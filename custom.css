@@ -21,6 +21,10 @@ figure figcaption {
     margin-bottom: 3em;
     text-align: center;
 }
+.videoDiv {
+    margin: 0 auto;
+    width: 300px;
+}
 
 
 figure {

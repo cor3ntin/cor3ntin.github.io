@@ -18,6 +18,16 @@
   </url>
   
   <url>
+    <loc>/posts/cross_compilation/</loc>
+    <lastmod>2018-02-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/helloworld_p1/</loc>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/posts/ode_formatting/</loc>
     <lastmod>2018-01-20T00:00:00+00:00</lastmod>
   </url>
@@ -30,6 +40,14 @@
   <url>
     <loc>/posts/stack_queue/</loc>
     <lastmod>2016-10-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/helloworld_p2/</loc>
+  </url>
+  
+  <url>
+    <loc>/posts/helloworld_p3/</loc>
   </url>
   
   <url>
