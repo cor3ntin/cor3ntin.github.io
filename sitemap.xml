@@ -3,66 +3,67 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/posts/attributes/</loc>
+    <loc>https://cor3ntin.github.io/posts/attributes/</loc>
     <lastmod>2018-04-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/dep_manager/</loc>
+    <loc>https://cor3ntin.github.io/posts/dep_manager/</loc>
     <lastmod>2018-03-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/what_should_go_in_stl/</loc>
+    <loc>https://cor3ntin.github.io/posts/what_should_go_in_stl/</loc>
     <lastmod>2018-02-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/cross_compilation/</loc>
+    <loc>https://cor3ntin.github.io/posts/cross_compilation/</loc>
     <lastmod>2018-02-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/helloworld_p1/</loc>
+    <loc>https://cor3ntin.github.io/posts/helloworld_p2/</loc>
+    <lastmod>2018-01-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/helloworld_p1/</loc>
     <lastmod>2018-01-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/ode_formatting/</loc>
+    <loc>https://cor3ntin.github.io/posts/ode_formatting/</loc>
     <lastmod>2018-01-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/undef_preprocessor/</loc>
+    <loc>https://cor3ntin.github.io/posts/undef_preprocessor/</loc>
     <lastmod>2018-01-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/stack_queue/</loc>
+    <loc>https://cor3ntin.github.io/posts/stack_queue/</loc>
     <lastmod>2016-10-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/helloworld_p2/</loc>
+    <loc>https://cor3ntin.github.io/posts/helloworld_p3/</loc>
   </url>
   
   <url>
-    <loc>/posts/helloworld_p3/</loc>
-  </url>
-  
-  <url>
-    <loc>/posts/</loc>
+    <loc>https://cor3ntin.github.io/posts/</loc>
     <lastmod>2018-04-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/</loc>
+    <loc>https://cor3ntin.github.io/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>https://cor3ntin.github.io/</loc>
     <lastmod>2018-04-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

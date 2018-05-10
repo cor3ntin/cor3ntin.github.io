@@ -4,17 +4,17 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title> | cor3ntin</title>
+<title>A C&#43;&#43; Hello World And the Cute Heartless Rainbow | cor3ntin</title>
 
 
-<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='/custom.css'></head>
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
 <body>
 
 <section class="section">
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="/"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -46,43 +46,111 @@
     <div class="subtitle is-6 is-pulled-right">
       
     </div>
-    
-    <h1 class="title"></h1>
+    <h2 class="subtitle is-6">January 24, 2018</h2>
+    <h1 class="title">A C&#43;&#43; Hello World And the Cute Heartless Rainbow</h1>
     
     <div class="content" id="article">
       
 
-<h1 id="a-c-hello-world-and-the-cute-heartless-rainbow">A C++ Hello World And the Cute Heartless Rainbow</h1>
+<p>This is Part two of a series wherein we build a “Hello World” application. If you are late to the party, I encourage you to check <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part 1</a> first.</p>
 
-<p>This is Part two of a series wherein we build a “Hello World” application. If you are late to the party, I encourage you to check Part 1 first.
-<a href="https://hackernoon.com/a-c-hello-world-and-a-glass-of-wine-oh-my-263434c0b8ad"><strong>A C++ Hello World And A Glass Of Wine, Oh My !</strong>
-*Wherein we try to use the Microsoft Visual C++ Compiler on Linux*hackernoon.com</a></p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2512/1*sC1_SuuV-v_TWQbtWnDrGQ.png" alt="Hic Sunt Arcūs" /><em>Hic Sunt Arcūs</em></p>
+<figure>
+    
+        <img src="dragon.png" />
+    
+    
+    <figcaption>
+        <h4>Hic Sunt Arcūs</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>So, our Boss came in to check on our progress. They were starting to wonder why it takes a whole day to port a 3 lines application to a new system. But the real reason of their visit was to ask for a new feature. While our “Hello world” business is booming, the marketing department thinks the lack of graphical UI is hurting sales.</p>
 
 <p>See, nobody escapes software bloat.</p>
 
 <p>Still. Eager to make the boss forget the time it takes to setup MSVC on Linux, I went above and beyond and completed a full rewrite of our app.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;QMessageBox&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;QApplication&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span>
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>(<span style="color:#888;font-weight:bold">int</span> argc, <span style="color:#888;font-weight:bold">char</span>** argv) {
+    QApplication a(argc, argv);
+    QString message = <span style="color:#d20;background-color:#fff0f0">&#34;Hello, World !!!!!!!&#34;</span>;
 
-<iframe src="https://medium.com/media/26028a65c0613d3eaf95daefbe3b0e99" frameborder=0></iframe>
-
+    QMessageBox::information(<span style="color:#080;font-weight:bold">nullptr</span>, <span style="color:#d20;background-color:#fff0f0">&#34;Hello World v2.0&#34;</span>, message,
+                             QMessageBox::Yes | QMessageBox::No);
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">0</span>;
+}
+</code></pre></div>
 <p>Of course, we also provide a small nifty build file.</p>
 
-<iframe src="https://medium.com/media/a86ab9adcaa119ee9db0fcf5345e3cc8" frameborder=0></iframe>
+<pre><code>import qbs 1.0
 
-<p>The Linux version is still building fine. Duh</p>
+QtGuiApplication {
+    name  : &quot;helloworld-gui&quot;
+    files : [&quot;helloworld.cpp&quot;]
 
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*I-3Z4ePysVLAevKL49zdLw.png" alt="The author likes to pretend all Linux machines are born with Qt And QBS installed. Just play along." /><em>The author likes to pretend all Linux machines are born with Qt And QBS installed. Just play along.</em></p>
+    Depends {
+        name : &quot;Qt.widgets&quot;
+    }
 
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*CqWp5CUXeQKrw1jADp4eqg.png" alt="In case of nuclear disaster, click “no”" /><em>In case of nuclear disaster, click “no”</em></p>
+    Group {
+        name: &quot;app&quot;
+        fileTagsFilter: &quot;application&quot;
+        qbs.install: true
+        qbs.installDir: &quot;bin&quot;
+    }
+}
+</code></pre>
 
-<p>Let’s enthusiastically build the Windows version</p>
+<p>The Linux version is still building fine. Duh.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2178/1*DRHrS8YCdtWTpAGZG3sVSw.png" alt="Not so Qt." /><em>Not so Qt.</em></p>
 
-<p>Yeah, turns out, we need a build of Qt compatible with our compiler. Right now, even QBS doesn’t know about Qt.</p>
+<figure>
+    
+        <img src="term1.png" />
+    
+    
+    <figcaption>
+        <h4>The author likes to pretend all Linux machines are born with Qt And QBS installed. Just play along.</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+
+<figure>
+    
+        <img src="stupiddialog.png" />
+    
+    
+    <figcaption>
+        <h4>In case of nuclear disaster, click “no”</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Let’s enthusiastically build the Windows version:</p>
+
+
+<figure>
+    
+        <img src="term2.png" />
+    
+    
+    <figcaption>
+        <h4>Not so Qt.</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>I went to download Qt on <a href="https://www.qt.io/download">https://www.qt.io/download</a>. That site is getting worse by the day. The Qt company tries to dissuade people to get the open source version. But if you go to <a href="https://download.qt.io/">https://download.qt.io/</a> you have all the tarballs and installers.</p>
 
@@ -92,9 +160,9 @@
 
 <p>Except. Qt still uses qmake to build itself. And qmake exists only to make cmake look cool and modern. There is an <a href="http://code.qt.io/cgit/qt/qtbase.git/log/?h=wip/qbs2">ongoing effort </a>to build Qt with qbs and while this is very exciting, it may be a bit too cutting edge, even for this blog.</p>
 
-<p>So, we are stuck with qmake .qmakeis a build system generator which unfortunately conflates toolchains and build systems. I did attempt to create configuration for my wine toolchain, it was actually rather simple, and it did generates some Makefiles with the proper commands. But they were Makefiles for nmake which is a make-like tool for windows albeit with a format that is not quite compatible with the original make. I tried using nmake (which works fine) but then all the subsequents cl.exe / link.execalls happen in the wine environment which means it executes the actual cl.exe rather than our wrapper and so our crude slashes-to-backslashes transformation script never gets run and the compilation fails because cl.exe assumes anything starting with / is an option. And we can’t get nmake to call our fake cl.exe wrapper since nmake is a windows process and windows doesn’t know about ELF.</p>
+<p>So, we are stuck with qmake .qmakeis a build system generator which unfortunately conflates toolchains and build systems. I did attempt to create configuration for my wine toolchain, it was actually rather simple, and it did generates some Makefiles with the proper commands. But they were Makefiles for nmake which is a make-like tool for windows albeit with a format that is not quite compatible with the original make. I tried using nmake (which works fine) but then all the subsequents cl.exe / link.execalls happen in the wine environment which means it executes the actual cl.exe rather than our wrapper and so our crude slashes-to-backslashes transformation script never gets run and the compilation fails because cl.exe assumes anything starting with <code>/</code> is an option. And we can’t get nmake to call our fake cl.exe wrapper since nmake is a windows process and windows doesn’t know about ELF.</p>
 
-<p>It is left as an exercise to the reader to calculate how many millions of dollars Windows using \ as a path separator and is costing the industry.</p>
+<p>It is left as an exercise to the reader to calculate how many millions of dollars Windows using <code>\</code> as a path separator and is costing the industry.</p>
 
 <p>The solution would be to patch qmake. Which even the maintainer of qmake actively avoid to do. So let’s not do that.</p>
 
@@ -106,29 +174,35 @@
 <p>How many Microsoft Engineers does it take to set up a build environment ? Certainly quite a few, since I was able to find about 1900 lines of batch scripts serving that purpose, in 20 or so files. There are probably more.</p>
 
 <p>I manage to get my environment sorted in 3 lines. Remember, regardless of how complex your build system is, it boils down to a handful of variables. A compiler doesn’t needs much.</p>
-
-<pre><code>set &quot;INCLUDE=C:\Program Files (x86)\Microsoft Visual       Studio\2017\BuildTools\VC\Tools\MSVC\14.12.25827\include;
- %INCLUDE%&quot;
-set &quot;LIB=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Tools\MSVC\14.12.25827\lib\x64\;%LIB%&quot;
-set &quot;PATH=%PATH%;C:\Users\cor3ntin\Documents\qtbase-everywhere-src-5.10.0\gnuwin32&quot;
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#038">set</span> <span style="color:#d20;background-color:#fff0f0">&#34;INCLUDE=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Tools\MSVC\14.12.25827\include; %INCLUDE%&#34;</span>
+<span style="color:#038">set</span> <span style="color:#d20;background-color:#fff0f0">&#34;LIB=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Tools\MSVC\14.12.25827\lib\x64\;%LIB%&#34;</span>
+<span style="color:#038">set</span> <span style="color:#d20;background-color:#fff0f0">&#34;PATH=%PATH%;C:\Users\cor3ntin\Documents\qtbase-everywhere-src-5.10.0\gnuwin32&#34;</span></code></pre></div>
 <p>After that, it was a matter of downloading Qt 5.10 setting up a x64 build environment ( I used vcvars64.bat + the three lines above, but you can set up PATH manually and not bother with vcvars.bat at all).</p>
 
 <p>Make sure perl is installed and in the PATH.</p>
 
 <p>For the purpose of this article, I only need Qt Base (Core, Gui, Network… ) so that’s what I’m building. Building QtWebEngine - which uses chromium - is a bit more involved.</p>
-
-<pre><code>configure -release -opensource -confirm-license -platform win32-msvc -nomake examples -nomake tests
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">configure -release -opensource -confirm-license <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>          -platform win32-msvc -nomake examples -nomake tests
 nmake
-nmake install
-</code></pre>
-
+nmake install</code></pre></div>
 <p>Once Qt has done building, copy the folders back to your linux host. You need at least bin, include, lib, plugins . put them in a new directory. I called mine qt5_10base-x64 .</p>
 
 <p>I had issues with the includes referencing src. So you can run perl bin\syncqt.pl -copy -windows -version 5.10.0 -outdir cpy from the Qt directory on windows and use the include folder generated in cpy . Even then I had to copy a few files manually ( qconfig.h, q{core,gui,widgets,network,xml}-config.h) from the src folder to their respective include folder. Definitively a bit fiddly but eventually you will get there.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*ENI-1QJHfRmp1JUBO5U1yg.png" alt="My Linux is slowly morphing into a Windows Box. I expect Clippy to appear at any moment now." /><em>My Linux is slowly morphing into a Windows Box. I expect Clippy to appear at any moment now.</em></p>
+
+<figure>
+    
+        <img src="term3.png" />
+    
+    
+    <figcaption>
+        <h4>My Linux is slowly morphing into a Windows Box. I expect Clippy to appear at any moment now</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>So now we have Qt. But how can we tell QBS to actually use it ?</p>
 
@@ -137,8 +211,7 @@ nmake install
 <p>However to works with Qt, qbs needs a complete set of modules per profile. The gcc profile we used earlier is made of 160 qbs files setting each Qt library and component.</p>
 
 <p>Fortunately, all you need to do is to call this handy tool.</p>
-
-<pre><code>qbs-setup-qt -h                                             
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qbs-setup-qt -h
 This tool creates qbs profiles from Qt versions.
 
 Usage:
@@ -149,52 +222,78 @@ Usage:
 
     qbs-setup-qt -h|--help
 
-The first form tries to auto-detect all known Qt versions, looking them up via the PATH environment variable.
+The first form tries to auto-detect all known Qt versions, looking them
+up via the PATH environment variable.
 
-The second form creates one profile for one Qt version.
-</code></pre>
-
+The second form creates one profile <span style="color:#080;font-weight:bold">for</span> one Qt version.</code></pre></div>
 <p>Except we can’t call that tool from linux because the built qmake is a windows application expected to run on Windows. Hopefully, someday we will get rid of qmake entirely, but for now, back to our Windows machine.</p>
 
 <p>We first <a href="https://doc.qt.io/qbs/installing.html">install a windows build</a> of qbs and run the tool.</p>
-
-<pre><code>qbs-windows-x86_64-1.10.0\bin\qbs-setup-qt.exe --settings-dir . bin\qmake.exe msvc14-x64-qt
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qbs-windows-x86_64-1.10.0<span style="color:#04d;background-color:#fff0f0">\b</span>in<span style="color:#04d;background-color:#fff0f0">\q</span>bs-setup-qt.exe <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>    --settings-dir . bin<span style="color:#04d;background-color:#fff0f0">\q</span>make.exe msvc14-x64-qt</code></pre></div>
 <p>That should create a qbs folder with the proper Qt configuration. Move that folder to your linux machine in the qt5_10base-x64 folder created earlier.</p>
 
 <p>If you open on of the .qbs file, say 1.10.0/profiles/msvc14-x64-qt/modules/Qt/gui/gui.qbs , you will notice a reference to a path. For some reason, in mine it’s /usr/local/Qt-5.10.0 . I guess I messed up somewhere since we should have a windows path. In any case we need to transform that path to the actual locations of Qt on our Linux machine, which is easy to do, just use sed.</p>
-
-<pre><code>find -name &quot;*.qbs&quot; -exec sed -i -e 's\#/usr/local/Qt-5.10.0\#/home/cor3ntin/dev/cross-compilers/windows/qt-5.10-msvc-x64\#g' {} \;
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">find -name <span style="color:#d20;background-color:#fff0f0">&#34;*.qbs&#34;</span> -exec sed -i -e <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>    <span style="color:#d20;background-color:#fff0f0">&#39;s\#/usr/local/Qt-5.10.0\#/home/cor3ntin/dev/cross-compilers/windows/qt-5.10-msvc-x64\#g&#39;</span> {} <span style="color:#04d;background-color:#fff0f0">\;</span></code></pre></div>
 <p>We then need to modify our qbs.conf to use those qt modules. Edit the QBS file created in part one to reference them:</p>
-
-<pre><code>qt-project\qbs\profiles\msvc14-x86_64\preferences\qbsSearchPaths=/home/cor3ntin/dev/Qt/qbs-wine-toolchain,/home/cor3ntin/dev/cross-compilers/windows/qt5_10base-x64/qbs/1.10.0/profiles/msvc14-x64-qt
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qt-project<span style="color:#04d;background-color:#fff0f0">\q</span>bs<span style="color:#04d;background-color:#fff0f0">\p</span>rofiles<span style="color:#04d;background-color:#fff0f0">\m</span>svc14-x86_64<span style="color:#04d;background-color:#fff0f0">\p</span>references<span style="color:#04d;background-color:#fff0f0">\q</span><span style="color:#369">bsSearchPaths</span>=<span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>    /home/cor3ntin/dev/Qt/qbs-wine-toolchain,/home/cor3ntin/dev/cross-compilers/windows/qt5_10base-x64/qbs/1.10.0/profiles/msvc14-x64-qt</code></pre></div>
 <p>I realize it’s all a bit tricky. Eventually though, we can run qbs and it compiles our Qt-based hello world for Windows.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2182/1*xLP2MZCHUatCvZwW8Xc7SA.png" alt="" /></p>
+
+<figure>
+    
+        <img src="term4.png" />
+    
+    
+    <figcaption>
+        <h4>$?==0</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>It won’t run because it can’t find the Qt dll. You can either copy the dll to the build directory, or make sure they are in the PATH. The windows/wine PATH that is.</p>
 
-<p>The only way I found to do that is to run regedit — make sure to do it from the appropriate WINEPREFIX and add the location of the Qt’s bin directory to Path which is under HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment.</p>
+<p>The only way I found to do that is to run regedit — make sure to do it from the appropriate WINEPREFIX and add the location of the Qt’s bin directory to Path which is under <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment</code>.</p>
 
 <p>If you know a way to script that away, please let me know.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2638/1*zCdD-4ub2NIru6jqKKJFTQ.png" alt="Using regedit on Linux. What would I not do for my readers ?" /><em>Using regedit on Linux. What would I not do for my readers ?</em></p>
+
+<figure>
+    
+        <img src="regedit.png" />
+    
+    
+    <figcaption>
+        <h4>Using regedit on Linux. What would I not do for my readers ?</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>We also need to put a qt.conf file next to our built helloworld.exe binary to tell Qt where to load the plugins from. In my case</p>
-
-<pre><code>[Paths]
-Prefix = /home/cor3ntin/dev/cross-compilers/windows/qt5_10base-x64/
-Plugins = plugins
-</code></pre>
-
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#080;font-weight:bold">[Paths]</span>
+<span style="color:#369">Prefix</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/windows/qt5_10base-x64/</span>
+<span style="color:#369">Plugins</span> = <span style="color:#d20;background-color:#fff0f0">plugins</span></code></pre></div>
 <p>And that’s it ! It wasn’t too hard, was it ?</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*_FAynCIKI52-XwCjCCLTMA.png" alt="I made a clicky thing !" /><em>I made a clicky thing !</em></p>
+
+<figure>
+    
+        <img src="hello1.png" />
+    
+    
+    <figcaption>
+        <h4>I made a clicky thing !</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <h3 id="and-so-microsoft-studio-visual-c-compiler-is-the-greatest-thing-ever">And So, Microsoft Studio Visual C++ Compiler is the greatest thing ever !</h3>
 
@@ -204,7 +303,19 @@ Plugins = plugins
 
 <p>Iterating over some container will require us to use range-v3. There is <em>literally</em> no other way.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2440/1*kOMrpyBT_MamoaiqybS3_w.png" alt="Making WordArt Great Again." /><em>Making WordArt Great Again.</em></p>
+
+<figure>
+    
+        <img src="rainbow1.png" />
+    
+    
+    <figcaption>
+        <h4>Making WordArt Great Again.</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>Isn’t that great ?</p>
 
@@ -250,72 +361,113 @@ Plugins = plugins
 
 <p>We are not quite done yet.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*_4h4mUSFXAZIO_U1jLHZ0g.jpeg" alt="Case consistency at Microsoft is a serious matter." /><em>Case consistency at Microsoft is a serious matter.</em></p>
+
+<figure>
+    
+        <img src="monkey.jpeg" />
+    
+    
+    <figcaption>
+        <h4>Case consistency at Microsoft is a serious matter</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>Microsoft Windows is designed around case insensitive file systems. Which I’m sure looked like a good idea at the time.</p>
 
 <p>However, unless you are masochistic enough to run your Linux machine on FAT, chances are your file-system is case sensitive. And that is an issue for us.</p>
 
-<p>How bad it is, really ? Well…</p>
-
-<pre><code>**A**cl**UI**.**L**ib
+<p>How bad it is, really ? Well…
+<pre>
+<strong>A</strong>cl<strong>UI</strong>.<strong>L</strong>ib
 ahadmin.lib
-wdsClientAPI.**LIB
-P**sapi.**L**ib
+wdsClientAPI.<strong>LIB
+P</strong>sapi.<strong>L</strong>ib
 sensorsapi.lib
-**S**etup**API**.**L**ib
-</code></pre>
-
-<p>This is just a small selection of files. I don’t suppose there is anything they can do to fix that now, it’s too late.</p>
+<strong>S</strong>etup<strong>API</strong>.<strong>L</strong>ib
+</pre>
+This is just a small selection of files. I don’t suppose there is anything they can do to fix that now, it’s too late.</p>
 
 <p>We could attempt to fix the case issues by changing the filename of every library and header. But that will probably not work since third party libraries aren’t consistent either. So even if we attempt to fix our build files sooner or later we will run on a case issue.</p>
 
 <p>So, the “proper” (for some definition of proper) solution would be to trick the Linux kernel into being case insensitive. And to that we need to use a case-insensitive system. Fortunately, a file can be a file system, so we will create a file large enough to hold the windows SDK, format it with a case-insensitive filesystem such as EXFAT and put the SDK there. Please note that NTFS is case sensitive, even if the Windows kernel is not.</p>
-
-<pre><code>dd if=/dev/zero of=win_sdk_10.fs bs=1024 count=$((1024 * 100 * 3))
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">dd <span style="color:#080;font-weight:bold">if</span>=/dev/zero <span style="color:#369">of</span>=win_sdk_10.fs <span style="color:#369">bs</span>=<span style="color:#00d;font-weight:bold">1024</span> <span style="color:#369">count</span>=<span style="color:#080;font-weight:bold">$((</span><span style="color:#00d;font-weight:bold">1024</span> * <span style="color:#00d;font-weight:bold">100</span> * <span style="color:#00d;font-weight:bold">3</span><span style="color:#080;font-weight:bold">))</span>
 mkfs.exfat win_sdk_10.fs
 mv sdk_10 sdk_10.bak
 mkdir sdk_10
 sudo mount win_sdk_10.fs
-mv sdk_10.bak/* sdk_10
-</code></pre>
-
+mv sdk_10.bak/* sdk_10</code></pre></div>
 <p>You gotta love Linux.</p>
 
 <p>And now, compiling with clang-cl works. However, running the program exposes a bug.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2190/1*EPrQZZVjU9BfdlnWgL8cAg.png" alt="Our program compiles with clang and runs but it exhibits a nasty bug." /><em>Our program compiles with clang and runs but it exhibits a nasty bug.</em></p>
+
+<figure>
+    
+        <img src="term6.png" />
+    
+    
+    <figcaption>
+        <h4>Our program compiles with clang and runs but it exhibits a nasty bug.</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>And yet, the same executable copied to a virtual machine runs fine.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*IePJwJz6S888ie3V5BKH5w.png" alt="Such greetings." /><em>Such greetings.</em></p>
+
+<figure>
+    
+        <img src="rainbow21.png" />
+    
+    
+    <figcaption>
+        <h4>Such greetings</h4>
+        
+    </figcaption>
+    
+</figure>
+
 
 <p>I’m still not sure where the bug actually is. It appears to be either in range-v3 or my use thereof, and yet it seems odd that it would expose a different run-time behavior.</p>
 
 <p>But that’s what’s great about having a bigger set of development environments, if you have bugs, the are more likely to get exposed. For one, this nasty graphical glitch made me realized I should handle white spaces as a special case.</p>
 
-<p>Oh, and if you want to check what clang is actually doing, you can use Microsoft’s dumpbin.exe found in msvc2017/bin/Hostx64/x64/ . This tool is equivalent of ldd and nm for unix.</p>
+<p>Oh, and if you want to check what clang is actually doing, you can use Microsoft’s <code>dumpbin.exe</code> found in <code>msvc2017/bin/Hostx64/x64/</code> . This tool is equivalent of ldd and nm for unix.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2656/1*2NM_zswTFQwCcLB1FAhtNA.png" alt="" /></p>
+
+<figure>
+    
+        <img src="term7.png" />
+    
+    
+</figure>
+
 
 <p>Interestingly, the clang artifact looks exactly like a msvc-produced one, albeit with few extra sections. Including the CRT and the vcruntime !</p>
 
 <p>Here is the MSVC built binary.</p>
 
-<p><img src="https://cdn-images-1.medium.com/max/2534/1*Da08y0P9XGXpQBWUO3qR8g.png" alt="" /></p>
 
-<p>Right now ldd-link is <a href="https://lld.llvm.org/windows_support.html">still experimental</a> and offers no support for debug info. clang-cl is <a href="https://clang.llvm.org/docs/MSVCCompatibility.html">mostly done</a> except for some exceptions handling. You can mix and match cl.exe clang-cl link.exe and lld-link.</p>
+<figure>
+    
+        <img src="term8.png" />
+    
+    
+</figure>
+
+
+<p>Right now ldd-link is <a href="https://lld.llvm.org/windows_support.html">still experimental</a> and offers no support for debug info. clang-cl is <a href="https://clang.llvm.org/docs/MSVCCompatibility.html">mostly done</a> except for some exceptions handling. You can mix and match <code>cl.exe</code> <code>clang-cl</code> <code>link.exe</code> and <code>lld-link</code>.</p>
 
 <p>I can’t advise you to use clang-cl in production (yet, it’s getting there ) but it’s an amazing tool to add to your CI and development environment.</p>
 
 <p>It’s all I have for you today, I hope you’ve learned something!</p>
 
-<h2 id="one-more-thing">… One more thing …</h2>
-
-<h3 id="see-you-in-part-3">See you in Part 3 !</h3>
-
-<p><a href="https://medium.com/@corentin.jabot/a-c-hello-world-and-the-rose-gold-walled-garden-of-doom-4ac3c92385ed"><strong>A C++ Hello World And The Rose Gold Walled Garden Of Doom</strong>
-*This is Part 3 on my series about cross-compilation. You can check out Part 1 and Part 2 first !*medium.com</a></p>
+<h2 id="one-more-thing-see-you-in-part-3-hahahugoshortcode-0xc42016cf00-16-hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
 
       
     </div>
