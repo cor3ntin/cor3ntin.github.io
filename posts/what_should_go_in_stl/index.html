@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>A cake for your cherry: what should go in the C&#43;&#43; standard library? | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="/"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg></i>
+            </span>
+          </a></nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">February 21, 2018</h2>
+    <h1 class="title">A cake for your cherry: what should go in the C&#43;&#43; standard library?</h1>
+    
+    <div class="content" id="article">
+      
+
+<p>This is a reply to <a href="https://hatcat.com/?p=16">Guy Davidson’s article “Batteries not included: what
+should go in the C++ standard library?</a>”.</p>
+
+<p>Over the past few years there has been a push to include a graphics
+library into the C++ standard. It would be something a bit like cairo.
+Or SDL. The proposal, in its current form, is <a href="https://wg21.link/P0267">here</a></p>
+
+<p>In its current state, the library proposal can draw some shapes on a
+pre-allocated surface, has some support for images, and there are of
+courses projects to add text, maybe some input in the form of mouse /
+keyboard handling.</p>
+
+<p>The primary goal of the library seems to be teaching. The argument put
+forward is that it’s cool and ludic for kids to have pretty blinky
+pixies on screen. Of course there already exists libraries to do that
+and more, but you see, C++ has no decent, idiomatic package manager, so,
+of course the conclusion was reached by some prominent committee members
+that the C++ standard should offer a 2D graphics library, out of the
+box.</p>
+
+<p>I do think this is a path that should not be pursued and that doing so
+would be, at best, a waste of time. Let me tell you why.</p>
+
+<h4 id="but-first-some-needed-clarifications">But, first, some needed clarifications</h4>
+
+<p>Guy Davidson and others have, on all account, put a great amount of
+work, time and energy in that proposal. The people pushing for that
+proposal to be rushed through standardization are way more experts than
+I will ever be.</p>
+
+<p>I did not contribute anything to C++ so what will follow are just the
+opinions of one guy.</p>
+
+<p>I also want to make clear that I do not have a negative opinion of that
+particular library. My issue is with the inclusion of a 2D painting
+library, any painting library in the C++ standard, at this point in
+time.</p>
+
+<p>I hope I won’t be misconstrued</p>
+
+<p>Anyway, let’s get to it.</p>
+
+<h3 id="the-c-standard-library-is-not-a-library">The C++ Standard Library is not a library</h3>
+
+<p>The C++ Standard is exactly that: A well specified document that
+describes in the most detailed and unambiguous possible way what C++ is,
+and how it works. The goal being that anyone can implement a C++
+compiler for themselves by implementing that specification. However, it
+happens that the specification is not specific enough, or implemented
+not quite properly, or implemented opinionatedly and so various C++
+compilers end up having some slight differences of behavior from one
+implementation to the next. Sometimes it cannot be implemented at all
+because the people doing the implementation and the people doing the
+specification forgot to talk to each others.</p>
+
+<p>Now, a big part of that specification describes the Standard Template
+Library, a library that ships with every conforming compiler.</p>
+
+<p>There exist at least 5 implementations of that specification, maintained
+by as many entities. Some are open source, some are not. They each work
+in a select subset of platforms and system. And even if they sit at the
+very bottom of about any C++ program, they are, like any other library ,
+subject to bugs.</p>
+
+<p>In this context, what should, or should not be included in the C++
+standard library is a very important question. What should come as
+standard bundled with the compiler? What do most people need to be
+productive with C++ ?</p>
+
+<p>Guy’s article describes the positions one can have. Maybe we need about
+nothing ? Maybe we need some vocabulary types ? Maybe containers ? Maybe
+not ? Do we need filesystem support ? sockets ? json ? xml ? rpg making
+tools ? sql ? html ? javascript vm ? 2d graphics ? 3d graphics ? soap ?
+IPC ? windowing ? Should $\pi$ be defined ?
+What about websockets ? ftp ? ssh ? VR ? AR ? crypto ? ssl ?
+Do we need ssl but no other crypto ? Deep learning ? Sound ? 3d sound ?
+Video Decoding ? gif ?</p>
+
+<p>Clearly we need to draw a line.</p>
+
+<p>Somewhere ?</p>
+
+<p>Where ?</p>
+
+<p>Let’s look at .Net. Or Java. When the STL is mentioned, comparing C++
+and Java is customary. Java is cool, right? It has sockets and HTTP and
+crypto and everything, basically.</p>
+
+<p>But Java is mostly maintained by a single entity. So someone at Oracle
+decides Java should have sockets and they implement it, there are
+internal reviews and now Java has Sockets. Sometimes later, Google want
+to have sockets using the same API, and before they can say “Ahead of
+time”, they are sued for 9 billions USD.</p>
+
+<p>Meanwhile, the C++ specification undergoes a long, painful process until
+there is a vote and there is a majority consensus on every single
+feature, every single method. Should that be called <code>data</code>?
+<code>get</code>? “At Bloomberg we have experience using <code>data</code> on our 2
+millions line code base” will say the guy working at Bloomberg. “We
+noticed it’s faster to use type <code>get</code> on
+EBCDIC keyboards” Will object the guy at IBM. “And we have a 3 millions
+lines code base”.</p>
+
+<p>I don’t have an opinion on which model is best. Benevolent dictatorship
+obviously only works if the dictator is benevolent.</p>
+
+<p>However, I will argue that democracy is unfit to the birth of a good
+graphic library.</p>
+
+<h3 id="the-committee-resources-are-limited">The Committee Resources are limited</h3>
+
+<p>Even if sleep deprived proposal authors sweat blood, a big part of the
+work and the voting takes places in week-long quarterly meetings where
+people go through an ever growing pile of proposals. As the committee
+learn to be more transparent, more people contribute, leading to more
+work for people attending. There is little to no money in that work. At
+best you can hope for someone to pay you the plane tickets to the
+beaches of Florida, the green hills of Switzerland or the pools of
+Hawaii at which the meeting happen. You will reportedly never see
+neither the beaches, the hills nor the pools.</p>
+
+<p>And because resources are limited and time is limited there is a need to
+sort, prioritize and even discard proposal. <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0939r0.pdf">Directions for ISO
+C++</a>
+attempts to describes how that sorting and prioritizing should happen.</p>
+
+<p>The question then becomes : can the committee spares the time to work on
+a 2D graphics library and is that a priority ?</p>
+
+<p>In its current form, which is limited to drawing shapes, the proposal is
+about 150 pages long. It’s one of the biggest proposal submitted for the
+next meeting.</p>
+
+<p>It can only grow bigger. There is no end to the complexity of a “small
+and simple graphics library”. Every second spend on that proposal will
+not be on some other work. Of course people discuss proposals they have
+an interested in and discussions happen in parallel. Still. There is
+maybe one person in those meetings for every 200’000 c++ developers.</p>
+
+<h3 id="let-s-draw-a-triangle">Let’s draw a triangle</h3>
+
+<p>A 2D graphics is the complete opposite of what the Standardization
+process is good at. Standardization is all about formalism, so it works
+best at describing formal things, Math, Algorithms. The more reality
+gets messy, the more it’s hard to describe it put it on paper and have
+that paper serves as source of Truth for decades.</p>
+
+<p>The first thing one need to do play with pretty pixes is to get a
+“surface”. A canvas where pixels get drawn.</p>
+
+<p>So hopefully you have a <code>surface</code> class
+to which you give dimensions and that gets you a canvas on which to
+paint.</p>
+
+<p>But wait. On most desktop systems, if you want a surface you need to put
+it in a window. It’s customary for windows to have titles so a graphics
+API should probably handle that, right ?</p>
+
+<p>You probably also want the window to have an icon. An icon is a file on
+most system, the format of which is system specific. But sometime it’s
+not a path, it’s a name corresponding to a path.</p>
+
+<p>The size of a window can change during the execution of the program on
+some desktop operating system.</p>
+
+<p>Sometimes the window can be moved to another screen that has another
+resolution. And there is this weird new screens where there are virtual
+pixels that are bigger than true pixels ? Unless you are rendering an
+images or something then you should make sure you uses all the power of
+the small crispy pixes since the customer paid a premium for boasting
+about how crispy his screen is.</p>
+
+<p>That woman over there was jealous so she bought a TV with 40 bits per
+pixels. You can’t really see the difference but are you going to tell
+her she wasted 5000 bucks ?</p>
+
+<p>And then there is a screen in your pocket and IT ROTATES in all the
+directions and now the surface is all wonky. But it has no window so it
+has no title or icon.</p>
+
+<p>What time is it ? OH GOSH THAT THING HAS A SCREEN TOO BUT IT’S SO SMALL…
+Better go and read a book WTF ELECTRONIC INK that you should refresh as
+little as possible and that only is black ?</p>
+
+<p>World is crazy, right ? Let’s stick to Linux, shall we? So on Linux
+there is this thing called X11 which you request a surface to… oh sorry,
+while you are writing the paper X11 is being deprecated and now you
+should use Wayland… unless you rather have a frame buffer? It can be
+accelerated using opengl. or embedded opengl. totally different thing.
+But really, Vulkan is faster than both these things. Oh and on this
+system we prefer that you draw the windows yourself, there is a war
+raging on about CSD vs SSD it has been going on for years and you can’t
+take side.</p>
+
+<p>And if you have CSD please make sure that I can drag the windows
+properly and I have set up sticky corners so that the windows can be
+aligned nicely. Make sure to handle them. Properly. And when you drag
+the window it should be a bit transparent, you know about windows
+compositing right ?</p>
+
+<p>Okay so, you start to tell yourself that maybe drawing stuff is
+complicated. Let the implementors compiler writers and library vendors
+deal with all that crap. So you provide an API that works everywhere, so
+it handles absolutely nothing, which is to say it works nowhere.</p>
+
+<p>Now the compiler writers are a bit pissed. All they wanted in life was
+to write compilers and there they are, trying to understand how GDI
+work. Plus Microsoft is maybe not really interested in providing a
+drawing framework, they rather have their users use the WinRT xml-based
+tools. Meanwhile the GCC guys are still trying to have
+<code>std::thread</code>  work on windows.</p>
+
+<p>Clang people get bug reports that “it doesn’t work”. People have
+expectations that the STL will work perfectly, consistently, <em>anywhere</em></p>
+
+<p>No problem. We will make the graphics library optional. So now there are
+bits of the Standard Library that are not standard. If and when they are
+implemented, they don’t behave quite the same on every platform. So now
+the code written using standard tools is not portable. So we need to
+have a copy of the STL in the repository along with messy build scripts.
+Back to square one.</p>
+
+<p>Maybe we messed up somewhere? Let’s look at what exists on Internet.
+People have displays so surely they do write libraries for them, right ?</p>
+
+<p>Turns out Qt is pretty popular. It does a lot more than displaying
+triangle though. It was released in 1995. It has strings, threads, tons
+of stuffs. People really did not came up with anything better since ?</p>
+
+<p>wxWidgets is even older. It too has strings and threads and a lot of
+things that don’t have business being in a graphic library. GTK is the
+exact same thing.</p>
+
+<p>But C++ goals are more aligned with things like SDL. Released in 1995
+with threads and strings and weird things. Allegro, released in 1990.
+Same thing</p>
+
+<p>You look at other languages. Surely the Rust community has an awesome
+painting framework, right ? Or the Go people ? Turns out they write
+wrappers around Qt, or SDL or something, like they deemed to complicated
+to start from scratch.</p>
+
+<p>So 20 years later you manage to draw a triangle on all platforms. For
+some definition of all.</p>
+
+<p>It’s quite the achievement, so you want to share your joy with the
+world. People communicate mostly using languages [citation needed] so
+you are going to display some words on the screen, how hard can it be to
+go from a triangle to that ?</p>
+
+<h4 id="void-draw-text-std-point2d-std-string">void draw_text(std::point2d, std::string);</h4>
+
+<p>You learn that there is a standard called “Unicode” that describe all
+the letters people around the world use. So many letters. The Unicode
+standard is about 10 times the size of the proposal you have been
+working on for 5 years. Fortunately most programming languages have
+backed in support for at least parts of Unicode. Except C++. Well, okay
+let’s put that aside for now.</p>
+
+<p>So text is rendered using fonts. The fonts are often installed on the
+system. There is that thing called a font database that tells what the
+font are. Unless the systems has no font database. Or no fonts. Or no
+system. People also like to use their own fonts.</p>
+
+<p>A font is a file, whose format is standard. There are 5 or so competing
+standards.</p>
+
+<p>A font file can contain glyph tables, PNGs, SVGs, scripts executed in a
+virtual machine, a mix of all that. Some fonts have color, but not all
+people like colors. Your children like colors. They sent you a 🐈. You
+will add support for cats, right ?</p>
+
+<p>You learn about subpixel rendering. You spend a few months in jail for
+patent infringement. You figure you can use that time to learn about
+ligatures in the encyclopædia. You start regretting being a developer
+and consider a new career as a monastic scribe.</p>
+
+<p>There is a lot of math involved in font rendering so you pick up a
+mathematics book written a dead guy called AL-Khwarizmi. You realize
+everything is written from right to left. How does that even work ?</p>
+
+<p>So maybe the optional 2D graphics library should have optional text
+support ?</p>
+
+<p>At the next committee meeting in Toronto ( Hawaii sank in the ocean long
+ago), someone is trying to write a complex graphic application with
+network and lots of input and to avoid spaghetti code they like to have
+some kind of event loop with maybe some threading. It’s a theoretical
+concern obviously as there is no input support. Consensus was never
+reached on how to name the keyboard keys.</p>
+
+<p>You think back on all the existing framework like Qt, now on version
+8.0, that provide an event loop, a message passing system and a Unicode
+string type. Maybe they were up to something.</p>
+
+<p>During all this time, people continued using Qt. People were hired for
+knowing Qt. They used it in their school projects. Of course Qt still
+sucks because the C++ reflection features that got added in the standard
+were never quite enough to replace their code generator. But people
+don’t care that its sucks. People who do use QML. Or Electron.</p>
+
+<p>Having not displayed a 🐅, let’s go back to 2018.</p>
+
+<h3 id="c4e3 .graf .graf--h3 .graf-after--p name="c4e3"">Has the committee anything better to do anyway ?</h3>
+
+<p>To be considered, a proposal has to be written and put forward, and the
+library proposal exists because someone put a lot of work in it.</p>
+
+<p>However, currently, C++ has</p>
+
+<ul>
+<li>Poor threading support ( no executors or facilities to use coroutines )</li>
+<li>No support for launching processes</li>
+<li>No support for Unicode</li>
+<li>Poor I/O facilities</li>
+<li>Poor locale facilities</li>
+<li>No support for dynamic loaded libraries</li>
+<li>No HTTP support</li>
+<li>Nothing crypto related</li>
+</ul>
+
+<p>The list, of course goes on. I don’t know what is a good candidate for a
+C++ library, but, according to the committee itself, a library proposal
+should</p>
+
+<ul>
+<li>Be useful to most people</li>
+<li>Have a stable API that isn’t too subject to frequent change</li>
+<li>Have real world experience and feedback. That’s why most C++ library
+started their lives as boost library.</li>
+</ul>
+
+<p>Proposal are often dismissed from the get go for not being useful enough
+or not being battle tested enough. Which is reasonable given the
+expectation people have regarding the stability of the STL but then
+those criteria should apply consistently.</p>
+
+<p>And of course there are a lot of languages features that are still in
+the pipelines after years and years of work, and they should take
+priority over library features since pure library addition can be
+polyfilled by boost or other.</p>
+
+<h3 id="the-teaching-argument">The teaching argument</h3>
+
+<p>One of the argument put forward for the inclusion of that library is
+that it would make C++ more teachable and that people are more
+interested in graphics-based projects.<br />
+I sympathize and fully agree with the goal of making C++ more teachable.
+However, there is a difference between making sure a given feature is
+teachable and adding a major feature to the language with the primary
+goal of being used in classrooms.</p>
+
+<p>Teachability implies easy to use, hard to misuse, and a sane mapping
+between a concept and its implementation, and generally behaving
+accordingly to the expectation of the majority of users. Quality that
+should be looked for in any new feature.</p>
+
+<p>It is also to be expected that some features are targeted to advanced
+users, library writers and experts.</p>
+
+<p>However, the “teaching friendly part” of C++ should be a subset of the
+features used in a professional settings rather than a different set.</p>
+
+<p>I would prefer that people learn to use Qt (for example) as that is a
+skill they can use in their professional careers, rather that something
+dedicated to teaching purposes.</p>
+
+<p>I also think that a library whose scope is too limited may give a bad
+image to the language. If people are told that they can’t draw emojis or
+gifs or use a gamepad, they may end up thinking that C++ is not powerful
+enough and switch to another language like C#, java, javascript, swift…
+But if they get to use an existing, battle tested framework, that is
+powerful enough to let them implement their design (Qt, SDL) even if the
+code isn’t “modern”, they will get a better grasp of what c++ can and
+does do.</p>
+
+<p>In other words, I’m afraid that if people are introduced to a toy
+library, they will think that C++ is a toy language.</p>
+
+<p>Beside, “Teaching” needs to be better define.</p>
+
+<p>Are we talking about middle schoolers? And if so, is teaching them C++ a
+good idea ? In some cases Python, Javascript, Lua are more suitable,
+easier to grasp choices. I think that’s okay.</p>
+
+<p>Are we talking about college CS 101 ? In this case, it’s probably
+desirable to introduce students to build systems, libraries and package
+management. tools are important. And in my experience, a lot of juniors
+developers don’t know how to use their tool and that’s as important as
+knowing languages. It’s also important that people know and are taught
+the ecosystem. Qt, boost, wxwidgets, SDL…</p>
+
+<h3 id="the-we-need-a-standard-library-because-using-third-party-libraries-is-hard-argument">The “We need a standard library because using third party libraries is hard” argument</h3>
+
+<p>I think most people agree on that. Including a library in a C++ project
+is a bad, often painful experience. Investing a lot of resources on a 2d
+graphic library don’t solve that problem. Unless every single library
+that exist or will exist gets folded into the standard, so, where do we
+stop ?</p>
+
+<p>And I’m sorry to say, things won’t improve on their own, it’s just not
+possible. The number one requirement for a package manager of any sort
+is to be authoritative. It doesn’t even necessarily need to be good. But
+until individual entities are left to deal with the issue, we will
+continue to have myriad of incompatible, half backed tools. I understand
+that the committee prerogatives don’t necessarily extend outside the
+definition of the language and therefore the issue of package management
+may not be solvable. But tools, not UI is the big challenge that C++
+must tackle.</p>
+
+<p>Note that there are ways the committee can help improving tooling
+without extending its prerogatives, notably:</p>
+
+<ul>
+<li>Finding ways to supersede all reasonable uses of the preprocessor (
+the work on reflection / code injection is very important for that )</li>
+<li>Defining a portable C++ ABI (N4028)</li>
+<li>Defining a portable module representation</li>
+</ul>
+
+<p>Sure, these works may not be as glamorous as a 2D API, but they are more
+fundamental, and more importantly, can’t happen independently of the
+committee.</p>
+
+<h3 id="things-should-move-forward-somehow">Things should move forward, somehow.</h3>
+
+<p>After looking at P0939 and P0267, I wanted to share my wishes for work
+to be done in related areas. Of course, I’m not in a position of doing
+more than wishing and I can only hope to inspire someone ! But I’m
+interested in what you think is important in those areas !</p>
+
+<h4 id="take-the-unicode-bull-by-the-horns">Take the Unicode bull by the horns</h4>
+
+<p>I would not have suggested that, as I understand why C++ lacks Unicode
+but if we are seriously considering 2D graphics, then we absolutely need
+to have proper Unicode support.</p>
+
+<ul>
+<li>A first step is the <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0482r1.html"><code>char8_t</code> paper</a> . Of course that is not sufficient, but it is necessary.</li>
+<li>We need a set of algorithm to normalize, compare, sanitize and
+transform Unicode strings, count characters. Something range-based could work nicely</li>
+<li>class of characters, Regexps… We might not need as many features as
+ICU but we do need some. That could be a <code>&lt;unicode&gt;</code> header.
+I&rsquo;m not certain that proper Unicode support is a goal aligned with the constraints outlined in P0939,
+however it would be beneficial to any application dealing with user
+input/output, including GUI, databases, (web) server, console application&hellip;</li>
+</ul>
+
+<p>I don’t know if we can qualify Unicode strings of vocabulary type but
+handling the world languages is certainly something everybody needs and
+it would be easier if there was a universal, idiomatic tool to do that.</p>
+
+<h4 id="add-geometry-primitives-to-the-standard">Add geometry primitives to the standard</h4>
+
+<p>It could be interesting to extract the vocabulary types introduced in
+p0267 and standardize them independently of graphics. Types like
+<code>point_2d</code> , <code>matrix_2d</code> ( and eventually <code>point_3d</code>, <code>matrix_3d</code>  ) are
+useful for graphics but may have other use, for example scientific
+computation, plot manipulation. They could be accompanied by a set of
+methods to perform widely used analytic geometry computation. All of
+that could live in a <code>&lt;geometry&gt;</code>  header.</p>
+
+<p>There are multiple reasons why this would be beneficial</p>
+
+<ul>
+<li>It’s something every library dealing with painting or surfaces need
+<code>SDL_Point</code>, <code>QPoint</code>, <code>wxPoint</code>.
+Converting from one type to the other is cumbersome, error prone.
+All these frameworks could benefit from speaking the same language
+in the same coordinate system. It&rsquo;s the definition of a vocabulary
+type.</li>
+<li>It’s guarantee to stand the test of time. Math are not affected by
+new technology trends and as such the API would remain stable for
+decades.</li>
+<li>For the same reason, it would be probably be easy to reach
+consensus, it’s hard to bike-shed basic maths.</li>
+</ul>
+
+<h4 id="help-improving-existing-graphics-library">Help improving existing graphics library</h4>
+
+<p>What can be done by the committee to improve Qt, wxWwidgets SDL and
+other graphics frameworks ? It turns out a lot of frameworks rely on
+boiler plate code that is either generated by extensive and invasive use
+of macros or through a code generator. Reflection and code injection are
+fundamental to the modernization and betterment of these frameworks, and
+this is fundamentally a language feature that should take priority over
+purely library work.</p>
+
+<h3 id="let-grow-the-graphics-proposal-on-its-own">Let grow the Graphics proposal on its own</h3>
+
+<p>Maybe we do need another graphics framework. Who am I to say otherwise ?
+But existing framework have been battle tested for 20 years. I think the
+2D graphics could thrive and grow as an independent or boost library
+over the next few years. Most importantly, it could provide a single
+implementation working on a wide variety of platforms rather than having
+5 implementations or more of the same thing.</p>
+
+<p>It would be free to experiment with text rendering, inputs, events,
+back-end, threading models…</p>
+
+<p>I feel that this proposal as well as the package management issue calls
+for <em>something</em> that is authoritative without being ISO and I have no
+idea what <em>that</em> could or should be.</p>
+
+
+<figure>
+    
+        <img src="https://cdn-images-1.medium.com/max/800/1*qvzUNZUGrfG8pbgBLRlRnw.png" />
+    
+    
+</figure>
+
+
+<p>In the mean time, Visual Studio and Xcode could ship with more third
+party libraries and that would solve at least half of the issues that
+this proposal is trying to solve.</p>
+
+      
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+</html>
+

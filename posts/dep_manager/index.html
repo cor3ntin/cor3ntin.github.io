@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Accio Dependency Manager | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="/"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg></i>
+            </span>
+          </a></nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">March 3, 2018</h2>
+    <h1 class="title">Accio Dependency Manager</h1>
+    
+    <div class="content" id="article">
+      
+
+<p>You may have noticed a number of “What should go in the Standard Library” posts over the last few days. These posts have generated quite a bit of comments on Reddit and discussions on Slack. I hope more people chime in.</p>
+
+<p>The conclusion is that we pretty much all agree to disagree on what the STL is or should be. I’m not sure we can even agree on what C++ is. Which tells you everything you need to know about C++.</p>
+
+<p>But there is a common sentiment transpiring from these discussions : “It would be pretty great if C++ had a package manager”. Something universal, powerful and easy to use.</p>
+
+<p>Meanwhile the <a href="https://t.co/R1B2cmu72C">C++ Committee is doing a survey </a>( which you should take if you are a C++ developer), Asking “How would you change C++ if you had a Magic Wand ?”</p>
+
+<p>Maybe we can use our magical powers to materialize a dependency manager out of thin air ? That would be pretty awesome.</p>
+
+<p>The first problem is that our spell only works if we can form a very precise mental model of what that dependency manager looks and acts like.</p>
+
+<h2 id="an-imaginary-dependency-manager">An Imaginary Dependency Manager</h2>
+
+<p>While discussing about it on the CppSlack, it became clear that people may not know what a dependency manager is. Or have varying opinions of what it is or ought to be.</p>
+
+<p>For some, it’s a way to <a href="https://github.com/dascandy/cpp-dependencies">manage headers in a given project</a> or a <a href="https://github.com/include-what-you-use/include-what-you-use">tool to get rid of useless headers</a>. Arch users were keen to let me know pacmac is all one ever needs.</p>
+
+<p>For me, simply, a dependency manager is a tool that lets me include an external dependency in my project. In exactly one simple command.</p>
+
+<p>But… what’s a dependency ? It may be a library, or a header only library. But take Qt for example. It has moc, rcc, uic and a bunch of other supporting binaries. So maybe a dependency can also be a tool/binary. But what if a project depends on llvm 7 , should that be a dependency ? Maybe ? I mean, why not ? Of course, system-provided libraries and packages should be preferred when available.</p>
+
+<p>As pointed out by Titus Winters, if we speak of “*Package Manager*”, people may assume the tool deals in binaries, and it’s probably not what we want (more on that later). Therefore, the term <strong>dependency</strong> is certainly more appropriate than “package”.</p>
+
+<p>We should also not conflate a “*system package manager*” with a “dependency manager”.</p>
+
+<p>A “*system package manager” *( aptfor example ), should be reserved for the installation of tools and applications, not something you use to manage the building blocks of a development project. And our “dependency manager” should not try to install things system wide. Linux distributions ( or brew ,chocolatey …) have their way of doing things and we should not interfere with that.</p>
+
+<p>The corollary is that, at no point, our tool should require root access. Never. Ever.</p>
+
+<h3 id="an-authoritative-dependency-manager">An Authoritative Dependency Manager</h3>
+
+<p>We still don’t even know how our mythical tool would work, but we know that it needs to be authoritative. We can’t afford multiple systems, because then different projects would use different, incompatible systems, and the initial premise of easily including any dependency in a project falls flat. We need exactly one package manager.</p>
+
+<p>Very few entities can manage that. I think that ideally it would need to be a concerted efforts by the C++ Committee ( whose prerogative does not extend beyond the design of the language) and major industry players (who may not agree with each other) and maintainers of existing tools. It’s a lot to dream for. But if every one continues to roll out their own tools I’m afraid we won’t ever get far.</p>
+
+<p>Note that it does not have to be perfect for everyone. But a large majority of users need to agree that’s it’s good enough and see the value in publishing their libraries on it.</p>
+
+<p>That does not necessarily mean that the system needs to be centralized. A centralized system would require an entity dedicated to maintaining it which would require money. It’s also unreliable and would mandate an access to internet which a lot of companies don’t provide their employees with. It may also not stand the test of time.</p>
+
+<p>People will also want to have company-wide repositories for their internal projects.</p>
+
+<p>Therefore our magical dependency manager provides</p>
+
+<ul>
+<li><p>Easy set up of a repository</p></li>
+
+<li><p>Easy setup of mirrors</p></li>
+</ul>
+
+<p>But it’s also very important that people can easily find and discover libraries, therefore we need a centralized index. Ideally, that index would be accompanied by a slick website where people can read a description of the library and maybe some statistics attesting of its popularity. Maybe a categories or tags system, license information, supported compilers/systems/architectures…</p>
+
+<p>It may seem unnecessary, but those the kind of things that would make the language more accessible.</p>
+
+<h3 id="a-sane-naming-scheme">A sane naming scheme</h3>
+
+<p>Ideally, no two C++ packages have conflicting identifiers. The first thing we can do is namespace package identifiers using an organization name, like Github does. So bjarne/foo is different from johndoe/foo.</p>
+
+<p>But how do we ensure that there is a single bjarne across the network ? Maybe we need to ensure the uniqueness of identities across the network ? Which may be tricky to do.</p>
+
+<p>Or maybe we need to tie the identity of a package publisher to a server, so that johndoe@google.com/foo and johndoe@microsoft.com/foo are two different packages ?</p>
+
+<p>Regardless, I think that identifying a package by its name alone would not be reasonable; a lot of projects use the same name, naming things is hard.</p>
+
+<p>In the age of GitHub, people should be free to fork their projects without fear of conflicts. I think systems of <em>packages priority</em> like apt-cache policy would be too clunky for a dependency manager as one may want to work on multiple forks of the same project.</p>
+
+<h3 id="a-sane-versioning-scheme">A sane versioning scheme</h3>
+
+<p>Something identical to <a href="https://semver.org/">https://semver.org/</a> — Aka Major version change indicates an API breakage. The meaning of version numbers is consistent across packages.</p>
+
+<p>Maybe we should provide support for special versions ( branch names, nightly).</p>
+
+<p>That was easy.</p>
+
+<h3 id="a-serious-dependency-manager">A Serious dependency Manager</h3>
+
+<p>I think a big issue with some tools provided by other languages / frameworks is that they don’t always take security and reliability seriously enough.</p>
+
+<p>That in turn has given a somewhat bad reputation to dependency managers.</p>
+
+<p>Obviously, packages cannot be altered after they have been published. So they need to be signed. It’s sad that this needs to be stated still, yet some existing tools deliver un-signed packages over a non-secure connection.</p>
+
+<p>It’s fortunate that our magic wand is powerful because we also should have a way to verify the identity of the dependency publisher. herb should not be able to push things as bjarne. Looking at existing package managers, a recurring issue seems to be name squatting, it’s reasonable to expect identity squatting would be an issue too. It brings us back to enforcing single-identity on a decentralized network. Maybe PGP could solve that issue.</p>
+
+<p>Security needs to be a property of the system. Not something that is either opt-in or opt-out. And so it’s important that it is simple to use. Easy to say, very hard to actually do. Which is why this is a blog post and not a GitHub repository.</p>
+
+<p>I have been wondering whether having a way to publish and be notified of security issues directly through the dependency manager would be a good idea. <a href="https://snyk.io/">External solutions exist</a> but it’s very important that if a known vulnerability is found in say, cryptographic or network code, users be notified as soon as possible.</p>
+
+<p>The system needs to be append only. There is no protocol to remove a pushed dependency/package from the network.</p>
+
+<p>As soon as something is online ( in a public repository ), we should assume that somebody depends on it and therefore we cannot delete it. Of course it can not be enforced that a given server won’t delete something, so the best solution is to prevent deletion in the mirroring protocol. Storage is cheap, breaking a dependency chain can easily cost millions. If deletion is something people really want, it should be a long process with notification of depreciation long before the files actually get purged.</p>
+
+<p>Being decentralized, the tool is hopefully resilient to the demise of any single entity and the loss of any server.</p>
+
+<p>Lastly, the packages can be audited, which leads us to our next point.</p>
+
+<h3 id="a-source-based-dependency-manager">A source-based dependency manager</h3>
+
+<p>The system should only distribute sources.</p>
+
+<p>As I said, binaries represent a security risks as they cannot be audited. I’m aware that, in most cases this is a theoretical and psychological concern as most source-distributed packages won’t be audited anyway. But it’s important that they <em>can</em> be.</p>
+
+<p>Sources are also cheaper to store. Most importantly, for a given source, there is an almost infinite number of binary versions as they depend on</p>
+
+<ul>
+<li><p>The lib C version</p></li>
+
+<li><p>The operating system, CPU, architecture, CPU generation in some cases, instruction sets….</p></li>
+
+<li><p>The Compiler / Compiler version</p></li>
+
+<li><p>A whole bunch of compiler flags</p></li>
+</ul>
+
+<p>And of course, that applies to all dependencies transitively.</p>
+
+<p>It’s also hard to describe that two given binary artifacts are compatible with each others in the general case. I think it would require both a formal ABI specification and maybe a formal description of the effect of the compiler flags. I don’t see that happening</p>
+
+<h3 id="but-compile-times-are-slow">But compile times are slow ?</h3>
+
+<p>That may be true but the issue is orthogonal. Local or remote caching is a better, safer way to solve slow build times. As concepts become more popular, which I hope they will, there will be little to put in implementation files anyway. Maybe compilers can be made faster still ( compiler writers : please don’t send a hit squad).</p>
+
+<h3 id="what-s-a-dependency-anyway">What’s a dependency anyway</h3>
+
+<p>A dependency is probably a signed a tarball, containing the source code, and some metadata (including the list of its dependencies). And as I said, that dependency is stored on some mirror server somewhere.</p>
+
+<p>It’s specifically *not *a link to GitHub. Ironically, GitHub is a single point of failure. It’s also, as proven by recent issues with npm, not immutable.</p>
+
+<p>A dependency also comes with its build script… Which brings us to the main issue : How do we get the damn thing to build ?</p>
+
+<h2 id="building-dependencies">Building dependencies</h2>
+
+<p>Some argue that we would need an authoritative build system. And boy , would that be great. Except people usually put cmake forward as a candidate and cmake is terrible.</p>
+
+<p>So while thinking about what a perfect magical build system would look like, I think a better question is : Do we need one ?</p>
+
+<p>I posit that we don’t.</p>
+
+<p>Regardless of how complex your build system is, at the end of the day, it’s a command that takes some parameters and creates artifacts.</p>
+
+<p>So we need:</p>
+
+<ul>
+<li><p>A way to invoke the build system of the dependency</p></li>
+
+<li><p>A way to pass compiler flags to that build system. What that means is that the top-level project, the one you work on, decides the flags of all its dependencies, including debug / optimization levels, warnings, etc</p></li>
+
+<li><p>A way to then map out the build artifacts to dependency identifiers. Note that along libraries and modules, a dependency can export macro (unfortunately), and maybe even compiler flags.</p></li>
+</ul>
+
+<p>It’s easy to achieve this in a controlled environment, but in the general case there are a few problems to solve:</p>
+
+<ul>
+<li><p>We may want that libraries available on the system be preferred over the one in the dependency manager. Unfortunately, both the name and the version number may not match. And typically, various linux distros use different names for the same library.</p></li>
+
+<li><p>We may need to configure a dependency ( direct or transitive ) to be say either static or dynamically linked, or activate some compile time behavior.</p></li>
+
+<li><p>It requires that build scripts be sane, aka that they don’t specify configuration-specific options ( warnings, optimization, debug, sanitizers, etc).</p></li>
+</ul>
+
+<p>There is also the concern that having a single build system may be faster because of better parallelism. But hey. Think about all the time lost not having a dependency manager !</p>
+
+<p>And of course, we need all the build systems ( or meta build systems ) involved in the dependency chain to actually support the dependency management tool ( aka that they bubble up a list of artifacts / flags / etc). Fortunately, our official dependency manager is popular enough that tool vendors have incentives to support it. Magic.</p>
+
+<h2 id="how-would-it-work">How would it work ?</h2>
+
+<p>I try to design softwares by starting with the workflow. So let’s do that.</p>
+
+<p>C++ has complex build systems. And we decided it was out of scope to fix that ( assuming it could be).</p>
+
+<p>So, we need a build system. I’ll do a terrible thing and use cmake as an example. Sorry.</p>
+
+<p>To use Boost.Asio (installed on the system) one do:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">find_package</span>(<span style="color:#d20;background-color:#fff0f0">Boost</span> <span style="color:#d20;background-color:#fff0f0">1.66</span> <span style="color:#d20;background-color:#fff0f0">COMPONENTS</span> <span style="color:#d20;background-color:#fff0f0">system</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_include_directories</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> ${<span style="color:#369">Boost_INCLUDE_DIR</span>})<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">foo.cpp</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_libraries</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> ${<span style="color:#369">Boost_LIBRARIES</span>})</code></pre></div>
+<p>This is insane ! But never mind. Using the same syntax, one could do</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">find_cpp_dependency</span>(<span style="color:#d20;background-color:#fff0f0">BOOST_ASIO</span> <span style="color:#d20;background-color:#fff0f0">&#34;boost/boost.asio&#34;</span> <span style="color:#d20;background-color:#fff0f0">VERSION</span> <span style="color:#d20;background-color:#fff0f0">1.66</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">foo.cpp</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">BOOST_ASIO</span>)</code></pre></div>
+<p>Upon running cmake that should:</p>
+
+<ul>
+<li><p>Look for a copy of Boost.Asio on the local machine’s cache.</p></li>
+
+<li><p>Look for that dependency on a remote server. The tool should have a list of mirrors baked in, and select the closest/fastest node to get the dependency from. Users, especially beginners should not have to care about where dependencies come from</p></li>
+
+<li><p>Look for/download dependencies transitively</p></li>
+
+<li><p>As usual, CMake should compute a list of compiler flags</p></li>
+
+<li><p>Then all dependencies are built. So maybe it calls bjam -with-system toolset=clang( bjam being the build tool used by boost).</p></li>
+
+<li><p>Hopefully the build is successful and outputs a list of compile flags in a format that could look very much like pkgconfig</p></li>
+
+<li><p>Those flags are then extracted by cmake and are forwarded to the build of the targets depending on asio, in this case foo.</p></li>
+</ul>
+
+<p>It really should not be harder than that. Not in the simple case. Maybe someone will want to build asio with no thread support in which case we pass extra arguments to the dependency build:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">find_cpp_dependency</span>(<span style="color:#d20;background-color:#fff0f0">BOOST_ASIO</span> <span style="color:#d20;background-color:#fff0f0">&#34;boost/boost.asio&#34;</span>
+                    <span style="color:#d20;background-color:#fff0f0">VERSION</span> <span style="color:#d20;background-color:#fff0f0">1.66</span>
+                    <span style="color:#d20;background-color:#fff0f0">ARGS</span> <span style="color:#d20;background-color:#fff0f0">--disable-threads</span> )</code></pre></div>
+<h2 id="the-python-way">The Python way</h2>
+
+<p>In Python you can install a package using pip install foo. And then import modules in the code using import foo .</p>
+
+<p>Note that there isn’t a direct equivalence between module names and packages names. for example the amazing BeautifulSoup library is installed by pip install beautifulsoup4 and imported by import bs4.</p>
+
+<p>That behavior could be matched. The workflow would be as follows:</p>
+
+<ul>
+<li><p>The user downloads a dependency by running idm get foo , where idm stands for <em>imaginary dependency manager</em>. At this point, we are not compiling anything, merely downloading some source files and putting them in a fixed location.</p></li>
+
+<li><p>The metadata of the downloaded library describes a list of modules, with which we can construct a mapping module name -&gt; dependency name.</p></li>
+
+<li><p>With that, we can imagine the following CMakeLists.txt</p></li>
+</ul>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">set</span>(<span style="color:#d20;background-color:#fff0f0">SCAN_MODULES</span> <span style="color:#d20;background-color:#fff0f0">ON</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">foo.cpp</span>)</code></pre></div>
+<p>And the following foo.cpp</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">import fmt.fmt
+<span style="color:#888;font-weight:bold">int</span> main () {
+    fmt::print(<span style="color:#d20;background-color:#fff0f0">u8</span><span style="color:#d20;background-color:#fff0f0">&#34;Hello imaginary world {}!&#34;</span>, u8<span style="color:#d20;background-color:#fff0f0">&#39;🦄&#39;</span>);
+}
+</code></pre></div>
+<p>The build process would look like:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#888"># cmake .
+</span><span style="color:#888"></span>
+-- Scanning foo.cpp
+-- idm search-module fmt
+-- idm get fmtlib/fmmt <span style="color:#00d;font-weight:bold">4</span>.10.05
+Download http://deps.isocpp.orgs/dist/fmtlib/fmt-4.10.05.tar
+Done.
+
+<span style="color:#888"># make
+</span><span style="color:#888"></span>
+clang++ --precompile <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>    <span style="color:#369">$IDM_DIR</span>/fmtlib/fmt/4.10.05/fmt.cppm -o .deps/modules/fmt.pcm
+clang++ -o foo foo.cpp -fmodule-file=.deps/modules/fmt.pcm</code></pre></div>
+<p>Of course for that to work, module names should not conflict across libraries so maybe we should enforce a consistent naming scheme for modules, like the first component of the module name being the organisation name</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">import boost.spirit        <span style="color:#888">//package boost/boost-spirit
+</span><span style="color:#888"></span>import <span style="color:#080;font-weight:bold">catch</span>.catch2.main   <span style="color:#888">//package catch/catch2
+</span><span style="color:#888"></span>import nlohmann.json       <span style="color:#888">//package nlohmann/json
+</span><span style="color:#888"></span></code></pre></div>
+<p>This can’t possibly work right ? But look at it this way, all these libraries are headers only, it does not work much differently from Python. You could even think that module files are to pyc what py files are to headers.</p>
+
+<p>After the initial scanning, you would get a file describing the dependencies, letting you change the version used.</p>
+
+<p>The point is that dependencies should be easy to add to a project, and described at a single location : Either in whatever build system you use or in a some other file but not both.</p>
+
+<p>You should not need to read a 5 pages long “*getting started*” guide. Especially if we want more high quality libraries while having less libraries inclusion in the standard.</p>
+
+<p>We could go further of course, for example auto-completion of non-installed module names in your favorite IDE.</p>
+
+<h2 id="summing-up">Summing up</h2>
+
+<p>The way I see it, a dependency manager should be:</p>
+
+<ul>
+<li><p>Decentralized</p></li>
+
+<li><p>Have discovery and aggregation features that are or feel centralized, so that end users don’t have to handle URL/URI.</p></li>
+
+<li><p>Impervious to the loss of nodes, robust and transparently mirrored</p></li>
+
+<li><p>Based on strong security foundations</p></li>
+
+<li><p>Orthogonal to build systems</p></li>
+
+<li><p>Only handling sources, not binaries</p></li>
+
+<li><p>Easy to use for a variety of use cases.</p></li>
+</ul>
+
+<h2 id="that-brings-us-to-our-second-problem">That brings us to our second problem</h2>
+
+<p>Magic does not exist.</p>
+
+<p><img src="https://cdn-images-1.medium.com/max/3200/1*Fd051TnTlBvMT1ZxCiNhfw.jpeg" alt="" /></p>
+
+      
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+</html>
+

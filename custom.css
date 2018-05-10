@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:500&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i');
+
+pre code {
+    margin-top : 2em;
+    margin-bottom : 2em;
+    font-size: 120% !important ;
+    background-color: #FFFCF1 !important;
+    font-family: 'IBM Plex Mono', monospace !important;
+}
+
+figure img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  vertical-align: top;
+}
+
+figure figcaption {
+    margin-top: 1em;
+    margin-bottom: 3em;
+    text-align: center;
+}
+
+
+figure {
+  display: block !important;
+  margin-bottom: 5em !important;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+code.has-jax {font: inherit;
+              font-size: 100%;
+              background: inherit;
+              border: inherit;
+              color: #515151;}

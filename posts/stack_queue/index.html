@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Stranded with a C&#43;&#43; compiler and a bunch of queues | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="/"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg></i>
+            </span>
+          </a></nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">October 31, 2016</h2>
+    <h1 class="title">Stranded with a C&#43;&#43; compiler and a bunch of queues</h1>
+    
+    <div class="content" id="article">
+      <p>A friend had a phone interview for a job in a company that I won’t name
+- It’s Microsoft. One of the questions was about describing how he would
+write a stack, only using standard queues.</p>
+
+<p>I was confounded, because long before an algorithm could form in my
+mind, I already decided that there was no solution that would actually
+be useful in any real life scenario.</p>
+
+<p>That the only solution I could find; To be honest, I was too lazy to
+come up with the algorithm myself, but it’s really straight forward.</p>
+
+<p>It has $\mathcal{O}( n )$ complexity, and… let’s just say it does not really scale.</p>
+
+<p>But, it’s quite an interesting algorithm nonetheless. See, for a huge
+company to ask this question to every candidate, I can only assume one
+former employee found themselves stranded on an island, with a bunch of
+queues. Their survival depended on having a stack, they failed to come
+up with the proper solution and died.</p>
+
+<p>It’s the only explanation that make sense to me; The other explanation
+would be that large companies ask really stupid &amp; meaningless interview
+questions, and, well… that’s just silly.</p>
+
+<p>Then, my friend told me the next question was about creating a queue
+using stacks.</p>
+
+<p>Sure, why not ?</p>
+
+<p>My friend and I debated about the complexity of this algorithm. I
+explained to him it was n². If our hero was stranded on an island, they
+could not have standard stacks shipped their way by amazon, and would
+have had to use what they had: a stack made of queues.</p>
+
+<p>Of course, our unfortunate hero had a stock of standard queues to begin
+with, but maybe hey could’t use them, for some reason. After all, he
+didn’t invent them himself so it was better to rewrite them anyway.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt; <span style="color:#080;font-weight:bold">using</span> MyQueue = queue&lt;T, stack&lt;T&gt;&gt;;
+</code></pre></div>
+<p>By that point, the poor cast away recognize a knife would have been more
+useful than a standard container and they realized their death was
+nothing but certain.</p>
+
+<p>And, as the hunger and their impending doom lead to dementia, they
+started to wonder… can we go deeper ?</p>
+
+<p>After all, it is good practice to have good, solid foundations, and a
+bit of judiciously placed redundancy never hurts.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+<span style="color:#080;font-weight:bold">using</span> MyQueue = queue&lt;T, stack&lt;T, queue&lt;T, stack&lt;T, std::queue&lt;T&gt;&gt;&gt;&gt;&gt;
+</code></pre></div>
+
+<figure>
+    
+        <img src="https://cdn-images-1.medium.com/max/800/1*-lkFAZJdBQPlFLtCfU86OQ.png" />
+    
+    
+    <figcaption>
+        <h4>A tree representation of a stack based queue</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>The structure has the property of being self-tested and grows
+exponentially more robust at the rate of 2\^n which could prove very
+useful for critical applications. We can however lament that 4 levels is
+a bit arbitrary and limited.</p>
+
+<p>Fortunately, I made the assumption that our hero, has with them a C++
+compiler. That may be a depressing consideration when you haven’t drink
+for 3 days, but, isn’t meta programming fantastic ?</p>
+
+<p>After a bit a tinkering, cursing and recursing, it is possible to create
+a queue of stacks - or a stack of queue - of arbitrary depth.</p>
+
+<p>They are pretty cool and easy to use:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">inception::stack&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#00d;font-weight:bold">13</span>&gt; stack;
+inception::queue&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#00d;font-weight:bold">13</span>&gt; stack;
+</code></pre></div>
+<p>On the system it was tested with, $N=13$ was sadly the maximum possible
+value for which the program would not crash at runtime - The deepest
+level consists of 8192 queues. The compiler was unable to compile a
+program for $N &gt; 47$. At that point the generated executable weighted
+merely 240MB</p>
+
+<p>I expect these issues to be resolved as the present solution - for which
+a Microsoft employee probably gave their life - gains in popularity.
+However, for $N &gt; 200$, the author reckon than the invention of
+hardware able to withstand the heat death of the universe is necessary.</p>
+
+<p>You may be wondering if you should use those containers in your next
+application ? Definitively ! Here are some suggestions.</p>
+
+<ul>
+<li><p>An internet enabled toaster : A sufficiently big value of $N$ should
+let you use the CPU as the sole heating element leading to a to a
+slimmer and more streamlined design, as well as reducing
+manufacturing costs.</p></li>
+
+<li><p>In an authentication layer, as the system has a natural protection
+against brute force attacks. N should be at least inversely
+proportional to the minimum entropy of your stupid password creation
+rules. The presented solution is however not sufficient to prevent
+Ddos</p></li>
+
+<li><p>Everywhere you wondered if you should use a vector but used a linked
+list instead.</p></li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+</html>
+
