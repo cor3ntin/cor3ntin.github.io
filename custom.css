@@ -40,4 +40,40 @@ code.has-jax {font: inherit;
               font-size: 100%;
               background: inherit;
               border: inherit;
-              color: #515151;}
+            }
+
+
+div#socialshareDiv {
+    display: block !important;;
+    margin-top: 50px !important;
+    float: right;
+}
+
+#socialshareDiv h1 {
+    display:inline !important;
+    margin-right:25px;
+    vertical-align: middle;
+}
+
+.icon-share-span > a {
+    vertical-align:center;
+    height:2em !important;
+    width :2em !important;
+    margin-right:15px;
+    display:inline-block !important;
+    vertical-align: middle;
+}
+
+.icon-share-twitter > svg {
+    fill: #1DA1F2;
+}
+
+.icon-share-reddit > svg {
+    fill: #FF5700;
+}
+
+.icon-share-hn > svg {
+    fill: #ff6600;
+}
+
+
