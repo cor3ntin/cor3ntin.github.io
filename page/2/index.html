@@ -115,7 +115,7 @@ I like that quote. it explains both JavaScript and Haskell. And by that measure 
       <div class="content">
         A friend had a phone interview for a job in a company that I won’t name - It’s Microsoft. One of the questions was about describing how he would write a stack, only using standard queues.
 I was confounded, because long before an algorithm could form in my mind, I already decided that there was no solution that would actually be useful in any real life scenario.
-That the only solution I could find; To be honest, I was too lazy to come up with the algorithm myself, but it’s really straight forward.
+template &lt;typename T, typename Container = std::queue&lt;T&gt;&gt; class stack { public: void push(const T &amp;); void pop(); T&amp; top(); std::size_t size() const; bool empty() const; private: void transfer(); Container a, b; }; template &lt;typename T, typename Container&gt; void stack&lt;T, Container&gt;::push(const T&amp; t) { a.
         
         <a class="button is-link" href="https://cor3ntin.github.io/posts/stack_queue/" style="height:28px">
           Read more

@@ -70,6 +70,45 @@ write a stack, only using standard queues.</p>
 mind, I already decided that there was no solution that would actually
 be useful in any real life scenario.</p>
 
+<div class="compiler_explorer compiler_explorer_block highlight"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container = std::queue&lt;T&gt;&gt;
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">stack</span> {
+<span style="color:#080;font-weight:bold">public</span>:
+    <span style="color:#888;font-weight:bold">void</span> push(<span style="color:#080;font-weight:bold">const</span> T &amp;);
+    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">pop</span>();
+    T&amp; top();
+    std::size_t size() <span style="color:#080;font-weight:bold">const</span>;
+    <span style="color:#888;font-weight:bold">bool</span> <span style="color:#06b;font-weight:bold">empty</span>() <span style="color:#080;font-weight:bold">const</span>;
+
+<span style="color:#080;font-weight:bold">private</span>:
+    <span style="color:#888;font-weight:bold">void</span> transfer();
+    Container a, b;
+};
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container&gt;
+<span style="color:#888;font-weight:bold">void</span> stack&lt;T, Container&gt;::push(<span style="color:#080;font-weight:bold">const</span> T&amp; t) {
+    a.push(t);
+}
+
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container&gt;
+<span style="color:#888;font-weight:bold">void</span> stack&lt;T, Container&gt;::pop() {
+    transfer();
+    a.pop();
+    std::swap(a, b);
+}
+
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container&gt;
+<span style="color:#888;font-weight:bold">void</span> stack&lt;T, Container&gt;::transfer() {
+    <span style="color:#080;font-weight:bold">while</span>(a.size() &gt; <span style="color:#00d;font-weight:bold">1</span>) {
+        T t = a.front();
+        a.pop();
+        b.push(t);
+    }
+}
+</code></pre></div>
+
+</div>
+
+
 <p>That the only solution I could find; To be honest, I was too lazy to
 come up with the algorithm myself, but it’s really straight forward.</p>
 
@@ -83,12 +122,51 @@ up with the proper solution and died.</p>
 
 <p>It’s the only explanation that make sense to me; The other explanation
 would be that large companies ask really stupid &amp; meaningless interview
-questions, and, well… that’s just silly.</p>
+questions, and, well&hellip; that’s just silly.</p>
 
 <p>Then, my friend told me the next question was about creating a queue
 using stacks.</p>
 
-<p>Sure, why not ?</p>
+<p>Sure, why not ?
+<div class="compiler_explorer compiler_explorer_block highlight"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container&gt;
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">queue</span> {
+<span style="color:#080;font-weight:bold">public</span>:
+    <span style="color:#888;font-weight:bold">void</span> push(<span style="color:#080;font-weight:bold">const</span> T &amp;);
+    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">pop</span>();
+    T&amp; front();
+    std::size_t size() <span style="color:#080;font-weight:bold">const</span>;
+    <span style="color:#888;font-weight:bold">bool</span> <span style="color:#06b;font-weight:bold">empty</span>() <span style="color:#080;font-weight:bold">const</span>;
+
+<span style="color:#080;font-weight:bold">private</span>:
+    <span style="color:#888;font-weight:bold">void</span> transfer();
+    Container a, b;
+};
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container&gt;
+<span style="color:#888;font-weight:bold">void</span> queue&lt;T, Container&gt;::push(<span style="color:#080;font-weight:bold">const</span> T&amp; t) {
+    a.push(t);
+}
+
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container&gt;
+<span style="color:#888;font-weight:bold">void</span> queue&lt;T, Container&gt;::pop() {
+    transfer();
+    b.pop();
+}
+
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container&gt;
+<span style="color:#888;font-weight:bold">void</span> queue&lt;T, Container&gt;::transfer() {
+    <span style="color:#080;font-weight:bold">if</span>(b.empty()) {
+        <span style="color:#080;font-weight:bold">while</span>(!a.empty()) {
+            T t = a.top();
+            a.pop();
+            b.push(t);
+        }
+    }
+}
+</code></pre></div>
+
+</div>
+</p>
 
 <p>My friend and I debated about the complexity of this algorithm. I
 explained to him it was n². If our hero was stranded on an island, they
@@ -105,7 +183,7 @@ useful than a standard container and they realized their death was
 nothing but certain.</p>
 
 <p>And, as the hunger and their impending doom lead to dementia, they
-started to wonder… can we go deeper ?</p>
+started to wonder… can we go deeper ?</p>
 
 <p>After all, it is good practice to have good, solid foundations, and a
 bit of judiciously placed redundancy never hurts.</p>

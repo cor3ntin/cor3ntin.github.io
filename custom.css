@@ -2,11 +2,16 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i');
 
 pre code{
-    margin-top : 0em  !important;
-    margin-bottom : 0em  !important;
+    margin-top : 2em  !important;
+    margin-bottom : 2em  !important;
     font-size: 120% !important ;
     background-color: #FFFCF1 !important;
     font-family: 'IBM Plex Mono', monospace !important;
+}
+
+.compiler_explorer_block pre code {
+    margin-top : 0em  !important;
+    margin-bottom : 0em  !important;
     padding-top:0 !important;
 }
 
