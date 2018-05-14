@@ -138,9 +138,62 @@ for 3 days, but, isn’t meta programming fantastic ?</p>
 <p>After a bit a tinkering, cursing and recursing, it is possible to create
 a queue of stacks - or a stack of queue - of arbitrary depth.</p>
 
+<div class="compiler_explorer compiler_explorer_block highlight"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">namespace</span> details {
+    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>...Args&gt;
+    <span style="color:#080;font-weight:bold">struct</span> outer {
+        <span style="color:#080;font-weight:bold">using</span> type = queue&lt;T, Args...&gt;;
+    };
+
+
+    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>...Args&gt;
+    <span style="color:#080;font-weight:bold">struct</span> outer&lt;T, stack&lt;Args...&gt;&gt; {
+        <span style="color:#080;font-weight:bold">using</span> type = queue&lt;T, stack&lt;Args...&gt;&gt;;
+    };
+
+    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>...Args&gt;
+    <span style="color:#080;font-weight:bold">struct</span> outer&lt;T, queue&lt;Args...&gt;&gt; {
+        <span style="color:#080;font-weight:bold">using</span> type = stack&lt;T, queue&lt;Args...&gt;&gt;;
+    };
+
+    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">unsigned</span> N, <span style="color:#080;font-weight:bold">typename</span> T&gt;
+    <span style="color:#080;font-weight:bold">struct</span> stack_generator {
+        <span style="color:#080;font-weight:bold">using</span> type  = <span style="color:#080;font-weight:bold">typename</span> outer&lt;T, <span style="color:#080;font-weight:bold">typename</span> stack_generator&lt;N-<span style="color:#00d;font-weight:bold">1</span>, T&gt;::type&gt;::type;
+    };
+    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">unsigned</span> N, <span style="color:#080;font-weight:bold">typename</span> T&gt;
+    <span style="color:#080;font-weight:bold">struct</span> queue_generator {
+        <span style="color:#080;font-weight:bold">using</span> type  = <span style="color:#080;font-weight:bold">typename</span> outer&lt;T, <span style="color:#080;font-weight:bold">typename</span> queue_generator&lt;N-<span style="color:#00d;font-weight:bold">1</span>, T&gt;::type&gt;::type;
+    };
+
+    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+    <span style="color:#080;font-weight:bold">struct</span> stack_generator&lt;<span style="color:#00d;font-weight:bold">0</span>, T&gt; {
+        <span style="color:#080;font-weight:bold">using</span> type = queue&lt;T&gt;;
+    };
+
+    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+    <span style="color:#080;font-weight:bold">struct</span> queue_generator&lt;<span style="color:#00d;font-weight:bold">0</span>, T&gt; {
+        <span style="color:#080;font-weight:bold">using</span> type = stack&lt;T&gt;;
+    };
+
+    <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">adjusted_size</span>(<span style="color:#888;font-weight:bold">int</span> i) {
+        <span style="color:#080;font-weight:bold">return</span> i % <span style="color:#00d;font-weight:bold">2</span> == <span style="color:#00d;font-weight:bold">0</span> ? i+<span style="color:#00d;font-weight:bold">1</span> : i;
+    }
+}
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">unsigned</span> N&gt;
+<span style="color:#080;font-weight:bold">using</span> stack = <span style="color:#080;font-weight:bold">typename</span> details::stack_generator&lt;details::adjusted_size(N), T&gt;::type;
+
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">unsigned</span> N&gt;
+<span style="color:#080;font-weight:bold">using</span> queue = <span style="color:#080;font-weight:bold">typename</span> details::stack_generator&lt;details::adjusted_size(N), T&gt;::type;
+
+
+</code></pre></div>
+
+</div>
+
+
 <p>They are pretty cool and easy to use:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">inception::stack&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#00d;font-weight:bold">13</span>&gt; stack;
-inception::queue&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#00d;font-weight:bold">13</span>&gt; stack;
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">stack&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#00d;font-weight:bold">13</span>&gt; stack;
+queue&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#00d;font-weight:bold">13</span>&gt; stack;
 </code></pre></div>
 <p>On the system it was tested with, $N=13$ was sadly the maximum possible
 value for which the program would not crash at runtime - The deepest
@@ -277,6 +330,63 @@ ga('send', 'pageview');
       }
     });
   })();
+</script>
+<script>
+(function () {
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element = ce_nodes[i];
+        let highlight = element.querySelector(".highlight");
+        let codeBlock = element.querySelector(".highlight code");
+        let source = unescape(codeBlock.textContent);
+        let content = [];
+        let compiler = "g81";
+        let options = "-O3"
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1.6
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options: options,
+                compiler: compiler,
+                fontScale: 1.0,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
 </script>
 </html>
 

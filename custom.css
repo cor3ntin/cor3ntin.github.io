@@ -1,12 +1,41 @@
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:500&subset=latin-ext');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i');
 
-pre code {
-    margin-top : 2em;
-    margin-bottom : 2em;
+pre code{
+    margin-top : 0em  !important;
+    margin-bottom : 0em  !important;
     font-size: 120% !important ;
     background-color: #FFFCF1 !important;
     font-family: 'IBM Plex Mono', monospace !important;
+    padding-top:0 !important;
+}
+
+.compiler_explorer_block {
+    position: relative;
+    width:100%;
+}
+
+.compiler-explorer-view-button {
+    width:15%;
+    margin:0;
+    padding: 0;
+    position: absolute;
+    right:0;
+    bottom:0%;
+    z-index: 0;
+    border-bottom:none !important;
+    opacity: 0.7;
+    margin-bottom:5x;
+    margin-right:5px;
+}
+
+.compiler-explorer-view-button:hover {
+    opacity: 1;
+}
+
+.compiler-explorer-view-button-img {
+    margin:0;
+    padding: 0;
 }
 
 figure img {
@@ -25,7 +54,6 @@ figure figcaption {
     margin: 0 auto;
     width: 300px;
 }
-
 
 figure {
   display: block !important;
