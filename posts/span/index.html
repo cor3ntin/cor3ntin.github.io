@@ -173,7 +173,7 @@ Nope, it is actually <code>string_view</code>.</p>
 First, we&rsquo;d like to make it as easy as possible to convert code to use string_view, so it&rsquo;s useful to keep the interface as similar as reasonable to std::string.</p>
 </blockquote>
 
-<p>There you have it : a backward compatibility wrat.</p>
+<p>There you have it : a backward compatibility wart.</p>
 
 <p>So, maybe we could actually define <code>std::string_view</code> in term of <code>span</code> ?</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> CharT&gt;
