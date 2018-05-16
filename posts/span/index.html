@@ -255,7 +255,7 @@ We can verify that this is indeed the case:</p>
 <p>We can refine that further, <code>span</code> is a <strong>contiguous range</strong>: A range whose elements are contiguous in memory.</p>
 
 <p>While currently neither the notion of <code>contiguous iterator</code> or the <code>ContiguousRange</code> concept are part of C++20, <a href="https://wg21.link/P0944">there is a proposal</a>.
-Weirdly, I couldn not find a proposal for <code>ContiguousRange</code>. Fortunately, it is implemented in <code>cmcstl2</code> so we can test for it.</p>
+<del>Weirdly, I couldn not find a proposal for <code>ContiguousRange</code></del><sup class="footnote-ref" id="fnref:fix-contiguous-range"><a href="#fn:fix-contiguous-range">1</a></sup>. Fortunately, it is implemented in <code>cmcstl2</code> so we can test for it.</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight">
     
@@ -506,7 +506,7 @@ that can easily lead to incorrect code.</p>
 
 <p>Tony Van Eerd having a knack for distilling fundamental truths,
 observed on slack that while the definition of <code>Regular</code> was quite precise (but, as it turns out, not quite precise enough to handle <code>struct {T* ptr };</code> ),
-its intent was to guarantee that handling <code>Regular</code> objects should have no effects on the rest of the program. Being proxy objects, <code>span</code> defie that expectation.</p>
+its intent was to guarantee that handling <code>Regular</code> objects should have no effects on the rest of the program. Being proxy objects, <code>span</code> defy that expectation.</p>
 
 <p>On the other side of the table, users of the STL can reasonably expect <code>span</code> to be a drop-in replacement for a <code>const vector &amp;</code>.
 And that happens to be mostly the case, you can compare it to a vector, iterate over it&hellip;
@@ -686,6 +686,15 @@ And I wonder if - as much fun as it may be to see them jumping over the canopee 
     
 </figure>
 
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:fix-contiguous-range">I originally mentionned incorrectly that <code>ContiguousRange</code> was not proposed for inclusion in the C++ Standard. <a href="https://wg21.link/P0944">This is incorrect</a>
+ <a class="footnote-return" href="#fnref:fix-contiguous-range"><sup>[return]</sup></a></li>
+</ol>
+</div>
 
       
     <div id="socialshareDiv">
