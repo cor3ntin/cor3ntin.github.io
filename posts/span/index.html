@@ -218,12 +218,12 @@ So, <code>std::span</code> is a view, <code>std::view</code> is a span, both cla
 <p>So much similar in fact that <a href="http://wg21.link/P0123">a brave soul suggested that they could be merged</a>.
 That was back in 2015 when <code>span</code> was still called <code>array_view</code>.</p>
 
-<p>Unfortunately, some people now think the term <code>view</code> somehow implies immuable.</p>
+<p>Unfortunately, some people now think the term <code>view</code> somehow implies immutable.</p>
 
 <p>But the only reason one might think so boils down to <code>string</code> hijacking a vocabulary type all for it self.
 And guess what&rsquo;s the last thing you should do to a utfX encoded string? Randomly slicing it into views at code unit/bytes boundary.</p>
 
-<p>In the <em>Ranges TS</em>, nothing either implies views are immuable:
+<p>In the <em>Ranges TS</em>, nothing either implies views are immutable:
 &gt; The View concept specifies the requirements of a Range type that has constant time copy, move and assignment operators;
 &gt; that is, the cost of these operations is not proportional to the number of elements in the
 View.</p>
@@ -514,7 +514,7 @@ Until of course, you try to copy it or change its value, then it stops acting li
 
 <h1 id="unmet-expectations">Unmet expectations</h1>
 
-<p><code>span</code> is a <code>Regular</code> type. <code>span</code> is a pointer to a chuck of memory. <code>span</code> is a value. <code>span</code> is <code>SemiRegular</code>, not <code>Regular</code>.
+<p><code>span</code> is a <code>Regular</code> type. <code>span</code> is a pointer to a chunk of memory. <code>span</code> is a value. <code>span</code> is <code>SemiRegular</code>, not <code>Regular</code>.
 <code>span</code> looks like a castor and bites like a snake, but is actually a duck-billed platypus, a monstrous hybrid that foils every attempt at
 classification.</p>
 
@@ -665,7 +665,7 @@ And I wonder if - as much fun as it may be to see them jumping over the canopee 
 
 <p>Maybe that&rsquo;s not quite accurate. But we need an unifying theory of everything.</p>
 
-<p>To conclude this short introduction of <code>span</code>, I will let you with this photo of a giraffe.</p>
+<p>To conclude this short introduction of <code>span</code>, I will leave you with this photo of a giraffe.</p>
 
 
 <figure>
