@@ -66,8 +66,8 @@
 
 <p>The papers that will be discussed at the next C++ committee meeting <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/#mailing2018-04">are out</a>.
 The listing contains a number of interesting and controversial papers.
-Among them, <a href="wg21.link/p0709">Herbceptions</a>, a number of concurrent concurrency proposals, a <a href="wg21.link/P1063">proposal</a> calling for major design changes in the coroutines TS,
-And an easy-to-review, <a href="P1037">200 hundred pages</a> long proposal to unify the Range TS in the <code>std</code> namespace.</p>
+Among them, <a href="https://wg21.link/p0709">Herbceptions</a>, a number of concurrent concurrency proposals, a <a href="https://wg21.link/P1063">proposal</a> calling for major design changes in the coroutines TS,
+And an easy-to-review, <a href="https://wg21.link/P1037">200 hundred pages</a> long proposal to unify the Range TS in the <code>std</code> namespace.</p>
 
 <p>In total, there are about 140 papers all rather interesting.</p>
 
@@ -166,7 +166,7 @@ Nope, it is actually <code>string_view</code>.</p>
 
 <p>It has all the same special snowflakes methods that <code>string</code> has.</p>
 
-<p>I am mean, those methods aren&rsquo;t that bad. The author of the <a href="http://wg21.link/n3921"><code>string_view</code> paper</a> had some very nice thing to say about them:</p>
+<p>I am mean, those methods aren&rsquo;t that bad. The author of the <a href="https://wg21.link/n3921"><code>string_view</code> paper</a> had some very nice thing to say about them:</p>
 
 <blockquote>
 <p>Many people have asked why we aren&rsquo;t removing all of the find* methods, since they&rsquo;re widely considered a wart on std::string.
@@ -191,7 +191,7 @@ First, we&rsquo;d like to make it as easy as possible to convert code to use str
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> CharT&gt;
 <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">basic_string_view</span> : <span style="color:#080;font-weight:bold">public</span> std::span&lt;<span style="color:#080;font-weight:bold">const</span> CharT&gt; {<span style="color:#888">/**/</span>};
 </code></pre></div>
-<p>Going back to the <a href="http://wg21.link/n3921"><code>string_view</code> paper</a>, the author explains that:</p>
+<p>Going back to the <a href="https://wg21.link/n3921"><code>string_view</code> paper</a>, the author explains that:</p>
 
 <blockquote>
 <p>The constant case is enough more common than the mutable case that it needs to be the default.
@@ -215,7 +215,7 @@ Since <code>mutable</code> always is the default, the language do not provide a 
 <p>Special snowflake methods aside, there is 0 difference between <code>typedef basic_string_view&lt;const char&gt; string_view</code> and <code>basic_string_view : public std::span&lt;CharT&gt;</code>.
 So, <code>std::span</code> is a view, <code>std::view</code> is a span, both classes are basically the same thing and have the same memory layout.</p>
 
-<p>So much similar in fact that <a href="http://wg21.link/P0123">a brave soul suggested that they could be merged</a>.
+<p>So much similar in fact that <a href="https://wg21.link/P0123">a brave soul suggested that they could be merged</a>.
 That was back in 2015 when <code>span</code> was still called <code>array_view</code>.</p>
 
 <p>Unfortunately, some people now think the term <code>view</code> somehow implies immutable.</p>
@@ -356,7 +356,7 @@ it is not possible to construct a <code>span</code>.</p>
 
 
 <p>So one one hand, <code>span</code> is a range, on the other hand, it does not play well with ranges.
-To be fair, <code>span</code> was voted in the draft before the great <a href="http://wg21.link/P0944">Contiguous Ranges</a> paper could be presented.
+To be fair, <code>span</code> was voted in the draft before the great <a href="https://wg21.link/P0944">Contiguous Ranges</a> paper could be presented.
 But then again, that paper hasn&rsquo;t been updated afterwards and Contiguous Ranges have been <a href="https://wg21.link/n3884">discussed since 2014</a>, including by the
 string view paper.</p>
 
