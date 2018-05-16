@@ -159,7 +159,7 @@ That also includes the lexicographical comparators and the <code>find*()</code> 
 
 <p>For the time being, it&rsquo;s best to see <code>std::*string</code> as opaque containers of bytes. Like you would of a vector.</p>
 
-<p>Alas <code>string</code>, being the favorite child, got to have it&rsquo;s own non-owning wrapper 3 years before anyone else. So in C++17, was introduced <del><code>string_span</code></del>.
+<p>Alas <code>string</code>, being the favorite child, got to have its own non-owning wrapper 3 years before anyone else. So in C++17, was introduced <del><code>string_span</code></del>.
 Nope, it is actually <code>string_view</code>.</p>
 
 <p>It&rsquo;s a <code>string</code>, it&rsquo;s a <code>span</code>. It&rsquo;s the api of both mixed together. But it&rsquo;s called a <code>view</code>.</p>
@@ -220,7 +220,7 @@ That was back in 2015 when <code>span</code> was still called <code>array_view</
 
 <p>Unfortunately, some people now think the term <code>view</code> somehow implies immutable.</p>
 
-<p>But the only reason one might think so boils down to <code>string</code> hijacking a vocabulary type all for it self.
+<p>But the only reason one might think so boils down to <code>string</code> hijacking a vocabulary type all for itself.
 And guess what&rsquo;s the last thing you should do to a utfX encoded string? Randomly slicing it into views at code unit/bytes boundary.</p>
 
 <p>In the <em>Ranges TS</em>, nothing either implies views are immutable:
