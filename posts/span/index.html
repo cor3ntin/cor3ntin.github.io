@@ -394,6 +394,20 @@ int main() {
 <p>Because we are speaking about contiguous memory, there is an equivalent relationship between a pair of
 <code>(begin, end)</code> pointers and a <code>begin</code> pointer + the size.</p>
 
+
+<figure>
+    
+        <img src="drake.jpeg" />
+    
+    
+    <figcaption>
+        <h4>Ranges all the things</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
 <p>Given that, we can rewrite our span class</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight">
@@ -507,10 +521,13 @@ classification.</p>
 <p><code>span</code> has a dual nature, an irreconcilable ambivalence that gets half the committee scrambling hopelessly to find some form
 of solace in the teachings of Alexander Stepanov while the other half has been caught whispering that maybe we should rewrite everything in rust.</p>
 
-<h3 id="can-you-freaking-stop-with-the-lyrical-dramatisation">Can you freaking stop with the lyrical dramatisation ?</h3>
+<blockquote>
+<p>Can you freaking stop with the lyrical dramatisation ?</p>
+</blockquote>
 
-<p>Hum, right. Sorry.
-But really, <code>span</code> tries to please both library writers as to be well behaving in generic algorithms and non-library writers as to offer a nice, easy to use API.
+<p>Hum, right. Sorry.</p>
+
+<p>But really, <code>span</code> tries to please both library writers as to be well behaving in generic algorithms and non-library writers as to offer a nice, easy to use API.
 Noble goals indeed.</p>
 
 <p>However, you can&rsquo;t have your cake and eat it too. And so is span bad at being a container proxy and bad as being a well behaved standard <code>Regular</code> type.
@@ -557,17 +574,17 @@ or the elements.</p>
 <p>There are supporters of both meanings and they are both <del>wrong</del> right.
 No really, I believe they are <em>wrong</em>. (I&rsquo;m gonna make so many friends with that article&hellip;).</p>
 
-<p>If both side of the arguments makes as much sense as the other, it&rsquo;s because there isn&rsquo;t an answer.
-It starts to be about made up arguments to back up one&rsquo;s personal preferences which usually is somewhere between thoose two extremes</p>
+<p>If both sides of the argument make as much sense as the other, it&rsquo;s because there isn&rsquo;t an answer.
+It starts to be about made up arguments to back up one&rsquo;s personal preferences which usually is somewhere between thoose two extremes:</p>
 
 <ul>
 <li>We should abide by the type categories and the standard library correctness otherwise we will inevitably blow our own foot.</li>
-<li>We should meet user expectations otherwise they will blow their foot and cut our heads.</li>
+<li>We should meet user expectations otherwise they will blow their foot and then have our heads.</li>
 </ul>
 
 <p>Both of which are very right and sensible positions to hold and respecting both these point of views is necessary.</p>
 
-<p>The only way to avoid a blood bath is to therefore remove completely all comparison operators.
+<p>The only way to avoid a blood bath is to therefore <strong>remove completely all comparison operators</strong>.
 If you can&rsquo;t compare them, you can&rsquo;t compare them wrongly.</p>
 
 <p>Unfortunately, if a type isn&rsquo;t comparable, the <code>stl</code> kinda stop working - the type stop being <code>Regular</code> and concretely sort and search algorithms will not work.</p>
