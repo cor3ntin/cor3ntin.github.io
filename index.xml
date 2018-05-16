@@ -6,10 +6,20 @@
     <description>Recent content on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 22 Apr 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 May 2018 12:36:14 +0200</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>A can of span</title>
+      <link>https://cor3ntin.github.io/posts/span/</link>
+      <pubDate>Mon, 14 May 2018 12:36:14 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/span/</guid>
+      <description>The papers that will be discussed at the next C++ committee meeting are out. The listing contains a number of interesting and controversial papers. Among them, Herbceptions, a number of concurrent concurrency proposals, a proposal calling for major design changes in the coroutines TS, And an easy-to-review, 200 hundred pages long proposal to unify the Range TS in the std namespace.
+In total, there are about 140 papers all rather interesting.</description>
+    </item>
     
     <item>
       <title>C&#43;&#43; Attributes</title>

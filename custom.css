@@ -15,6 +15,10 @@ pre code{
     padding-top:0 !important;
 }
 
+.highlight {
+    background-color: #FFFCF1 !important;
+}
+
 .compiler_explorer_block {
     position: relative;
     width:100%;

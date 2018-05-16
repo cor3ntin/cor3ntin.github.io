@@ -720,12 +720,11 @@ ga('send', 'pageview');
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
         let element = ce_nodes[i];
-        let highlight = element.querySelector(".highlight");
-        let codeBlock = element.querySelector(".highlight code");
-        let source = unescape(codeBlock.textContent);
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
         let content = [];
         let compiler = "g81";
-        let options = "-O3"
+        let options = "-O1 -fconcepts -std=c++2a"
         content.push({
             type: 'component',
             componentName: 'codeEditor',

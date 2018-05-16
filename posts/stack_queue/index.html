@@ -70,7 +70,8 @@ write a stack, only using standard queues.</p>
 mind, I already decided that there was no solution that would actually
 be useful in any real life scenario.</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container = std::queue&lt;T&gt;&gt;
 <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">stack</span> {
 <span style="color:#080;font-weight:bold">public</span>:
@@ -105,7 +106,6 @@ be useful in any real life scenario.</p>
     }
 }
 </code></pre></div>
-
 </div>
 
 
@@ -128,7 +128,8 @@ questions, and, well&hellip; that’s just silly.</p>
 using stacks.</p>
 
 <p>Sure, why not ?
-<div class="compiler_explorer compiler_explorer_block highlight"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container&gt;
 <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">queue</span> {
 <span style="color:#080;font-weight:bold">public</span>:
@@ -164,7 +165,6 @@ using stacks.</p>
     }
 }
 </code></pre></div>
-
 </div>
 </p>
 
@@ -216,7 +216,8 @@ for 3 days, but, isn’t meta programming fantastic ?</p>
 <p>After a bit a tinkering, cursing and recursing, it is possible to create
 a queue of stacks - or a stack of queue - of arbitrary depth.</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">namespace</span> details {
     <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>...Args&gt;
     <span style="color:#080;font-weight:bold">struct</span> outer {
@@ -265,7 +266,6 @@ a queue of stacks - or a stack of queue - of arbitrary depth.</p>
 
 
 </code></pre></div>
-
 </div>
 
 
@@ -414,12 +414,11 @@ ga('send', 'pageview');
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
         let element = ce_nodes[i];
-        let highlight = element.querySelector(".highlight");
-        let codeBlock = element.querySelector(".highlight code");
-        let source = unescape(codeBlock.textContent);
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
         let content = [];
         let compiler = "g81";
-        let options = "-O3"
+        let options = "-O1 -fconcepts -std=c++2a"
         content.push({
             type: 'component',
             componentName: 'codeEditor',

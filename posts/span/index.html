@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>A can of span | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">May 14, 2018</h2>
+    <h1 class="title">A can of span</h1>
+    
+    <div class="content">
+      
+
+<p>The papers that will be discussed at the next C++ committee meeting <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/#mailing2018-04">are out</a>.
+The listing contains a number of interesting and controversial papers.
+Among them, <a href="wg21.link/p0709">Herbceptions</a>, a number of concurrent concurrency proposals, a <a href="wg21.link/P1063">proposal</a> calling for major design changes in the coroutines TS,
+And an easy-to-review, <a href="P1037">200 hundred pages</a> long proposal to unify the Range TS in the <code>std</code> namespace.</p>
+
+<p>In total, there are about 140 papers all rather interesting.</p>
+
+<p>It&rsquo;s no wonder then that the hottest topic on the <a href="https://cpplang.now.sh/">Cpp Slack</a> these past few days is <code>std::span</code>.</p>
+
+<p><strong><em>Wait, what ?</em></strong></p>
+
+<p>First off, if you are not on the Cpp Slack, you should, it&rsquo;s a great community.</p>
+
+<p>Second, maybe you heard that <code>std::span</code> was already merged in the C++20 draft last meeting so why talk about it and why would a modest library addition make so much virtual ink flow ?</p>
+
+<p>Or maybe you never heard of <code>std::span</code> and are wondering what <code>std::span</code> even is.</p>
+
+
+<figure>
+    
+        <img src="question.gif" />
+    
+    
+    <figcaption>
+        <h4>Life, the universe and span</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Trying not to break any eggs, I would say it can be described as <strong>a fixed-sized, non-owning wrapper over a contiguous sequence of objects letting you iterate and mutate the individual items in that sequence</strong>.</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;gsl/span&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span>
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    std::vector&lt;std::string&gt; greeting = {<span style="color:#d20;background-color:#fff0f0">&#34;hello&#34;</span>, <span style="color:#d20;background-color:#fff0f0">&#34;world&#34;</span>};
+    gsl::span&lt;std::string&gt; span (greeting);
+    <span style="color:#080;font-weight:bold">for</span>(<span style="color:#080;font-weight:bold">auto</span> &amp;&amp; <span style="color:#369;font-style:italic">s</span> : span) {
+        s[<span style="color:#00d;font-weight:bold">0</span>] = std::toupper(s[<span style="color:#00d;font-weight:bold">0</span>]);
+    }
+    <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span>&amp; <span style="color:#369;font-style:italic">word</span>: greeting) {
+        std::cout &lt;&lt; word &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#39; &#39;</span>;
+    }
+}
+</code></pre></div>
+</div>
+
+
+<p>This simply prints <code>Hello World</code> and illustrate the mutability of span&rsquo;s content.</p>
+
+<p><code>span</code> can represent any contiguous sequence, including <code>std::array</code>, <code>std::string</code>, <code>T[]</code>, <code>T* + size</code>, or a subset or an array or a vector.</p>
+
+<p>Of course, not all containers are <code>span</code>, for example neither <code>std::list</code> or <code>std::deque</code> are contiguous in memory.</p>
+
+<h2 id="is-span-a-view">Is span a view ?</h2>
+
+<p>I&rsquo;m not quite sure how to answer that. I wonder what the proposal says. So let&rsquo;s read the <a href="https://wg21.link/P0122">span proposal</a>:</p>
+
+<blockquote>
+<p>The span type is an abstraction that provides a <strong>view</strong> over a contiguous sequence of objects, the storage
+of which is owned by some other object.</p>
+</blockquote>
+
+<p>You might also have noticed that the paper is title &ldquo;<strong>span: bounds-safe views</strong>&rdquo;.</p>
+
+<p>(Emphasis mine)</p>
+
+<p>So a span is a <code>view</code>. Except it is called <code>span</code>. I asked around why was <code>view</code> called <code>span</code> and the reason seems to be that the committee
+was feeling like calling it <code>span</code> that day. In fact, when the span paper was first presented in front of the committee it was called <code>array_view</code>.
+An array in c++ being analogous to a sequence of contiguous elements in memory. At least, the vocabulary <code>Span</code> exist in <code>C#</code> with basically the same semantic.</p>
+
+<h3 id="but-now-we-must-talk-about-strings">But now, we must talk about strings.</h3>
+
+<p>By that I mean that we must talk about <code>std::string</code>.  For all intent and purpose, <code>std::string</code> is a <code>std::vector&lt;char&gt;</code>.
+But people feel like strings are some special snowflakes that need their special container with a bunch of special methods.
+So <code>string</code> gets to have a <code>length()</code> method because <code>size()</code> was probably not good enough for the princess, some <code>find*()</code> methods and lexicographical comparators.</p>
+
+<p>And I mean, that&rsquo;s fair. A lot of application handle texts more than other kind of data, so having a special class to do so make total sense.
+But fundamentally, the only difference between a vector and a string is that which is convey by the programmers&rsquo; intent.</p>
+
+<p>It should be noted that  <code>std::string</code> ( or <code>std::wstring</code> and the other <code>std::*string</code> ) is completely unsuited to handle text that is not encoded as ASCII.</p>
+
+<p>If you are one of the 6 billions people on earth that do not speak English, you are gonna have a f��� bad time if you think <code>std::string</code> can do anything for you.
+(Pardon my Chinese). At best, you can hope that if you don&rsquo;t mutate it in anyway or look at it funny, it might still look okay by the time you display it somewhere.
+That also includes the lexicographical comparators and the <code>find*()</code> methods. Don&rsquo;t trust them with text.</p>
+
+<p>(Hang tight, the C++ committee is working hard on those issues!)</p>
+
+<p>For the time being, it&rsquo;s best to see <code>std::*string</code> as opaque containers of bytes. Like you would of a vector.</p>
+
+<p>Alas <code>string</code>, being the favorite child, got to have it&rsquo;s own non-owning wrapper 3 years before anyone else. So in C++17, was introduced <del><code>string_span</code></del>.
+Nope, it is actually <code>string_view</code>.</p>
+
+<p>It&rsquo;s a <code>string</code>, it&rsquo;s a <code>span</code>. It&rsquo;s the api of both mixed together. But it&rsquo;s called a <code>view</code>.</p>
+
+<p>It has all the same special snowflakes methods that <code>string</code> has.</p>
+
+<p>I am mean, those methods aren&rsquo;t that bad. The author of the <a href="http://wg21.link/n3921"><code>string_view</code> paper</a> had some very nice thing to say about them:</p>
+
+<blockquote>
+<p>Many people have asked why we aren&rsquo;t removing all of the find* methods, since they&rsquo;re widely considered a wart on std::string.
+First, we&rsquo;d like to make it as easy as possible to convert code to use string_view, so it&rsquo;s useful to keep the interface as similar as reasonable to std::string.</p>
+</blockquote>
+
+<p>There you have it : a backward compatibility wrat.</p>
+
+<p>So, maybe we could actually define <code>std::string_view</code> in term of <code>span</code> ?</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> CharT&gt;
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">basic_string_view</span> : <span style="color:#080;font-weight:bold">public</span> std::span&lt;CharT&gt; {
+    std::size_t length() <span style="color:#080;font-weight:bold">const</span> {
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;size();
+    }
+};
+</code></pre></div>
+<p>Simple and easy!</p>
+
+<p><strong>Except</strong> this is completely wrong because unlike span, <code>std::string_view</code> is a <strong>non mutable</strong> view.</p>
+
+<p>So it is actually more like more like</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> CharT&gt;
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">basic_string_view</span> : <span style="color:#080;font-weight:bold">public</span> std::span&lt;<span style="color:#080;font-weight:bold">const</span> CharT&gt; {<span style="color:#888">/**/</span>};
+</code></pre></div>
+<p>Going back to the <a href="http://wg21.link/n3921"><code>string_view</code> paper</a>, the author explains that:</p>
+
+<blockquote>
+<p>The constant case is enough more common than the mutable case that it needs to be the default.
+Making the mutable case the default would prevent passing string literals into string_view parameters, which would defeat a significant use case for string_view.
+In a somewhat analogous sitation, LLVM defined an ArrayRef class in Feb 2011, and didn&rsquo;t find a need for the matching MutableArrayRef until Jan 2012.
+They still haven&rsquo;t needed a mutable version of StringRef. One possible reason for this is that most uses that need to modify a string also need to be able to change its length,
+and that&rsquo;s impossible through even a mutable version of string_view.</p>
+</blockquote>
+
+<p>It is hard to argue with that, especially given what I just said about strings. So <code>basic_string_view</code> is non mutable because it&rsquo;s a sensible default <em>for strings</em>.</p>
+
+<blockquote>
+<p>We could use typedef basic_string_view<const char> string_view to make the immutable case the default while still supporting the mutable case using the same template.
+I haven&rsquo;t gone this way because it would complicate the template&rsquo;s definition without significantly helping users.</p>
+</blockquote>
+
+<p>However, C++ is mutable by default, and constness is opt-in.
+So having a type being <code>const</code> by default, while more appealing to our modern, wiser sensibilities may not be that great : there is no way to opt-out from from <code>basic_string_view</code> constness.
+Since <code>mutable</code> always is the default, the language do not provide a way to construct a <code>basic_string_view&lt;mutable char&gt;</code>.</p>
+
+<p>Special snowflake methods aside, there is 0 difference between <code>typedef basic_string_view&lt;const char&gt; string_view</code> and <code>basic_string_view : public std::span&lt;CharT&gt;</code>.
+So, <code>std::span</code> is a view, <code>std::view</code> is a span, both classes are basically the same thing and have the same memory layout.</p>
+
+<p>So much similar in fact that <a href="http://wg21.link/P0123">a brave soul suggested that they could be merged</a>.
+That was back in 2015 when <code>span</code> was still called <code>array_view</code>.</p>
+
+<p>Unfortunately, some people now think the term <code>view</code> somehow implies immuable.</p>
+
+<p>But the only reason one might think so boils down to <code>string</code> hijacking a vocabulary type all for it self.
+And guess what&rsquo;s the last thing you should do to a utfX encoded string? Randomly slicing it into views at code unit/bytes boundary.</p>
+
+<p>In the <em>Ranges TS</em>, nothing either implies views are immuable:
+&gt; The View concept specifies the requirements of a Range type that has constant time copy, move and assignment operators;
+&gt; that is, the cost of these operations is not proportional to the number of elements in the
+View.</p>
+
+<p>TL;DR: view and span: same thing; <code>string_view</code>: special confusing little snowflake.</p>
+
+<p>Moving on&hellip;</p>
+
+<h2 id="is-span-a-range">Is span a range ?</h2>
+
+<p>In C++20, a range is very simply something with a <code>begin()</code> and an <code>end()</code>, therefore a <code>span</code> is a range.
+We can verify that this is indeed the case:</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight">
+    
+<xmp style="display:none;">#include <stl2/detail/range/concepts.hpp>
+#include <vector>
+#include <gsl/span></xmp>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::Range&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
+<span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::Range&lt;gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
+</code></pre></div>
+
+
+</div>
+
+
+<p>We can refine that further, <code>span</code> is a <strong>contiguous range</strong>: A range whose elements are contiguous in memory.</p>
+
+<p>While currently neither the notion of <code>contiguous iterator</code> or the <code>ContiguousRange</code> concept are part of C++20, <a href="https://wg21.link/P0944">there is a proposal</a>.
+Weirdly, I couldn not find a proposal for <code>ContiguousRange</code>. Fortunately, it is implemented in <code>cmcstl2</code> so we can test for it.</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight">
+    
+<xmp style="display:none;">#include <stl2/detail/range/concepts.hpp>
+#include <gsl/span></xmp>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::ext::ContiguousRange&lt;gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
+
+
+</code></pre></div>
+
+
+</div>
+
+
+<p>So, given that we know that <code>span</code> is basically a wrapper over a contiguous range, maybe we
+can implement it ourselves ?</p>
+
+<p>For example, we could add some sugar coating over a pair of iterators:</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;gsl/span&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;stl2/detail/range/concepts.hpp&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span>
+<span style="color:#080;font-weight:bold">template</span> &lt;
+    std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
+    std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E
+&gt;
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">span</span> : <span style="color:#080;font-weight:bold">private</span> std::pair&lt;B, E&gt; {
+<span style="color:#080;font-weight:bold">public</span>:
+    <span style="color:#080;font-weight:bold">using</span> std::pair&lt;B, E&gt;::pair;
+    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">begin</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;first; }
+
+    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">end</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;second; }
+
+    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">size</span>() <span style="color:#080;font-weight:bold">const</span> { <span style="color:#080;font-weight:bold">return</span> std::count(begin(), end()); }
+
+    <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
+    span(CR &amp;c)
+        : std::pair&lt;B, E&gt;::pair(std::begin(c), std::end(c)) {}
+};
+
+<span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
+<span style="color:#080;font-weight:bold">explicit</span> span(CR &amp;)-&gt;span&lt;<span style="color:#080;font-weight:bold">decltype</span>(std::begin(CR())), <span style="color:#080;font-weight:bold">decltype</span>(std::end(CR()))&gt;;
+
+<span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
+          std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
+<span style="color:#080;font-weight:bold">explicit</span> span(B &amp;&amp; e, E &amp;&amp; b)-&gt;span&lt;B, E&gt;;
+
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; v;
+    span s(v);
+    span s2(std::begin(v), std::end(v));
+    <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">auto</span> &amp;&amp;<span style="color:#369;font-style:italic">e</span> : s) {
+    }
+}
+</code></pre></div>
+</div>
+
+
+<p>Isn&rsquo;t that nice and dandy ?</p>
+
+<p>Well&hellip; except of course, this is not a <code>span&lt;int&gt;</code> <strong><em>at all</em></strong>. It&rsquo;s a freaking</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">span&lt;
+    __gnu_cxx::__normal_iterator&lt;<span style="color:#888;font-weight:bold">int</span>*, std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;,
+    __gnu_cxx::__normal_iterator&lt;<span style="color:#888;font-weight:bold">int</span>*, std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;
+&gt;
+</code></pre></div>
+<p>Pretty pointless, right ?</p>
+
+<p>See, we can think of <code>views</code> and <code>span</code> and all those things as basically &ldquo;template erasure&rdquo; over ranges.
+Instead of a representing a range with pair of iterators whose type depends on the underlying container,
+you&rsquo;d use a view/span.</p>
+
+<p>However, a range is not a span. Given a <code>ContiguousRange</code> - or a pair of <code>contiguous_iterator</code>,
+it is not possible to construct a <code>span</code>.</p>
+
+<p>This will not compile:</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight">
+    
+<xmp style="display:none;">#include <vector>
+#include <gsl/span></xmp>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> uniform_unitialization_workaround = -<span style="color:#00d;font-weight:bold">1</span>;
+    std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; a = {<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">1</span>, uniform_unitialization_workaround};
+    gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt; span (std::begin(a), std::end(a));
+}
+</code></pre></div>
+
+
+</div>
+
+
+<p>So one one hand, <code>span</code> is a range, on the other hand, it does not play well with ranges.
+To be fair, <code>span</code> was voted in the draft before the great <a href="http://wg21.link/P0944">Contiguous Ranges</a> paper could be presented.
+But then again, that paper hasn&rsquo;t been updated afterwards and Contiguous Ranges have been <a href="https://wg21.link/n3884">discussed since 2014</a>, including by the
+string view paper.</p>
+
+<p>Let&rsquo;s hope that this will be fixed before 2020 !</p>
+
+<p>In the meantime, using span with the std algorithms will have to be done like that I guess.</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight">
+    
+<xmp style="display:none;">#include <vector>
+#include <gsl/span>
+
+int main() {
+    std::vector<std::string> names {
+        "Alexender", "Alphonse", "Batman", "Eric", "Linus", "Maria", "Zoe"
+    };</xmp>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+    <span style="color:#080;font-weight:bold">auto</span> begin = std::begin(names);
+    <span style="color:#080;font-weight:bold">auto</span> end = std::find_if(begin, std::end(names), [](<span style="color:#080;font-weight:bold">const</span> std::string &amp;n) {
+                    <span style="color:#080;font-weight:bold">return</span> std::toupper(n[<span style="color:#00d;font-weight:bold">0</span>]) &gt; <span style="color:#d20;background-color:#fff0f0">&#39;A&#39;</span>;
+    });
+    gsl::span&lt;std::string&gt; span {
+        &amp;(*begin),
+        std::distance(begin, end)
+    };
+}
+</code></pre></div>
+
+
+</div>
+
+
+<p>Which is nice, safe and obvious.</p>
+
+<p>Because we are speaking about contiguous memory, there is an equivalent relationship between a pair of
+<code>(begin, end)</code> pointers and a <code>begin</code> pointer + the size.</p>
+
+<p>Given that, we can rewrite our span class</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight">
+    
+<xmp style="display:none;">#include <gsl/span>
+#include <stl2/detail/range/concepts.hpp>
+#include <vector></xmp>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">span</span> : <span style="color:#080;font-weight:bold">private</span> std::pair&lt;T*, T*&gt; {
+<span style="color:#080;font-weight:bold">public</span>:
+    <span style="color:#080;font-weight:bold">using</span> std::pair&lt;T*, T*&gt;::pair;
+    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">begin</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;first; }
+
+    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">end</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;second; }
+
+    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">size</span>() <span style="color:#080;font-weight:bold">const</span> { <span style="color:#080;font-weight:bold">return</span> std::count(begin(), end()); }
+
+    <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
+    span(CR &amp;c)
+        : std::pair&lt;T*, T*&gt;::pair(&amp;(*std::begin(c)), &amp;(*std::end(c))) {}
+
+    <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
+              std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
+    span(B &amp;&amp; b, E &amp;&amp; e)
+        : std::pair&lt;T*, T*&gt;::pair(&amp;(*b), &amp;(*e)) {}
+};
+
+<span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
+<span style="color:#080;font-weight:bold">explicit</span> span(CR &amp;)-&gt;span&lt;<span style="color:#080;font-weight:bold">typename</span> CR::value_type&gt;;
+
+<span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
+          std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
+<span style="color:#080;font-weight:bold">explicit</span> span(B &amp;&amp; b, E &amp;&amp; e)-&gt;span&lt;<span style="color:#080;font-weight:bold">typename</span> B::value_type&gt;;
+</code></pre></div>
+<xmp style="display:none;">int main() {
+    std::vector<int> v;
+    span s(v);
+    span s2(std::begin(v), std::end(v));
+    for (auto &&e : s) {
+    }
+}</xmp>
+
+
+</div>
+
+
+<p>This behave conceptually like the standard <code>std::span</code> and yet it is easier to understand and reason about.</p>
+
+<h3 id="wait-what-are-we-talking-about-i-forgot">Wait, what are we talking about ? I forgot&hellip;</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+<span style="color:#080;font-weight:bold">struct</span> {
+    T* data;
+    std::size_t size;
+};
+</code></pre></div>
+<p>Oh, right, freaking <code>span</code> !</p>
+
+<p>I guess that my point is that <code>contiguous ranges</code> are the general solution to <code>span</code>. <code>span</code> can be easily described in term of a contiguous range.
+Implementing or reasoning about <code>span</code> without <code>contiguous ranges</code> however is trickier.
+<code>string_view</code> being a further refinment on span, it&rsquo;s clear that the committee started with the more specialized solution
+and is progressing to the general cases, leaving odd inconsistancies in its wake.</p>
+
+
+<figure>
+    
+        <img src="vasa.jpg" />
+    
+    
+    <figcaption>
+        <h4>Death by a thousand paper cuts</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>So far we established that <code>span</code> is a view by any other name and a cumbersome range.</p>
+
+<h2 id="something-very-very-wrong-with-span">Something very, very wrong with span</h2>
+
+<p>I would go so far as to say than <code>span</code> (and <code>view</code>, same thing) breaks C++.</p>
+
+<p>The standard library is built on a taxonomy of types and particularly the concept of a <code>Regular</code> type.
+I would not pretend to explain that half as well as Barry Revzin did, so go read
+<a href="https://medium.com/@barryrevzin/non-ownership-and-generic-programming-and-regular-types-oh-my-d35cd490d402">his great blog post</a>
+which explain explains the issue in detail.</p>
+
+<p>Basically, the standard generic algorithms make some assumptions about a type in order to guarantee that the algorithms are correct.
+This types properties are statically checked at compile time, however if a type definition do not match its behaviour, the algorithm will compile
+but may produce incorrect results.</p>
+
+<p>Fortunately, span is the definition of a <code>Regular</code> type. You can construct it, copy it around and compare it. So it can be fed to most standard algorithms.
+However, comparison operators don&rsquo;t actually compare two <code>span</code>, they compare the data <code>span</code> <strong>points to</strong>. And as Barry illustrated,
+that can easily lead to incorrect code.</p>
+
+<p>Tony Van Eerd having a knack for distilling fundamental truths,
+observed on slack that while the definition of <code>Regular</code> was quite precise (but, as it turns out, not quite precise enough to handle <code>struct {T* ptr };</code> ),
+its intent was to guarantee that handling <code>Regular</code> objects should have no effects on the rest of the program. Being proxy objects, <code>span</code> defie that expectation.</p>
+
+<p>On the other side of the table, users of the STL can reasonably expect <code>span</code> to be a drop-in replacement for a <code>const vector &amp;</code>.
+And that happens to be mostly the case, you can compare it to a vector, iterate over it&hellip;
+Until of course, you try to copy it or change its value, then it stops acting like a <code>vector</code>.</p>
+
+<h1 id="unmet-expectations">Unmet expectations</h1>
+
+<p><code>span</code> is a <code>Regular</code> type. <code>span</code> is a pointer to a chuck of memory. <code>span</code> is a value. <code>span</code> is <code>SemiRegular</code>, not <code>Regular</code>.
+<code>span</code> looks like a castor and bites like a snake, but is actually a duck-billed platypus, a monstrous hybrid that foils every attempt at
+classification.</p>
+
+<p><code>span</code> has a dual nature, an irreconcilable ambivalence that gets half the committee scrambling hopelessly to find some form
+of solace in the teachings of Alexander Stepanov while the other half has been caught whispering that maybe we should rewrite everything in rust.</p>
+
+<h3 id="can-you-freaking-stop-with-the-lyrical-dramatisation">Can you freaking stop with the lyrical dramatisation ?</h3>
+
+<p>Hum, right. Sorry.
+But really, <code>span</code> tries to please both library writers as to be well behaving in generic algorithms and non-library writers as to offer a nice, easy to use API.
+Noble goals indeed.</p>
+
+<p>However, you can&rsquo;t have your cake and eat it too. And so is span bad at being a container proxy and bad as being a well behaved standard <code>Regular</code> type.
+By its dual nature, its api is easy to misused and its humble appearance make it look like an innocent container-like thing rather than the deadly trap it is.
+It stands to reason that <strong>if the API is in any way easy to be misused, it will be</strong>. And so <code>span</code> is nothing but an unassuming foot-blowing nuclear warhead.</p>
+
+<p>In short, it does not meet expectations, because some of its design goals are antithetical. Specifically:</p>
+
+<ul>
+<li>It&rsquo;s a pointer-like object whose comparison compares the content of the underlying data.</li>
+<li>It&rsquo;s a container-like object whose assignment do not actually change the underlying data.</li>
+</ul>
+
+<h1 id="fixing-span">Fixing span</h1>
+
+<p><em>Can such a monster even be tamed ?</em></p>
+
+<p>I believe it can, and it actually would not require much.</p>
+
+<p>There is in fact nothing intrinsically wrong with <code>span</code>, we just need it to drop the mask and be upfront about its true nature.
+A lot can be said to the importance of naming things properly and as far as <code>span</code> is concerned, there are more than a few names wrong.</p>
+
+<p>Let&rsquo;s unpack</p>
+
+<h2 id="span-operator">span::operator==()</h2>
+
+<p>There are whole fields of mathematics dedicated to describe how things are &ldquo;equal&rdquo; or comparable.
+Careers were made, books were written, libraries filled, it was theorized, organized, researched, and ported to Haskell.
+That&rsquo;s why, in its infinite wisdom, <code>perl 6</code> dedicated a few tokens to describe the equality of things:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-perl" data-lang="perl">==
+<span style="color:#080">eq</span>
+===
+aqv
+=:=
+=~=
+~~</code></pre></div>
+<p>Meanwhile, <code>std::span</code> is collapsing the entire group theory into 2 characters.
+And of course there is only so much meaning one can imbue to a 2 bytes token.</p>
+
+<p>A lot of arguing between committee members has been about whether <code>operator==</code>
+should compare the identity (whether two span points to the same underlying data),
+or the elements.</p>
+
+<p>There are supporters of both meanings and they are both <del>wrong</del> right.
+No really, I believe they are <em>wrong</em>. (I&rsquo;m gonna make so many friends with that article&hellip;).</p>
+
+<p>If both side of the arguments makes as much sense as the other, it&rsquo;s because there isn&rsquo;t an answer.
+It starts to be about made up arguments to back up one&rsquo;s personal preferences which usually is somewhere between thoose two extremes</p>
+
+<ul>
+<li>We should abide by the type categories and the standard library correctness otherwise we will inevitably blow our own foot.</li>
+<li>We should meet user expectations otherwise they will blow their foot and cut our heads.</li>
+</ul>
+
+<p>Both of which are very right and sensible positions to hold and respecting both these point of views is necessary.</p>
+
+<p>The only way to avoid a blood bath is to therefore remove completely all comparison operators.
+If you can&rsquo;t compare them, you can&rsquo;t compare them wrongly.</p>
+
+<p>Unfortunately, if a type isn&rsquo;t comparable, the <code>stl</code> kinda stop working - the type stop being <code>Regular</code> and concretely sort and search algorithms will not work.</p>
+
+<p>A solution may be to resort to some <code>ADL</code> trickery to make <code>span</code> comparable only in the context of the standard library.
+That can be demonstrated:</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;algorithm&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span>
+<span style="color:#080;font-weight:bold">namespace</span> std {
+    <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">span</span> { };
+}
+
+<span style="color:#080;font-weight:bold">namespace</span> __gnu_cxx::__ops {
+    <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>&lt;(<span style="color:#080;font-weight:bold">const</span> std::span &amp;a, std::span &amp;b);
+}
+
+<span style="color:#888;font-weight:bold">void</span> compile() {
+    std::vector&lt;std::span&gt; s;
+    std::sort(s.begin(), s.end());
+}
+
+<span style="color:#888">//void do_no_compile() {
+</span><span style="color:#888">//    std::span a, b;
+</span><span style="color:#888">//    a &lt; b;
+</span><span style="color:#888">//}
+</span><span style="color:#888"></span></code></pre></div>
+</div>
+
+
+<p>That would make <code>span</code> truly regular within the stl, and prevent people comparing the wrong thing.
+Elements comparison would be done through <code>std::equal</code>.</p>
+
+<h2 id="span-operator-1">span::operator=()</h2>
+
+<p>Depending on whether span is seen as a pointer or a container, one could assume that  we are setting the span pointer or
+the underlying data;
+Unfortunately, we can&rsquo;t use the same ADL trick as for <code>==</code> and I don&rsquo;t see any other reasonable solution.
+There is another way we can fix <code>operator=</code> though:  By making it very clear than span behaves like a pointer..</p>
+
+<h2 id="renaming-span">Renaming span</h2>
+
+<p><code>span</code> used to be called <code>array_view</code>. It&rsquo;s easy to see a <code>view</code> as a pointer (not in the context of the range TS though).
+<code>view</code> makes it extra clear that it&rsquo;s a view and therefore non-owning.</p>
+
+<p><code>array</code> carries that it is a pointer to a contiguous memory segment, because that&rsquo;s what array are in the C memory model.</p>
+
+<p>And yeah, that would mean that <code>array_view</code> is mutable and <code>string_view</code> is constant.</p>
+
+<p>It makes no sense. However, it makes a lot more sense than having a very confusing <code>span</code> type that the world&rsquo;s best experts are
+not quite sure what to make of.</p>
+
+<h2 id="changing-people">Changing people ?</h2>
+
+<p>Some believe that we should teach people that playtipus are ducks because that sure would be convenient.
+But, while meeting expectations is hard and sometimes impossible, trying to make people change their expectations completely
+sounds a bit unreasonable to be. At best it takes decades, and by the time the collective knowlegde and widsom starts shifting, the
+experts on the front lines will need people to have a completely new set of expectations.</p>
+
+<p>Sure, sometimes nothing can replace education, talks and books. However, teachers have bigger battles to focus on than <code>span</code>.</p>
+
+<h2 id="a-simpler-story-for-views-and-ranges">A simpler story for views and ranges</h2>
+
+<p>After having sorted the mammals on one graph and the birds on the others, I imagine biologists were pretty pissed to see a flying squirrel.</p>
+
+<p>However, the committee is not just classifying existing types they are designing them.
+And I wonder if - as much fun as it may be to see them jumping over the canopee - we actually have a need for non mutable flying squirrels.</p>
+
+<ul>
+<li><code>Ranges</code> are&hellip; ranges represented by a pair of iterators. Either owning(<code>Containers</code>), or non-owning(<code>Views</code>)</li>
+<li><code>Views</code>  are&hellip; non-owning views over ranges.</li>
+<li><code>array_view</code> and <code>string_view</code> offer erasure of a view over a range represented by a pair of iterators who happen to be pointers.</li>
+<li>Containers own data</li>
+</ul>
+
+<p>Maybe that&rsquo;s not quite accurate. But we need an unifying theory of everything.</p>
+
+<p>To conclude this short introduction of <code>span</code>, I will let you with this photo of a giraffe.</p>
+
+
+<figure>
+    
+        <img src="horse.jpg" />
+    
+    
+    <figcaption>
+        <h4>Span</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fspan%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fspan%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fspan%2f&t=A%20can%20of%20span" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-119011218-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element = ce_nodes[i];
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options = "-O1 -fconcepts -std=c++2a"
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options: options,
+                compiler: compiler,
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

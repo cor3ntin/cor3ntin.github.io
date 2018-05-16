@@ -479,7 +479,7 @@ mv sdk_10.bak/* sdk_10</code></pre></div>
 
 <p>It’s all I have for you today, I hope you’ve learned something!</p>
 
-<h2 id="one-more-thing-see-you-in-part-3-hahahugoshortcode-0xc420247400-16-hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
+<h2 id="one-more-thing-see-you-in-part-3-hahahugoshortcode-0xc42028b900-16-hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
 
       
     <div id="socialshareDiv">
@@ -592,12 +592,11 @@ ga('send', 'pageview');
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
         let element = ce_nodes[i];
-        let highlight = element.querySelector(".highlight");
-        let codeBlock = element.querySelector(".highlight code");
-        let source = unescape(codeBlock.textContent);
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
         let content = [];
         let compiler = "g81";
-        let options = "-O3"
+        let options = "-O1 -fconcepts -std=c++2a"
         content.push({
             type: 'component',
             componentName: 'codeEditor',
