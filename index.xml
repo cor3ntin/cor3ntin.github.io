@@ -6,10 +6,30 @@
     <description>Recent content on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 May 2018 12:36:14 +0200</lastBuildDate>
+    <lastBuildDate>Mon, 11 Jun 2018 12:26:11 +0200</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Rapperswil Committee meeting: a trip report</title>
+      <link>https://cor3ntin.github.io/posts/rapperswil/</link>
+      <pubDate>Mon, 11 Jun 2018 12:26:11 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/rapperswil/</guid>
+      <description>This was my first committee meeting. I arrived Sunday morning at Jona, the next town over where I had a lovely AirBnB in a very nice, peaceful suburb. I settled to visit Rapperswil but met some people from Nvidia going to the meeting. So we naturally started to talk about C++. The meeting was to last 6 days and until the very end, we talked about C++, every minute of every hour.</description>
+    </item>
+    
+    <item>
+      <title>A Json Parser Part 1 : Reading a file</title>
+      <link>https://cor3ntin.github.io/posts/read_a_file/</link>
+      <pubDate>Wed, 23 May 2018 20:03:48 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/read_a_file/</guid>
+      <description>The year is 2021. A rainy Sunday afternoon. It&amp;rsquo;s getting increasingly more difficult to ignore the looming shadow of The Great Rewrite.
+But you ran out of cacao and there is nothing on HBO. So you guzzle a fourth cup of coffee and decide to start a new project. In C++ of course. You sacrificed too much to reevaluate your life choices now.
+But you need to do something new.</description>
+    </item>
     
     <item>
       <title>A can of span</title>
