@@ -112,7 +112,7 @@ I elected to spend my time between EWG and LEWG because I care more about new ex
 
 <p>was not off to a great start. We took two hours to decide <code>basic_string_view(nullptr)</code> should be UB. Bummer. I hate views.
 We then decided to merge feature macros into the working draft, a decision I&rsquo;m very happy about. They are very useful if you need them and don&rsquo;t hurt if you don&rsquo;t.
-Of course, we don&rsquo;t quite know how that would work in a module-only world, but this answer to a concrete problem until we hopefully have something better.</p>
+Of course, we don&rsquo;t quite know how that would work in a module-only world, but this answers a concrete problem until we hopefully have something better.</p>
 
 <p>We then fixed initialization and aggregates. Ok, we only fixed a tiny part of it, by reverting to C++98 rules for the definition of what an aggregate is.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> aggregate {};
@@ -142,12 +142,12 @@ It also interesting that this change was very well received despite being a smal
 <p>I spent the morning at EWG talking about modules.
 It was a very constructive morning about a conjoint proposal from the ATOM proposal and TS authors.</p>
 
-<p>I am mostly happy with the current state of affairs even if I still don&rsquo;t see the added value of added partitions.
+<p>I am mostly happy with the current state of affairs even if I still don&rsquo;t see the added value of partitions.
 I&rsquo;m concerned about lexing and preprocessing being increasingly more of a tangled mess but the solution seems unusable by tooling.
 I really hope they make it to C++20.
-Unfortunately, I did not stay there in the afternoon so I don&rsquo;t know if exporting macros was discussed. This would be kind of an over-my-dead-body thing.</p>
+Unfortunately, I did not stay there in the afternoon so I don&rsquo;t know if exporting macros were discussed. This would be kind of an over-my-dead-body thing.</p>
 
-<p>I elected to spend the afternoon in LEWG instead when we did the work of going through all the 190 pages of the modules TS and decided to move it forward to LWG,
+<p>I elected to spend the afternoon in LEWG instead where we did the work of going through all the 190 pages of the modules TS and decided to forward it to LWG,
 the next step before being merged into the working draft.</p>
 
 
@@ -161,15 +161,15 @@ the next step before being merged into the working draft.</p>
 
 <h3 id="wednesday">Wednesday</h3>
 
-<p>We discussed the creation of a new data persistence Study group and enough people were interested that this might formally happen in the coming months.
+<p>We discussed the creation of a new data persistence Study Group and enough people were interested that this might formally happen in the coming months.
 This group would focus on bringing low level i/o facilities such as async files and memory mapped files.</p>
 
 <p>I raised the concern that it should be separated from text formatting and people seem to be in agreement. So this work might lead to facilities saner than <code>iostream</code>,
-on top of which other could build separated formatting and localization facilities. Nothing not to love!</p>
+on top of which others could build separate formatting and localization facilities. Nothing not to love!</p>
 
 <p>Speaking of text formatting, Victor Zverovich presented an update to his <code>fmt</code> proposal, and we decided this is a high priority item that LEWG should focus on in the C++20 time frame.
 I&rsquo;m very happy about that. The alternative was to send it to a TS (library extensions v3) and given all the great things in
-<a href="http://en.cppreference.com/w/cpp/experimental/lib_extensions_2">ibraries extensions v2</a> are not merged into the WD, I was concerned we might not have <code>fmt</code> any time soon.</p>
+<a href="http://en.cppreference.com/w/cpp/experimental/lib_extensions_2">ibraries extensions v2</a> that are not merged into the WD, I was concerned we might not have <code>fmt</code> any time soon.</p>
 
 <p>I went to part of the <code>coroutine</code> talks. It was&hellip; entertaining. I have no expert opinion on this subject, however, I think the current TS is the good level of abstraction for most users
 and the point was made that core coroutines could be a subset of future coroutines implementation rather than an either-or question.</p>
@@ -177,18 +177,18 @@ and the point was made that core coroutines could be a subset of future coroutin
 <p>Coroutines got consensus in EWG but on Saturday they did not reach consensus.</p>
 
 <p>In LEWG, Eric Niebler presented his &ldquo;Deep integration&rdquo; proposal for ranges, with much applause.
-So the rangified algorithms will live in <code>std::ranges</code> while the iterators and traits will remain in <code>std</code> avoiding a lot of complexity.
-We also approved <code>ContigousRanges</code>, which is very exciting!</p>
+So the rangified algorithms will live in <code>std::ranges</code> while the iterators and traits will remain in <code>std</code> avoiding a lot of complexity and duplication.
+We also approved <code>ContigousRanges</code>, which is a small but very exciting refinement of ranges and iterators!</p>
 
 <p>After dinner, the Direction Working Group gave a detailed presentation of
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0939r0.pdf">p0939r0</a>. <a href="http://open-std.org/JTC1/SC22/WG21/docs/papers/2018/p0977r0.pdf">Bjarne talked about the Vasa</a>.</p>
 
-<p>I&rsquo;m still unsure what teachings extract from all of that. And the tale of the Vasa can be interpreted a lot of different ways.
+<p>I&rsquo;m still unsure what teachings extract from all of that. And the tale of the Vasa can be interpreted in a lot of different ways.
 We mostly agreed that this was all very complicated and that there were no right answers.</p>
 
 <p>We discussed the usefulness and nature of TS, there again without a clear outcome.</p>
 
-<p>We, however, reach the agreement that all good papers should have a rationale, an abstract, a quote and a Tony table.</p>
+<p>We, however, reached the agreement that all good papers should have a rationale, an abstract, a quote and a Tony table.</p>
 
 <p>I left the room with more question than I had going in.
 Later that week I asked some people whether WG21 could benefit from better tooling to manage, search and keep track of papers.
@@ -209,7 +209,7 @@ If that&rsquo;s something that interests you, I really think a lot can be done i
 
 <p>Thursday was a good day.
 We started off by making <code>std::span</code> <code>SemiRegular</code>, thereby restoring order in the universe. A poll was taken on whether we should nuke span altogether and that, unfortunately, did not reach consensus.
-It was noted that <code>std::ranges</code> as a <code>subrange</code> type that does most of what span does, except better.
+It was noted that <code>std::ranges</code> has a <code>subrange</code> type that does most of what span does, except better.
 But, realistically, I think that removing all comparisons operator was the best outcome we could hope for and I&rsquo;m really glad we agreed on that. Thanks, Tony.
 Let&rsquo;s hope <em>the room</em> does not change its mind at the next meeting.</p>
 
@@ -217,11 +217,11 @@ Let&rsquo;s hope <em>the room</em> does not change its mind at the next meeting.
 
 <p>Herb presented part of the static exception proposal and we almost unanimously decided that we did not care about <code>std::bad_alloc</code> going forward.</p>
 
-<p>I skipped a few session to talk about dependency management and just try to rest my brain a bit.</p>
+<p>I skipped a few session to talk about dependency management with some people and just try to rest my brain a bit.</p>
 
 <p>After dinner, we had a long conversation about 2D Graphics.
 I&rsquo;m a bit confused about the actual outcome of that evening and <a href="hatcat.com/?p=48">Guy already did a great summary from his point of view</a>.
-I think it&rsquo;s dead, Jim. I think it&rsquo;s a good thing. Nonetheless, we all expressed that what we want, what we really really want is a dependency manager.</p>
+I think it&rsquo;s dead, Jim. I think it&rsquo;s a good thing. Nonetheless, we all expressed that what we want, what we really really want, is a dependency manager.</p>
 
 <h3 id="friday">Friday</h3>
 
@@ -230,7 +230,7 @@ I&rsquo;m very excited about that. There are a lot of libraries out there to do 
 I think it will be useful to a lot of people (including me !). The API is small and clean, and I have good hope it will be in the C++20 IS.</p>
 
 <p>LEWG also rangify some uninitialized memory algorithms I did not know existed.
-And noted it should rangify more stuff. Brace yourself for the &ldquo;Rangify all the things&rdquo;. I am definitively not complaining.</p>
+And noted it should rangify more stuff. Brace yourself for the &ldquo;Rangify all the things&rdquo; era. I am definitively not complaining.</p>
 
 <p>I then went back to EWG were we talked about <code>constexpr!</code> and <code>std::is_constant_evaluated()</code>, both of which got the favors of the crowd.
 <code>constexpr!</code> is particularly great for reflection and <a href="https://wg21.link/p1040"><code>std::embed</code></a>. in short <code>constexpr!</code> is always constexpr.</p>
@@ -239,10 +239,10 @@ And noted it should rangify more stuff. Brace yourself for the &ldquo;Rangify al
 I wish we would not have hijacked the <code>!</code> so lightly.</p>
 
 <p>Some more <code>constexpr</code> things were voted in while I was not in the room.
-The committee is working toward making <code>std::string</code> constexpr and to a value-based concept syntax. Which is great if you ask me!</p>
+The committee is working toward making <code>std::string</code> constexpr and toward a value-based concept syntax. Which is great if you ask me!</p>
 
-<p>Unfortunately, <code>Deducing this</code> was discussed while I was not in the room. It apparently did not get much love in its current form. And the great &lsquo;adjective&rsquo; like was bikeshed against. Sad face.
-I hope it comes back in a slightly different form, maybe unified with unified function call proposal.</p>
+<p>Unfortunately, <code>Deducing this</code> was discussed while I was not in the room. It apparently did not get much love in its current form. And the great &lsquo;adjective&rsquo;-like syntax was, quite unfortunately bikeshed against. Sad face.
+I hope it comes back in a slightly different form, maybe unified with the <code>unified function call</code> proposal.</p>
 
 
 <figure>
@@ -263,7 +263,7 @@ Nothing positive was said about CMake, it&rsquo;s a start!</p>
 
 <p>The lengthy conversations I had with the main developer of <code>vcpkg</code> certainly makes me want to use <code>vcpkg</code> more.</p>
 
-<p>Wait and see?</p>
+<p>Wait and see, I guess?</p>
 
 <h3 id="saturday">Saturday</h3>
 
@@ -293,7 +293,7 @@ The nastiness of it put me off, but I learned a few things about lifetime extens
 Some kind of Rustification of C++ memory model would not hurt, especially given that ranges and Rvalue-refs don&rsquo;t work well together at all.</p>
 
 <p>After that, we discussed a coupled more papers but I was out of it and started to make some very stupid comments.
-People left one after the other until we did not have quorum. it was time to adjourn.</p>
+People left one after the other until we did not have quorum. It was time to adjourn.</p>
 
 <h3 id="unicode">Unicode</h3>
 
