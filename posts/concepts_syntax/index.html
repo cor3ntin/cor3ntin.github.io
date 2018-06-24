@@ -98,7 +98,7 @@ The compiler can pinpoint exactly what requirement(s) a type is missing for a gi
 know which template you were trying to instantiate as it can&rsquo;t read your mind to resolve ambiguities. <a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI17/paper/view/14603">Yet</a>.</p>
 
 <p>It&rsquo;s probably <a href="https://godbolt.org/g/g8gfLM">less magical than what you might expect</a>, so it will not absolve
-C++ developers from understanding@xar cryptic compilation errors spawned somewhere inside a deep template instantiation stack,
+C++ developers from understanding cryptic compilation errors spawned somewhere inside a deep template instantiation stack,
 however to an experienced developer, the errors will be much more explicit.</p>
 
 <p>So, it does not seem too inaccurate to view Concepts as sugar coating over SFINAE, with the added bonus of more explicit errors messages.
