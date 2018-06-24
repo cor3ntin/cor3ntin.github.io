@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>The tightly-constrained design space of convenient template functions declaration syntaxes | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">June 13, 2018</h2>
+    <h1 class="title">The tightly-constrained design space of convenient template functions declaration syntaxes</h1>
+    
+    <div class="content">
+      
+
+<div style="font-size: larger; padding:1em; margin-top:2em; margin-bottom:2em; background:#FFF2DB; color:#666">
+
+<p> Please take the quick survey on concept syntax at the <a href="#survey"> end of this article</a>.
+</p>
+
+</div>
+
+<p>Did you know that the concept TS was merged into the Working Draft in July 2017, in sorry Toronto?
+And we are a planck length away from merging the Range TS in C++20 as well, including a few goodies such as projections,
+contiguous ranges/iterators and ranges adaptors?
+We also added a bunch of general-purpose concepts in the <code>std</code> namespace in Rapperswil.</p>
+
+<p>Concepts have been 3 decades in the making and the Ranges TS is a huge body of work.
+Yet, I feel like a lot of people are unaware of these great features that are coming to a compiler near them.</p>
+
+<p>It might be that only GCC has an implementation of concepts (that do not quite matches the TS and that is easily tripped), making experimentation a bit hard.
+Or maybe people are tired of waiting? After all, we were promised <del>jetpacks</del> concepts in C++11, C++14, C++17.</p>
+
+<p>Or maybe the expert-friendly syntax of concept usage scares people away?</p>
+
+<h1 id="what-are-concepts">What are concepts?</h1>
+
+<p>Truth is, there is little concepts can do that can not already be achieved with C++17 and (a lot) of SFINAE.
+Eric Niebler&rsquo;s widely popular <code>ranges-v3</code>, which was the foundation of the Ranges TS makes heavy use of &ldquo;&ldquo;concepts&rdquo;&rdquo; using a lot of
+<a href="http://ericniebler.com/2013/11/23/concept-checking-in-c11/">SFINAE tricks and a few macros</a>. And honestly, using <code>ranges-v3</code> to define or
+refine your own concepts is rather easy.
+Still, without a lot of metaprogramming tricks that most developers should not be expected to fully understand, SFINAE is tricky and error-prone.
+Concepts aim to provide an easy way to describe complex requirements on individual types and advanced overload sets.</p>
+
+<p>The second thing that concepts offer is better error messages (even if this is, of course, a quality-of-implementation matter).
+The compiler can pinpoint exactly what requirement(s) a type is missing for a given template instantiation but it can&rsquo;t
+know which template you were trying to instantiate as it can&rsquo;t read your mind to resolve ambiguities. <a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI17/paper/view/14603">Yet</a>.</p>
+
+<p>It&rsquo;s probably <a href="https://godbolt.org/g/g8gfLM">less magical than what you might expect</a>, so it will not absolve
+C++ developers from understanding@xar cryptic compilation errors spawned somewhere inside a deep template instantiation stack,
+however to an experienced developer, the errors will be much more explicit.</p>
+
+<p>So, it does not seem too inaccurate to view Concepts as sugar coating over SFINAE, with the added bonus of more explicit errors messages.
+It may not seem very exciting, admittedly.</p>
+
+<p>But since Bjarne Stroustrup dreamed concepts a few things happened.
+First, meta-programming tricks, knowledge, and libraries, as well as more robust compiler implementations enabled libraries such as <code>ranges-v3</code> to exist.
+At the same time, the Concepts proposals were simplified to the point where concepts as they were merged used to be called &ldquo;concepts-lite&rdquo;,
+dropping both <a href="https://isocpp.org/wiki/faq/cpp0x-concepts-history#cpp0x-concept-maps">concepts maps</a> and <a href="https://isocpp.org/wiki/faq/cpp0x-concepts-history#cpp0x-axioms">axioms</a>.</p>
+
+<p>Yet concepts set to achieve a very important goal:
+Bridging the gap between Imperative programming and Generic Programming, by making templates easier to use and seamlessly integrated.
+Generic programming would then be more easily accessible to most non-experts C++ developers and it would then be easier to write inter-operating libraries. Reusable, modular, explicit APIs.</p>
+
+<p>There was, however, an issue.
+Templates were always somewhat unfriendly to non-experts, and adding a bunch of <code>requires requires</code> clauses in the mix did not improve the situation.</p>
+
+
+<div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
+  <iframe src="//www.youtube.com/embed/H8HplZtVGT0?"
+  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allowfullscreen frameborder="0" title="YouTube Video"></iframe>
+</div>
+
+<h1 id="short-syntaxes">Short syntaxes</h1>
+
+<p>To make concepts more palatable, the Concept-Lite proposal (circa 2013) introduced a bunch of shorthand syntaxes.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+concept Foo = <span style="color:#038">true</span>;
+
+<span style="color:#888">//template introducer syntax.
+</span><span style="color:#888"></span>Foo{T} <span style="color:#888;font-weight:bold">void</span> foo(<span style="color:#080;font-weight:bold">const</span> T&amp;);
+<span style="color:#888">//abbreviated function syntax
+</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">bar</span>(<span style="color:#080;font-weight:bold">const</span> Foo&amp;);
+<span style="color:#888">//abbreviated function syntax, auto being the least constrained possible constraint
+</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">bar</span>(<span style="color:#080;font-weight:bold">auto</span>);
+</code></pre></div>
+<p>And it was easy, it was reasonably elegant, and everything was well in the world.
+But then, questions arise, concerns were raised:</p>
+
+<p>What about the meaning of multiple parameters constrained by the same concepts?
+How distinguish generic functions from the non-generic ones? What about collapsing universal forwarding references?</p>
+
+<p>As the ink was flowing, C++14 shipped. As C++17 sailed, defenders and detractors of the concept abbreviated syntax dug trenches until progress on the Concept TS
+came to a gloomy stop.</p>
+
+<p>In this context, a brave soul suggested that we could maybe remove the abbreviated syntaxes from the TS and merge the non-controversial bits in the TS.
+And for a little while, a truth was established, allowing concepts to be merged in the Working Draft, while Tom Honnerman enjoyed his well deserved moment of glory.</p>
+
+<p><strong>However</strong>.</p>
+
+<p>The committee still wanted a <del>short</del> <del>abbreviated</del> <del>terse</del> <del>natural</del> convenient syntax. They just could not agree on which syntax was best. It was back to the drawing board.</p>
+
+<p>You might think that getting consensus on syntax would be easier.
+It turns out the design space is ridiculously complicated, so let me try to describe some of the numerous constraints.</p>
+
+<h1 id="the-design-space">The Design Space</h1>
+
+<h2 id="0-the-meaning-of-void-f-conceptname-a-conceptname-b">0 - The meaning of void f(ConceptName a, ConceptName b)</h2>
+
+<p>Up until last year, some people argued that given <code>void f(ConceptName a, ConceptName b)</code>, <code>a</code> and <code>b</code> should resolve to the same type.</p>
+
+<p>This is a quote from the <a href="https://wg21.link/n3701">original Concept-Lite proposal</a>:</p>
+
+<blockquote>
+<p>What if we need two argument types of the same concept? Consider <br/>
+<code>void sort(Random_access_iterator p, Random_access_iterator q);</code> <br/>
+For this to make sense, <code>p</code> and <code>q</code> must be of the same (random-access iterator)
+type, and that is the rule. By default, if you use the same constrained parameter
+type name for two arguments, the types of those arguments must be the same.
+We chose to make repeated use of a constrained parameter type name imply
+“same type” because that (in most environments) is the most common case,
+it would be odd to have an identifier used twice in a scope have two different
+meanings, and the aim here is to optimize for terse notation of the simplest case.</p>
+</blockquote>
+
+<p>Fortunately, <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0464r2.html">this issue was resolved</a>,
+and there is now a tacit(?) consensus that each parameter should be deducted separately and be of potentially different types.</p>
+
+<p>So, in fact, <em>some</em> progress was made on the convenient syntax and things are moving in the right direction</p>
+
+<h2 id="1-it-s-purely-a-syntax-issue">1 - It&rsquo;s purely a syntax issue.</h2>
+
+<ul>
+<li>Concepts are in the WD</li>
+<li>Every imaginable set of constraints can be applied to type and methods using the non-convenient syntax as per the WD</li>
+<li>The compiler (and by extension, tools) needs no syntax whatsoever to distinguish concepts, types, values, type-concepts, value-concepts.</li>
+<li>There may be some questions regarding references but the same solution can be applied regardless of the actually chosen syntax</li>
+<li>The question then is what the best way to please the finicky human developers might be.</li>
+</ul>
+
+<h2 id="2-simple-and-natural">2 - Simple and natural</h2>
+
+<p>The main goal being making templates simpler for most people, we need to find a simple syntax.
+Something easy to teach and easy to learn.
+Hopefully intuitive. But people intuitions change.
+People have different expectations depending on their background, the other languages they, there skill level with C++&hellip;
+It&rsquo;s to be expected that a given syntax will be intuitive to the author that proposed it and most experts will eventually grasp almost anything.
+So what is simple is highly debatable and subjective.</p>
+
+<p>But we can set up a few guidelines</p>
+
+<ul>
+<li>Not too verbose: Syntaxes that require putting a large number of tokens in a particular order are often hard to grasp</li>
+<li>Not too alien: We can look at other languages too see how concepts could be expressed. More importantly, we can look at other parts of C++ to avoid
+introducing a completely new syntax and instead, be consistent with existing bits (that we can&rsquo;t change, standardization is, for the most part, an additive only process).</li>
+</ul>
+
+<h2 id="3-consistent">3 - Consistent</h2>
+
+<blockquote>
+<p>If you talk to every individual member of the standardization committee, and you said &ldquo;Are you concerned about inconsistencies, and simplicity and ease of explanation?&rdquo;, they would all say &ldquo;yes, those are very important&rdquo;.
+And they would not be lying. Every member of the committee would say yes, those are very important to me. But in my opinion, if you look at the result of their work, the resulting standardization document; The decisions they make ultimately,
+as a committee do not reflect these concerns. - Scott Meyers</p>
+</blockquote>
+
+<p>What do we mean about consistency?</p>
+
+<p>We probably want template parameters lists to look somewhat like functions parameter lists.
+Or maybe we want functions and lambda to look as much like one another as possible?
+Or maybe should parameters declaration match variable declaration?
+Should NTNTTP declaration and Type template parameter look alike somehow?
+What should be done with auto and its multiple meanings?</p>
+
+<p>There is mainly 2 kind of consistencies.
+The first one is familiar sequences of tokens, syntactic patterns used in similar context through the language.
+Of course, we can argue whether two contexts are similar enough to use the same contexts.
+A familiar syntax used for a different purpose in a different context is inconsistent indeed.</p>
+
+<p>But, I have found that consistency is fore-and-foremost, a good story.
+In this case, consistency comes more from a mental model a developer has rather than from the syntax.</p>
+
+<p>The heated <code>const Foo x</code> vs <code>Foo const x</code> is a recent demonstration of that (westconstia forever).
+What you find consistent and intuitive in this context depends on the mental model you prefer. The same thing goes for details like <code>Foo* bar</code> vs <code>Foo *bar</code>.</p>
+
+<p>Having a &ldquo;consistency story&rdquo; is akin to having a rationale on a proposal or imagining yourself teaching that syntax.
+How do concepts fit into your mental model?</p>
+
+<p>Syntax is just syntax but it might affect the way you think about the language.</p>
+
+<p>At least, we probably can agree that we don&rsquo;t want to introduce a syntax so illogical and alien that it is inconsistent with everything else.</p>
+
+<h2 id="4-terse">4 - Terse</h2>
+
+<p>Some people want the syntax to be as terse as possible and they really have nothing else to say about that.</p>
+
+<p>But can terse be too terse?
+Does verbosity hinder people &rsquo;s ability to read code (reading code is much more frequent than writing it)?
+Should we count individuals characters? Should symbols count double?
+Does Perl have concepts?</p>
+
+<h2 id="5-verbose">5 - Verbose</h2>
+
+<p>Some people like syntax so much, Bjarne call them the &ldquo;syntax people&rdquo;. We know little of the syntax people, where they come from or what their motivations are.
+Like Ent, they don&rsquo;t write any C++ expression unless it takes a very large amount of exotic tokens to do so.
+For them, any single template declaration should be preceded by &ldquo;Hail to the Chief&rdquo; and every single instantiation be as ceremonious as humanly possible.</p>
+
+<p>The syntax people where first encountered in the 90s when C++ was being standardized.
+At the time, templates and generic programming was rather novel, and people tend to be afraid of novel things.
+And so, people were very keen to have a syntax for generic programming that served as a caution sign that they were indeed using templates.</p>
+
+<p>Bjarne noticed that people tend to like new features to be verbose but often ask for a more terse syntax as they get more familiar with the feature.
+Isn&rsquo;t that the definition of FUD?</p>
+
+<p>Of course, the case can be made than generic programming may lead to increase code size which still isn&rsquo;t acceptable in the most constrained environments,
+However, most embedded developers seem to not be aware that identifiers can be more than four letters long so I&rsquo;m not sure that&rsquo;s the culprit.</p>
+
+<p>What is certain though, is that it will be difficult to reconcile the idea that generic programming should be ceremonious
+and that generic programming should be no different than non-generic programming.</p>
+
+<p>And once again, &ldquo;verbosity&rdquo; is a bit subjective. What one considers verbose enough varies greatly.</p>
+
+<h2 id="6-forwarding-references">6 - Forwarding references</h2>
+
+<p>We are finally getting to an actual technical concern.</p>
+
+<p><code>Foo &amp;&amp;</code> deduces a different type whether <code>Foo</code> is a type or the name of a template parameter.
+In the first case, it&rsquo;s an r-value reference, in the second case it&rsquo;s a forwarding reference,
+which might be a reference to an rvalue or a reference to an l-value with any cv-qualifier it might have.</p>
+
+<p><a href="https://wg21.link/N4164">N4164</a>, the paper that gave forwarding references their name, makes a great job of explaining what they are.
+You might notice that &ldquo;Forwarding references&rdquo; have a name only since C++17, while they were introduced in C++11.</p>
+
+<p>Forwarding references are an artifact of references collapsing and special rules for template argument deductions,
+a topic notably covered by <a href="https://www.youtube.com/watch?v=wQxj20X-tIU">Scott Meyers</a>.
+So while it took them a while to be named, forwarding references have always been fairly well understood.</p>
+
+<p>But, it is not possible to distinguish forwarding references from r-value references without knowing the nature
+of the entity they decorate as they share the same syntax. It&rsquo;s unclear if that was intentional at the time or whether it was seen as a neat trick,
+but a lot of experts now believe it was a mistake to not introduce a different syntax for forwarding references.</p>
+
+<p>As we look to introduce a short syntax, how can we distinguish forwarding references for r-value references?
+That is, how can we distinguish concrete types from template parameters and concept names?</p>
+
+<p>There are a few options</p>
+
+<ul>
+<li>Make sure parameters whose type is a template/concept-name are visually distinguished.</li>
+<li>Retroactively remove the ambiguity from the language. Some people have suggested <code>&amp;&amp;&amp;</code> as a syntax to mean forwarding reference.
+But of course, that ship has sailed, so even if we introduce a new unambiguous syntax, what to do of the old one?</li>
+<li>Choose to turn a blind eye on this issue.</li>
+</ul>
+
+<h2 id="7-non-type-non-template-template-parameters-and-value-concepts">7 - Non-type, Non-Template Template Parameters and Value Concepts</h2>
+
+<p>A template parameter can be a type, or a value.
+Furthermore, concepts can either constrained a type or a value.
+However, a given concept can never constrain both a type and a value - Even if constraining a value implicitly constrains its type.
+For example, an &ldquo;Even&rdquo; concept that would check that <code>v % 2 == 0</code> can be applied to an <code>int</code> but not to a string or a double as neither
+of those types has a <code>%</code> operator.</p>
+
+<p>It seems a common misunderstanding that template value parameter (NTNTTP) can be mutated.
+Then it would be legitimate to wonder whether a constraint should apply over the lifetime of said variable.
+But in fact, as per the standard,</p>
+
+<blockquote>
+<p>A non-type non-reference template-parameter is a prvalue.
+It shall not be assigned to or in any other way have its value changed.
+A non-type non-reference template-parameter cannot have its address taken.</p>
+</blockquote>
+
+<p>So a concept or set of constraints can only ever be applied at the time of instantiation.</p>
+
+<p>The following snippet is valid, at no point can a concept constrains a runtime value.
+That&rsquo;s what contracts are for!</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;Even e&gt; <span style="color:#080;font-weight:bold">decltype</span>(e) f()  {
+    <span style="color:#080;font-weight:bold">return</span> e + <span style="color:#00d;font-weight:bold">1</span>;
+}
+[[<span style="color:#369;font-style:italic">assert</span>: f&lt;<span style="color:#00d;font-weight:bold">0</span>&gt;() == <span style="color:#00d;font-weight:bold">1</span>]];
+f&lt;<span style="color:#00d;font-weight:bold">1</span>&gt;(); <span style="color:#888">// ill-formed
+</span><span style="color:#888"></span></code></pre></div>
+<p>I don&rsquo;t think this is an actual issue people struggle with? If you think it&rsquo;s confusing, let me know!</p>
+
+<p>To sum things up</p>
+
+<ul>
+<li>A template parameter can be a type or a value</li>
+<li>In a function signature, only types can be constrained</li>
+<li>We may want to constrain NTNTTP on both their value and their type.</li>
+<li>Types are significantly more common than NTNTTP in template definitions but in C++20
+a lot more types can be used as template parameters so that might change slightly.</li>
+</ul>
+
+<h2 id="8-pleasing">8 - Pleasing</h2>
+
+<p>Last and maybe least, if there is such thing as elegant code, maybe can we find a syntax that is not too unpleasant to our obsessives minds.
+After all, the world is watching.</p>
+
+<h1 id="making-sense-of-an-ocean-of-proposals">Making sense of an ocean of proposals</h1>
+
+<h2 id="overview">Overview</h2>
+
+<p>A tony table is worth a thousand words</p>
+
+<div style='width: 80vw; position: relative; left: 50%; right: 50%;margin-left: -40vw; margin-right: -40vw;'>
+
+<div style="margin:auto">
+<table>
+<tr>
+    <th> <a href="http://eel.is/c++draft/temp.param#nt:constrained-parameter">C++20 draft</a>
+    </th>
+    <th> <a href="https://wg21.link/n3701">Concept Lite</a> </th>
+    <th> <a href="https://wg21.link/p1079">Bjarne's "minimal solution"</a> </th>
+    <th> <a href="https://wg21.link/p0745r1">In Place Concept</a> </th>
+    <th> Adjective <sup><a href="#fn1" id="ref1">1</a></sup>
+        <a href="https://wg21.link/p0807">P0807</a>
+        <a href="https://wg21.link/p0791">P0791</a>
+        <a href="https://wg21.link/p0873">P0873</a>
+    </th>
+</tr>
+<tr>
+    <th colspan="5" style="text-align:center"> Simple function </th>
+</tr>
+<tr>
+<td>
+    <pre>template &lt;Container C>
+void sort(C & c);</pre>
+</td>
+<td>
+    <pre>void sort(Container &c);</pre>
+</td>
+<td>
+    <pre>template void sort(Container &c);</pre>
+</td>
+<td>
+    <pre>void sort(Container{} &c);</pre>
+</td>
+<td>
+    <pre>void sort(Container auto &c);</pre>
+</td>
+</tr>
+
+<tr>
+    <th colspan="5" style="text-align:center"> Function with type name introduction </th>
+</tr>
+<tr>
+<td>
+    <pre>template &lt;Container C>
+void sort(C & c);</pre>
+</td>
+<td>
+    <pre>Container{C} void sort(Container &c);</pre>
+</td>
+<td>
+    <pre>template &lt;Container C> void sort(C &c);</pre>
+</td>
+<td>
+    <pre>Container{C} void sort(Container &c);</pre>
+</td>
+<td>
+    <pre>template &lt;Container C>
+    void sort(C &c);</pre>
+</td>
+</tr>
+
+<tr>
+    <th colspan="5" style="text-align:center"> Lambdas </th>
+</tr>
+<tr>
+<td>
+    <pre>[]&lt;Container C>(C & c) {};</pre>
+</td>
+<td>
+    <pre>[](Container &c){};</pre>
+</td>
+<td>
+    <pre>[](Container & c) {};</pre>
+    <pre>[]&lt;Container C>(C & c) {};</pre>
+</td>
+<td>
+    <pre>[](Container{} &c){};</pre>
+    <pre>[]&lt;Container{C}>(C &c){};</pre>
+</td>
+<td>
+    <pre>[](Container auto & c) {};</pre>
+    <pre>[]&lt;Container C>(C & c) {};</pre>
+</td>
+</tr>
+
+<tr>
+    <th colspan="5" style="text-align:center"> Template parameter list </th>
+</tr>
+<tr>
+<td>
+    <pre>template&lt;Container C></pre>
+</td>
+<td>
+    <pre>template&lt;Container C></pre>
+</td>
+<td>
+    <pre>template&lt;Container C></pre>
+</td>
+<td>
+    <pre>template&lt;Container{C}></pre>
+</td>
+<td>
+    <pre>template&lt;Container C></pre>
+    <pre>template&lt;Container typename C></pre>
+</td>
+</tr>
+
+<tr>
+    <th colspan="5" style="text-align:center"> Non type, Non-template template parameter constrained on type</th>
+</tr>
+<tr>
+<td>
+    <pre>template&lt;auto N>
+    requires Unsigned&lt;decltype(N)></pre>
+</td>
+<td>
+    🚫
+</td>
+<td>
+    <pre>template&lt;Unsigned_value N></pre>
+</td>
+<td>
+    <pre>template&lt;Unsigned{Type} N></pre>
+</td>
+<td>
+    <pre>template&lt;Unsigned auto N>
+</td>
+</tr>
+
+
+<tr>
+    <th colspan="5" style="text-align:center"> Non type, Non-template template parameter constrained on value</th>
+</tr>
+<tr>
+<td>
+    <pre>template&lt;auto N>
+    requires Even&lt;decltype(N)></pre>
+</td>
+<td>
+    🚫
+</td>
+<td>
+    <pre>template&lt;Even N></pre>
+</td>
+<td>
+    🚫
+</td>
+<td>
+    <pre>template&lt;Even auto N>
+</td>
+</tr>
+
+<tr>
+    <th colspan="5" style="text-align:center"> Non type, Non-template template parameter constrained on both value and type</th>
+</tr>
+<tr>
+<td>
+    <pre>template&lt;auto N>
+    requires Unsigned&lt;decltype(N)>
+        && Even&lt;N> </pre>
+</td>
+<td>
+    🚫
+</td>
+<td>
+    🚫
+</td>
+<td>
+    🚫
+</td>
+<td>
+    <pre>template&lt;Unsigned Even auto N>
+</td>
+</tr>
+
+
+<tr>
+    <th colspan="5" style="text-align:center"> Dependent types </th>
+</tr>
+<tr>
+<td>
+    <pre>template&lt;typename A, typename B>
+    requires Swappable&lt;A, B>
+    void foo(A & a, B & b);</pre>
+</td>
+<td>
+    <pre>Swappable{A, B} void foo(A & a, B & b);<pre>
+</td>
+<td>
+    <pre>template&lt;Swappable{A, B}>
+void foo(A & a, B & b);</pre>
+</td>
+<td>
+    <pre>template&lt;Swappable{A, B}>
+    void foo(A & a, B & b);</pre>
+    <pre>void foo(Swappable{A,B} & a, B & b);</pre>
+</td>
+<td>
+    🚫 Same syntax as the working draft
+</td>
+</tr>
+
+<tr>
+    <th colspan="5" style="text-align:center"> Identical types  <sup><a href="#fn2" id="ref2">2</a></sup> </th>
+</tr>
+<tr>
+<td>
+    <pre>template&lt;Container A>
+void foo(A & a, A & b);</pre>
+</td>
+<td>
+    <pre>void foo(Container & a, Container & b);</pre>
+</td>
+<td>
+    🚫 Same syntax as the working draft
+</td>
+<td>
+    <pre>void foo(Container{A} & a, A & b);</pre>
+</td>
+<td>
+    🚫 Same syntax as the working draft
+</td>
+</tr>
+
+
+<tr>
+    <th colspan="5" style="text-align:center"> Identical constraints on different types  <sup><a href="#fn2" id="ref2">2</a></sup> </th>
+</tr>
+<tr>
+<td>
+    <pre>template&lt;Container A, Container B>
+void foo(A & a, B & b);</pre>
+</td>
+<td>
+    🚫
+</td>
+<td>
+    <pre>template
+void foo(Container & a, Container & b);</pre>
+</td>
+<td>
+    <pre>void foo(Container{B} & a, Container{B} & b);</pre>
+</td>
+<td>
+    <pre>void foo(Container auto & a, Container auto & b);</pre>
+</td>
+</tr>
+
+
+<tr>
+    <th colspan="5" style="text-align:center"> Unconstrained type </th>
+</tr>
+<tr>
+<td>
+    <pre>template&lt;typename Foo>
+void foo(Foo & a);</pre>
+</td>
+<td>
+    <pre>void foo(auto & a);</pre>
+</td>
+<td>
+    <pre>void foo(auto & a);</pre>
+</td>
+<td>
+    <pre>void foo(auto & a);</pre>
+</td>
+<td>
+    <pre>void foo(auto & a);</pre>
+</td>
+</tr>
+
+
+<tr>
+    <th colspan="5" style="text-align:center"> Multiple constraints <sup><a href="#fn3" id="ref3">3</a></sup></th>
+</tr>
+<tr>
+<td>
+    <pre>template&lt;typename Foo>
+    requires Container&lt;Foo>
+        && Iterable&lt;Foo>
+void foo(Foo & a);</pre>
+</td>
+<td>
+    🚫 Not proposed
+</td>
+<td>
+    🚫 Not proposed
+</td>
+<td>
+    🚫
+</td>
+<td>
+    <pre>void
+foo(Iterable Container auto & a);<pre>
+</td>
+</tr>
+
+
+<tr>
+    <th colspan="5" style="text-align:center"> Return value</th>
+</tr>
+<tr>
+<td>
+    <pre>template &lt;Containter C>C foo();</pre>
+    <pre>template &lt;Containter C>auto foo() ->C;</pre>
+</td>
+<td>
+    <pre>Containter foo();</pre>
+    <pre>auto foo() -> Container;</pre>
+</td>
+<td>
+    <pre>Containter foo();</pre>
+    <pre>auto foo() -> Container;</pre>
+</td>
+<td>
+    <pre>Containter{} foo();</pre>
+    <pre>auto foo() -> Container{};</pre>
+</td>
+<td>
+    <pre>Containter auto foo();<sup><a href="#fn4" id="ref4">4</a></sup></pre>
+    <pre>auto foo() -> Container auto;<sup><a href="#fn4" id="ref4">4</a></sup></pre>
+    <pre>auto foo() -> Container;</pre>
+</td>
+</tr>
+
+
+
+<tr>
+    <th colspan="5" style="text-align:center"> Local variables type checking</th>
+</tr>
+<tr>
+<td>
+    <pre>auto c = get_container();
+static_assert&lt;Container&lt;decltype(c)>()>;</pre>
+</td>
+<td>
+    🚫 Not proposed
+</td>
+<td>
+    🚫 Not proposed
+</td>
+<td>
+    <pre>Container{} c = get_container();<pre>
+</td>
+<td>
+    <pre>Container auto c = get_container();<pre>
+</td>
+</tr>
+
+
+<tr>
+    <th colspan="5" style="text-align:center"> Visual distinction of template function</th>
+</tr>
+<tr>
+<td>
+    &#x2714;
+</td>
+<td>
+    🚫
+</td>
+<td>
+    &#x2714;
+</td>
+<td>
+    &#x2714;
+</td>
+<td>
+    &#x2714;
+</td>
+</tr>
+
+<tr>
+    <th colspan="5" style="text-align:center"> Visual distinction of concepts and concret types</th>
+</tr>
+<tr>
+<td>
+    &#x2714;
+</td>
+<td>
+    🚫
+</td>
+<td>
+    🚫
+</td>
+<td>
+    &#x2714;
+</td>
+<td>
+    &#x2714;
+</td>
+</tr>
+
+<tr>
+    <th colspan="5" style="text-align:center"> Visual distinction of value-concepts and type-concepts</th>
+</tr>
+<tr>
+<td>
+    &#x2714;
+</td>
+<td>
+    🚫
+</td>
+<td>
+    🚫
+</td>
+<td>
+    Yes, but confusing
+</td>
+<td>
+    &#x2714;
+</td>
+</tr>
+</table>
+
+<span id="fn1"><a href="#ref1" title="Jump back">1</a>. There have been several adjective syntax papers (I'm the author of one of them).
+This table attempt to aggregate them.</span>
+<br/>
+<span id="fn2"><a href="#ref2" title="Jump back">2</a>.
+There are other ways to achieve the same result, including using `decltype` but these solutions do not behave the same way in an overload set.</span>
+<br/>
+<span id="fn3"><a href="#ref3" title="Jump back">3</a>. Proposed as a possible extension.</span>
+<br/>
+<span id="fn4"><a href="#ref4" title="Jump back">4</a>. In a return value, `auto` could be optional (no forwarding reference issue) and is offered as a way to maintain a coherent consistency story.</span>
+
+</div>
+</div>
+
+<h2 id="bjarne-simple-proposal">Bjarne &ldquo;simple&rdquo; proposal</h2>
+
+<p>I think Bjarne&rsquo;s proposal is probably what the concept syntax should have been if it has been designed before C++.
+It&rsquo;s simple, minimalist and therefore easy to use and teach.
+the <code>template</code> keyword was added to please the syntax people and allow distinguishing between functions and functions templates.</p>
+
+<p>However, this proposal chooses to ignore the rvalue/forwarding reference ambiguity issue.
+Indeed, the <code>template</code> keyword tells you nothing about the nature of each individual parameter type.</p>
+
+<p>The author believes that the rvalue/forwarding reference ambiguity should be fixed rather than adapting the syntax around that issue.
+While this would indeed be great, all the committee members I talked to think this issue can not be fixed in any meaningful way.
+That ship has sailed when C++ shipped.</p>
+
+<p>Interestingly, it allows a shorthand syntax inspired by concept-lite to declare multiple types with dependent constraints.
+On the other hand, it makes working with NTNTTP a bit clumsy and ambiguous.</p>
+
+<h2 id="herb-s-in-place-proposal">Herb&rsquo;s &ldquo;In-Place&rdquo; proposal</h2>
+
+<p>Inspired by the notion of &ldquo;concept introducers&rdquo; that were initially in the TS,
+this syntax manages to be both the most expressive, and the tersest.
+This, you can declare and constrain the more complicated functions of the STL in a single line.
+It makes working with constraints involving multiple types or having parameters with identical types really easy.
+It also makes possible to visually distinguish concepts from concrete types</p>
+
+<p>But, in order to do do that, a few sacrifices are made</p>
+
+<ul>
+<li><code>template&lt;Unsigned{N}&gt;</code> declare <code>N</code> to be a type while <code>Unsigned{} N</code> is a value - whose type is unsigned.
+Whis this is somewhat logical, I don&rsquo;t think it will be obvious to beginners.</li>
+<li>It is not possible to constrain a value with a value-concept</li>
+<li>The syntax is&hellip; novel. In the simple case (aka <code>void sort(Sortable{} &amp; c);</code>),
+the syntax will not be familiar to C++ developers or people coming from another language.</li>
+</ul>
+
+<p>I also dislike that it introduces dependencies between separate declarations:
+Take <br/>
+    <code>void f(C{A} _1, A _2)</code>:
+In this example, the declaration of <code>_2</code> depends on the declaration of <code>_1</code>.
+Of course, this is achievable already with <code>decltype</code>, but introducing a core syntax will make this pattern more widespread and
+it makes refactoring and tooling harder.</p>
+
+<h2 id="adjective-syntax">Adjective syntax.</h2>
+
+<p>Take any existing variable, generic function/lambda parameter. Stick a Concept name on the left. This entity is now constrained.
+Existing syntax is not modified (Concepts names are added to the left).
+To make things terser, we make <code>typename</code> optional in a template parameter declaration.
+This is the adjective syntax in a nutshell.</p>
+
+<p>Concepts are distinguished from types by the presence of <code>auto</code> - <code>auto</code> is a familiar keyword meaning &ldquo;deduce the type&rdquo;.
+So it&rsquo;s easy to distinguish template functions from non-template functions.</p>
+
+<p>The adjective syntax also offers a natural model to work with NTNTTP parameters.</p>
+
+<p>This syntax focus on simplicity, and consistency while making sure that types and concepts are distinguished in order not to introduce
+more trap into the language.</p>
+
+<p>But because it focuses on making the simple case simple, it is a bit more verbose than other proposed syntax and a <code>require</code> clause is necessary
+to specify constraints on multiple types.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>I tried to stay neutral, but it&rsquo;s no secret that I like the adjective syntax the best.
+It has a good story for forwarding references, NTNTTP and is consistent with the rest of the language and easy to teach. It also has no trap or ambiguities.</p>
+
+<p>But each proposed syntax has both merits and drawbacks so hopefully, the most popular one will prevail!
+To this end, I set up a survey.</p>
+
+<h1 id="survey">Survey</h1>
+
+<p>This is very informal but it may influence me or others to write papers accordingly.
+And I&rsquo;m very curious to know what your opinions on that matter so please take that survey.
+It&rsquo;s hopefully short enough, and if you have more to say, leave a comment!</p>
+
+<p>I hope you enjoyed this article!</p>
+
+<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdWtc712Hp479exxo6j2aDcWjRrsxP2ORzpoxub2rMv5BB0vA/viewform?embedded=true" width="800" height="2000" frameborder="0" marginheight="0" marginwidth="0">
+</iframe>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fconcepts_syntax%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fconcepts_syntax%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fconcepts_syntax%2f&t=The%20tightly-constrained%20design%20space%20of%20convenient%20template%20functions%20declaration%20syntaxes" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-119011218-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element = ce_nodes[i];
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options = "-O1 -fconcepts -std=c++2a"
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options: options,
+                compiler: compiler,
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

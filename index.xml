@@ -6,10 +6,19 @@
     <description>Recent content on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 11 Jun 2018 12:26:11 +0200</lastBuildDate>
+    <lastBuildDate>Wed, 13 Jun 2018 11:32:09 +0200</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>The tightly-constrained design space of convenient template functions declaration syntaxes</title>
+      <link>https://cor3ntin.github.io/posts/concepts_syntax/</link>
+      <pubDate>Wed, 13 Jun 2018 11:32:09 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/concepts_syntax/</guid>
+      <description>Please take the quick survey on concept syntax at the end of this article.  Did you know that the concept TS was merged into the Working Draft in July 2017, in sorry Toronto? And we are a planck length away from merging the Range TS in C++20 as well, including a few goodies such as projections, contiguous ranges/iterators and ranges adaptors? We also added a bunch of general-purpose concepts in the std namespace in Rapperswil.</description>
+    </item>
     
     <item>
       <title>Rapperswil Committee Meeting: A Trip Report</title>
