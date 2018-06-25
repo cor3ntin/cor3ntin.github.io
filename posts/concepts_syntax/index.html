@@ -616,7 +616,7 @@ void foo(Foo & a);</pre>
     <pre>void foo(auto & a);</pre>
 </td>
 <td>
-    <pre>void foo(auto & a);</pre>
+    <pre>template void foo(auto & a);</pre>
 </td>
 <td>
     <pre>void foo(auto & a);</pre>
@@ -666,8 +666,8 @@ foo(Iterable Container auto & a);<pre>
     <pre>auto foo() -> Container;</pre>
 </td>
 <td>
-    <pre>Container foo();</pre>
-    <pre>auto foo() -> Container;</pre>
+    <pre>template Container foo();</pre>
+    <pre>template auto foo() -> Container;</pre>
 </td>
 <td>
     <pre>Container{} foo();</pre>
