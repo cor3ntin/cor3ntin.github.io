@@ -104,7 +104,7 @@ however to an experienced developer, the errors will be much more explicit.</p>
 <p>So, it does not seem too inaccurate to view Concepts as sugar coating over SFINAE, with the added bonus of more explicit errors messages.
 It may not seem very exciting, admittedly.</p>
 
-<p>But since Bjarne Stroustrup dreamed concepts a few things happened.
+<p>But since Alexander Stepanov and Bjarne Stroustrup dreamed concepts a few things happened.
 First, meta-programming tricks, knowledge, and libraries, as well as more robust compiler implementations enabled libraries such as <code>range-v3</code> to exist.
 At the same time, the Concepts proposals were simplified to the point where concepts as they were merged used to be called &ldquo;concepts-lite&rdquo;,
 dropping both <a href="https://isocpp.org/wiki/faq/cpp0x-concepts-history#cpp0x-concept-maps">concepts maps</a> and <a href="https://isocpp.org/wiki/faq/cpp0x-concepts-history#cpp0x-axioms">axioms</a>.</p>
@@ -302,7 +302,7 @@ But of course, that ship has sailed, so even if we introduce a new unambiguous s
 
 <h2 id="7-non-type-non-template-template-parameters-and-value-concepts">7 - Non-type, Non-Template Template Parameters and Value Concepts</h2>
 
-<p>A template parameter can be a type, or a value.
+<p>A template parameter can be a type, or a value (or a template).
 Furthermore, concepts can either constrain a type or a value.
 However, a given concept can never constrain both a type and a value - even if constraining a value implicitly constrains its type.
 For example, an &ldquo;Even&rdquo; concept that would check that <code>v % 2 == 0</code> can be applied to an <code>int</code> but not to a string or a double as neither
@@ -401,13 +401,13 @@ void sort(C & c);</pre>
 void sort(C & c);</pre>
 </td>
 <td>
-    <pre>Container{C} void sort(Container &c);</pre>
+    <pre>Container{C} void sort(C &c);</pre>
 </td>
 <td>
     <pre>template &lt;Container C> void sort(C &c);</pre>
 </td>
 <td>
-    <pre>Container{C} void sort(Container &c);</pre>
+    <pre>Container{C} void sort(C &c);</pre>
 </td>
 <td>
     <pre>template &lt;Container C>
@@ -772,11 +772,11 @@ static_assert&lt;Container&lt;decltype(c)>()>;</pre>
 This table attempt to aggregate them.</span>
 <br/>
 <span id="fn2"><a href="#ref2" title="Jump back">2</a>.
-There are other ways to achieve the same result, including using `decltype` but these solutions do not behave the same way in an overload set.</span>
+There are other ways to achieve the same result, including using <pre>decltype</pre> but these solutions do not behave the same way in an overload set.</span>
 <br/>
 <span id="fn3"><a href="#ref3" title="Jump back">3</a>. Proposed as a possible extension.</span>
 <br/>
-<span id="fn4"><a href="#ref4" title="Jump back">4</a>. In a return value, `auto` could be optional (no forwarding reference issue) and is offered as a way to maintain a coherent consistency story.</span>
+<span id="fn4"><a href="#ref4" title="Jump back">4</a>. In a return value, <pre>auto</pre> could be optional (no forwarding reference issue) and is offered as a way to maintain a coherent consistency story.</span>
 
 </div>
 </div>
