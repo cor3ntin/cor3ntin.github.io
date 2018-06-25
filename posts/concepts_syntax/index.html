@@ -71,7 +71,7 @@
 
 </div>
 
-<p>Did you know that the Concept TS was merged into the Working Draft in July 2017, in sorry Toronto?
+<p>Did you know that the Concept TS was merged into the Working Draft in July 2017, in Toronto?
 And we are a planck length away from merging the Range TS in C++20 as well, including a few goodies such as projections,
 contiguous ranges/iterators and ranges adaptors?
 We also added a bunch of general-purpose concepts in the <code>std</code> namespace in Rapperswil.</p>
@@ -87,8 +87,8 @@ Or maybe people are tired of waiting? After all, we were promised <del>jetpacks<
 <h1 id="what-are-concepts">What are concepts?</h1>
 
 <p>Truth is, there is little concepts can do that can not already be achieved with C++17 and (a lot of) SFINAE.
-Eric Niebler&rsquo;s widely popular <code>ranges-v3</code>, which was the foundation of the Ranges TS makes heavy use of &ldquo;&ldquo;concepts&rdquo;&rdquo; using a lot of
-<a href="http://ericniebler.com/2013/11/23/concept-checking-in-c11/">SFINAE tricks and a few macros</a>. And honestly, using <code>ranges-v3</code> to define or
+Eric Niebler&rsquo;s widely popular <code>range-v3</code>, which was the foundation of the Ranges TS makes heavy use of &ldquo;&ldquo;concepts&rdquo;&rdquo; using a lot of
+<a href="http://ericniebler.com/2013/11/23/concept-checking-in-c11/">SFINAE tricks and a few macros</a>. And honestly, using <code>range-v3</code> to define or
 refine your own concepts is rather easy.
 Still, without a lot of metaprogramming tricks that most developers should not be expected to fully understand, SFINAE is tricky and error-prone.
 Concepts aim to provide an easy way to describe complex requirements on individual types and advanced overload sets.</p>
@@ -105,7 +105,7 @@ however to an experienced developer, the errors will be much more explicit.</p>
 It may not seem very exciting, admittedly.</p>
 
 <p>But since Bjarne Stroustrup dreamed concepts a few things happened.
-First, meta-programming tricks, knowledge, and libraries, as well as more robust compiler implementations enabled libraries such as <code>ranges-v3</code> to exist.
+First, meta-programming tricks, knowledge, and libraries, as well as more robust compiler implementations enabled libraries such as <code>range-v3</code> to exist.
 At the same time, the Concepts proposals were simplified to the point where concepts as they were merged used to be called &ldquo;concepts-lite&rdquo;,
 dropping both <a href="https://isocpp.org/wiki/faq/cpp0x-concepts-history#cpp0x-concept-maps">concepts maps</a> and <a href="https://isocpp.org/wiki/faq/cpp0x-concepts-history#cpp0x-axioms">axioms</a>.</p>
 
@@ -145,7 +145,7 @@ How to distinguish generic functions from the non-generic ones? What about colla
 came to a gloomy stop.</p>
 
 <p>In this context, a brave soul suggested that we could maybe remove the abbreviated syntaxes from the TS and merge the non-controversial bits in the TS.
-And for a little while, a truth was established, allowing concepts to be merged in the Working Draft, while Tom Honnerman enjoyed his well deserved moment of glory.</p>
+And for a little while, a truth was established, allowing concepts to be merged in the Working Draft, while Tom Honermann enjoyed his well deserved moment of glory.</p>
 
 <p><strong>However</strong>.</p>
 
@@ -470,7 +470,7 @@ void sort(C & c);</pre>
     requires Unsigned&lt;decltype(N)></pre>
 </td>
 <td>
-    🚫
+    🚫 Same syntax as the working draft
 </td>
 <td>
     <pre>template&lt;Unsigned_value N></pre>
@@ -493,13 +493,13 @@ void sort(C & c);</pre>
     requires Even&lt;decltype(N)></pre>
 </td>
 <td>
-    🚫
+    🚫 Same syntax as the working draft
 </td>
 <td>
     <pre>template&lt;Even N></pre>
 </td>
 <td>
-    🚫
+    🚫 Same syntax as the working draft
 </td>
 <td>
     <pre>template&lt;Even auto N>
@@ -516,13 +516,13 @@ void sort(C & c);</pre>
         && Even&lt;N> </pre>
 </td>
 <td>
-    🚫
+    🚫 Same syntax as the working draft
 </td>
 <td>
-    🚫
+    🚫 Same syntax as the working draft
 </td>
 <td>
-    🚫
+    🚫 Same syntax as the working draft
 </td>
 <td>
     <pre>template&lt;Unsigned Even auto N>
@@ -588,7 +588,7 @@ void foo(A & a, A & b);</pre>
 void foo(A & a, B & b);</pre>
 </td>
 <td>
-    🚫
+    🚫 Same syntax as the working draft
 </td>
 <td>
     <pre>template
@@ -657,23 +657,23 @@ foo(Iterable Container auto & a);<pre>
 </tr>
 <tr>
 <td>
-    <pre>template &lt;Containter C>C foo();</pre>
-    <pre>template &lt;Containter C>auto foo() ->C;</pre>
+    <pre>template &lt;Container C>C foo();</pre>
+    <pre>template &lt;Container C>auto foo() ->C;</pre>
 </td>
 <td>
-    <pre>Containter foo();</pre>
+    <pre>Container foo();</pre>
     <pre>auto foo() -> Container;</pre>
 </td>
 <td>
-    <pre>Containter foo();</pre>
+    <pre>Container foo();</pre>
     <pre>auto foo() -> Container;</pre>
 </td>
 <td>
-    <pre>Containter{} foo();</pre>
+    <pre>Container{} foo();</pre>
     <pre>auto foo() -> Container{};</pre>
 </td>
 <td>
-    <pre>Containter auto foo();<sup><a href="#fn4" id="ref4">4</a></sup></pre>
+    <pre>Container auto foo();<sup><a href="#fn4" id="ref4">4</a></sup></pre>
     <pre>auto foo() -> Container auto;<sup><a href="#fn4" id="ref4">4</a></sup></pre>
     <pre>auto foo() -> Container;</pre>
 </td>
@@ -783,6 +783,8 @@ There are other ways to achieve the same result, including using `decltype` but 
 
 <h2 id="bjarne-simple-proposal">Bjarne &ldquo;simple&rdquo; proposal</h2>
 
+<p><a href="https://wg21.link/p1079">P1079</a></p>
+
 <p>I think Bjarne&rsquo;s proposal is probably what the concept syntax should have been if it has been designed before C++.
 It&rsquo;s simple, minimalist and therefore easy to use and teach.
 The <code>template</code> keyword was added to please the syntax people and allow distinguishing between functions and functions templates.</p>
@@ -798,6 +800,8 @@ That ship has sailed when C++ shipped.</p>
 On the other hand, it makes working with <acronym title="Non-template, Non-type, template parameter">NTNTTP</acronym> a bit clumsy and ambiguous.</p>
 
 <h2 id="herb-s-in-place-proposal">Herb&rsquo;s &ldquo;In-Place&rdquo; proposal</h2>
+
+<p><a href="https://wg21.link/p0745">P0745</a></p>
 
 <p>Inspired by the notion of &ldquo;concept introducers&rdquo; that were initially in the TS,
 this syntax manages to be both the most expressive, and the tersest.
@@ -823,6 +827,8 @@ Of course, this is achievable already with <code>decltype</code>, but introducin
 it makes refactoring and tooling harder.</p>
 
 <h2 id="adjective-syntax">Adjective syntax.</h2>
+
+<p><a href="https://wg21.link/p0807">P0807</a>, <a href="https://wg21.link/p0791">P0791</a>, <a href="https://wg21.link/p0873">P0873</a></p>
 
 <p>Take any existing variable, generic function/lambda parameter. Stick a Concept name on the left. This entity is now constrained.
 Existing syntax is not modified (Concepts names are added to the left).
@@ -863,7 +869,7 @@ It&rsquo;s hopefully short enough, and if you have more to say, leave a comment!
 
 <h1 id="acknowledgments">Acknowledgments</h1>
 
-<p>Thanks to Simon Brand, Patrice Roy, Vinnie Falco, Christopher Di Bella and Martin Hořeňovský for proof-reading and offering valuable feedbacks.</p>
+<p>Thanks to Simon Brand, Christopher Di Bella, Vinnie Falco, Tom Honermann, Martin Hořeňovský and Patrice Roy or proof-reading and offering valuable feedbacks.</p>
 
       
     <div id="socialshareDiv">
