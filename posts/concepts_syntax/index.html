@@ -193,8 +193,8 @@ and there is now a tacit(?) consensus that each parameter should be deducted sep
 
 <p>The main goal being making templates simpler for most people, we need to find a simple syntax.
 Something easy to teach and easy to learn.
-Hopefully intuitive. But people intuitions change.
-People have different expectations depending on their background, the other languages they, there skill level with C++&hellip;
+Hopefully intuitive. But people&rsquo;s intuitions change.
+People have different expectations depending on their background, the other languages they know, their skill level with C++&hellip;
 It&rsquo;s to be expected that a given syntax will be intuitive to the author that proposed it and most experts will eventually grasp almost anything.
 So what is simple is highly debatable and subjective.</p>
 
@@ -216,10 +216,10 @@ as a committee do not reflect these concerns. - Scott Meyers</p>
 
 <p>What do we mean about consistency?</p>
 
-<p>We probably want template parameters lists to look somewhat like functions parameter lists.
-Or maybe we want functions and lambda to look as much like one another as possible?
-Or maybe should parameters declaration match variable declaration?
-Should NTNTTP declaration and Type template parameter look alike somehow?
+<p>We probably want template parameter lists to look somewhat like function parameter lists.
+Or maybe we want functions and lambda to look as much as one another as possible?
+Should parameters declaration match variable declaration?
+Should NTNTTP declarations and type template parameters look alike somehow?
 What should be done with auto and its multiple meanings?</p>
 
 <p>There is mainly 2 kind of consistencies.
@@ -227,7 +227,7 @@ The first one is familiar sequences of tokens, syntactic patterns used in simila
 Of course, we can argue whether two contexts are similar enough to use the same contexts.
 A familiar syntax used for a different purpose in a different context is inconsistent indeed.</p>
 
-<p>But, I have found that consistency is fore-and-foremost, a good story.
+<p>But, I have found that consistency is, first and foremost, a good story.
 In this case, consistency comes more from a mental model a developer has rather than from the syntax.</p>
 
 <p>The heated <code>const Foo x</code> vs <code>Foo const x</code> is a recent demonstration of that (westconstia forever).
@@ -251,18 +251,18 @@ Does Perl have concepts?</p>
 
 <h2 id="5-verbose">5 - Verbose</h2>
 
-<p>Some people like syntax so much, Bjarne call them the &ldquo;syntax people&rdquo;. We know little of the syntax people, where they come from or what their motivations are.
+<p>Some people like syntax so much, Bjarne calls them the &ldquo;syntax people&rdquo;. We know little of the syntax people, where they come from or what their motivations are.
 Like Ent, they don&rsquo;t write any C++ expression unless it takes a very large amount of exotic tokens to do so.
 For them, any single template declaration should be preceded by &ldquo;Hail to the Chief&rdquo; and every single instantiation be as ceremonious as humanly possible.</p>
 
 <p>The syntax people where first encountered in the 90s when C++ was being standardized.
-At the time, templates and generic programming was rather novel, and people tend to be afraid of novel things.
+At the time, templates and generic programming were rather novel, and people tend to be afraid of novel things.
 And so, people were very keen to have a syntax for generic programming that served as a caution sign that they were indeed using templates.</p>
 
 <p>Bjarne noticed that people tend to like new features to be verbose but often ask for a more terse syntax as they get more familiar with the feature.
 Isn&rsquo;t that the definition of FUD?</p>
 
-<p>Of course, the case can be made than generic programming may lead to increase code size which still isn&rsquo;t acceptable in the most constrained environments,
+<p>Of course, the case can be made that generic programming may lead to increased code size, which still isn&rsquo;t acceptable in the most constrained environments.
 However, most embedded developers seem to not be aware that identifiers can be more than four letters long so I&rsquo;m not sure that&rsquo;s the culprit.</p>
 
 <p>What is certain though, is that it will be difficult to reconcile the idea that generic programming should be ceremonious
@@ -297,15 +297,15 @@ That is, how can we distinguish concrete types from template parameters and conc
 <ul>
 <li>Make sure parameters whose type is a template/concept-name are visually distinguished.</li>
 <li>Retroactively remove the ambiguity from the language. Some people have suggested <code>&amp;&amp;&amp;</code> as a syntax to mean forwarding reference.
-But of course, that ship has sailed, so even if we introduce a new unambiguous syntax, what to do of the old one?</li>
+But of course, that ship has sailed, so even if we introduce a new unambiguous syntax, what should be done with the old one?</li>
 <li>Choose to turn a blind eye on this issue.</li>
 </ul>
 
 <h2 id="7-non-type-non-template-template-parameters-and-value-concepts">7 - Non-type, Non-Template Template Parameters and Value Concepts</h2>
 
 <p>A template parameter can be a type, or a value.
-Furthermore, concepts can either constrained a type or a value.
-However, a given concept can never constrain both a type and a value - Even if constraining a value implicitly constrains its type.
+Furthermore, concepts can either constrain a type or a value.
+However, a given concept can never constrain both a type and a value - even if constraining a value implicitly constrains its type.
 For example, an &ldquo;Even&rdquo; concept that would check that <code>v % 2 == 0</code> can be applied to an <code>int</code> but not to a string or a double as neither
 of those types has a <code>%</code> operator.</p>
 
@@ -321,7 +321,7 @@ A non-type non-reference template-parameter cannot have its address taken.</p>
 
 <p>So a concept or set of constraints can only ever be applied at the time of instantiation.</p>
 
-<p>The following snippet is valid, at no point can a concept constrains a runtime value.
+<p>The following snippet is valid; at no point can a concept constrain a runtime value.
 That&rsquo;s what contracts are for!</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;Even e&gt; <span style="color:#080;font-weight:bold">decltype</span>(e) f()  {
     <span style="color:#080;font-weight:bold">return</span> e + <span style="color:#00d;font-weight:bold">1</span>;
@@ -331,7 +331,7 @@ f&lt;<span style="color:#00d;font-weight:bold">1</span>&gt;(); <span style="colo
 </span><span style="color:#888"></span></code></pre></div>
 <p>I don&rsquo;t think this is an actual issue people struggle with? If you think it&rsquo;s confusing, let me know!</p>
 
-<p>To sum things up</p>
+<p>To sum things up:</p>
 
 <ul>
 <li>A template parameter can be a type or a value</li>
@@ -354,7 +354,7 @@ After all, the world is watching.</p>
 
 <div style='width: 80vw; position: relative; left: 50%; right: 50%;margin-left: -40vw; margin-right: -40vw;'>
 
-<div style="margin:auto">
+<div style="margin:auto;overflow-x:auto;">
 <table>
 <tr>
     <th> <a href="http://eel.is/c++draft/temp.param#nt:constrained-parameter">C++20 draft</a>
