@@ -571,8 +571,7 @@ void foo(A & a, A & b);</pre>
     🚫 Same syntax as the working draft
 </td>
 <td>
-    <pre>void foo(Container{A} & a, A & b);</pre>
-    <pre>void foo(Container{A} & x, C{A} & b);</pre>
+    <pre>void foo(Container{A} & x, Container{A} & b);</pre>
 </td>
 <td>
     🚫 Same syntax as the working draft
