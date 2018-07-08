@@ -6,10 +6,20 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Jun 2018 11:32:09 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 07 Jul 2018 11:16:27 +0200</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Concept and template syntax take 836</title>
+      <link>https://cor3ntin.github.io/posts/template_syntax2/</link>
+      <pubDate>Sat, 07 Jul 2018 11:16:27 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/template_syntax2/</guid>
+      <description>The return of the adjective syntax A couple of weeks ago, I made an article on concept terse syntax and I thank the people who took the time to take the poll, it was quite revealing.
+And since then a new paper, P1141 - Yet another approach for constrained declarations came out. Despite the name, it&amp;rsquo;s pretty much the Adjective syntax, repacked with an impressive authors list including Herb Sutter (author of the In-Place syntax proposal), Bjarne Stroustrup and Gabriel Dos Reis (authors of &amp;ldquo;minimal solution&amp;rdquo; proposals) and Thomas Köppe (author of one of the adjective syntax proposal), so it would seem that we are converging towards a solution that pleases a large number of people (and that is, after all, the name of the game).</description>
+    </item>
     
     <item>
       <title>The tightly-constrained design space of convenient syntaxes for generic programming</title>
