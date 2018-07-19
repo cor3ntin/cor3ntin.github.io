@@ -322,14 +322,14 @@ easier to parse, but that doesn&rsquo;t change the key observation that (human) 
 <em>Bjarne Stroustrup, Parameterized Types for C++, 1988</em>
 </div>
 
-<p>And what I did then, was reinventing a 30 years old idea&hellip;</p>
+<p>And what I did then, was to reinvent a 30 years old idea&hellip;</p>
 
 <p>However, there are a lot of things to take away from this insightful quote.</p>
 
 <p>One of the issue with this syntax was that in
 <code>T foo&lt;typename T&gt;();</code>, <code>T</code> is used before it is declared. First, I don&rsquo;t believe this
 would add a lot (if any) complexity to a modern compiler, late parsing happening in quite a few places already.
-But, most importantly, we did, in C++11 introduce a trailing return syntax akin to the one Bjarne mentions:
+But, most importantly, in C++11, we did introduce a trailing return syntax akin to the one Bjarne mentions:
 <code>auto foo() -&gt; int ();</code>.
 The other concern regarding parsing ambiguities are resolved by always having a leading return type
 (which can be <code>auto</code>).</p>
@@ -378,7 +378,96 @@ having a shorter syntax for template parameters would be well received!</p>
 </div>
 </div>
 
-<h1 id="unified-syntax">Unified Syntax</h1>
+<h2 id="motivation-rationale-and-design-goals">Motivation, Rationale and design goals.</h2>
+
+<p>I propose that the <em>template parameter list</em> can be put immediately after a type name in types and function declaration,
+instead of before the declaration. The <code>template</code> keyword is not used.</p>
+
+<h3 id="why">Why?</h3>
+
+<ul>
+<li>Because people have expressed a desire for a terser function template declaration syntax</li>
+<li>Because it adds a lot of consistency and uniformity to the language, notably by making lambdas and functions obey the same grammar rules.</li>
+<li>This, in turn, makes the language easier to teach and learn.</li>
+<li>By forgoing the template keyword, template declaration feel less ceremonious, achieving a long-desired goal of some committee members to make generic programming
+more seamlessly integrated with non-generic programming.</li>
+</ul>
+
+<h3 id="why-not">Why not?</h3>
+
+<ul>
+<li>I merely proposes to get rid of the <code>template</code> keyword and shifting the <em>template-parameter-list</em> a few token to the left, which might be deemed not worth the trouble</li>
+<li>We would have 2 syntaxes to declare a template parameter list</li>
+<li>Some questions remain, notably regarding potential parsing ambiguities involving template specialization.</li>
+</ul>
+
+<h3 id="what-about-p1141">What about P1141?</h3>
+
+<p>I am strongly in favor of P1141, and this means to complement it.
+If you need to constrain a function parameter, the syntax for function parameters introduced by P1141 will serve you nicely.
+If you need to introduce a constrained named type or need to specify a relation between multiple parameters, the syntax proposed here
+will be better. Note that the syntax for constrained template parameters proposed by P1141 would apply to what I am proposing here.</p>
+
+<h3 id="is-the-world-ready-for-a-terser-syntax">Is the world ready for a terser syntax?</h3>
+
+<p>I don&rsquo;t know, it certainly looks that way.
+In any case, if we are ready for an abbreviated syntax such as P1141, we should be willing to get rid of <code>template</code> in more places.</p>
+
+<h3 id="what-about-type-introducers-such-as-proposed-by-the-concept-in-place-syntax-proposal">What about type introducers such as proposed by the &ldquo;Concept In-Place Syntax&rdquo; proposal?</h3>
+
+<p>My personal conviction is that it is a bad idea to be able to introduce types in a parameter declaration as it introducing dependencies
+between parameters and declarations, which hinder the ability to reason locally about the code.
+I see value in the &ldquo;If you need to introduce a type, use a template parameter list&rdquo;, which is how C++20&rsquo;s generic lambdas were designed.
+Here, I propose a shorter syntax to introduce types that do not require a new syntax (it&rsquo;s a familiar syntax made a bit terser).</p>
+
+<h3 id="can-it-be-made-terser-still">Can it be made terser still?</h3>
+
+<p>Yes, you can use <code>void f&lt;class T&gt;(){};</code> instead of <code>void f&lt;typename T&gt;(){};</code>
+as these two keywords have had the same meaning in this context for quite a while.</p>
+
+<h3 id="nothing-terser">Nothing terser?</h3>
+
+<p>I tend to think that terseness is a noble goal. Up to a point.
+Cramming too much information in too few keywords is done at the cost of teachability, consistency, and maintainability.
+These properties are tied together and at some point terseness becomes detrimental.</p>
+
+<h2 id="functions-and-lambda">Functions and lambda</h2>
+
+<p>The following table compares lambdas as in the C++ WD and P1141 and functions as per the following proposal.</p>
+
+<div style='width: 70vw; position: relative; left: 50%; right: 50%;margin-left: -35vw; margin-right: -35vw;'>
+
+<div style="margin:auto;overflow-x:auto;">
+<table>
+<tr >
+    <th style="text-align: center"> C++20 Lambdas </th>
+    <th style="text-align: center"> Function template </th>
+</tr>
+<tr>
+<td>
+    <pre>auto f = [](){}</pre>
+<p><pre>auto f = []() -> int {} </pre></p>
+<p><pre>auto f = [](const Containter auto &){} </pre></p>
+<p><pre>auto f = []&lt;typename T>(const T & a, const T & b){} </pre></p>
+<p><pre>auto f = []&lt;Regular T>(const T & a, const T & b){} </pre></p>
+<p><pre>auto merge = []<typename IN1, typename IN2, typename Out)
+    requires Mergeable<IN1,IN2,OUT>(IN1, IN1, IN2, IN2, OUT) -> Out;</pre></p>
+</td>
+<td> <pre>void f(){}</pre>
+<p>  <pre>auto f() -> int {} </pre></p>
+<p>  <pre>auto f(const Containter auto &){} </pre></p>
+<p>  <pre>auto f&lt;typename T>(const T & a, const T & b){} </pre></p>
+<p>  <pre>auto f&lt;Regular T>(const T & a, const T & b){} </pre></p>
+<p>  <pre>auto merge<typename IN1, typename IN2, typename Out)
+    requires Mergeable<IN1,IN2,OUT>(IN1, IN1, IN2, IN2, OUT) -> Out; </pre>
+</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+
+<h1 id="unified-theory-of-everything">Unified Theory of Everything</h1>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">/*A lambda*/</span>
 <span style="color:#080;font-weight:bold">auto</span> foo = [](<span style="color:#888;font-weight:bold">int</span>) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
 
@@ -479,6 +568,105 @@ concept Everything&lt;<span style="color:#080;font-weight:bold">typename</span> 
   <span style="color:#080;font-weight:bold">friend</span> <span style="color:#888;font-weight:bold">void</span> f&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt;(T){ <span style="color:#888">/* ... */</span> }
 };
 </code></pre></div>
+<h2 id="potential-issues-and-open-questions">Potential issues and open questions</h2>
+
+<h3 id="can-we-have-2-template-parameters-list-in-the-same-declaration">Can we have 2 template parameters list in the same declaration?</h3>
+
+<p>Aka, should <code>template&lt;typename T&gt; void f&lt;typename U&gt;();</code> be valid ?</p>
+
+<p>For me, the answer is clearly no. While I obviously see the benefit of having a terser syntax,
+for the sake of maintainability and readability, I think a given declaration should either use a <em>template-head</em>
+(<code>template&lt;typename T&gt;</code> or a <em>template-parameter-list</em>, but never both.)</p>
+
+<h3 id="where-to-put-the-requires-clause-s">Where to put the requires clause(s)?</h3>
+
+<p>In the Working Draft, there are two places where one can put a require clause.
+After the template parameter list preceding the declaration, and before trailing return type.
+Quoting the standard:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f1</span>(<span style="color:#888;font-weight:bold">int</span> a) requires <span style="color:#038">true</span>;               <span style="color:#888">// OK
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">f2</span>(<span style="color:#888;font-weight:bold">int</span> a) -&gt; <span style="color:#888;font-weight:bold">bool</span> requires <span style="color:#038">true</span>;       <span style="color:#888">// OK
+</span><span style="color:#888">// error: requires-clause precedes trailing-return-type
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">f3</span>(<span style="color:#888;font-weight:bold">int</span> a) requires <span style="color:#038">true</span> -&gt; <span style="color:#888;font-weight:bold">bool</span>;
+</code></pre></div>
+<p>And, as I&rsquo;m proposing to have a second place to put a template parameter list, I wonder :
+Is it reasonable or useful to have two places where to put requires clauses? At the same time?</p>
+
+<p>I am not, however, proposing to change that.
+There can be a trailing-requires-clause and a requires clauses after the template parameters list.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">// OK in the WD: truer syntad have never been worded.
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> b = <span style="color:#038">true</span>&gt; requires <span style="color:#038">true</span> <span style="color:#888;font-weight:bold">bool</span> f() -&gt; requires <span style="color:#038">true</span>
+<span style="color:#888">// OK in the WD
+</span><span style="color:#888"></span>[]&lt;<span style="color:#888;font-weight:bold">bool</span> b = <span style="color:#038">true</span>&gt; requires <span style="color:#038">true</span> () -&gt; <span style="color:#888;font-weight:bold">bool</span> requires <span style="color:#038">true</span> {};
+<span style="color:#888">// Ok, as proposed
+</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b = <span style="color:#038">true</span>&gt; requires <span style="color:#038">true</span> () -&gt; requires <span style="color:#038">true</span> {}
+</code></pre></div>
+<p>Because we do not allow 2 template parameter lists, the following are ill-formed:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">// Ill-formed (one template parameters list is enough)
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> a&gt; <span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b&gt;();
+<span style="color:#888">// Ill-formed !
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> a&gt; requires <span style="color:#038">true</span> <span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b&gt; requires <span style="color:#038">true</span>();
+<span style="color:#888">// Stop it
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> a&gt; requires <span style="color:#038">true</span> <span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b&gt; requires <span style="color:#038">true</span>() requires <span style="color:#038">true</span>;
+</code></pre></div>
+<h3 id="should-a-leading-return-type-depending-on-a-template-parameter-be-valid">Should a leading return type depending on a template parameter be valid?</h3>
+
+<p>The function <code>template &lt;typename T&gt; T make_t();</code> can be rewritten <code>auto make_t&lt;typename T&gt;() -&gt; T;</code>.
+But should we allow <code>T make_t&lt;typename T&gt;();</code> to be well-formed, ie to refer to a not-yet-declared type?</p>
+
+<p>This would require delaying the parsing of the return type of all
+functions (except those that are preceded by a <em>template-head</em> ), until after the parsing of
+the <em>template-parameter-list</em> that may be present after the function name.</p>
+
+<p>While I think this could be implemented, the complexity it would add may not be worth the trouble.
+Using type before they have been declared also sets a precedent I&rsquo;m not quite comfortable with.
+The closest valid syntax to that I can think of is <code>struct S* s;</code></p>
+
+<h3 id="specialization">Specialization</h3>
+
+<p>The proposed syntax has the potential to make template specialization easier, by putting the template parameter list closer to the related declaration.</p>
+
+<p>Given</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T1</span>&gt; <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">A</span> {
+    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T2</span>&gt; <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">B</span> {
+        <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T3</span>&gt; <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">C</span> {};
+    };
+};
+</code></pre></div>
+<p>This specialization</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;&gt;
+<span style="color:#080;font-weight:bold">template</span> &lt;&gt;
+<span style="color:#080;font-weight:bold">template</span> &lt;&gt;
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">A</span>&lt;<span style="color:#888;font-weight:bold">int</span>&gt;::B&lt;<span style="color:#888;font-weight:bold">int</span>&gt;::C&lt;<span style="color:#888;font-weight:bold">int</span>&gt; {};
+</code></pre></div>
+<p>Can be rewritten as <code>class A&lt;int&gt;::B&lt;int&gt;::C&lt;int&gt; {};</code>, which is less verbose, while still being readable.</p>
+
+<p>In fact, a compiler can diagnostic a missing <code>template &lt;&gt;</code>.</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> X&gt; <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">D</span>{};
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">D</span>&lt;<span style="color:#888;font-weight:bold">int</span>&gt;{};
+<span style="color:#888">//error: an explicit specialization must be preceded by &#39;template &lt;&gt;&#39;
+</span><span style="color:#888"></span></code></pre></div>
+</div>
+
+
+<p>There may, however, be some issues.</p>
+
+<p>For one, given <code>class Foo&lt;int&gt;{};</code>, a human reader, without context, can&rsquo;t know whether <code>Foo</code> declares a template class with an <code>int</code> template
+parameter or specialize <code>Foo</code> for <code>ìnt</code>.
+Given the outcomes of numerous recent syntax-related discussions, I do expect that people will want a way to make that distinction.</p>
+
+<p>But the compiler would also have to do some look ahead to distinguish declarations from specialization with nested types.
+The following example was provided by Tony V.E. While unambiguous, it requires a bit more look ahead:</p>
+
+<pre><code>struct T { ... };
+Bar foo&lt;typename T::type&gt;(int t);
+</code></pre>
+
+<p>I think it might be reasonable not to allow specialization using this new syntax as a first approach,
+specialization can still be achieved using the current syntax.</p>
+
       
     <div id="socialshareDiv">
         <h1>Share on </h1>
