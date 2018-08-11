@@ -166,7 +166,7 @@ Which bring us to the next point</p>
 
 <h3 id="typename">typename</h3>
 
-<p>I think one of the issues with the first adjective syntax papers is that people found <code>&lt;ConceptName typename T&gt;</code> overly verbose and a time where the committee was <a href="wg21.link/0634">down with typename</a>.
+<p>I think one of the issues with the first adjective syntax papers is that people found <code>&lt;ConceptName typename T&gt;</code> overly verbose and a time where the committee was <a href="https://wg21.link/0634">down with typename</a>.
 And of course, omitting <code>typename</code> is a good default as Bjarne S notices type parameter probably constitute 99% of cases.</p>
 
 <p>So, it&rsquo;s very fortunate that we don&rsquo;t have to specify <code>typename</code> systematically.</p>
@@ -231,7 +231,7 @@ And, it&rsquo;s important to remember when talking about syntax that code is mea
 <p>So we are left of the following choices</p>
 
 <ul>
-<li>Do the <code>template</code> dance : template <typename T> const T &amp; min(const T &amp; a, const T &amp; b);`</li>
+<li>Do the <code>template</code> dance : template &lt;typename T&gt; const T &amp; min(const T &amp; a, const T &amp; b);`</li>
 <li>Using decltype (and getting it wrong) : <code>auto min(const T &amp; a, decltype(a), b) -&gt; decltype(a);</code></li>
 <li>Using some kind of type introducer  <code>auto min(const auto{T} &amp; a, const T &amp;b) -&gt; const T&amp;</code></li>
 </ul>
@@ -250,7 +250,7 @@ I think there is.</p>
 </ul>
 
 <p>I was also thinking about Lambdas. Lambdas have an interesting history. They started by not having any form of syntax support in C++11.
-Then in C++17, they gained support for auto parameters. So in C++17, you can have <code>[](auto foo){}</code> but not <code>void foo(){}</code>.</p>
+Then in C++17, they gained support for auto parameters. So in C++17, you can have <code>[](auto foo){}</code> but not <code>void bar(auto foo){}</code>.</p>
 
 <p>People then realized that giving a name to the type of the deduced parameter might be useful, so in C++20,  The following syntax was introduced.
 <code>[]&lt;typename T&gt;(T foo) {}</code></p>
