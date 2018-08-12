@@ -320,12 +320,19 @@ then parse the inline definitions, method default parameters, and data member in
 </div>
 
 
-<p>Here, what happens is
-* The compiler creates a member <code>a</code> of <code>auto</code> type, at this stage the variable <code>a</code> has a name, but no actual, usable type.
-* The compiler creates a function <code>b</code> of type int;
-* The compiler parses the initializer of <code>a</code> and <code>a</code> becomes an <code>int</code>, however, <code>b()</code> is not called.
-* The compiler parses the definition of <code>b</code>
-* The compiler construct foo and calls <code>b()</code> to initialize <code>a</code></p>
+<p>Here, what happens is</p>
+
+<ol>
+<li><p>The compiler creates a member <code>a</code> of <code>auto</code> type, at this stage the variable <code>a</code> has a name, but no actual, usable type.</p></li>
+
+<li><p>The compiler creates a function <code>b</code> of type int;</p></li>
+
+<li><p>The compiler parses the initializer of <code>a</code> and <code>a</code> becomes an <code>int</code>, however, <code>b()</code> is not called.</p></li>
+
+<li><p>The compiler parses the definition of <code>b</code></p></li>
+
+<li><p>The compiler construct foo and calls <code>b()</code> to initialize <code>a</code></p></li>
+</ol>
 
 <p>In some cases, the class is not yet complete when the compiler deduces a data member type, leading to an ill-formed program:</p>
 
@@ -339,11 +346,14 @@ then parse the inline definitions, method default parameters, and data member in
 </div>
 
 
-<p>Here:
-* The compiler creates a member <code>a</code> of <code>auto</code> type, at this stage the variable <code>a</code> has a name, but no actual, usable type.
-* The compiler  creates a member <code>b</code> of <code>auto</code> type
-* The compiler parses the initializer of <code>a</code> in order to determine its type
-* At this stage, neither the size of a or b is known, the class is &ldquo;incomplete&rdquo; and <code>sizeof</code> expression is ill-formed: <code>error: invalid application of 'sizeof' to an incomplete type 's'</code>.</p>
+<p>Here:</p>
+
+<ol>
+<li>The compiler creates a member <code>a</code> of <code>auto</code> type, at this stage the variable <code>a</code> has a name, but no actual, usable type.</li>
+<li>The compiler  creates a member <code>b</code> of <code>auto</code> type</li>
+<li>The compiler parses the initializer of <code>a</code> in order to determine its type</li>
+<li>At this stage, neither the size of a or b is known, the class is &ldquo;incomplete&rdquo; and <code>sizeof</code> expression is ill-formed: <code>error: invalid application of 'sizeof' to an incomplete type 's'</code>.</li>
+</ol>
 
 <p>So there are certain things you can not do within auto-nsdmi: calling <code>sizeof</code> referring to <code>*this</code> (even in decltype), constructing an instance of the class, etc.
 All of this makes sense and you would run with the same issue with <code>decltype</code>. Or simply by doing</p>
@@ -369,10 +379,13 @@ All of this makes sense and you would run with the same issue with <code>decltyp
 </div>
 
 
-<p>Here:
-* The compiler creates a member <code>a</code> of <code>auto</code> type, at this stage the variable <code>a</code> has a name, but no actual, usable type.
-* The compiler creates a member <code>b</code> of <code>auto</code> type, at this stage the variable <code>b</code> has a name, but no actual, usable type.
-* The compiler parses the initializer of <code>a</code> in order to determine its type. the type of <code>b</code> is unknown and therefore the program is ill-formed.</p>
+<p>Here:</p>
+
+<ol>
+<li>The compiler creates a member <code>a</code> of <code>auto</code> type, at this stage the variable <code>a</code> has a name, but no actual, usable type.</li>
+<li>The compiler creates a member <code>b</code> of <code>auto</code> type, at this stage the variable <code>b</code> has a name, but no actual, usable type.</li>
+<li>The compiler parses the initializer of <code>a</code> in order to determine its type. the type of <code>b</code> is unknown and therefore the program is ill-formed.</li>
+</ol>
 
 <p>Which again, should feel natural to most c++ developers. Alas, these quirks were enough for the feature never to make in the working draft.</p>
 
