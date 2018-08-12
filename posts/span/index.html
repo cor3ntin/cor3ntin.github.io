@@ -97,7 +97,7 @@ And an easy-to-review, <a href="https://wg21.link/P1037">200 pages</a> long prop
 
 <p>Trying not to break any eggs, I would say it can be described as <strong>a fixed-sized, non-owning wrapper over a contiguous sequence of objects letting you iterate and mutate the individual items in that sequence</strong>.</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="compiler_explorer compiler_explorer_block highlight"  >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
 </span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;gsl/span&gt;</span><span style="color:#c00;font-weight:bold">
@@ -237,7 +237,7 @@ View.</p>
 <p>In C++20, a range is very simply something with a <code>begin()</code> and an <code>end()</code>, therefore a <code>span</code> is a range.
 We can verify that this is indeed the case:</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-concepts">
     
 <xmp style="display:none;">#include <stl2/detail/range/concepts.hpp>
 #include <vector>
@@ -257,7 +257,7 @@ We can verify that this is indeed the case:</p>
 <p>While currently neither the notion of <code>contiguous iterator</code> or the <code>ContiguousRange</code> concept are part of C++20, <a href="https://wg21.link/P0944">there is a proposal</a>.
 <del>Weirdly, I could not find a proposal for <code>ContiguousRange</code></del><sup class="footnote-ref" id="fnref:fix-contiguous-range"><a href="#fn:fix-contiguous-range">1</a></sup>. Fortunately, it is implemented in <code>cmcstl2</code> so we can test for it.</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-concepts">
     
 <xmp style="display:none;">#include <stl2/detail/range/concepts.hpp>
 #include <gsl/span></xmp>
@@ -277,7 +277,7 @@ can implement it ourselves?</p>
 
 <p>For example, we could add some sugar coating over a pair of iterators:</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-concepts" >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;gsl/span&gt;</span><span style="color:#c00;font-weight:bold">
 </span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;stl2/detail/range/concepts.hpp&gt;</span><span style="color:#c00;font-weight:bold">
@@ -338,7 +338,7 @@ it is not possible to construct a <code>span</code>.</p>
 
 <p>This will not compile:</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="compiler_explorer compiler_explorer_block highlight" >
     
 <xmp style="display:none;">#include <vector>
 #include <gsl/span></xmp>
@@ -364,7 +364,7 @@ string view paper.</p>
 
 <p>In the meantime, using span with the std algorithms will have to be done like that I guess.</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="compiler_explorer compiler_explorer_block highlight" >
     
 <xmp style="display:none;">#include <vector>
 #include <gsl/span>
@@ -410,7 +410,7 @@ int main() {
 
 <p>Given that, we can rewrite our span class</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-concepts">
     
 <xmp style="display:none;">#include <gsl/span>
 #include <stl2/detail/range/concepts.hpp>
@@ -592,7 +592,7 @@ If you can&rsquo;t compare them, you can&rsquo;t compare them wrongly.</p>
 <p>A solution may be to resort to some <code>ADL</code> trickery to make <code>span</code> comparable only in the context of the standard library.
 That can be demonstrated:</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="compiler_explorer compiler_explorer_block highlight"  >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
 </span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;algorithm&gt;</span><span style="color:#c00;font-weight:bold">
@@ -804,14 +804,20 @@ ga('send', 'pageview');
 </script>
 <script>
 (function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -fconcepts -std=c++2a"},
+    }
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
-        let element = ce_nodes[i];
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
         let codeBlock = element.querySelector(".highlight code :not([hidden])");
         let source = unescape(element.textContent).trim();
         let content = [];
         let compiler = "g81";
-        let options = "-O1 -fconcepts -std=c++2a"
+        let options =
         content.push({
             type: 'component',
             componentName: 'codeEditor',
@@ -828,8 +834,8 @@ ga('send', 'pageview');
             componentState: {
                 source: 1,
                 filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
-                options: options,
-                compiler: compiler,
+                options : settings["options"],
+                compiler: settings["compiler"],
                 fontScale: 0.8,
                 libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}]
 

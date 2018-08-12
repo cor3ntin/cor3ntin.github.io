@@ -62,6 +62,28 @@
         <div class="subtitle is-6 is-pulled-right">
             
         </div>
+        <h2 class="subtitle is-6">March 3, 2018</h2>
+        <h1 class="title"><a href="https://cor3ntin.github.io/posts/dep_manager/">Accio Dependency Manager</a></h1>
+        <div class="content">
+            You may have noticed a number of “What should go in the Standard Library” posts over the last few days. These posts have generated quite a bit of comments on Reddit and discussions on Slack. I hope more people chime in.
+The conclusion is that we pretty much all agree to disagree on what the STL is or should be. I’m not sure we can even agree on what C++ is.
+            
+            <a class="button is-link" href="https://cor3ntin.github.io/posts/dep_manager/" style="height:28px">
+            Read more
+            <span class="icon is-small">
+                <i class="fa fa-angle-double-right"></i>
+            </span>
+            </a>
+            
+        </div>
+        </article>
+        
+    
+    
+        <article id="article">
+        <div class="subtitle is-6 is-pulled-right">
+            
+        </div>
         <h2 class="subtitle is-6">February 21, 2018</h2>
         <h1 class="title"><a href="https://cor3ntin.github.io/posts/what_should_go_in_stl/">A cake for your cherry: what should go in the C&#43;&#43; standard library?</a></h1>
         <div class="content">
@@ -201,28 +223,6 @@ You have to choose, there is no midway
         </article>
         
     
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">January 10, 2018</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/undef_preprocessor/">Undefining the C&#43;&#43; Pre-processor</a></h1>
-        <div class="content">
-            There are only two kinds of languages: the ones people complain about and the ones nobody uses — Bjarne Stroustrup
-I like that quote. it explains both JavaScript and Haskell. And by that measure the preprocessor is a great language in that people use it, a lot. It’s never considered separately from C and C++, but if it was, it would be the number one language on TIOBE. The preprocessor is both extremely useful, and pervasive.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/undef_preprocessor/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
   </div>
 </section>
 <section class="section">
@@ -331,14 +331,20 @@ ga('send', 'pageview');
 </script>
 <script>
 (function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -fconcepts -std=c++2a"},
+    }
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
-        let element = ce_nodes[i];
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
         let codeBlock = element.querySelector(".highlight code :not([hidden])");
         let source = unescape(element.textContent).trim();
         let content = [];
         let compiler = "g81";
-        let options = "-O1 -fconcepts -std=c++2a"
+        let options =
         content.push({
             type: 'component',
             componentName: 'codeEditor',
@@ -355,8 +361,8 @@ ga('send', 'pageview');
             componentState: {
                 source: 1,
                 filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
-                options: options,
-                compiler: compiler,
+                options : settings["options"],
+                compiler: settings["compiler"],
                 fontScale: 0.8,
                 libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}]
 

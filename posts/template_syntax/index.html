@@ -642,7 +642,7 @@ The closest valid syntax to that I can think of is <code>struct S* s;</code></p>
 
 <p>In fact, a compiler can diagnostic a missing <code>template &lt;&gt;</code>.</p>
 
-<div class="compiler_explorer compiler_explorer_block highlight">
+<div class="compiler_explorer compiler_explorer_block highlight"  >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> X&gt; <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">D</span>{};
 <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">D</span>&lt;<span style="color:#888;font-weight:bold">int</span>&gt;{};
@@ -773,14 +773,20 @@ ga('send', 'pageview');
 </script>
 <script>
 (function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -fconcepts -std=c++2a"},
+    }
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
-        let element = ce_nodes[i];
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
         let codeBlock = element.querySelector(".highlight code :not([hidden])");
         let source = unescape(element.textContent).trim();
         let content = [];
         let compiler = "g81";
-        let options = "-O1 -fconcepts -std=c++2a"
+        let options =
         content.push({
             type: 'component',
             componentName: 'codeEditor',
@@ -797,8 +803,8 @@ ga('send', 'pageview');
             componentState: {
                 source: 1,
                 filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
-                options: options,
-                compiler: compiler,
+                options : settings["options"],
+                compiler: settings["compiler"],
                 fontScale: 0.8,
                 libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}]
 

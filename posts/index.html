@@ -60,6 +60,8 @@
     
     
     
+    
+    
         <article id="article">
         <div class="subtitle is-6 is-pulled-right">
             
@@ -138,28 +140,6 @@ The language provisions for standard attributes as well as non-standard attribut
 Most standard attributes were added in C++14 and 17.
             
             <a class="button is-link" href="https://cor3ntin.github.io/posts/attributes/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">March 3, 2018</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/dep_manager/">Accio Dependency Manager</a></h1>
-        <div class="content">
-            You may have noticed a number of “What should go in the Standard Library” posts over the last few days. These posts have generated quite a bit of comments on Reddit and discussions on Slack. I hope more people chime in.
-The conclusion is that we pretty much all agree to disagree on what the STL is or should be. I’m not sure we can even agree on what C++ is.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/dep_manager/" style="height:28px">
             Read more
             <span class="icon is-small">
                 <i class="fa fa-angle-double-right"></i>
@@ -266,14 +246,20 @@ ga('send', 'pageview');
 </script>
 <script>
 (function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -fconcepts -std=c++2a"},
+    }
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
-        let element = ce_nodes[i];
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
         let codeBlock = element.querySelector(".highlight code :not([hidden])");
         let source = unescape(element.textContent).trim();
         let content = [];
         let compiler = "g81";
-        let options = "-O1 -fconcepts -std=c++2a"
+        let options =
         content.push({
             type: 'component',
             componentName: 'codeEditor',
@@ -290,8 +276,8 @@ ga('send', 'pageview');
             componentState: {
                 source: 1,
                 filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
-                options: options,
-                compiler: compiler,
+                options : settings["options"],
+                compiler: settings["compiler"],
                 fontScale: 0.8,
                 libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}]
 
