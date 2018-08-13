@@ -389,11 +389,23 @@ All of this makes sense and you would run with the same issue with <code>decltyp
 
 <p>Which again, should feel natural to most c++ developers. Alas, these quirks were enough for the feature never to make in the working draft.</p>
 
+<h3 id="binary-compatibility">Binary compatibility</h3>
+
+<p>Changing <code>struct S { auto x = 0; };</code> to <code>struct S { auto x = 0.0 ; };</code> breaks abi compatibility. While this may indeed be a bit confusing, functions with <code>auto</code>
+return type have the same issue. In general exposing binary-stable interfaces in C++ is a complicated exercise that should be avoided.
+This proposed feature does not significantly exacerbate the issue.
+If for some reason you care about binary compatibility, avoid using <code>auto</code> in your exported interfaces. And maybe avoid using <em>data member initializers</em> altogether.</p>
+
 <h2 id="is-a-paper-coming">Is a paper coming?</h2>
 
-<p>It&rsquo;s not something I plan to do, I just wanted to start a discussion again!</p>
+<p>It&rsquo;s not something I plan to do, I just wanted to start a discussion again!
+The <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2713.html">original paper</a> is too old to be still relevant.</p>
 
-<p>It took me a while to find what exactly prevents auto NSDMI in the standard, so let&rsquo;s look at some wording.</p>
+<p>The author noted at the time:
+&gt; Recently, it was pointed out on comp.lang.c++.moderated that one can get the same effect anyway, just with uglier code, using decltype.
+Because of that, the author believes that the objection to auto has softened.</p>
+
+<p>The wording of the standard changed significantly since then. Enough that it took me a while to find what exactly prevents auto NSDMI in today&rsquo;s standard, so let&rsquo;s look at some wording.</p>
 
 <blockquote>
 <p><a href="http://eel.is/c++draft/dcl.spec.auto">dcl.spec.auto</a> The type of a variable declared using auto or decltype(auto) is deduced from its initializer. This use is allowed in an initializing declaration ([dcl.init]) of a variable. auto or decltype(auto) shall appear as one of the decl-specifiers in the decl-specifier-seq and the decl-specifier-seq shall be followed by one or more declarators, each of which shall be followed by a non-empty initializer.</p>
@@ -405,22 +417,22 @@ All of this makes sense and you would run with the same issue with <code>decltyp
 <p><a href="http://eel.is/c++draft/basic#6">basic</a> A variable is introduced by the declaration of a reference other than a non-static data member or of an object. The variable&rsquo;s name, if any, denotes the reference or object.</p>
 </blockquote>
 
-<p>It took me a while to think of looking up the definition variable, which single-out non-static data members. neat.</p>
+<p>I was stuck for quite some time before I thought of checking up the normative definition of <code>variable</code>, which single-out non-static data members. Neat.</p>
 
-<p>So, adding auto nsdmi to the standard would only requiere to add:</p>
+<p>So, adding auto NSDMI to the standard would only requiere to add:</p>
 
 <blockquote>
 <p><a href="http://eel.is/c++draft/dcl.spec.auto">dcl.spec.auto</a> The type of a variable <span style="background-color:#e6ffed;"> or data-member</span> declared using auto or decltype(auto) is deduced from its initializer. This use is allowed in an initializing declaration ([dcl.init]) of a variable.</p>
 </blockquote>
 
-<p>But the committee may also want to specify exactly the way auto NSDMI and late class parsing interact, which is easy enough to explain in a blog post but much harder to write wording for.</p>
+<p>But the committee may also want to specify exactly the way auto-NSDMI and late class parsing interact, which is easy enough to explain in a blog post but much harder to write wording for.</p>
 
 <h2 id="acknowledgments">Acknowledgments</h2>
 
 <ul>
-<li>Matt Godbolt and the compiler explorer team to putting this experimental branch on compiler explorer</li>
-<li>Faisal Vali who authored the initial clang support</li>
-<li>Alexandr Timofeev who motivated me to write this article</li>
+<li>Matt Godbolt and the compiler explorer team for helping my put this experimental branch on compiler explorer.</li>
+<li>Faisal Vali who authored the initial clang support.</li>
+<li>Alexandr Timofeev who motivated me to write this article.</li>
 </ul>
 
 <h2 id="references">References</h2>
