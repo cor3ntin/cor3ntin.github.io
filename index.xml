@@ -12,6 +12,16 @@
     
     
     
+    <item>
+    <title>The case for Auto Non-Static Data Member Initializers</title>
+        <link>https://cor3ntin.github.io/posts/auto_nsdmi/</link>
+            <pubDate>Sun, 12 Aug 2018 11:27:00 +0200</pubDate>
+            
+            <guid>https://cor3ntin.github.io/posts/auto_nsdmi/</guid>
+            <description>In this article, we talk about Auto Non-Static Data Member Initializers in C++. All code snippet can be tested on Compiler Explorer thanks to Matt Godbolt and the CE team. The clang patch to enable this feature was authored by Faisal Vali 5 years ago, but I have crudely rebased it on top of clang trunk (~ 7.0).
+In fact, the main motivation for this article is to put this feature in the hand of people to prove that it works and that it would be a great addition to the standard.</description>
+        </item>
+        
         
     
         
