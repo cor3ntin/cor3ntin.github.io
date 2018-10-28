@@ -260,9 +260,10 @@ An issue that seems to hold this TS back.</p>
 Most of the time it will constant evaluate them regardless of whether they are actually marked as such.
 The keyword is required to ensure that the compiler will actually do the constant evaluation when it can and, most importantly,
 because removing the constexpr-ness of a function may be a source breaking change - (if that function is called during the evaluation of a <code>constexpr</code> variable).
-By its very nature, <code>constexpr</code> implies that <code>constexpr</code> functions are defined somewhere is the TU. And everything not defined in the TU cannot be constant-evaluated.</p>
+By its very nature, <code>constexpr</code> implies that <code>constexpr</code> functions are defined somewhere is the TU. And everything not defined in the TU cannot be constant-evaluated.
+<a href="https://wg21.link/p1235">A proposal for C++20 proposes to make it implicit in some cases</a></p>
 
-<p>At the end of the day, we are left with the following code, and it is on you to use the appropriate decorators.</p>
+<p>For now, we are left with the following code, and it is on you to use the appropriate qualifiers.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe;
 <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
 <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe { <span style="color:#080;font-weight:bold">return</span> s.width; }
@@ -347,8 +348,8 @@ Or not, you will know at runtime.</p>
 <p>They can optimize the <em>whole program</em> because, unlike compilers, linkers get to see <em>all of your code</em>.
 So all the code, that you were very careful to split into multiple source files at the expense of a very complicated build system is in the end stitched together by the linker anyway and optimized as a whole that way.</p>
 
-<p>Of course, you were able to run lots of build in parallel, across a distributed build farm, where all of your
-gazillion CPU where all parsing <code>&lt;vector&gt;</code> at the same time.
+<p>Of course, you are able to run lots of build in parallel, across a distributed build farm, where all of your
+gazillion CPU are all parsing <code>&lt;vector&gt;</code> at the same time.
 The flip side of that is that the compiler itself, expecting you to run multiple jobs at the same time, will not implement any kind of concurrency in its implementation.</p>
 
 <p>What is not used in the call graph starting from the <code>main()</code> function or the global constructors is then
@@ -404,7 +405,7 @@ which&hellip;I have opinions about.</p>
 <li>A way to modernize C++</li>
 </ul>
 
-<p>There have been <a href="https://wg21.link/P0997">some proposals</a> to disallow or fix some specific constructs in module contexts, I don&rsquo;t expect they will fair well,
+<p>There have been <a href="https://wg21.link/P0997">some proposals</a> to disallow or fix some specific constructs in module contexts, I don&rsquo;t expect they will fare well,
 once again because people are more concerned about existing codebases than future code.
 Python 2 is often used as a cautionary tale in these circumstances.</p>
 
