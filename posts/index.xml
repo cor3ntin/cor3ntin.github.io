@@ -21,7 +21,7 @@
 struct square { int width; }
 You could of course do that:
 int area(square s) { return s.width * s.width; }
-But, your friend tony told you to use more functions, so instead you do that
+But, your friend Tony told you to use more functions, so instead you do that
 int area(square s) { return width(s) * width(s); } int width(square s) { return s.width; }  area being the function you really care about it is defined first - after all, code reads from top to bottom.</description>
     </item>
     

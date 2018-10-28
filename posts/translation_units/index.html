@@ -72,12 +72,12 @@
 
 <p><code>int area(square s) { return s.width * s.width; }</code></p>
 
-<p>But, your friend tony told you to use more functions, so instead you do that</p>
+<p>But, your friend Tony told you to use more functions, so instead you do that</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s) { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
 <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
 </code></pre></div>
 <p><code>area</code> being the function you really care about it is defined first - after all, code reads from top to bottom.<br />
-Or so argues <code>Clean Code</code>.</p>
+Or so argues <a href="https://en.wikipedia.org/wiki/Robert_C._Martin">Clean Code</a>.</p>
 
 <p>As you may have guessed from the lack of <code>;</code> after the struct&rsquo;s closing bracket, the above code is written in D.
 I figure my readership isn&rsquo;t really into D, so maybe you would prefer some <strong>Rust</strong>?</p>
@@ -388,7 +388,8 @@ transitively, even if you don&rsquo;t modify existing declarations.</p>
 <ul>
 <li><p>A way to permit used-before-declared symbol. I guess they <em>could</em> have been.
 Modules being closed, it seems reasonable to consider all the declarations in the same module before doing any parsing of definitions,
-but this would make &ldquo;porting to modules&rdquo; harder, and &ldquo;porting to modules&rdquo; is an important part of the TS.</p></li>
+but this would make &ldquo;porting to modules&rdquo; harder, and &ldquo;porting to modules&rdquo; is an important part of the TS.
+Unless <em><em>you</em></em> want to write a paper about that?!</p></li>
 
 <li><p>A way to sandbox macros
 There is a strong incentive to get modules working on 20yo codebases without actually putting any work into it,
