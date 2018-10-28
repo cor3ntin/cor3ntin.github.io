@@ -125,7 +125,7 @@ I bet your code is beautiful, like this small self-contained super useful progra
 <p>Which on my system expands to about <em>33000</em> lines of code. The freaking thing. But more on that later.</p>
 
 <p>Let&rsquo;s go back to square one.
-C++, in its infinite wisdom, let us forward declare functions, so we can write this:</p>
+C++, in its infinite wisdom, lets us forward-declare functions, so we can write this:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> square { <span style="color:#888;font-weight:bold">int</span> width; };
 <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s);
 <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s)  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
@@ -133,8 +133,7 @@ C++, in its infinite wisdom, let us forward declare functions, so we can write t
 </code></pre></div>
 <p>Which is nice and dandy, if you squint.</p>
 
-<p>Besides requiring you to get the exact declaration of functions perfectly right,
-which is hard to maintain, lots of entities are not forward declarable,
+<p>Besides requiring you to get the exact declaration of functions perfectly right - which is hard to maintain, lots of entities are not forward-declarable,
 notably type alias, templated types, etc.
 Which is an odd limitation given that where forward declaring a function require you
 to know the precise signature, for types you are merely trying to introduce a name.</p>
@@ -181,7 +180,7 @@ That is the functions that:</p>
 <p>So you, as a developer striving to mark all function that can be <code>noexcept</code> as such,
 have to walk the call tree recursively until you can ascertain that the call chain will never throw
 or actually might (because one callee does throw, or is at a C interface boundary, etc).
-One argument again exceptions is that it makes reasoning about control flow harder:
+One argument against exceptions is that it makes reasoning about control flow harder:
 Exceptions more or less force you to reason about the control flow of the whole program at every time.
 <code>noexcept</code> is supposed to solve that, but, to put that <code>noexcept</code> keyword confidently, you still need
 to do that analyze. The chances you get it wrong are high.
@@ -462,10 +461,10 @@ I don&rsquo;t know if we will ever stop caring about ABI outside of very specifi
 
 <p>As the C++ community dream of better tools, and dependency managers, maybe it would help to define the fundamentals
 more accurately: Our programs are a set of <em>definitions</em>, some of which are maintained out-of-tree by other people.
-The more our tools adhere to that model, the better off we will fare in the long run.</p>
+The more closely our tools adhere to that model, the better off we will fare in the long run.</p>
 
-<p>Maybe we need to ask fundamental questions about the compilation model,
-or some beliefs we hold (For example &ldquo;Compilers and build system need to be kept separated&rdquo;. Do they? To what extent?).</p>
+<p>So maybe we need to ask fundamental questions about the compilation model and question
+some beliefs we hold (For example &ldquo;Compilers and build system need to be kept separated&rdquo;. Do they? To what extent?).</p>
 
 <p>There are definitively immense technical roadblocks, social and legal ones (LGPL, you should be ashamed of yourself).
 It seems impossible, but the reward would be, oh, so great. And so, in the meantime, I&rsquo;ll shout on the Internets.</p>
