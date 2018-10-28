@@ -370,7 +370,7 @@ transitively, even if you don&rsquo;t modify existing declarations.</p>
 <p>Importantly, modules are not</p>
 
 <ul>
-<li>A scoping mechanism, or a way to replace complement namespaces.</li>
+<li>A scoping mechanism, or a way to replace namespaces.</li>
 </ul>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">//MyFoo.cppm
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module my.foo;
@@ -398,7 +398,7 @@ Unless <em><em>you</em></em> want to write a paper about that?!</p>
 
 <p>There is a strong incentive to get modules working on 20yo codebases without actually putting any work into it,
 Consequently, the current proposal let you declare and use macros more or less anywhere you want, and possibly export them from modules,
-which&hellip;I have opinions about</p>
+which&hellip;I have opinions about.</p>
 
 <ul>
 <li>A way to modernize C++</li>
@@ -412,7 +412,7 @@ Python 2 is often used as a cautionary tale in these circumstances.</p>
 <li>Modules</li>
 </ul>
 
-<p>Being glorified compiled headerq, C++ modules do not strive to replace the translation units model.
+<p>Being glorified compiled headers, C++ modules do not strive to replace the translation units model.
 A module is still split as its interface (the compiler can transform the source of that module into a BMI - binary module interface -),
 and the definition of the things implemented in the interface (an object file).
 In fact, the following code will not link</p>
@@ -459,7 +459,7 @@ It expresses &ldquo;this is the set of declarations that constitute my library.&
 <p>I don&rsquo;t know if we will ever manage to get rid of object files, static libraries and dynamic libraries.
 I don&rsquo;t know if we will ever stop caring about ABI outside of very specific libraries.</p>
 
-<p>As the C++ community dream of better tools, and dependency managers, maybe it would help to define the fundamentals
+<p>As the C++ community dreams of better tools, and dependency managers, maybe it would help to define the fundamentals
 more accurately: Our programs are a set of <em>definitions</em>, some of which are maintained out-of-tree by other people.
 The more closely our tools adhere to that model, the better off we will fare in the long run.</p>
 
