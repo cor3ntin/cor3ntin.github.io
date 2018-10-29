@@ -330,12 +330,16 @@ make a program out of it. At this point, the infamous <code>One Definition Rule<
 You shall only define each symbol once.
 Your hundred of headers expanding to hundred thousands of line of code in various order, with various set of macros defined
 in a way specific to that project, on your system, on that day, <em>shall not</em> redefine anything.
-Best case scenario you get a linker. More likely, you get UB. Is your code violating ODR right now? Who knows?
-But really, you <em>shall</em> not.</p>
+Best case scenario you get a linker error. More likely, you get UB. Is your code violating ODR to some extent right now? In all likelihood, it does.
+But really, it <em>shall</em> not.
+ODR is a direct consequence of your compiler not knowing what names exist in your codebase.</p>
+
+<p>It turns out that Titus Winters talk at length about ODR in great new talk <a href="https://www.youtube.com/watch?v=IY8tHh2LSX4">C++ Past vs. Future</a>.
+You should definitively watch this.</p>
 
 <p><strong>But linkers are pretty great</strong></p>
 
-<p>They can make static libraries - a zip with multiple translations units.
+<p>They can make static libraries - basically a zip with multiple translations units.
 When consuming that library, the linker may conveniently not link otherwise not-referenced static objects.
 They didn&rsquo;t get the memo that constructors may have side effects.</p>
 
@@ -355,7 +359,7 @@ The flip side of that is that the compiler itself, expecting you to run multiple
 <p>What is not used in the call graph starting from the <code>main()</code> function or the global constructors is then
 thrown away.</p>
 
-<h1 id="what-about-modules">What about modules ?</h1>
+<h1 id="what-about-modules">What about modules?</h1>
 
 <p>Well, C++ modules help, a tiny bit.</p>
 
@@ -399,7 +403,7 @@ Unless <em><em>you</em></em> want to write a paper about that?!</p>
 
 <p>There is a strong incentive to get modules working on 20yo codebases without actually putting any work into it,
 Consequently, the current proposal let you declare and use macros more or less anywhere you want, and possibly export them from modules,
-which&hellip;I have opinions about.</p>
+which&hellip;I have opinions about. Namely, I think it remains to be seen how modules codebases will actually be built efficiently.</p>
 
 <ul>
 <li>A way to modernize C++</li>
@@ -452,17 +456,20 @@ but development tools manipulate files, and there is a certain mismatch there.</
 <p>For a long time, the C++ community had the deep belief that the separation of definitions and declarations, the source/header model was superior.
 But we see an increasing number of header-only libraries, that may be slightly slower to compile but are, at the end of the day,
 much easier to use and reason about. For people, for tools, for compilers.
-I would not be surprised if future libraries shipped as modules will be &ldquo;module-interface-only&rdquo; as well.</p>
-
-<p>I think it does not matter that single-header libraries ship as one file. What matter is that they can be consumed by including a single file.
+I would not be surprised if future libraries shipped as modules will be &ldquo;module-interface-only&rdquo; as well.
+I think it does not matter that single-header libraries ship as one file. What matter is that they can be consumed by including a single file.
 It expresses &ldquo;this is the set of declarations that constitute my library.&rdquo;</p>
 
-<p>I don&rsquo;t know if we will ever manage to get rid of object files, static libraries and dynamic libraries.
+<p>We should of course not handwave away the problem of long compilation time.
+But it is well accepted that most FX/3D artists need a $4000 or more machine to do their job. Studios understand that as the cost of doing business.
+And maybe, compiling C++ requires expensive hardware too. And maybe that&rsquo;s okay. Hardware is cheap, people are not. <em>Especially</em> good software Engineers.</p>
+
+<p>I don&rsquo;t know if we will ever manage to get rid of object files, static libraries, and dynamic libraries.
 I don&rsquo;t know if we will ever stop caring about ABI outside of very specific libraries.</p>
 
-<p>As the C++ community dreams of better tools, and dependency managers, maybe it would help to define the fundamentals
+<p>But as the C++ community dreams of better tools, and dependency managers, maybe it would help to define the fundamentals
 more accurately: Our programs are a set of <em>definitions</em>, some of which are maintained out-of-tree by other people.
-The more closely our tools adhere to that model, the better off we will fare in the long run.</p>
+I think the more closely our tools adhere to that model, the better off we will fare in the long run.</p>
 
 <p>So maybe we need to ask fundamental questions about the compilation model and question
 some beliefs we hold (For example &ldquo;Compilers and build system need to be kept separated&rdquo;. Do they? To what extent?).</p>
