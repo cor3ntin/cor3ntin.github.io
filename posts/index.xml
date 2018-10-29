@@ -6,7 +6,7 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Oct 2018 21:50:38 +0200</lastBuildDate>
+    <lastBuildDate>Mon, 29 Oct 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Translation units considered harmful ?</title>
       <link>https://cor3ntin.github.io/posts/translation_units/</link>
-      <pubDate>Sun, 21 Oct 2018 21:50:38 +0200</pubDate>
+      <pubDate>Mon, 29 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>https://cor3ntin.github.io/posts/translation_units/</guid>
       <description>Let say you have some struct square you want to compute the area of.

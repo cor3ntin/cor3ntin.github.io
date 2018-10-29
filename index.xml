@@ -6,12 +6,26 @@
     <description>Recent content on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Oct 2018 21:50:38 +0200</lastBuildDate>
+    <lastBuildDate>Mon, 29 Oct 2018 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="https://cor3ntin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     
+    <item>
+    <title>Translation units considered harmful ?</title>
+        <link>https://cor3ntin.github.io/posts/translation_units/</link>
+            <pubDate>Mon, 29 Oct 2018 00:00:00 +0000</pubDate>
+            
+            <guid>https://cor3ntin.github.io/posts/translation_units/</guid>
+            <description>Let say you have some struct square you want to compute the area of.
+struct square { int width; }
+You could of course do that:
+int area(square s) { return s.width * s.width; }
+But, your friend Tony told you to use more functions, so instead you do that
+int area(square s) { return width(s) * width(s); } int width(square s) { return s.width; }  area being the function you really care about it is defined first - after all, code reads from top to bottom.</description>
+        </item>
+        
         
     
         
