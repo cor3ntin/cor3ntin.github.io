@@ -251,7 +251,7 @@ function that is not transaction-safe<br /></li>
 And only call functions with the same properties.
 That&rsquo;s probably upward of 99% of functions - I suspect the very terrible default exists for compatibility reasons.
 The important part is that you have to tag all your functions or hope that the property holds true recursively.
-Like <code>noexcept</code>, you can lie, by marking a function <code>transaction_safe</code> even if a callee is not itself <code>transaction_safe</code>.
+(Like <code>noexcept</code>, you can lie, by marking a function <code>transaction_safe</code> even if a callee is not itself <code>transaction_safe</code>, opening the door to UB).
 An issue that seems to hold this TS back.</p>
 
 <h2 id="constexpr">constexpr</h2>
@@ -442,6 +442,8 @@ BMI. leading to a rebuild of all dependencies anyway.</p>
 <p>So modules are not, a self-sufficient unit like they are in other languages.
 Luckily, they do require that the implementation of a given module is done in a single translation unit.</p>
 
+<h1 id="a-set-of-definitions">A set of definitions</h1>
+
 <p>People think about their code as a cohesive whole, the colloquial term being a &ldquo;project&rdquo;.
 The more the compiler sees about your code, the more it will be able to optimize it.
 An increasing majority of C++ constructs need to be visible to the compiler at all time.
@@ -462,20 +464,20 @@ It expresses &ldquo;this is the set of declarations that constitute my library.&
 
 <p>We should of course not handwave away the problem of long compilation time.
 But it is well accepted that most FX/3D artists need a $4000 or more machine to do their job. Studios understand that as the cost of doing business.
-And maybe, compiling C++ requires expensive hardware too. And maybe that&rsquo;s okay. Hardware is cheap, people are not. <em>Especially</em> good software Engineers.</p>
+And maybe, compiling C++ requires expensive hardware too. And maybe that&rsquo;s okay. Hardware is cheap, people are not. <em>Especially</em> good software engineers.</p>
 
 <p>I don&rsquo;t know if we will ever manage to get rid of object files, static libraries, and dynamic libraries.
 I don&rsquo;t know if we will ever stop caring about ABI outside of very specific libraries.</p>
 
 <p>But as the C++ community dreams of better tools, and dependency managers, maybe it would help to define the fundamentals
-more accurately: Our programs are a set of <em>definitions</em>, some of which are maintained out-of-tree by other people.
+more accurately: Our programs are a set of <em>definitions</em>, some of which are provided and maintained out-of-tree by other people.
 I think the more closely our tools adhere to that model, the better off we will fare in the long run.</p>
 
-<p>So maybe we need to ask fundamental questions about the compilation model and question
+<p>So maybe we need to ask fundamental questions about the compilation model and examine
 some beliefs we hold (For example &ldquo;Compilers and build system need to be kept separated&rdquo;. Do they? To what extent?).</p>
 
 <p>There are definitively immense technical roadblocks, social and legal ones (LGPL, you should be ashamed of yourself).
-It seems impossible, but the reward would be, ô so great. And so, in the meantime, I&rsquo;ll shout on the Internets.</p>
+It seems impossible, but the reward would be, ô so great. In the meantime, fully aware I don&rsquo;t have any answer, I&rsquo;ll shout on the Internets.</p>
 
       
     <div id="socialshareDiv">
