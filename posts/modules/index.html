@@ -64,7 +64,7 @@
     <div class="content">
       
 
-<p>C++ Modules are going through the standard and current plans would have them merged in the C++ Standard.
+<p>C++ Modules are going through the standardization process and current plans would have them merged in the C++ Standard in time for C++20.
 They are a great language feature, offering a number of benefits over headers</p>
 
 <ul>
@@ -79,7 +79,7 @@ Still, I have a few concerns with them and think they could go further <a href="
 I&rsquo;m afraid that the &ldquo;legacy&rdquo; features that add a ton of complexity to the design will never be legacy,
 and will be a long-term source of issues for the benefits of short-term gains. I may be wrong and I certainly hope I am.</p>
 
-<p>But, what concerns me the most is the question of how tooling and modules will integrate with each other, an issue that I feel has bit somewhat handwaved away.
+<p>But, what concerns me the most is the question of how tooling and modules will integrate with each other, an issue that I feel has been somewhat handwaved away.
 The paper <a href="wg21.link/p0822">C++ Modules Are a Tooling Opportunity</a> call for better tools. It&rsquo;s hard not to agree with the author.
 C++ tooling, is, for the most part, stuck in the past.</p>
 
@@ -232,12 +232,12 @@ have to be. I don&rsquo;t think google&rsquo;s code base would build on my lapto
 
 <p>Let say you modify <code>foo.cppm</code>. Your build system needs to see that and rebuild everything it needs.
 As an apart, let me tell you about the two kinds of build systems there are:
- * Build systems that, upon a change in the codebase will always run the minimum and sufficient set of tasks to update the artifacts as to apply these changes.
- * Build systems that are garbage. Expect more of your tools!</p>
+* Build systems that, upon a change in the codebase will always run the minimum and sufficient set of tasks to update the artifacts as to apply these changes.
+* Build systems that are garbage. Expect more of your tools!</p>
 
 <p>But many things may have happened:
- * You renamed the module (changed <code>export module cor3ntin.foo</code> to <code>export module cor3ntin.gadget</code> )
- * You added an import</p>
+* You renamed the module (changed <code>export module cor3ntin.foo</code> to <code>export module cor3ntin.gadget</code> )
+* You added an import</p>
 
 <p>And you might have done that to <em>any</em> modified file</p>
 
