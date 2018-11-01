@@ -231,13 +231,19 @@ This has to be cached, so the build system needs to be stateful, which I don&rsq
 have to be. I don&rsquo;t think google&rsquo;s code base would build on my laptop in a reasonable time frame.</p>
 
 <p>Let say you modify <code>foo.cppm</code>. Your build system needs to see that and rebuild everything it needs.
-As an apart, let me tell you about the two kinds of build systems there are:
-* Build systems that, upon a change in the codebase will always run the minimum and sufficient set of tasks to update the artifacts as to apply these changes.
-* Build systems that are garbage. Expect more of your tools!</p>
+As an apart, let me tell you about the two kinds of build systems there are:</p>
 
-<p>But many things may have happened:
-* You renamed the module (changed <code>export module cor3ntin.foo</code> to <code>export module cor3ntin.gadget</code> )
-* You added an import</p>
+<ul>
+<li>Build systems that, upon a change in the codebase will always run the minimum and sufficient set of tasks to update the artifacts as to apply these changes.</li>
+<li>Build systems that are garbage. Expect more of your tools!</li>
+</ul>
+
+<p>But many things may have happened:</p>
+
+<ul>
+<li>You renamed the module (changed <code>export module cor3ntin.foo</code> to <code>export module cor3ntin.gadget</code> )</li>
+<li>You added an import</li>
+</ul>
 
 <p>And you might have done that to <em>any</em> modified file</p>
 
