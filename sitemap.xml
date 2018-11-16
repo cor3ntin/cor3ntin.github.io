@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://cor3ntin.github.io/posts/sandiego/</loc>
+    <lastmod>2018-11-16T13:42:44+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://cor3ntin.github.io/posts/modules/</loc>
     <lastmod>2018-10-31T23:16:15+01:00</lastmod>
   </url>
@@ -99,7 +104,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/posts/</loc>
-    <lastmod>2018-10-31T23:16:15+01:00</lastmod>
+    <lastmod>2018-11-16T13:42:44+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -110,7 +115,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/</loc>
-    <lastmod>2018-10-31T23:16:15+01:00</lastmod>
+    <lastmod>2018-11-16T13:42:44+01:00</lastmod>
     <priority>0</priority>
   </url>
   

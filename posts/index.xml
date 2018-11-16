@@ -6,10 +6,22 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 31 Oct 2018 23:16:15 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 16 Nov 2018 13:42:44 +0100</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>San Diego Committee Meeting: A Trip Report</title>
+      <link>https://cor3ntin.github.io/posts/sandiego/</link>
+      <pubDate>Fri, 16 Nov 2018 13:42:44 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/sandiego/</guid>
+      <description>As I left Rapperswil earlier this year, I said very firmly that I would not go to the San Diego Meeting.
+Crossing an ocean to work on C++ 12 hours a day for a week is indeed madness.
+And so naturally, I found myself in a San Diego hotel straight from the 60s, to do some C++ for a week.
+  San Diego   Concepts The adjective syntax prevailed, after a few years of struggle.</description>
+    </item>
     
     <item>
       <title>Modules are not a tooling opportunity</title>
