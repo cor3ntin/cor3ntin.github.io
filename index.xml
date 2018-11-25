@@ -12,6 +12,17 @@
     
     
     
+    <item>
+    <title>RangeOf: A better span</title>
+        <link>https://cor3ntin.github.io/posts/rangeof/</link>
+            <pubDate>Sun, 25 Nov 2018 11:50:51 +0100</pubDate>
+            
+            <guid>https://cor3ntin.github.io/posts/rangeof/</guid>
+            <description>I don&amp;rsquo;t like span.
+Since that article was posted, the committee improved span quite a bit by removing operator== and making it&amp;rsquo;s size() consistent with that of vector after a lot of discussions. And I mean a lot.
+What is span: 30 seconds refresher If you have N T laid out contiguously in memory, you can build a span&amp;lt;T&amp;gt; over them. Span being a value type you can move it around, copy it and so forth.</description>
+        </item>
+        
         
     
     <item>

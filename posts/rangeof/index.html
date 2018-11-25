@@ -64,8 +64,9 @@
     <div class="content">
       
 
-<p><a href="/posts/span">I don&rsquo;t like span</a>.
-Since this article was posted, the committee improved span quite a bit by removing <code>operator==</code> and making it&rsquo;s <code>size()</code> consistent
+<p><a href="/posts/span">I don&rsquo;t like span</a>.</p>
+
+<p>Since that article was posted, the committee improved span quite a bit by removing <code>operator==</code> and making it&rsquo;s <code>size()</code> consistent
 with that of <code>vector</code> after a lot of discussions. And I mean <em>a lot</em>.</p>
 
 <h1 id="what-is-span-30-seconds-refresher">What is span: 30 seconds refresher</h1>
@@ -102,16 +103,21 @@ Except the one taking a range has a much easier to understand ownership model</p
 
 <p>If called with more that one type of containers the <code>span</code> version will be instantiated only once per element type, whether
 the ContiguousRange will be instantiated per range type.
-Keep that in mind if you work with memory constrained platforms.</p>
+Keep that in mind if you work with memory constrained platforms.
+But in general, I think <a href="/posts/translation_units">we should try to move away from the Header/source file separation model</a> so we can make full use of <code>constexpr</code> functions,
+generic code and the ability of the compiler to do code inlining.</p>
 
-<p>But what if you want a range of a specific type?</p>
+<p>Anyway, How can you specify that you want a range of a specific type?
+With span, it&rsquo;s quite straightforward:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> std::span&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">int</span>&gt; &amp; r);
-</code></pre></div><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;std::ContiguousRange R&gt;
+</code></pre></div>
+<p>With ranges, it would look like that:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;std::ContiguousRange R&gt;
 requires std::is_same_v&lt;std::ranges::iter_value_t&lt;std::ranges::iterator_t&lt;R&gt;&gt;, <span style="color:#888;font-weight:bold">int</span>&gt;
 <span style="color:#888;font-weight:bold">void</span> f(<span style="color:#080;font-weight:bold">const</span> R &amp; r);
 </code></pre></div>
-<p>There you are done. easy, right?
-With a bit of luck that might be simplifiable further by C++20</p>
+<p>There we are done. Easy, right?
+With a bit of luck that might be simplifiable further by C++20:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;std::ContiguousRange R&gt;
 requires std::is_same_v&lt;std::ranges::range_value_t&lt;R&gt;, <span style="color:#888;font-weight:bold">int</span>&gt;
 <span style="color:#888;font-weight:bold">void</span> f(<span style="color:#080;font-weight:bold">const</span> R &amp; r);
