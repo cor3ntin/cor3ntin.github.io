@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://cor3ntin.github.io/posts/modules_mapping/</loc>
+    <lastmod>2018-11-26T20:26:40+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://cor3ntin.github.io/posts/rangeof/</loc>
     <lastmod>2018-11-25T11:50:51+01:00</lastmod>
   </url>
@@ -109,7 +114,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/posts/</loc>
-    <lastmod>2018-11-25T11:50:51+01:00</lastmod>
+    <lastmod>2018-11-26T20:26:40+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -120,7 +125,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/</loc>
-    <lastmod>2018-11-25T11:50:51+01:00</lastmod>
+    <lastmod>2018-11-26T20:26:40+01:00</lastmod>
     <priority>0</priority>
   </url>
   

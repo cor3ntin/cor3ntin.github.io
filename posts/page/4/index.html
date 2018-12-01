@@ -58,108 +58,18 @@
   <div class="container">
     
     
-    
-    
         <article id="article">
         <div class="subtitle is-6 is-pulled-right">
             
         </div>
-        <h2 class="subtitle is-6">June 13, 2018</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/concepts_syntax/">The tightly-constrained design space of convenient syntaxes for generic programming</a></h1>
+        <h2 class="subtitle is-6">October 31, 2016</h2>
+        <h1 class="title"><a href="https://cor3ntin.github.io/posts/stack_queue/">Stranded with a C&#43;&#43; compiler and a bunch of queues</a></h1>
         <div class="content">
-            Please take the quick survey on concept syntax at the end of this article.  Did you know that the Concept TS was merged into the Working Draft in July 2017, in Toronto? And we are a Planck length away from merging the Range TS in C++20 as well, including a few goodies such as projections, contiguous ranges/iterators and ranges adaptors? We also added a bunch of general-purpose concepts in the std namespace in Rapperswil.
+            A friend had a phone interview for a job in a company that I won’t name - It’s Microsoft. One of the questions was about describing how he would write a stack, only using standard queues.
+I was confounded, because long before an algorithm could form in my mind, I already decided that there was no solution that would actually be useful in any real life scenario.
+template &lt;typename T, typename Container = std::queue&lt;T&gt;&gt; class stack { public: void push(const T &amp;); void pop(); T&amp; top(); std::size_t size() const; bool empty() const; private: void transfer(); Container a, b; }; template &lt;typename T, typename Container&gt; void stack&lt;T, Container&gt;::push(const T&amp; t) { a.
             
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/concepts_syntax/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">June 11, 2018</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/rapperswil/">Rapperswil Committee Meeting: A Trip Report</a></h1>
-        <div class="content">
-            This was my first committee meeting. I arrived Sunday morning at Jona, the next town over where I had a lovely AirBnB in a very nice, peaceful suburb. I settled to visit Rapperswil but met some people from Nvidia going to the meeting. So we naturally started to talk about C++. The meeting was to last 6 days and until the very end, we talked about C++, every minute of every hour.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/rapperswil/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">May 14, 2018</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/span/">A can of span</a></h1>
-        <div class="content">
-            The papers that will be discussed at the next C++ committee meeting are out. The listing contains a number of interesting and controversial papers. Among them, Herbceptions, a number of concurrent concurrency proposals, a proposal calling for major design changes in the coroutines TS, And an easy-to-review, 200 pages long proposal to unify the Range TS in the std namespace.
-In total, there are about 140 papers all rather interesting.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/span/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">April 22, 2018</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/attributes/">C&#43;&#43; Attributes</a></h1>
-        <div class="content">
-            In C++11, attributes were added as a way to standardized features such as gnu __attribute__and msvc’s __declspec.
-The language provisions for standard attributes as well as non-standard attributes through the use of namespaces, though the behavior of non-standard attributes was only settled for C++17. And sadly, as of 2018, neither GCC nor MSVC offer their vendor-specific attributes though the portable C++ standard syntax.
-Most standard attributes were added in C++14 and 17.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/attributes/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">March 3, 2018</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/dep_manager/">Accio Dependency Manager</a></h1>
-        <div class="content">
-            You may have noticed a number of “What should go in the Standard Library” posts over the last few days. These posts have generated quite a bit of comments on Reddit and discussions on Slack. I hope more people chime in.
-The conclusion is that we pretty much all agree to disagree on what the STL is or should be. I’m not sure we can even agree on what C++ is.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/dep_manager/" style="height:28px">
+            <a class="button is-link" href="https://cor3ntin.github.io/posts/stack_queue/" style="height:28px">
             Read more
             <span class="icon is-small">
                 <i class="fa fa-angle-double-right"></i>
@@ -178,7 +88,7 @@ The conclusion is that we pretty much all agree to disagree on what the STL is o
       <div class="level-left">
         <div class="level-item">
           
-          <a class="button" href="/posts/">
+          <a class="button" href="/posts/page/3/">
             <span class="icon is-small is-marginless">
               <svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
@@ -194,18 +104,6 @@ The conclusion is that we pretty much all agree to disagree on what the STL is o
       </div>
       <div class="level-right is-marginless">
         <div class="level-item">
-          
-          <a class="button" href="/posts/page/3/">
-            Older
-            <span class="icon is-small is-marginless">
-              <svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
-    
-    <polyline points="14 6 20 12 14 18"/>
-    
-  </svg>
-
-            </span>
-          </a>
           
         </div>
       </div>

@@ -6,10 +6,21 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 25 Nov 2018 11:50:51 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 26 Nov 2018 20:26:40 +0100</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Towards Better C&#43;&#43; Modules - Part 1: Modules mapping</title>
+      <link>https://cor3ntin.github.io/posts/modules_mapping/</link>
+      <pubDate>Mon, 26 Nov 2018 20:26:40 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/modules_mapping/</guid>
+      <description>In this blog post, we will talk about modules mapping. Modules mapping is a mechanism by which is a module name is associated with the source file that defines that module&amp;rsquo;s interface.
+A module is closed and self-contained. Which mean that for every module name there must exist one and only source file defining that module.
+Module mapping is not useful to the compiler per-say. By the time the compiler encounters an import declaration, the module binary interface must exist and be known to the compiler.</description>
+    </item>
     
     <item>
       <title>RangeOf: A better span</title>
