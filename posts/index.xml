@@ -6,10 +6,21 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 26 Nov 2018 20:26:40 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 03 Dec 2018 12:59:36 +0100</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Towards Better C&#43;&#43; Modules - Part 1: Modules mapping</title>
+      <link>https://cor3ntin.github.io/posts/modules_naming/</link>
+      <pubDate>Mon, 03 Dec 2018 12:59:36 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/modules_naming/</guid>
+      <description>In case you have been naping, in the last instalment we talked about modules mapping, and so now we must talk about modules naming.
+You see, modules have names and names are hard. In this case, names serve to identify uniquely each module used thourough the program.
+Dotting the identifiers An important point to make is that modules names are composed of a sequence of identifiers separated by dots. You might think dots have been granted some semantic meaning, the power of organizing the world hierarchically.</description>
+    </item>
     
     <item>
       <title>Towards Better C&#43;&#43; Modules - Part 1: Modules mapping</title>

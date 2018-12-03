@@ -111,7 +111,7 @@ but which need possible for modules to include non-modular code.
 I will come back to the preprocessor in a later article.
 For now, it&rsquo;s enough to say that extracting the name of a module from a file is non-trivial and require a full-fledged compiler.</p>
 
-<p>And, if a translation units, for example, depends on a module <code>foo</code>, you may have to open hundreds of files, until you find one that declares <code>foo</code>.
+<p>And, if a translation unit, for example, depends on a module <code>foo</code>, you may have to open hundreds of files, until you find one that declares <code>foo</code>.
 On some system, opening files and launching process can be costly and so mapping a module to a file may take a while.</p>
 
 <p>You might argue that the same problem exists for dependency extraction.
@@ -134,7 +134,7 @@ For example, if you use cmake, you could write:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake">    <span style="color:#038">add_module</span>(<span style="color:#d20;background-color:#fff0f0">foo,</span> <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>)</code></pre></div>
 <p>But this is not about cmake, for example, <code>build2</code> supports exactly that</p>
 
-<pre><code>    mxx{foo}@./: cxx.module_name = fooo
+<pre><code>    mxx{foo}@./: cxx.module_name = foo
 </code></pre>
 
 <p>This is a bit cumbersome, as one might have hundreds of modules.
