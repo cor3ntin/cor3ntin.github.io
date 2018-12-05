@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>Towards Better C&#43;&#43; Modules - Part 1: Modules mapping | cor3ntin</title>
+<title>Towards Better C&#43;&#43; Modules - Part 2: Modules naming | cor3ntin</title>
 
 
 <link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
@@ -59,16 +59,19 @@
       
     </div>
     <h2 class="subtitle is-6">December 3, 2018</h2>
-    <h1 class="title">Towards Better C&#43;&#43; Modules - Part 1: Modules mapping</h1>
+    <h1 class="title">Towards Better C&#43;&#43; Modules - Part 2: Modules naming</h1>
     
     <div class="content">
       
 
-<p>In case you have been naping, in the last instalment we talked about modules mapping, and so now we must talk
+<p>In case you have been napping, in the last installment we talked about modules mapping, and so now we must talk
 about modules naming.</p>
 
 <p>You see, modules have names and names are hard.
-In this case, names serve to identify uniquely each module used thourough the program.</p>
+In this case, names serve to identify uniquely each module used through the program.</p>
+
+<p>The end of this article proposes to govern module naming through an official WG21 standing document and I would love <em>your</em> opinion.
+But be patient!</p>
 
 <h1 id="dotting-the-identifiers">Dotting the identifiers</h1>
 
@@ -76,7 +79,7 @@ In this case, names serve to identify uniquely each module used thourough the pr
 You might think dots have been granted some semantic meaning, the power of organizing the world hierarchically.
 And you would be wrong.
 Dots are dots. And nothing more.
-They have no more meaning that what you would be enclined to ascribe to them.
+They have no more meaning than what you would be inclined to ascribe to them.
 And so, all modules are created equal. There are no submodules, no super module, no set or superset.</p>
 
 <p><code>foo.bar</code> and <code>foo.baz</code>, as far as The standard is concerned, are not related.
@@ -84,7 +87,7 @@ And so, all modules are created equal. There are no submodules, no super module,
 Importing  <code>foo</code> does especially not import the names of <code>foo.bar</code>.
 You can&rsquo;t go wild and <code>import foo.*;</code> because there is no such thing.</p>
 
-<p>What you can do however, like all respectable spy agencies, is start an <code>export import</code> scheme.
+<p>What you can do, however, like all respectable spy agencies, is start an <code>export import</code> scheme.
 For example, given a module <code>foo.bar</code> (declared in <code>foo.bar.cppm</code>), you can further have a module
 <code>foo</code> in a file <code>foo.cppm</code></p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">export</span> module foo;
@@ -96,20 +99,226 @@ But <code>foo</code> could equally <code>export import</code> <code>bar</code> o
 
 <h1 id="say-my-name">Say my name.</h1>
 
-<p>That module thing is great.</p>
+<p>You very enthusiastically decide to put all your core business logic in <code>core.cppm</code> and some useful bits in <code>utils.cppm</code>.</p>
 
-<p>You very enthousiastically put all your core buisness logic in <code>core.cppm</code> and some useful bits in <code>utils.cppm</code>.</p>
+<p>Sometimes later, you start using a third party library which has 2 modules: <code>core.cppm</code> where lies the core of the library, and the aptly named <code>utils.cppm</code> containing
+some useful bits of that library.</p>
 
-<p>Sometimes later, you start using a third party library which has 2 modules : <code>core.cpp</code> where lies the core of the library, and the aptly named <code>utils.cppm</code> containing
-some useful bits.</p>
-
-<p>There was no collusion here, just a violent collision bruptaly ending the compilation in a terrible slam.
+<p>There was no collusion here, just a violent collision abruptly ending the compilation in a terrible slam.
 Obviously, you did nothing wrong. You were first to claim <code>core.cppm</code> for yourself.
 If only one can use that name, it should be you. <code>core</code> is a great name and it&rsquo;s yours. For now and ever.</p>
 
-<p>Others disagree, conflict arise, we are in a bit of a pickle.</p>
+<p>Others disagree, conflict arises, we are in a bit of a pickle.</p>
 
-<h1 id="babushka-doll">Babushka doll</h1>
+<h1 id="a-bit-of-elvish">A bit of Elvish</h1>
+
+<p>Where would you find <code>namespace aragorn</code>? Well, in the <code>strider</code> module, as one would expect. In turn, that module is logically located
+in the <code>esstr</code> directory (Originally called <code>elessar_telcontar</code>, but that proved problematic in regard to <code>MAX_PATH</code> as windows developers didn&rsquo;t quite care for old Entish).
+The whole thing is part of the <code>Longshanks</code> project, that you will find on <code>github.com/Tolkien/D\&amp;#250;nadan</code>.</p>
+
+<p>It is fortunate indeed that linguists are not C++ developers.
+And while most reasonable projects are not as intricate as <em>The Silmarion</em>, the fact remains that a lot of entities have to be created and named:
+Libraries, modules, directories, files, namespaces&hellip;</p>
+
+<p><a href="/posts/modules_mapping">In my previous article on module mapping</a>, I talked about the benefits of giving modules and files the same names.
+One thing I didn&rsquo;t mention is that names are hard to find and harder to remember. Naming things uniformly make for an easier to read codebase.</p>
+
+<p>Liberated of the pressure of naming files (What can I say except you&rsquo;re welcome?), let&rsquo;s focus on libraries and namespaces.</p>
+
+<p>If a module is a collection of names, then a namespace is a named collection of names and a library is a named collection of names with a ribbon.
+Of course, a module can open several namespaces, a namespace can spread over several modules, and a library can be composed of several namespaces and modules.
+There are header-only libraries and there will be module-interfaces only libraries.</p>
+
+
+<figure>
+    
+        <img src="doll.jpg" />
+    
+    
+    <figcaption>
+        <h4>Modules, libraries and namespaces</h4>
+        <p>
+        
+        <a href="http://angelsbarcelona.com/en/artists/jaime-pitarch/projects/chernobyl/192"> 
+            Jaime Pitarch
+        </a> 
+        </p> 
+    </figcaption>
+    
+</figure>
+
+
+<h3 id="a-daily-reminder">A daily reminder</h3>
+
+<p><strong>A module does not a namespace make</strong>.</p>
+
+<p>Modules are not namespaces and they do not introduce a namespace or provide any kind of namespacing or prefixing or anything of the sort to the names they export.
+Because modules are close-ended and namespaces can be reopened, I do not believe this could possibly be changed or improve upon. Sad Face Emoji</p>
+
+<p>This was your daily reminder that <strong>a module does not a namespace make</strong>.</p>
+
+<h2 id="namespaces-and-libraries">Namespaces and Libraries</h2>
+
+<p>We understand that putting names in the global namespace is bad.
+We also think that ADL makes namespaces terrible.</p>
+
+<p>That doesn&rsquo;t leave us a lot of places to put names.</p>
+
+<p>Being reasonable, we agree that each library should have one top-level namespace containing all its names and maybe avoid nested namespaces.</p>
+
+<p>We also know that putting names in other people namespaces will lead to breakage when they themselves introduce the same names and as such,
+opening other people&rsquo;s namespaces is frowned upon.</p>
+
+<p><strong>Top level namespaces, therefore, do not denote a cohesive set of names but rather signal ownership</strong>.</p>
+
+<p>Libraries also signal ownership. Even if there is a logical unity (a library often provides a cohesive set of features),
+the defining property of libraries is to have an owner, an entity that provides or maintains that library.</p>
+
+<p>And so, namespaces and libraries provide the same functionality: Signaling Ownership.
+Being two side of the same coins, maybe namespaces and libraries should share the same names?</p>
+
+<p>Did I mention Naming is hard? <a href="https://github.com/adishavit/argh"><code>Argh!</code></a></p>
+
+<p><a href="http://loki-lib.sourceforge.net/"><code>Loki</code></a>, a <a href="https://github.com/ipkn/crow"><code>crow</code></a> <a href="http://cute-test.com/"><code>CUTE</code></a> as a <a href="http://botan.randombit.net/"><code>botan</code></a>  <a href="https://github.com/facebook/wangle"><code>wangle</code>d</a> a <a href="http://pistache.io/"><code>pistache</code></a> while I drank this <a href="https://github.com/TonicAudio/Tonic"><code>Tonic</code></a> <a href="https://github.com/Equilibrium-Games/Acid"><code>Acid</code></a> <a href="https://github.com/yuzu-emu/yuzu"><code>Yuzu</code></a> <a href="https://github.com/julianstorer/JUCE"><code>juce</code></a> giving me a <a href="https://github.com/boostorg"><code>boost</code></a>.
+Is  <a href="https://github.com/nlohmann/json"><code>json</code></a> a good name? <a href="https://github.com/riolet/nope.c"><code>Nope</code></a>! <a href="https://github.com/emeryberger/Hoard"><code>Hoard</code></a> of projects are already called like that, it would be <a href="https://github.com/mattiasflodin/reckless"><code>reckless</code></a> <a href="https://github.com/facebook/folly"><code>folly</code></a>.</p>
+
+<p>(If you can make a fun sentence composed of C++ project names, I will retweet it !)</p>
+
+<p>Library and project names are usually creative.
+Yet, they need to be unique, and at the same time, on the shorter side if at all possible.</p>
+
+<p>But how can a name be short and creative while remaining creative and meaningful?</p>
+
+<h1 id="naming-through-the-ages">Naming through the ages</h1>
+
+<h2 id="java">Java</h2>
+
+<p>Java packages offer the same features as C++ modules and namespaces combined.
+The java documentation states</p>
+
+<blockquote>
+<p>Companies use their reversed Internet domain name to begin their package names—for example, com.example.mypackage for a package named mypackage created by a programmer at example.com.</p>
+
+<p>Name collisions that occur within a single company need to be handled by convention within that company, perhaps by including the region or the project name after the company name (for example, com.example.region.mypackage).</p>
+
+<p>Packages in the Java language itself begin with java. or javax.</p>
+</blockquote>
+
+<p>Java is almost 25 years old and yet wise enough to propose a naming scheme that guarantees uniqueness and signal ownership</p>
+
+<h2 id="c-sharp">C&sharp;</h2>
+
+<p><code>C#</code> has assemblies (~= libraries) and namespaces and does not need modules.</p>
+
+<p>It provides an <a href="https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-namespaces">impressively detailed guideline</a>,
+for the namespaces of modules, which is summarized as:
+    <code>&lt;Company&gt;.(&lt;Product&gt;|&lt;Technology&gt;)[.&lt;Feature&gt;][.&lt;Subnamespace&gt;]</code></p>
+
+<blockquote>
+<p>✓ DO prefix namespace names with a company name to prevent namespaces from different companies from having the same name.</p>
+
+<p>✓ DO use a stable, version-independent product name at the second level of a namespace name.</p>
+</blockquote>
+
+<p>I&rsquo;m not familiar with <code>C#</code>, but I assume it doesn&rsquo;t suffer from the use of nested namespaces.
+Most importantly, <code>&lt;Company&gt;.&lt;Product&gt;</code>, should be unique, and be immutable.</p>
+
+<h2 id="go">Go</h2>
+
+<p>Go realized that packages are resources that need to be uniquely identified and so Go packages can be
+imported through an URL.</p>
+
+<p>It also offers some <a href="https://blog.golang.org/package-names">insights about good packages names</a>. Apparently, <code>util</code> is
+not a good package name. Who would have thought?</p>
+
+<h2 id="rust-and-javascript">Rust and Javascript</h2>
+
+<p>Yes, I dare to bundle these two together, I double dare.</p>
+
+<p>Rust has crates which are the combination of C++ libraries and modules. Rust also has modules, which are namespaces.
+The Javascript ecosystem has packages (libraries) made of modules behaving like namespaces, often implemented as functions.
+Confused?</p>
+
+<p>Fortunately, both Rust and Javascript have official or de-facto centralized package managers (cargo and npm respectively).
+That centralized package manager guarantees the uniqueness of package name, using a simple scheme:
+First arrived, first served.</p>
+
+<p>NPM offers the possibility to prefix a package name by an organization name (<code>google/foo_bar</code>), while cargo does not.
+This is, as it turns out, a recurring topic in these communities.</p>
+
+<h1 id="the-library-that-owns-itself">The library that owns itself</h1>
+
+<p>Let say you want to use <code>Qt</code>, a great library that does 2d graphics, audio and even encrypted networking.
+Qt was developed by Trolltech in the early 90s.
+So, Trolltech owns Qt, and because company names are reasonably unique, <code>trolltech.qt</code> is unique and would rename unique forever.
+In 2008, Trolltech was bought by Nokia. Then Nokia was bought by Microsoft and Qt was bought by Digia who then spawned The Qt Company.
+Meanwhile, Qt is also an open source project maintained by the <code>Qt Project</code> who exists in part thanks to the <code>KDE Free Qt Foundation</code>.
+In 2012, some people decide to create a new project called CopperSpice out of a fork of Qt.</p>
+
+<p>You probably know <code>Catch</code>. It&rsquo;s a great testing framework. But do you know Phil Nash, The great guy who created Catch?
+Since then, lots of people have contributed to Catch, which is developed at github.com/catchorg/catch2.
+So who maintains <code>Catch</code>? The <code>Catch</code> maintainers, obviously!</p>
+
+<p>In fact, most open source libraries are owned by their maintainers, which means they are own by everyone and no one at the same time.
+And so, should &lsquo;Catch&rsquo; be refered to as &lsquo;catch&rsquo; &lsquo;philnash.catch&rsquo; or &lsquo;catch.catch&rsquo; ? (<a href="https://godbolt.org/z/c2LrCM">oups, <code>catch</code> is a keyword</a>!)</p>
+
+<p>More importantly, projects can be forked.</p>
+
+<p>If Microsoft forks Google&rsquo;s fork of Webkit, is it still Google&rsquo;s? Should it be called <code>google.blink</code> or <code>microsoft.blink</code>?
+Or just <a href="https://chromium.googlesource.com/chromium/src.git/+/62.0.3178.1/third_party/WebKit/Source/platform/wtf/README.md">apple.wtf</a> ?</p>
+
+<p>If Opera were to buy both Google and Microsoft, and all the modules and top-level namespaces names are different, would they be able to ever merge these 2 projects back together?</p>
+
+<p>These are real concerns (watch out Microsoft!), because names, like diamonds, are forever.
+Top level namespaces and module names even more so.</p>
+
+<p>Module names will be very invasive, like top level namespaces already are. Both can have aliases (with <code>export import</code> for modules), but they can never disappear.
+If you look at old java projects, <code>import</code> declarations show the geological record of a bygone era when Sun shined on the ecosystem.</p>
+
+<p>It&rsquo;s not just a matter of API either, modules names can be made part of the ABI. They can&rsquo;t be renamed, <em>ever</em>.</p>
+
+<h1 id="making-sure-the-future-is-backward-compatible">Making sure the future is backward compatible</h1>
+
+<p>We don&rsquo;t have a dependencies manager of meaning full scale.
+But, unicity of names is central to any such tool. <code>vcpkg</code> for example use project names to identify packages and requires names to be unique.
+Having uniquely addressable packages offer many great benefits and opportunity for amazing tooling.
+Having further consistency between project names, module names and library names ensure there are no name collisions and that all libraries can be easily
+used in the same project.</p>
+
+<p>Imagine a tool that download boosts when you type <code>import boost.system.error;</code>  or one that inserts <code>import folly;</code> when you type <code>folly::</code>.</p>
+
+<h1 id="a-call-for-a-standing-document">A call for a standing document</h1>
+
+<p>While <em>The C++ Standard</em> cannot enforce good names, a great many languages provide guidelines for package/namespace/modules/etc
+naming and I think it is important C++ do the same.</p>
+
+<p>The goal is not to enforce unique names (because it is not possible), or to overly constrain naming scheme, but to make sure people do not name their projects in a way
+that would hinder the development of a larger ecosystem.</p>
+
+<p>The C++ Core Guidelines might be another area to explore,
+but they are less official and we can only rip the benefits of consistent naming if everybody follows the same rules.</p>
+
+<h2 id="rough-draft">Rough Draft:</h2>
+
+<ul>
+<li><strong>Prefix module names with an entity and/or a project name to prevent modules from different companies, entities and projects of declaring the same module names.</strong></li>
+<li><strong>Exported top-level namespaces should have a name identic to the project name used as part of the name of the module(s) from which it is exported.</strong></li>
+<li><strong>Do not export multiple top-level namespaces</strong></li>
+<li><strong>Do not export entities in the global namespace outside of the global module fragment.</strong></li>
+<li><strong>Organize modules hierarchically.</strong> For example, if both modules <code>example.foo</code> and <code>example.foo.bar</code> exist as part of the public API of <code>example</code>, <code>example.foo</code> should reexport <code>example.foo.bar</code></li>
+<li><strong>Avoid common names such as <code>util</code> and <code>core</code> for module name prefix and top-level namespace names.</strong></li>
+<li><strong>Use lower-case module names</strong></li>
+<li><strong>Do not use characters outside of the basic source character set in module name identifiers.</strong></li>
+</ul>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Modules might give the C++ community the rare opportunity to federate the ecosystem under a common set of rules.<br />
+This set of rules would permit the emergence of more modern module-oriented dependencies managers and tools.</p>
+
+<p>As modules cannot be renamed, these rules would have to be published along with the same C++ version that introduces modules as a language feature.</p>
+
+<p>What do you think?</p>
 
       
     <div id="socialshareDiv">
@@ -126,7 +335,7 @@ If only one can use that name, it should be you. <code>core</code> is a great na
     
   </svg>
 </i></a></span>
-        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules_naming%2f&t=Towards%20Better%20C%2b%2b%20Modules%20-%20Part%201%3a%20Modules%20mapping" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules_naming%2f&t=Towards%20Better%20C%2b%2b%20Modules%20-%20Part%202%3a%20Modules%20naming" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
     <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
     
