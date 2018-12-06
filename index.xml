@@ -6,12 +6,23 @@
     <description>Recent content on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 03 Dec 2018 12:59:36 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 06 Dec 2018 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="https://cor3ntin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     
+    <item>
+    <title>Towards Better C&#43;&#43; Modules - Part 2: Modules naming</title>
+        <link>https://cor3ntin.github.io/posts/modules_naming/</link>
+            <pubDate>Thu, 06 Dec 2018 00:00:00 +0000</pubDate>
+            
+            <guid>https://cor3ntin.github.io/posts/modules_naming/</guid>
+            <description>In case you have been napping, in the last installment we talked about modules mapping, and so now we must talk about modules naming.
+You see, modules have names and names are hard. In this case, names serve to identify uniquely each module used through the program.
+The end of this article proposes to govern module naming through an official WG21 standing document and I would love your opinion. But be patient!</description>
+        </item>
+        
         
     
     <item>
