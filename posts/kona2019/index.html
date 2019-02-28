@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>Kona : A trip report | cor3ntin</title>
+<title>Kona: A trip report | cor3ntin</title>
 
 
 <link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
@@ -59,12 +59,12 @@
       
     </div>
     <h2 class="subtitle is-6">February 28, 2019</h2>
-    <h1 class="title">Kona : A trip report</h1>
+    <h1 class="title">Kona: A trip report</h1>
     
     <div class="content">
       
 
-<p>I was lucky enough to participate to a third wg21 commitee meeting in a row, this time in Kona, Hawaii, a
+<p>I was lucky enough to participate in a third wg21 committee meeting in a row, this time in Kona, Hawaii, a
 mere 13000 kilometers away.</p>
 
 
@@ -81,23 +81,23 @@ mere 13000 kilometers away.</p>
 </figure>
 
 
-<p>As is tradition, Bryce and others wrote a rather thorough trip report and reddit and you should check it out.
+<p>As is tradition, Bryce and others wrote a rather thorough trip report and Reddit and you should check it out.
 However, if you want to read more details about my experience and some of the proposals I find important,
 please read on (knowing that your time is limited, and doing so will leave less time to read other blog posts).</p>
 
-<p>With a handful of active study groups, 2 incubator groups, Evolution, Library Evolution, Core Wording Group and Library Wording Group,
+<p>With a handful of active study groups, 2 incubator groups, Evolution, Library Evolution, Core Wording Group, and Library Wording Group,
 it is impossible to follow closely everything that happened in the 7 or so concurrently running rooms.
 As such, I missed discussions about some proposals I have strong opinions about and participated in discussions about features I feel strongly neutral about.
 Such is life.
 I also reserve the right not to have an opinion on the basis that on most topic, I&rsquo;m too stupid to have an informed one.</p>
 
 <p>And the committee is by no mean slowing down.
-The pre-kona mailing list have a staggering 177 papers. Including 144 never-seen-before papers.
+The pre-Kona mailing list have a staggering 177 papers. Including 144 never-seen-before papers.
 This meeting was also the feature freeze. Which means no feature not approved y an evolution group before the end of the meeting will be added in C++20.
 At least, that&rsquo;s the theory.</p>
 
 <p>This meeting has been qualified of historic and indeed we approved a lot of major features that have been in the work for a while as well as a number of small
-quality of life improvements. C++20 is poised to be the biggest release since C++11, or, dare I say it, <em>ever</em> ?</p>
+quality of life improvements. C++20 is poised to be the biggest release since C++11, or, dare I say it, _ever _?</p>
 
 <p>The number of features actually added this meeting was relatively small, but a lot of papers are waiting to go through the wording groups and should be accepted in
 Cologne.</p>
@@ -105,51 +105,51 @@ Cologne.</p>
 <h1 id="coroutines">Coroutines</h1>
 
 <p>Coroutines were merged with a very strong consensus and I think this is terrific.
-If you follow the development of C++ closely, you would have noticed that their design have not changed significantly
-over the past year, but there were no consensus to merge them in San Diego or Rapperswill. So, why now?</p>
+If you follow the development of C++ closely, you would have noticed that their design has not changed significantly
+over the past year, but there was no consensus to merge them in San Diego or Rapperswil. So, why now?</p>
 
 <p>One contention point of the Coroutines TS is that it always heap-allocate the type-erased coroutine frame
-and relies on impressive optimization technics to make these allocations disapear when the frame does not outlive the caller&rsquo;s
+and relies on impressive optimization technics to make these allocations disappear when the frame does not outlive the caller&rsquo;s
 context.</p>
 
-<p>The Core Coroutine proposal offered determistic stack allocations of coroutines frames.</p>
+<p>The Core Coroutine proposal offered deterministic stack allocations of coroutines frames.</p>
 
 <p>The issue with having the coroutine frame allocated on the stack is that it can not be optimized away without black magic.
-That black magic now has a name: Defered layout.
+That black magic now has a name: Deferred layout.
 A seducing idea that would let the compiler backend set the layout of some types including coroutine frames. We would then be to
 optimize away stack allocated coroutines.
 However, these types would not have a constexpr <code>sizeof</code> which has deep-reaching consequences in the language and more importantly is deemed
 very complex by compiler vendors.
-This idea then is very much an area of research that might not bare fruit in the next 5 to 10 years.
-Defered layout types would also not be able to cross TU boundaries.</p>
+This idea then is very much an area of research that might not bear fruit in the next 5 to 10 years.
+Deferred layout types would also not be able to cross TU boundaries.</p>
 
 <p>So, what I think happened is that people realized that the core coroutines would not be implementable for a very long time, whereas the TS has been
 implemented in all compilers with great success.
 We are also confident - although not certain - that there is a way for coroutines to gain deterministic allocation in the future, in backward compatible
 fashion.</p>
 
-<p>Coroutines then, are not perfect, but they certainly good enough for an overwhelming majority of use cases.
-And they are so powerful and universally useful that it became quite apparent that it was not reasonable to deprived the community of coroutines
+<p>Coroutines then are not perfect, but they certainly good enough for an overwhelming majority of use cases.
+And they are so powerful and universally useful that it became quite apparent that it was not reasonable to deprive the community of coroutines
 while we chase after unicorns.</p>
 
 <p>I would have like <a href="https://wg21.link/p1477">P1477</a> to be discussed, but it seems Evolution ran out of time. I really hope this can be discussed before
-C++20 as it makes writting new coroutine types more palatable.</p>
+C++20 as it makes writing new coroutine types more palatable.</p>
 
-<p>Note that writing coroutines types is not something we expect most C++ developers to ever needing to do.
-Unfortunately, time has ran out and C++20 will not ship with any standard library support for coroutines.
-I am afraid this will give people a bad impression of anotherwise amazing feature.</p>
+<p>Note that writing coroutines types is not something we expect most C++ developers to ever need to do.
+Unfortunately, time has run out and C++20 will not ship with any standard library support for coroutines.
+I am afraid this will give people a bad impression of an otherwise amazing feature.</p>
 
 <p>Consequently, I recommend that you use <a href="https://github.com/lewissbaker/cppcoro">cppcoro</a> when trying out and using coroutines
 as it hides the gory details and gives a good idea of what we expect the Standard library to offer in future versions of C++20.
 This library is authored by Lewis Baker, who has greatly contributed to the success of coroutines.</p>
 
 <p>The merge of the core coroutines TS is an incredible success for C++ and
-Gor Nishanov who has been working on coroutines (or so called Gorroutines) for the past 5 years.</p>
+Gor Nishanov who has been working on coroutines (or so-called Gorroutines) for the past 5 years.</p>
 
 <p>Having coroutines in the standard open the door for a lot of proposals and work, for example
 * A user-friendly networking library
 * Well integrated executors
-* Sane implementation of unicode bidirectional iterators</p>
+* Sane implementation of Unicode bidirectional iterators</p>
 
 
 <figure>
@@ -170,7 +170,7 @@ Gor Nishanov who has been working on coroutines (or so called Gorroutines) for t
 <p>Modules too got merged into the IS with an extremely strong consensus.
 That too is a major transformational feature who has been in the work for more than a decade.</p>
 
-<p>I voted against. Maybe I should explain why !</p>
+<p>I voted against. Maybe I should explain why!</p>
 
 <p>Modules have been branded as a paradigm shift. Which isn&rsquo;t wrong.
 Modules might indeed be the most transformational feature C++ will gain in the coming decades.
@@ -183,12 +183,12 @@ The design changed considerably (for the better) over the past year.</p>
 <p>There is no usage experience whatsoever with non-legacy modules as proposed by the merged proposal.
 (There is a lot of experience with legacy modules though.)</p>
 
-<p>You would think for a feature that will have a profund impact on the whole ecosystem we would have
+<p>You would think for a feature that will have a profound impact on the whole ecosystem we would have
 taken the time to make sure modules do indeed work as intended and let the design mature for a while.
 We didn&rsquo;t.</p>
 
 <p>According to their proponents, modules fix <em>everything</em>, from componentization to ORD to compilation speed,
-but it is unknow how much code and build systems they will break.
+but it is unknown how much code and build systems they will break.
 As someone said, the first <code>import</code> statement in a code base will be very costly.
 Expect pain and suffering in the next decade.</p>
 
@@ -197,21 +197,20 @@ the way modules work once the IS ships (unlike coroutines which have sufficient 
 
 <h3 id="a-tr-for-the-c-ecosystem">A TR for the C++ ecosystem.</h3>
 
-<p>While working on deterministic module name mapping to file with Peter Bindels, it become apparent to me
-that we would never get to fix the toolability concerns of modules (as expressed in <a href="https://wg21.link/P1427">P1427</a> ) in the IS.</p>
+<p>While working on deterministic module name mapping to file with Peter Bindels, it became apparent to me that we would never get to fix the toolability concerns of modules (as expressed in <a href="https://wg21.link/P1427">P1427</a> ) in the IS.</p>
 
-<p>Jetlag helping, I started to draft some slides at 4am the day of the tooling session.
+<p>Jetlag helping, I started to draft some slides at 4 am the day of the tooling session.
 Later, a few SG-15 members and me stat down near the pool and thanks to Bryce Adelstein Lelbach we were able to present a call for
 a &ldquo;C++ Ecosystem Technical Report&rdquo; later that day.</p>
 
 <p>We got a very positive reception.</p>
 
-<p>The idea is to, in marge of the IS, describe the common use case of source-file-to-machine-code compilation driven by a build sysem.
+<p>The idea is to, in marge of the IS, describe the common use case of source-file-to-machine-code compilation driven by a build system.
 We will first focus on making module workable and might be able to later extend this document to package management.
-The document will strive to offer guidelines, inter-exchange formats and other specification to offfer all tools and compilers a common baseline
-to follow such that modularized code can be shared and reused in a wide variaety of scenarios and platforms.</p>
+The document will strive to offer guidelines, inter-exchange formats and other specification to offer all tools and compilers a common baseline
+to follow such that modularized code can be shared and reused in a wide variety of scenarios and platforms.</p>
 
-<p>SG-15 will do its best to have enough material to ship a first version of this document in about the same time as the IS to ensure modules are a succes,
+<p>SG-15 will do its best to have enough material to ship a first version of this document in about the same time as the IS to ensure modules are a success,
 but it&rsquo;s a tall order.</p>
 
 <h3 id="no-standard-library-modules-in-c-20">No standard library modules in C++20</h3>
@@ -219,42 +218,41 @@ but it&rsquo;s a tall order.</p>
 <p>The standard library will not be modularized in C++20 but standard libraries modules will be considered legacy header units,
 so <code>#include &lt;vector&gt;</code> will be equivalent to <code>#import &lt;vector&gt;</code> while <code>import std;</code> will be ill-formed.</p>
 
-<p>We realized that macros used to configure the standard library might stop working or break in fun and unexpected way
-but that didn&rsquo;t stop anything.</p>
+<p>We realized that macros used to configure the standard library might stop working or break in fun and unexpected ways but that didn&rsquo;t stop anything.</p>
 
-<h3 id="how-broken-are-modules">How broken are modules ?</h3>
+<h3 id="how-broken-are-modules">How broken are modules?</h3>
 
 <p>Modules are probably 90% of the way there. I think they could be ready in a few meetings.</p>
 
-<p>Language wise my main concern at this point is the <code>inline</code> keyword. Which make absolutely no sense whatsoever in a module context.
+<p>Language-wise my main concern at this point is the <code>inline</code> keyword. Which makes absolutely no sense whatsoever in a module context.
 I&rsquo;ll try to detail why in a paper time permitting, but I doubt there is still time to fix that. We will see I guess.</p>
 
-<p>It remain to see how the sucessful the TR approach will be as it will still require a lot of vendors to agree on specify behaviors that are
+<p>It remains to see how the successful the TR approach will be as it will still require a lot of vendors to agree on specify behaviors that are
 currently implementation-defined.</p>
 
-<p>I have also stills huge concerns about what modules are not.</p>
+<p>I have also still huge concerns about what modules are not.</p>
 
-<p>Implicit forward-declarations (hoisting) in module context was never seriously considered, the opportunity to cleanup the language
-<a href="https://wg21.link/P0997">P0997</a> was shot down, the single-file module usecase was barely considered, etc.
+<p>Implicit forward-declarations (hoisting) in module context was never seriously considered, the opportunity to clean up the language
+<a href="https://wg21.link/P0997">P0997</a> was shot down, the single-file module use-case was barely considered, etc.
 Yet, it seems that the wider community still expect modules to be</p>
 
 <ul>
 <li>A name scoping mechanism (they are not)</li>
-<li>A replacement to library (they are not)</li>
+<li>A replacement to libraries (they are not)</li>
 <li>A massive compilation improvement (they offer some improvement in some use-cases)</li>
 <li>Portable (they are not)</li>
-<li>A symbol versionning system (they are not)</li>
+<li>A symbol versioning system (they are not)</li>
 </ul>
 
 <p>I&rsquo;m not sure everyone on the committee agrees on what modules <em>are</em>, nor should be but at least implementers all have their own
 interesting twist on how modules and BMI are implemented.</p>
 
 <p>The situation is certainly not as dire as I make it to be. Forgive me, I am a bit salty.
-Truth is, the consensus in plennary was strong enough that I&rsquo;m probably wrong and regardless
+Truth is, the consensus in plenary was strong enough that I&rsquo;m probably wrong and regardless
 are still an incredible achievement by their authors.</p>
 
-<p>We have still time to fix things and SG-15 will be meeting bi-mensually to do their best to make module adoption as smooth as possible.
-I think it&rsquo;s great that SG-15 new charter is, for the time being more focused and narrow as it will help the group progress in small steps
+<p>We have still time to fix things and SG-15 will be meeting twice a month to do their best to make module adoption as smooth as possible.
+I think it&rsquo;s great that SG-15 new charter is, for the time being, more focused and narrow as it will help the group progress in small steps
 towards where we want to be.</p>
 
 
@@ -273,7 +271,7 @@ towards where we want to be.</p>
 
 <h1 id="my-papers">My papers</h1>
 
-<p>One of the reason I fly to the opposite side of the planet is that I accidently wrote
+<p>One of the reasons I fly to the opposite side of the planet is that I accidentally wrote
 the most papers on the pre-Kona mailing. Sorry.</p>
 
 <h2 id="deprecate-uses-of-the-comma-operator-in-subscripting-expressions">Deprecate uses of the comma operator in subscripting expressions</h2>
@@ -283,13 +281,12 @@ the most papers on the pre-Kona mailing. Sorry.</p>
 <p>When they tell you to write papers, they don&rsquo;t tell you would ultimately end up
 in core. It is a rather stressful experience, as I had to live edit-generate-upload my paper
 as wording experts were arguing about each word, each comma.
-Keeping track off all the changes requested as I was still trying to modifying the paper was definityively challenging.</p>
+Keeping track off all the changes requested as I was still trying to modifying the paper was definitively challenging.</p>
 
-<p>It is however a necessary process as confusing wording is hardly implementable and the wording is, after all, the
-only product of WG21&rsquo;s work.
-Ultimately, core was satisfy with the wording and P1161 should be voted in plenary in Cologne!</p>
+<p>It is, however, a necessary process as confusing wording is hardly implementable and the wording is, after all, the only product of WG21&rsquo;s work.
+Ultimately, core was satisfied with the wording and P1161 should be voted in plenary in Cologne!</p>
 
-<p>Now, the question remain as to how we can reclaim that syntax in the C++23 timeframe such that mdspan and linear algebra&rsquo;s matrices
+<p>Now, the question remains as to how we can reclaim that syntax in the C++23 timeframe such that mdspan and linear algebra&rsquo;s matrices
 can make use of it.</p>
 
 <h2 id="source-location">source_location</h2>
@@ -298,7 +295,7 @@ can make use of it.</p>
 
 <p><code>source_location</code> is mostly the work of Robert Douglas, but I did manage to pull it out of Library Fundamentals and I fully expect it will
 be merged into the C++20 WD at the next meeting.
-LWG did a first review of the wording after the official adjourment of the meeting (which was less intense than core), and I will upload a
+LWG did a first review of the wording after the official adjournment of the meeting (which was less intense than core), and I will upload a
 more or less final version of the wording in the post mailing.</p>
 
 <p><code>source_location</code> API might change slightly before the publication of C++20 as we try to unify the interfaces of <code>source_location</code> , <code>contract_violation</code> and
@@ -318,14 +315,14 @@ helped me shape and simplify the design - the first iterations were rather terri
 
 <p>The basic idea is that objects non-forward iterators are used to iterate over are not regular and that consequently non-forward iterators
 should not require regularity either.
-In fact I show that there is a relation between the notion of single-pass and that of non-copyability.</p>
+In fact, I show that there is a relation between the notion of single-pass and that of non-copyability.</p>
 
 <p>Practically speaking, this change permits the creation of non-forward iterators that are safer to use and easier to teach.</p>
 
-<p>One of the reason we are doing this change now and not before or later
-is that concepts can never be change as both relaxing a concept and adding requierement represent API breaks.</p>
+<p>One of the reasons we are doing this change now and not before or later
+is that concepts can never be changed as both relaxing a concept and adding requirement represent API breaks.</p>
 
-<p>The new ranges concepts gave us an unique opportunity to better defined the requierements of iterators and we took it.
+<p>The new ranges concepts gave us a unique opportunity to better defined the requirements of iterators and we took it.
 I will have to iterate over the wording over the past few months and hopefully present LWG with something standard worthy before Cologne.
 I don&rsquo;t really have a choice, do I?</p>
 
@@ -376,7 +373,7 @@ Minor implementation and design changes were made during the week, so expect a n
 
 <p>I proposed generalized ranges-based constructors constrained by <code>ContiguousRanges</code> to both <code>std::span</code> and <code>std::string_view</code> both of which were
 accepted - pending wording review, as always.
-This allow constructing span from views and <code>string_view</code> from, for example a <code>std::vector&lt;char8_t&gt;</code> or a <code>QByteArray</code> -
+This allows constructing span from views and <code>string_view</code> from, for example, a <code>std::vector&lt;char8_t&gt;</code> or a <code>QByteArray</code> -
 which was always the intent of <code>string_view</code>.</p>
 
 
@@ -395,7 +392,7 @@ which was always the intent of <code>string_view</code>.</p>
 
 <h1 id="more-peppers">More peppers 🌶️</h1>
 
-<p>I still have a terrible french accent.
+<p>I still have a terrible French accent.
 Anyhow.</p>
 
 <h2 id="move-only-views">Move-only views</h2>
@@ -403,7 +400,7 @@ Anyhow.</p>
 <p><a href="https://wg21.link/P1456">P1456</a></p>
 
 <p>Casey Carter proposed a paper for move-only views which was accepted, more or less for the same reasons move-only iterators were.
-An extra benefit of move-only viewsn is thatn for example <code>view_filter</code> can support move-only predicates.</p>
+An extra benefit of move-only views is that for example <code>view_filter</code> can support move-only predicates.</p>
 
 <h2 id="view-all-the-things">View all the things</h2>
 
@@ -423,9 +420,9 @@ P1035, authored by Christopher Di Bella is the biggest piece of that story, as i
 </ul>
 
 <p>Christopher was nice enough to let me add the last three views in is paper, although he ended up doing most of the wording work on it.
-Thanks Chris !</p>
+Thanks Chris!</p>
 
-<p><code>zip</code> did not make the cut as it requieres careful modifications of pair and tuple. <code>enumerate</code> was not proposed but requieres the same modification of <code>tuple</code>
+<p><code>zip</code> did not make the cut as it requires careful modifications of pair and tuple. <code>enumerate</code> was not proposed but requires the same modification of <code>tuple</code>
 as <code>zip</code>.
 We expect these very useful views to be offered in C++23.</p>
 
@@ -448,15 +445,15 @@ We expect these very useful views to be offered in C++23.</p>
 <p><a href="https://wg21.link/P1361">P1361</a></p>
 
 <p><em>Integration of chrono with text formatting</em> authored by Victor Zverovich and Howard E. Hinnant, authors of <code>std::format</code> and <code>&lt;chrono&gt;</code> respectively,
-unifies the fmt and chrono api, so that <code>fmt</code> is the one and only way to format a date or time in C++.
-I love this paper because it adds consistency and avoid duplication. Simplern, leaner APIS!</p>
+unifies the fmt and chrono API, so that <code>fmt</code> is the one and only way to format a date or time in C++.
+I love this paper because it adds consistency and avoids duplication. Simpler, leaner APIS!</p>
 
 <h2 id="out-pouter">out pouter</h2>
 
 <p><a href="https://wg21.link/P1132">P1132</a></p>
 
-<p><code>out_ptr</code>, authored by JeanHeyd Meneide is an utility to safely handle C apis expecting T** as parameters, and will be useful to anyone who ever had to deal with
-C apis.
+<p><code>out_ptr</code>, authored by JeanHeyd Meneide is a utility to safely handle C APIs expecting T** as parameters and will be useful to anyone who ever had to deal with
+C APIs.
 I believe this was the very last paper seen by LEWG this meeting.</p>
 
 <h2 id="a-auto-joining-interruptible-thread">A auto-joining interruptible thread.</h2>
@@ -497,24 +494,24 @@ kind of thing. Now, we can stop talking about it.</p>
 
 <p>We saw for the first time a proposal based on <code>CTRE</code>, presented by its author, Hana Dusíková.
 I think we are all excited by the prospect of having something like CTRE in the standard.
-However, we had to explain to Hana that <code>std::regex</code> is broken beyond repair, we will never be able to add unicode support to it.
-And, given the burden of adding regex engines to the standard, we would very much please make ctre a unicode-compliant replacement to <code>std::regex</code>.</p>
+However, we had to explain to Hana that <code>std::regex</code> is broken beyond repair, we will never be able to add Unicode support to it.
+And, given the burden of adding regex engines to the standard, we would very much please make ctre a Unicode-compliant replacement to <code>std::regex</code>.</p>
 
 <p>But the thing is, Regex is the final boss of Unicode and the regex TR is so massive virtually no one implements it fully.
 And SG-16 may not be ready to tackle that beast for a while.</p>
 
-<p>Yet, we really want <code>CTRE</code> to be forward compatible with unicode and <a href="http://unicode.org/reports/tr18/">TR-18</a>.
+<p>Yet, we really want <code>CTRE</code> to be forward compatible with Unicode and <a href="http://unicode.org/reports/tr18/">TR-18</a>.
 A hurdle with that is that ctre is based on prce&rsquo;s syntax which is not standardized.
 Fortunately, <a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-regexp-regular-expression-objects">ECMAScript 2018</a> specifies level 1 support for regex so C++ can hopefully rely on that work which would simplify the wording.</p>
 
 <h2 id="transcoding">Transcoding</h2>
 
-<p>We also discussed a proposal describe the requierements for a transcoding API and we expect to get more paper in this area in subsequent meetings.</p>
+<p>We also discussed a proposal to describe the requirements for a transcoding API and we expect to get more paper in this area in subsequent meetings.</p>
 
-<h1 id="see-you-in-cologne">See you in cologne</h1>
+<h1 id="see-you-in-cologne">See you in Cologne</h1>
 
-<p>I&rsquo;ve very grateful to the people that gave me little choice but to be in Kona, especially Bryce and the C++ fundation.
-Hawaii is a great place and it is quite easy imagining saying there forever.
+<p>I&rsquo;ve very grateful to the people that gave me little choice but to be in Kona, especially Bryce and the C++ foundation.
+Hawaii is a great place and it is quite easy imagining staying there forever.
 Summer 12 months a year and a lot of varied, breathtaking landscapes, what is not to like?</p>
 
 <p>However, time to get back to work (I do have a day job) and get work on my papers,
@@ -553,7 +550,7 @@ Take care and see you next time.</p>
     
   </svg>
 </i></a></span>
-        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fkona2019%2f&t=Kona%20%3a%20A%20trip%20report" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fkona2019%2f&t=Kona%3a%20A%20trip%20report" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
     <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
     
