@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Kona : A trip report | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">February 28, 2019</h2>
+    <h1 class="title">Kona : A trip report</h1>
+    
+    <div class="content">
+      
+
+<p>I was lucky enough to participate to a third wg21 commitee meeting in a row, this time in Kona, Hawaii, a
+mere 13000 kilometers away.</p>
+
+
+<figure>
+    
+        <img src="kona.jpg" />
+    
+    
+    <figcaption>
+        <h4>Kona</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>As is tradition, Bryce and others wrote a rather thorough trip report and reddit and you should check it out.
+However, if you want to read more details about my experience and some of the proposals I find important,
+please read on (knowing that your time is limited, and doing so will leave less time to read other blog posts).</p>
+
+<p>With a handful of active study groups, 2 incubator groups, Evolution, Library Evolution, Core Wording Group and Library Wording Group,
+it is impossible to follow closely everything that happened in the 7 or so concurrently running rooms.
+As such, I missed discussions about some proposals I have strong opinions about and participated in discussions about features I feel strongly neutral about.
+Such is life.
+I also reserve the right not to have an opinion on the basis that on most topic, I&rsquo;m too stupid to have an informed one.</p>
+
+<p>And the committee is by no mean slowing down.
+The pre-kona mailing list have a staggering 177 papers. Including 144 never-seen-before papers.
+This meeting was also the feature freeze. Which means no feature not approved y an evolution group before the end of the meeting will be added in C++20.
+At least, that&rsquo;s the theory.</p>
+
+<p>This meeting has been qualified of historic and indeed we approved a lot of major features that have been in the work for a while as well as a number of small
+quality of life improvements. C++20 is poised to be the biggest release since C++11, or, dare I say it, <em>ever</em> ?</p>
+
+<p>The number of features actually added this meeting was relatively small, but a lot of papers are waiting to go through the wording groups and should be accepted in
+Cologne.</p>
+
+<h1 id="coroutines">Coroutines</h1>
+
+<p>Coroutines were merged with a very strong consensus and I think this is terrific.
+If you follow the development of C++ closely, you would have noticed that their design have not changed significantly
+over the past year, but there were no consensus to merge them in San Diego or Rapperswill. So, why now?</p>
+
+<p>One contention point of the Coroutines TS is that it always heap-allocate the type-erased coroutine frame
+and relies on impressive optimization technics to make these allocations disapear when the frame does not outlive the caller&rsquo;s
+context.</p>
+
+<p>The Core Coroutine proposal offered determistic stack allocations of coroutines frames.</p>
+
+<p>The issue with having the coroutine frame allocated on the stack is that it can not be optimized away without black magic.
+That black magic now has a name: Defered layout.
+A seducing idea that would let the compiler backend set the layout of some types including coroutine frames. We would then be to
+optimize away stack allocated coroutines.
+However, these types would not have a constexpr <code>sizeof</code> which has deep-reaching consequences in the language and more importantly is deemed
+very complex by compiler vendors.
+This idea then is very much an area of research that might not bare fruit in the next 5 to 10 years.
+Defered layout types would also not be able to cross TU boundaries.</p>
+
+<p>So, what I think happened is that people realized that the core coroutines would not be implementable for a very long time, whereas the TS has been
+implemented in all compilers with great success.
+We are also confident - although not certain - that there is a way for coroutines to gain deterministic allocation in the future, in backward compatible
+fashion.</p>
+
+<p>Coroutines then, are not perfect, but they certainly good enough for an overwhelming majority of use cases.
+And they are so powerful and universally useful that it became quite apparent that it was not reasonable to deprived the community of coroutines
+while we chase after unicorns.</p>
+
+<p>I would have like <a href="https://wg21.link/p1477">P1477</a> to be discussed, but it seems Evolution ran out of time. I really hope this can be discussed before
+C++20 as it makes writting new coroutine types more palatable.</p>
+
+<p>Note that writing coroutines types is not something we expect most C++ developers to ever needing to do.
+Unfortunately, time has ran out and C++20 will not ship with any standard library support for coroutines.
+I am afraid this will give people a bad impression of anotherwise amazing feature.</p>
+
+<p>Consequently, I recommend that you use <a href="https://github.com/lewissbaker/cppcoro">cppcoro</a> when trying out and using coroutines
+as it hides the gory details and gives a good idea of what we expect the Standard library to offer in future versions of C++20.
+This library is authored by Lewis Baker, who has greatly contributed to the success of coroutines.</p>
+
+<p>The merge of the core coroutines TS is an incredible success for C++ and
+Gor Nishanov who has been working on coroutines (or so called Gorroutines) for the past 5 years.</p>
+
+<p>Having coroutines in the standard open the door for a lot of proposals and work, for example
+* A user-friendly networking library
+* Well integrated executors
+* Sane implementation of unicode bidirectional iterators</p>
+
+
+<figure>
+    
+        <img src="coros.jpg" />
+    
+    
+    <figcaption>
+        <h4>co_celebration</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h1 id="modules">Modules</h1>
+
+<p>Modules too got merged into the IS with an extremely strong consensus.
+That too is a major transformational feature who has been in the work for more than a decade.</p>
+
+<p>I voted against. Maybe I should explain why !</p>
+
+<p>Modules have been branded as a paradigm shift. Which isn&rsquo;t wrong.
+Modules might indeed be the most transformational feature C++ will gain in the coming decades.
+Which is why it is important to get them right.</p>
+
+<p>But here is the thing. Modules are not stable. Not by a long shot. There have been papers written
+overnight (kudos to the authors !) during the meeting to fix issues with linkage of static symbols.
+The design changed considerably (for the better) over the past year.</p>
+
+<p>There is no usage experience whatsoever with non-legacy modules as proposed by the merged proposal.
+(There is a lot of experience with legacy modules though.)</p>
+
+<p>You would think for a feature that will have a profund impact on the whole ecosystem we would have
+taken the time to make sure modules do indeed work as intended and let the design mature for a while.
+We didn&rsquo;t.</p>
+
+<p>According to their proponents, modules fix <em>everything</em>, from componentization to ORD to compilation speed,
+but it is unknow how much code and build systems they will break.
+As someone said, the first <code>import</code> statement in a code base will be very costly.
+Expect pain and suffering in the next decade.</p>
+
+<p>Critically, it will be hard (as in, close to impossible) to alter meaningfully
+the way modules work once the IS ships (unlike coroutines which have sufficient room to evolve).</p>
+
+<h3 id="a-tr-for-the-c-ecosystem">A TR for the C++ ecosystem.</h3>
+
+<p>While working on deterministic module name mapping to file with Peter Bindels, it become apparent to me
+that we would never get to fix the toolability concerns of modules (as expressed in <a href="https://wg21.link/P1427">P1427</a> ) in the IS.</p>
+
+<p>Jetlag helping, I started to draft some slides at 4am the day of the tooling session.
+Later, a few SG-15 members and me stat down near the pool and thanks to Bryce Adelstein Lelbach we were able to present a call for
+a &ldquo;C++ Ecosystem Technical Report&rdquo; later that day.</p>
+
+<p>We got a very positive reception.</p>
+
+<p>The idea is to, in marge of the IS, describe the common use case of source-file-to-machine-code compilation driven by a build sysem.
+We will first focus on making module workable and might be able to later extend this document to package management.
+The document will strive to offer guidelines, inter-exchange formats and other specification to offfer all tools and compilers a common baseline
+to follow such that modularized code can be shared and reused in a wide variaety of scenarios and platforms.</p>
+
+<p>SG-15 will do its best to have enough material to ship a first version of this document in about the same time as the IS to ensure modules are a succes,
+but it&rsquo;s a tall order.</p>
+
+<h3 id="no-standard-library-modules-in-c-20">No standard library modules in C++20</h3>
+
+<p>The standard library will not be modularized in C++20 but standard libraries modules will be considered legacy header units,
+so <code>#include &lt;vector&gt;</code> will be equivalent to <code>#import &lt;vector&gt;</code> while <code>import std;</code> will be ill-formed.</p>
+
+<p>We realized that macros used to configure the standard library might stop working or break in fun and unexpected way
+but that didn&rsquo;t stop anything.</p>
+
+<h3 id="how-broken-are-modules">How broken are modules ?</h3>
+
+<p>Modules are probably 90% of the way there. I think they could be ready in a few meetings.</p>
+
+<p>Language wise my main concern at this point is the <code>inline</code> keyword. Which make absolutely no sense whatsoever in a module context.
+I&rsquo;ll try to detail why in a paper time permitting, but I doubt there is still time to fix that. We will see I guess.</p>
+
+<p>It remain to see how the sucessful the TR approach will be as it will still require a lot of vendors to agree on specify behaviors that are
+currently implementation-defined.</p>
+
+<p>I have also stills huge concerns about what modules are not.</p>
+
+<p>Implicit forward-declarations (hoisting) in module context was never seriously considered, the opportunity to cleanup the language
+<a href="https://wg21.link/P0997">P0997</a> was shot down, the single-file module usecase was barely considered, etc.
+Yet, it seems that the wider community still expect modules to be</p>
+
+<ul>
+<li>A name scoping mechanism (they are not)</li>
+<li>A replacement to library (they are not)</li>
+<li>A massive compilation improvement (they offer some improvement in some use-cases)</li>
+<li>Portable (they are not)</li>
+<li>A symbol versionning system (they are not)</li>
+</ul>
+
+<p>I&rsquo;m not sure everyone on the committee agrees on what modules <em>are</em>, nor should be but at least implementers all have their own
+interesting twist on how modules and BMI are implemented.</p>
+
+<p>The situation is certainly not as dire as I make it to be. Forgive me, I am a bit salty.
+Truth is, the consensus in plennary was strong enough that I&rsquo;m probably wrong and regardless
+are still an incredible achievement by their authors.</p>
+
+<p>We have still time to fix things and SG-15 will be meeting bi-mensually to do their best to make module adoption as smooth as possible.
+I think it&rsquo;s great that SG-15 new charter is, for the time being more focused and narrow as it will help the group progress in small steps
+towards where we want to be.</p>
+
+
+<figure>
+    
+        <img src="0010.jpg" />
+    
+    
+    <figcaption>
+        <h4>Towards Module adoption</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h1 id="my-papers">My papers</h1>
+
+<p>One of the reason I fly to the opposite side of the planet is that I accidently wrote
+the most papers on the pre-Kona mailing. Sorry.</p>
+
+<h2 id="deprecate-uses-of-the-comma-operator-in-subscripting-expressions">Deprecate uses of the comma operator in subscripting expressions</h2>
+
+<p><a href="https://wg21.link/P1161">P1161</a></p>
+
+<p>When they tell you to write papers, they don&rsquo;t tell you would ultimately end up
+in core. It is a rather stressful experience, as I had to live edit-generate-upload my paper
+as wording experts were arguing about each word, each comma.
+Keeping track off all the changes requested as I was still trying to modifying the paper was definityively challenging.</p>
+
+<p>It is however a necessary process as confusing wording is hardly implementable and the wording is, after all, the
+only product of WG21&rsquo;s work.
+Ultimately, core was satisfy with the wording and P1161 should be voted in plenary in Cologne!</p>
+
+<p>Now, the question remain as to how we can reclaim that syntax in the C++23 timeframe such that mdspan and linear algebra&rsquo;s matrices
+can make use of it.</p>
+
+<h2 id="source-location">source_location</h2>
+
+<p><a href="https://wg21.link/P1208">P1208</a></p>
+
+<p><code>source_location</code> is mostly the work of Robert Douglas, but I did manage to pull it out of Library Fundamentals and I fully expect it will
+be merged into the C++20 WD at the next meeting.
+LWG did a first review of the wording after the official adjourment of the meeting (which was less intense than core), and I will upload a
+more or less final version of the wording in the post mailing.</p>
+
+<p><code>source_location</code> API might change slightly before the publication of C++20 as we try to unify the interfaces of <code>source_location</code> , <code>contract_violation</code> and
+<code>stacktrace</code></p>
+
+<h2 id="movability-of-single-pass-iterators">Movability of Single-pass Iterators</h2>
+
+<p><a href="https://wg21.link/P1207">P1207</a></p>
+
+<p>This paper proposes to strike the Copyability requirement for non-forward iterators, which is a small change with a rather big impact.
+I probably should do a separate blog post about it.
+I encourage you to read the paper, as I tried to motivate the design as much as possible.</p>
+
+<p>I still have to provide full wording for it but LEWG approved the design and it should go in 20 if all goes well.
+I was really not expecting that this paper would receive as much support as it did and I&rsquo;m incredibly grateful to all the people who
+helped me shape and simplify the design - the first iterations were rather terrible.</p>
+
+<p>The basic idea is that objects non-forward iterators are used to iterate over are not regular and that consequently non-forward iterators
+should not require regularity either.
+In fact I show that there is a relation between the notion of single-pass and that of non-copyability.</p>
+
+<p>Practically speaking, this change permits the creation of non-forward iterators that are safer to use and easier to teach.</p>
+
+<p>One of the reason we are doing this change now and not before or later
+is that concepts can never be change as both relaxing a concept and adding requierement represent API breaks.</p>
+
+<p>The new ranges concepts gave us an unique opportunity to better defined the requierements of iterators and we took it.
+I will have to iterate over the wording over the past few months and hopefully present LWG with something standard worthy before Cologne.
+I don&rsquo;t really have a choice, do I?</p>
+
+<h2 id="ranges-to">ranges::to</h2>
+
+<p><a href="https://wg21.link/P1206">P1206</a></p>
+
+<p>No, I haven&rsquo;t proposed ranges 2.</p>
+
+<p>P1206 was originally called &ldquo;Range constructors for containers&rdquo; but this approach was defeated by <code>initializer_list</code>s.
+So, I went back to the drawing board and came back with a design that was rather close to the existing <code>ranges-v3</code>&rsquo;s <code>to_</code> facility.</p>
+
+<p><code>ranges::to</code> functions both as a function and a pipable object and can construct a container from a range.
+It supports standard containers, associative containers, extra parameters such as allocators and can deduce the type of the container&rsquo;s value type.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std::list&lt;<span style="color:#888;font-weight:bold">int</span>&gt; l;
+std::map&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#888;font-weight:bold">int</span>&gt; m;
+<span style="color:#888">// copy a list to a vector of the same type
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> a = ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;(l);
+<span style="color:#888">//Specify an allocator
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> b = ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>, Alloc&gt;(l, alloc);
+<span style="color:#888">// copy a list to a vector of the same type, deducing value_type
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> c = ranges::to&lt;std::vector&gt;(l);
+<span style="color:#888">// copy to a container of types ConvertibleTo
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> d = ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">long</span>&gt;&gt;(l);
+<span style="color:#888">//Supports converting associative container to sequence containers
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> f = ranges::to&lt;vector&lt;std::pair&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">int</span>, <span style="color:#888;font-weight:bold">int</span>&gt;&gt;&gt;(m);
+<span style="color:#888">//Supports converting sequence containers to associative ones
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> g = f | ranges::to&lt;map&gt;();
+<span style="color:#888">//Pipe syntaxe
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> g = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&gt;();
+<span style="color:#888">//Pipe syntax with allocator
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> h = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&gt;(alloc);
+<span style="color:#888">//The pipe syntax also support specifying the type and conversions
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> i = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">long</span>&gt;&gt;();
+<span style="color:#888">//Pathenthesis are optional
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> j = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&gt;;
+<span style="color:#888">//and types
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> k = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">long</span>&gt;&gt;;
+</code></pre></div>
+<p>This facility was accepted by LEWG and should be present in C++20 if LWG has the time to review the wording - that I haven&rsquo;t written yet -
+in Cologne.
+A lot of work was done by Eric Niebler on this proposal, notably to make the paratheses optional.
+Minor implementation and design changes were made during the week, so expect a new revision in the post mailing list.</p>
+
+<p>I think this function will prove extremely useful - especially to stick views (which are lazy) into memory.</p>
+
+<h2 id="conceptify-all-the-things">Conceptify all the things</h2>
+
+<p>I proposed generalized ranges-based constructors constrained by <code>ContiguousRanges</code> to both <code>std::span</code> and <code>std::string_view</code> both of which were
+accepted - pending wording review, as always.
+This allow constructing span from views and <code>string_view</code> from, for example a <code>std::vector&lt;char8_t&gt;</code> or a <code>QByteArray</code> -
+which was always the intent of <code>string_view</code>.</p>
+
+
+<figure>
+    
+        <img src="0014.jpg" />
+    
+    
+    <figcaption>
+        <h4>Tight integration</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h1 id="more-peppers">More peppers 🌶️</h1>
+
+<p>I still have a terrible french accent.
+Anyhow.</p>
+
+<h2 id="move-only-views">Move-only views</h2>
+
+<p><a href="https://wg21.link/P1456">P1456</a></p>
+
+<p>Casey Carter proposed a paper for move-only views which was accepted, more or less for the same reasons move-only iterators were.
+An extra benefit of move-only viewsn is thatn for example <code>view_filter</code> can support move-only predicates.</p>
+
+<h2 id="view-all-the-things">View all the things</h2>
+
+<p><a href="https://wg21.link/P1035">P1035</a></p>
+
+<p>You would have noticed that rounding-up the rangification of the STL is a common theme of these papers.
+P1035, authored by Christopher Di Bella is the biggest piece of that story, as it adds a number of views including</p>
+
+<ul>
+<li>istream_view (view over an input stream)</li>
+<li>take_while   (view over the first elements of a range matching a predicate)</li>
+<li>drop         (view over the elements of a range, skipping the nth first elements)</li>
+<li>drop_while   (view over the elements of a range, skipping first elements matching a predicate)</li>
+<li>keys         (view over the first elements of a sequence of pairs)</li>
+<li>values       (view over the second elements of a sequence of pairs)</li>
+<li>elements     (view over the nths elements of a sequence of tuples)</li>
+</ul>
+
+<p>Christopher was nice enough to let me add the last three views in is paper, although he ended up doing most of the wording work on it.
+Thanks Chris !</p>
+
+<p><code>zip</code> did not make the cut as it requieres careful modifications of pair and tuple. <code>enumerate</code> was not proposed but requieres the same modification of <code>tuple</code>
+as <code>zip</code>.
+We expect these very useful views to be offered in C++23.</p>
+
+
+<figure>
+    
+        <img src="0002.jpg" />
+    
+    
+    <figcaption>
+        <h4>The very best views</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h2 id="integration-of-chrono-with-text-formatting">Integration of chrono with text formatting</h2>
+
+<p><a href="https://wg21.link/P1361">P1361</a></p>
+
+<p><em>Integration of chrono with text formatting</em> authored by Victor Zverovich and Howard E. Hinnant, authors of <code>std::format</code> and <code>&lt;chrono&gt;</code> respectively,
+unifies the fmt and chrono api, so that <code>fmt</code> is the one and only way to format a date or time in C++.
+I love this paper because it adds consistency and avoid duplication. Simplern, leaner APIS!</p>
+
+<h2 id="out-pouter">out pouter</h2>
+
+<p><a href="https://wg21.link/P1132">P1132</a></p>
+
+<p><code>out_ptr</code>, authored by JeanHeyd Meneide is an utility to safely handle C apis expecting T** as parameters, and will be useful to anyone who ever had to deal with
+C apis.
+I believe this was the very last paper seen by LEWG this meeting.</p>
+
+<h2 id="a-auto-joining-interruptible-thread">A auto-joining interruptible thread.</h2>
+
+<p><a href="https://wg21.link/P0660">P0660</a></p>
+
+<p><code>std::jthread</code> is a thread that can be requested to stop and that will automatically join on destruction. Very useful indeed.</p>
+
+<h2 id="deprecating-volatile">Deprecating volatile</h2>
+
+<p><a href="https://wg21.link/P1152">P1152</a></p>
+
+<p>Thanks to JF Bastien, we are taking some steps towards getting rid of the <code>volatile</code> keyword.
+<a href="https://wg21.link/P1382">P1382</a> which will not be in C++20 will offer a sane replacement to the useful use cases of volatiles.</p>
+
+<h2 id="span-s-size-type">span&rsquo;s size type</h2>
+
+<p>We made span&rsquo;s size type consistent with size_t and offered a non-member <code>ssize()</code> function that returns a signed size for people who care about that
+kind of thing. Now, we can stop talking about it.</p>
+
+
+<figure>
+    
+        <img src="0003.jpg" />
+    
+    
+    <figcaption>
+        <h4>An overworked seal of approval</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h1 id="unicode">🕴️ Unicode 🕴️</h1>
+
+<h2 id="ctre">ctre</h2>
+
+<p>We saw for the first time a proposal based on <code>CTRE</code>, presented by its author, Hana Dusíková.
+I think we are all excited by the prospect of having something like CTRE in the standard.
+However, we had to explain to Hana that <code>std::regex</code> is broken beyond repair, we will never be able to add unicode support to it.
+And, given the burden of adding regex engines to the standard, we would very much please make ctre a unicode-compliant replacement to <code>std::regex</code>.</p>
+
+<p>But the thing is, Regex is the final boss of Unicode and the regex TR is so massive virtually no one implements it fully.
+And SG-16 may not be ready to tackle that beast for a while.</p>
+
+<p>Yet, we really want <code>CTRE</code> to be forward compatible with unicode and <a href="http://unicode.org/reports/tr18/">TR-18</a>.
+A hurdle with that is that ctre is based on prce&rsquo;s syntax which is not standardized.
+Fortunately, <a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-regexp-regular-expression-objects">ECMAScript 2018</a> specifies level 1 support for regex so C++ can hopefully rely on that work which would simplify the wording.</p>
+
+<h2 id="transcoding">Transcoding</h2>
+
+<p>We also discussed a proposal describe the requierements for a transcoding API and we expect to get more paper in this area in subsequent meetings.</p>
+
+<h1 id="see-you-in-cologne">See you in cologne</h1>
+
+<p>I&rsquo;ve very grateful to the people that gave me little choice but to be in Kona, especially Bryce and the C++ fundation.
+Hawaii is a great place and it is quite easy imagining saying there forever.
+Summer 12 months a year and a lot of varied, breathtaking landscapes, what is not to like?</p>
+
+<p>However, time to get back to work (I do have a day job) and get work on my papers,
+I have a todo list claiming I need to write 6R0 papers for the next meeting along the 6 I need to provide wording for.
+And I still have no idea why I&rsquo;m doing all of that.</p>
+
+<p>Most importantly, it was great seeing all the amazing committee members, even (especially ?) <a href="https://twitter.com/TitusWinters/status/1097947543458131969">those we disagree with</a>.
+Take care and see you next time.</p>
+
+
+<figure>
+    
+        <img src="0009.jpg" />
+    
+    
+    <figcaption>
+        <h4>See you in cologne</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fkona2019%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fkona2019%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fkona2019%2f&t=Kona%20%3a%20A%20trip%20report" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-119011218-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+
