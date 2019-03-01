@@ -91,11 +91,11 @@ As such, I missed discussions about some proposals I have strong opinions about 
 
 <p>Such is life.</p>
 
-<p>I also reserve the right not to have an opinion on the basis that on most topic, I&rsquo;m too stupid to have an informed one.</p>
+<p>I also reserve the right not to have an opinion on the basis that on most topics, I&rsquo;m too stupid to have an informed one.</p>
 
 <p>And the committee is by no mean slowing down.
 The pre-Kona mailing list have a staggering 177 papers. Including 144 never-seen-before papers.
-This meeting was also the feature freeze. Which means no feature not approved by an evolution group before the end of the meeting will be added in C++20.
+This meeting was also the feature freeze for C+20. Which means no feature not approved by an evolution group before the end of the meeting will be added in C++20.
 At least, that&rsquo;s the theory.</p>
 
 <p>This meeting has been qualified of historic and indeed we approved a lot of major features that have been in the work for a while as well as a number of small
@@ -121,9 +121,9 @@ That black magic now has a name: Deferred layout.
 A seducing idea that would let the compiler backend set the layout of some types including coroutine frames. We would then be to
 optimize away stack allocated coroutines.
 However, these types would not have a constexpr <code>sizeof</code> which has deep-reaching consequences in the language and more importantly is deemed
-very complex by compiler vendors.
-This idea then is very much an area of research that might not bear fruit in the next 5 to 10 years.
-Deferred layout types would also not be able to cross TU boundaries.</p>
+very complex to implement by compiler vendors (ie, it would probably cost a few tens of millions of dollars in R&amp;D accross the industry to get there)
+This idea then is very much an area of research that might not bear fruit (or not) in the next 5 to 10 years.
+Deferred layout types would also not be able to cross TU boundaries, so some form of type erasure would still be needed.</p>
 
 <p>So, what I think happened is that people realized that the core coroutines would not be implementable for a very long time, whereas the TS has been
 implemented in all compilers with great success.
@@ -135,17 +135,20 @@ And they are so powerful and universally useful that it became quite apparent th
 while we chase after unicorns.</p>
 
 <p>I would have like <a href="https://wg21.link/p1477">P1477</a> to be discussed, but it seems Evolution ran out of time. I really hope this can be discussed before
-C++20 as it makes writing new coroutine types more palatable.</p>
+C++20 as it makes writing new coroutine types more palatable. Note that writing coroutines types is not something we expect most C++ developers to ever needing to do.</p>
 
-<p>Note that writing coroutines types is not something we expect most C++ developers to ever need to do.
-Unfortunately, time has run out and C++20 will not ship with any standard library support for coroutines.
+<p>Unfortunately, time has run out and C++20 will not ship with any standard library support for coroutines.
 I am afraid this will give people a bad impression of an otherwise amazing feature.</p>
 
 <p>Consequently, I recommend that you use <a href="https://github.com/lewissbaker/cppcoro">cppcoro</a> when trying out and using coroutines
 as it hides the gory details and gives a good idea of what we expect the Standard library to offer in future versions of C++20.
 This library is authored by Lewis Baker, who has greatly contributed to the success of coroutines.</p>
 
-<p>The merge of the core coroutines TS is an incredible success for C++ and
+<p>Then there is the keywords mess, which I think is still important to address, but this is a loosing battle.
+(There will be a paper in the post-mailling which offer a great way to use <code>await</code> and <code>yield</code> as keyword without breaking any existing code - I really, really hope it will be
+given serious consideration !)</p>
+
+<p>Overall, the merge of the core coroutines TS is an incredible success for C++ and
 Gor Nishanov who has been working on coroutines (or so-called Gorroutines) for the past 5 years.</p>
 
 <p>Having coroutines in the standard open the door for a lot of proposals and work, for example
@@ -192,14 +195,15 @@ We didn&rsquo;t.</p>
 <p>According to their proponents, modules fix <em>everything</em>, from componentization to ORD to compilation speed,
 but it is unknown how much code and build systems they will break.
 As someone said, the first <code>import</code> statement in a code base will be very costly.
-Expect pain and suffering in the next decade.</p>
+Expect pain and suffering over the next decade.</p>
 
 <p>Critically, it will be hard (as in, close to impossible) to alter meaningfully
 the way modules work once the IS ships (unlike coroutines which have sufficient room to evolve).</p>
 
 <h3 id="a-tr-for-the-c-ecosystem">A TR for the C++ ecosystem.</h3>
 
-<p>While working on deterministic module name mapping to file with Peter Bindels, it became apparent to me that we would never get to fix the toolability concerns of modules (as expressed in <a href="https://wg21.link/P1427">P1427</a> ) in the IS.</p>
+<p>While working on deterministic module name mapping to file with Peter Bindels,
+it became apparent to me that we would never get to fix the toolability concerns of modules (as expressed in <a href="https://wg21.link/P1427">P1427</a> ) in the IS.</p>
 
 <p>Jetlag helping, I started to draft some slides at 4 am the day of the tooling session.
 Later, a few SG-15 members and me stat down near the pool and thanks to Bryce Adelstein Lelbach we were able to present a call for
@@ -207,9 +211,9 @@ a &ldquo;C++ Ecosystem Technical Report&rdquo; later that day.</p>
 
 <p>We got a very positive reception.</p>
 
-<p>The idea is to, in marge of the IS, describe the common use case of source-file-to-machine-code compilation driven by a build system.
-We will first focus on making module workable and might be able to later extend this document to package management.
-The document will strive to offer guidelines, inter-exchange formats and other specification to offer all tools and compilers a common baseline
+<p>The idea is to, in marge of the IS, describe the common use case of source-file-to-machine-code compilation driven by a build system in a separate ISO document.
+We will first focus on making module workable and might be able to later extend this document to package management. And maybe even <a href="https://github.com/GabrielDosReis/ipr">IPR</a>.
+The document will strive to offer guidelines, inter-exchange formats and other specifications to offer all tools and compilers a common baseline
 to follow such that modularized code can be shared and reused in a wide variety of scenarios and platforms.</p>
 
 <p>SG-15 will do its best to have enough material to ship a first version of this document in about the same time as the IS to ensure modules are a success,
@@ -220,6 +224,9 @@ but it&rsquo;s a tall order.</p>
 <p>The standard library will not be modularized in C++20 but standard libraries modules will be considered legacy header units,
 so <code>#include &lt;vector&gt;</code> will be equivalent to <code>#import &lt;vector&gt;</code> while <code>import std;</code> will be ill-formed.</p>
 
+<p>For some reason, we decided that it would be implementation-defined whether C headers would be legacy header units, and as such,
+<code>#import &lt;stdlib.h&gt;;</code> might compile on your platform. Or not.</p>
+
 <p>We realized that macros used to configure the standard library might stop working or break in fun and unexpected ways but that didn&rsquo;t stop anything.</p>
 
 <h3 id="how-broken-are-modules">How broken are modules?</h3>
@@ -227,7 +234,7 @@ so <code>#include &lt;vector&gt;</code> will be equivalent to <code>#import &lt;
 <p>Modules are probably 90% of the way there. I think they could be ready in a few meetings.</p>
 
 <p>Language-wise my main concern at this point is the <code>inline</code> keyword. Which makes absolutely no sense whatsoever in a module context.
-I&rsquo;ll try to detail why in a paper time permitting, but I doubt there is still time to fix that. We will see I guess.</p>
+I&rsquo;ll try to detail why in a paper - time permitting - but I doubt there is still time to fix that. We will see I guess.</p>
 
 <p>It remains to see how the successful the TR approach will be as it will still require a lot of vendors to agree on specify behaviors that are
 currently implementation-defined.</p>
@@ -247,11 +254,21 @@ Yet, it seems that the wider community still expect modules to be</p>
 </ul>
 
 <p>I&rsquo;m not sure everyone on the committee agrees on what modules <em>are</em>, nor should be but at least implementers all have their own
-interesting twist on how modules and BMI are implemented.</p>
+interesting twist on how modules and BMI are implemented.
+But I was advised to be more positive so here are a few things I like about modules</p>
+
+<ul>
+<li>They let you specify exactly what is and is not part of the public interface</li>
+<li>They sandbox macros</li>
+<li>They require module names to be unique - if done right this can help package managers.</li>
+<li>They actually materialize the interface/implementation entities - if done right this can help package managers.</li>
+<li>They are closed</li>
+<li>They may help improve compilation speed in some common scenarios</li>
+</ul>
 
 <p>The situation is certainly not as dire as I make it to be. Forgive me, I am a bit salty.
-Truth is, the consensus in plenary was strong enough that I&rsquo;m probably wrong and regardless
-are still an incredible achievement by their authors.</p>
+Truth is, the consensus in plenary was strong enough that I&rsquo;m probably wrong and regardless modules are still an incredible achievement by their authors
+and congratulations are in order.</p>
 
 <p>We have still time to fix things and SG-15 will be meeting twice a month to do their best to make module adoption as smooth as possible.
 I think it&rsquo;s great that SG-15 new charter is, for the time being, more focused and narrow as it will help the group progress in small steps
@@ -273,7 +290,7 @@ towards where we want to be.</p>
 
 <h1 id="my-papers">My papers</h1>
 
-<p>One of the reasons I fly to the opposite side of the planet is that I accidentally wrote
+<p>One of the reasons I flew to the opposite side of the planet is that I accidentally wrote
 the most papers on the pre-Kona mailing. Sorry.</p>
 
 <h2 id="deprecate-uses-of-the-comma-operator-in-subscripting-expressions">Deprecate uses of the comma operator in subscripting expressions</h2>
@@ -322,11 +339,13 @@ In fact, I show that there is a relation between the notion of single-pass and t
 <p>Practically speaking, this change permits the creation of non-forward iterators that are safer to use and easier to teach.</p>
 
 <p>One of the reasons we are doing this change now and not before or later
-is that concepts can never be changed as both relaxing a concept and adding requirement represent API breaks.</p>
+is that stadard concepts can never be changed <em>at all</em> as both relaxing a concept and adding requirement represent API breaks.</p>
 
 <p>The new ranges concepts gave us a unique opportunity to better defined the requirements of iterators and we took it.
 I will have to iterate over the wording over the past few months and hopefully present LWG with something standard worthy before Cologne.
 I don&rsquo;t really have a choice, do I?</p>
+
+<p>There might be a few other tweaks before C++20 ships as it is important to get everything <em>just right</em>.</p>
 
 <h2 id="ranges-to">ranges::to</h2>
 
@@ -337,7 +356,7 @@ I don&rsquo;t really have a choice, do I?</p>
 <p>P1206 was originally called &ldquo;Range constructors for containers&rdquo; but this approach was defeated by <code>initializer_list</code>s.
 So, I went back to the drawing board and came back with a design that was rather close to the existing <code>ranges-v3</code>&rsquo;s <code>to_</code> facility.</p>
 
-<p><code>ranges::to</code> functions both as a function and a pipable object and can construct a container from a range.
+<p><code>ranges::to</code> works both as a function and a pipable object and can construct a container from a range (whether that is another container or a view).
 It supports standard containers, associative containers, extra parameters such as allocators and can deduce the type of the container&rsquo;s value type.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std::list&lt;<span style="color:#888;font-weight:bold">int</span>&gt; l;
 std::map&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#888;font-weight:bold">int</span>&gt; m;
@@ -394,8 +413,9 @@ which was always the intent of <code>string_view</code>.</p>
 
 <h1 id="more-peppers">More peppers 🌶️</h1>
 
-<p>I still have a terrible French accent.
-Anyhow.</p>
+<p>I still have a terrible French accent.</p>
+
+<p>Anyhow.</p>
 
 <h2 id="move-only-views">Move-only views</h2>
 
@@ -450,13 +470,16 @@ We expect these very useful views to be offered in C++23.</p>
 unifies the fmt and chrono API, so that <code>fmt</code> is the one and only way to format a date or time in C++.
 I love this paper because it adds consistency and avoids duplication. Simpler, leaner APIS!</p>
 
-<h2 id="out-pouter">out pouter</h2>
+<h2 id="out-pouter">Out pouter</h2>
 
 <p><a href="https://wg21.link/P1132">P1132</a></p>
 
-<p><code>out_ptr</code>, authored by JeanHeyd Meneide is a utility to safely handle C APIs expecting T** as parameters and will be useful to anyone who ever had to deal with
+<p><code>out_ptr</code>, authored by JeanHeyd Meneide is a utility to safely handle C APIs expecting <code>T**</code> as parameters and will be useful to anyone who ever had to deal with
 C APIs.
 I believe this was the very last paper seen by LEWG this meeting.</p>
+
+<p>Another useful pointer type to deal with C apis, <a href="https://wg21.link/P0468"><code>retain_ptr</code> - proposed by Isabella Muerte</a>
+did not make the cul for C++20 but should be adopted in C++23</p>
 
 <h2 id="a-auto-joining-interruptible-thread">A auto-joining interruptible thread.</h2>
 
@@ -469,7 +492,7 @@ I believe this was the very last paper seen by LEWG this meeting.</p>
 <p><a href="https://wg21.link/P1152">P1152</a></p>
 
 <p>Thanks to JF Bastien, we are taking some steps towards getting rid of the <code>volatile</code> keyword.
-<a href="https://wg21.link/P1382">P1382</a> which will not be in C++20 will offer a sane replacement to the useful use cases of volatiles.</p>
+<a href="https://wg21.link/P1382">P1382</a> which will not be in C++20 will offer a sane replacement for the useful use cases of volatiles.</p>
 
 <h2 id="span-s-size-type">span&rsquo;s size type</h2>
 
@@ -499,29 +522,63 @@ I think we are all excited by the prospect of having something like CTRE in the 
 However, we had to explain to Hana that <code>std::regex</code> is broken beyond repair, we will never be able to add Unicode support to it.
 And, given the burden of adding regex engines to the standard, we would very much please make ctre a Unicode-compliant replacement to <code>std::regex</code>.</p>
 
-<p>But the thing is, Regex is the final boss of Unicode and the regex TR is so massive virtually no one implements it fully.
+<p>But the thing is, Regex is the final boss of Unicode and the <a href="http://unicode.org/reports/tr18/">Unicode Regex TR</a>is so massive virtually no one implements it fully.
 And SG-16 may not be ready to tackle that beast for a while.</p>
 
 <p>Yet, we really want <code>CTRE</code> to be forward compatible with Unicode and <a href="http://unicode.org/reports/tr18/">TR-18</a>.
 A hurdle with that is that ctre is based on prce&rsquo;s syntax which is not standardized.
-Fortunately, <a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-regexp-regular-expression-objects">ECMAScript 2018</a> specifies level 1 support for regex so C++ can hopefully rely on that work which would simplify the wording.</p>
+Fortunately, <a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-regexp-regular-expression-objects">ECMAScript 2018</a> <br />
+specifies level 1 support for Unicode so C++ can hopefully rely on that work which would simplify the wording -
+<code>std::regex</code> is derived from an older version of the ECMAScript specification.</p>
+
+<p>In short, Hana&rsquo;s have her hands full, but Unicode support can be added incrementally as long as we plan ahead.
+If we manage to pull that off, it will be glorious.</p>
 
 <h2 id="transcoding">Transcoding</h2>
 
 <p>We also discussed a proposal to describe the requirements for a transcoding API and we expect to get more paper in this area in subsequent meetings.</p>
 
+<h1 id="a-bright-future">A bright future</h1>
+
+<p>As committee members, we get to live at head and beyond. Which is sometimes a curse as most of us are stuck in C++17 or older and will be for a while.
+C++20 conformance will take quite a while to achieve.
+Yet, as the end of the C++20 cycle nears, hee is some proposals to look forward in C++23 and 26</p>
+
+<ul>
+<li>Library support for <a href="https://wg21.link/p1056">coroutines</a> and <a href="https://wg21.link/p1453">modules</a></li>
+<li><a href="https://wg21.link/p0709">Deterministic exceptions</a></li>
+<li>Value-based static reflection</li>
+<li><a href="https://wg21.link/p1371r0">Pattern matching</a></li>
+<li><a href="https://wg21.link/p1040"><code>std::embed</code></a></li>
+<li><code>ranges::zip</code> and <code>ranges::enumerate</code></li>
+<li><a href="https://wg21.link/p0009"><code>std::mdspan</code></a></li>
+<li><a href="https://wg21.link/p1238">Text transcoding and Unicode support</a></li>
+<li>Executors</li>
+<li>More generally speaking, a lot more facilities for asyncronous, concurrent, parallel and heterogenous computations</li>
+<li>More Ranges (async ranges, actions)</li>
+<li>Better random number generator facilities</li>
+<li><a href="https://wg21.link/p0959"><code>uuid</code></a></li>
+<li><a href="https://wg21.link/P0829">A better freestanding library</a></li>
+<li>Scope, sanitized macros</li>
+<li>A lot more !</li>
+</ul>
+
+<p>I think the LEWGI and EWGI groups are an incredible success which seems to have increased the committee bandwith significantly.
+Bryce and JF do an incredible job out of it.
+Study groups are also very active, and I keep being impressed by the expertise of SG-16 (text study group) members.</p>
+
 <h1 id="see-you-in-cologne">See you in Cologne</h1>
 
 <p>I&rsquo;ve very grateful to the people that gave me little choice but to be in Kona, especially Bryce and the C++ foundation.
 Hawaii is a great place and it is quite easy imagining staying there forever.
-Summer 12 months a year and a lot of varied, breathtaking landscapes, what is not to like?</p>
+Summer 12 months a year and a lot of varied, breathtaking landscapes, what is not to love?</p>
 
-<p>However, time to get back to work (I do have a day job) and get work on my papers,
+<p>However, time to get back to work (I do have a day job) and make progress on my papers.
 I have a todo list claiming I need to write 6R0 papers for the next meeting along the 6 I need to provide wording for.
 And I still have no idea why I&rsquo;m doing all of that.</p>
 
 <p>Most importantly, it was great seeing all the amazing committee members, even (especially ?) <a href="https://twitter.com/TitusWinters/status/1097947543458131969">those we disagree with</a>.
-Take care and see you next time.</p>
+Take care and see you next time !</p>
 
 
 <figure>
