@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Modules are not a tooling opportunity | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">October 31, 2018</h2>
+    <h1 class="title">Modules are not a tooling opportunity</h1>
+    
+    <div class="content">
+      
+
+<p>C++ Modules are going through the standardization process and current plans would have them merged in the C++ Standard in time for C++20.
+They are a great language feature, offering a number of benefits over headers</p>
+
+<ul>
+<li>They feel more modern</li>
+<li>They are <em>much</em> faster to parse</li>
+<li>They provide protections against macros</li>
+<li>They provide some protections against ODR violations.</li>
+</ul>
+
+<p>I really can&rsquo;t wait to be able to replace headers with them in my code bases.
+Still, I have a few concerns with them and think they could go further <a href="posts/translation_units/">In replacing the classic translation unit model</a>.
+I&rsquo;m afraid that the &ldquo;legacy&rdquo; features that add a ton of complexity to the design will never be legacy,
+and will be a long-term source of issues for the benefits of short-term gains. I may be wrong and I certainly hope I am.</p>
+
+<p>But, what concerns me the most is the question of how tooling and modules will integrate with each other, an issue that I feel has been somewhat handwaved away.
+The paper <a href="wg21.link/p0822">C++ Modules Are a Tooling Opportunity</a> call for better tools. It&rsquo;s hard not to agree with the author.
+C++ tooling, is, for the most part, stuck in the past.</p>
+
+<p>It is however very optimistic to think modules will magically lead to better tooling. Namely, modules can hardly lead to better build systems.
+Build systems don&rsquo;t have much value for the final product leading companies to either</p>
+
+<ul>
+<li>Organically grow a set of scripts over decades, they barely work but no one wants to pay a few engineers for months to upgrade them to a better solution</li>
+<li>Use an existing solution to benefit from a wider ecosystem.</li>
+</ul>
+
+<p>This pattern has led to the adoption to <code>CMake</code> (a bunch of scripts that barely work but with the benefit of a wide ecosystem) by a large number of products.
+There also exist a number of more modern build systems that fail to reach a critical mass before their maintainers loose faith, and are <a href="http://blog.qt.io/blog/2018/10/29/deprecation-of-qbs/">simply abandonned</a> or used by 3 people in their basement.</p>
+
+<p>Growing a new build system takes years and represent a significant investment, it&rsquo;s not something that can be wished to existence.
+No matter how much I would like that promised magic tool.</p>
+
+<p>More importantly, the challenges tools (Build systems, IDEs, refactoring, indexing, etc) face in order to handle module smoothly are independent of the age or quality of the tool.
+The problem is simple.
+Imagine you have 100s/1000s of modules. Maybe more.
+You don&rsquo;t have to be a big company to have that many modules. Maybe you wanted to add a small feature to LLVM or chrome.
+Or maybe you use <code>vcpkg</code> to handle a large number of dependencies. Why reinvent the wheel when all this beautiful code exist?</p>
+
+<p>You create a bunch of files for a new project</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">//foo.cppm
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module cor3ntin.foo;
+<span style="color:#080;font-weight:bold">export</span> import cor3ntin.foo.bar;
+import google.chrome.net.http;
+
+<span style="color:#080;font-weight:bold">export</span> <span style="color:#080;font-weight:bold">namespace</span> cor3ntin {
+    <span style="color:#080;font-weight:bold">inline</span> <span style="color:#888;font-weight:bold">void</span> this_is_not_important() {}
+}
+
+<span style="color:#888">//bar.cppm
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module cor3ntin.foo.bar;
+
+<span style="color:#888">//main.cpp
+</span><span style="color:#888"></span>import cor3ntin.foo;
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    cor3ntin::this_is_not_important();
+}
+</code></pre></div>
+<p>This actually look rather elegant and modern, even if these things are somewhat subjective.
+It is important to note a couple of things</p>
+
+<ul>
+<li>My modules are called <code>cor3ntin.foo</code>: The <code>.</code> has no intrinsic meaning: modules are <strong>not</strong> hierarchical, but for the sake of one day have a nice ecosystem it is important to behave like if they were.
+By having an organization name as part of your modules name you ensure uniqueness across your project and its dependencies. No one forces you to do that, but, please do it?</li>
+<li>The first thing I do is open a namespace called like part of the module name. Modules are not a namespacing mechanism. It kinda makes sense in the C++ world because of legacy and some differences between
+namespaces and modules, but it surprises a lot of people (I was surprised too at first) because it is contrary to what is done is a lot of other languages</li>
+</ul>
+
+<p>You also have a CMakeFile.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span>
+               <span style="color:#d20;background-color:#fff0f0">main.cpp</span>
+               <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>
+               <span style="color:#d20;background-color:#fff0f0">bar.cppm</span>
+)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">PUBLIC</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net</span>)</code></pre></div>
+<p>And you ask Cmake to run the build. Or rather to generate a script for an even more ill-equipped tool that will run the build.
+I imagine cmake will see that <code>main.cpp</code> depends on nothing, so that&rsquo;s the first thing it will put in the dependency graph.</p>
+
+<pre><code>&gt; compilator3000 main.cpp -o main.o
+Error: no module named cor3ntin.foo
+</code></pre>
+
+<p>Because of course, at this point the module binary interface it is looking for has not been precompiled yet. How do we fix that?</p>
+
+<h1 id="manually-expressing-the-dependencies-graph">Manually expressing the dependencies graph</h1>
+
+<p>Well, an obvious solution is to build a dependency graph for all your modules manually.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">add_cpp_module</span>(<span style="color:#d20;background-color:#fff0f0">bar-module</span> <span style="color:#d20;background-color:#fff0f0">bar.cppm</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_cpp_module</span>(<span style="color:#d20;background-color:#fff0f0">foo-module</span> <span style="color:#d20;background-color:#fff0f0">foo.cppm</span> <span style="color:#d20;background-color:#fff0f0">DEPENDS</span> <span style="color:#d20;background-color:#fff0f0">bar-module</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net-http-module</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span>
+               <span style="color:#d20;background-color:#fff0f0">main.cpp</span>
+               <span style="color:#d20;background-color:#fff0f0">foo-module</span>
+               <span style="color:#d20;background-color:#fff0f0">bar-module</span>
+)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">PUBLIC</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net</span>)</code></pre></div>
+<p>This is not currently valid <code>CMake</code> syntax, but hopefully, you can understand what it would do: explicitly create a target (graph node) for each module.
+And while cmake has no support for modules, this kind of manual way of expressing the dependency graph is how modules seem to have been used by companies
+who tested the module TS.</p>
+
+<p>With that cmake can do things in the correct order:</p>
+
+<ul>
+<li>Build <code>google-chrome::net-http-module</code> so we can import the <code>google.chrome.net.http</code> BMI</li>
+<li>Build <code>bar-module</code> so we can import the <code>cor3ntin.foo.bar</code> BMI</li>
+<li>Build <code>foo-module</code> and importing the now existing BMI <code>cor3ntin.foo.bar</code> and <code>google.chrome.net.http</code></li>
+<li>build main.cpp</li>
+<li>Build the executable</li>
+</ul>
+
+<p>So, it would work. And maybe there is an expectation that modules will be used that way.</p>
+
+<p>When I was about 2 weeks old, my mom told me to avoid duplication. She explained it was good engineering practice.
+It made perfect sense and I strive to avoid code duplication ever since.
+And other people seem to think that too because they invented generic programming, templates and <a href="https://www.youtube.com/watch?v=2jeJixIQlx4">even functions</a>
+just to get closer of that goal of expressing themselves with no duplication.</p>
+
+<p>As an industry, we know that code duplication leads to harder to maintain code and we like our code to be maintainable because we are nice people.
+We especially like to be nice to our future selves.</p>
+
+<p>Modules are no different. Putting our code in well-delimited unit of works, that are reusable and shareable, is a way to avoid code duplication.</p>
+
+<p>Why I&rsquo;m telling you all of that?
+Well, let&rsquo;s look at our project.</p>
+
+<p>We have a file <code>foo.cppm</code>. It declares a <code>cor3ntin.foo</code> module. Which is built by the <code>foo-module</code> target?
+This is saying the same thing 3 times. With different names. And, as the saying goes, the 3 hardest problems in computer science are naming and consistency.</p>
+
+<p>More critically, we have duplicated the dependencies of our modules.
+<code>add_cpp_module(... DEPENDS bar-module)</code> in the build script encodes the exact same information as <code>import cor3ntin.foo.bar;</code> in the source file.
+Meaning each time we want to add or remove a module from a file we to edit the build script.</p>
+
+<p>(Notice also that I have not specified build flags for individual modules, but that would need to be added too, presumably leading to more duplication or complexity)</p>
+
+<p>If you have hundreds of modules or have to rewrite a dependency&rsquo;s build script, this scheme is really not maintainable. And it makes <code>modules</code> somewhat not appealing.
+The last thing I want or need is more build scripts.</p>
+
+<h1 id="automatic-dependency-graph-building">Automatic dependency graph building</h1>
+
+<p>Instead, what we really want is to go back to the simplicity of our first <code>CMakeFiles</code></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span>
+               <span style="color:#d20;background-color:#fff0f0">main.cpp</span>
+               <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>
+               <span style="color:#d20;background-color:#fff0f0">bar.cppm</span>
+)<span style="color:#a61717;background-color:#e3d2d2">
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">PUBLIC</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net</span>)</code></pre></div>
+<p>And, will make <code>cmake</code> smart. It&rsquo;s a tall order but bear with me.
+Cmake will open all the files and lex them to extract the list of dependencies of every module.</p>
+
+<p>Main: not a module declaration, but depends on <code>cor3ntin.foo</code>
+foo.cppm : this is a module called <code>cor3ntin.foo</code>, it depends on <code>cor3ntin.foo.bar</code> and <code>google.chrome.net.http</code>. Add it to the dependencies of <code>main.cpp</code>
+bar.cppm : this is a module called <code>cor3ntin.foo.bar</code>. Add it to the dependencies of <code>foo.cppm</code></p>
+
+<p>CMake also has to parse the entirety of Chrome&rsquo;s code base to find a file declaring <code>google.chrome.net.http</code>.</p>
+
+<p>To do that, it has to open each file, and preprocess a &ldquo;preamble&rdquo; which may contain macros, and include directives. Conditionally import code, etc.
+So, it takes a while. Also, the parsing has to be accurate, so you need to defer to a full-fledged compiler to get the actual dependencies, which is <em>slow</em>.
+Maybe vendors will be able to provide a library to resolve dependency without having to open a process. One can certainly hope!
+Or maybe P1299, which argue in favor of <code>import</code> declarations <em>anywhere</em> in the global scope will be adopted in which case,
+cmake will have to preprocess and lex all of your c++ all of the time.</p>
+
+<p>After a while, CMake has in memory the dependency graph of all modules of the chrome codebase and ours, even if we only care about the dependencies of <code>google.chrome.net.http</code>.
+This has to be cached, so the build system needs to be stateful, which I don&rsquo;t think is a source of issues, but it&rsquo;s worth pointing out.</p>
+
+<p>At this point, you have a dependency graph and you can start doing your builds and dispatch things to build nodes if you are fancy at scale. Which, to be clear, a lot of companies
+have to be. I don&rsquo;t think google&rsquo;s code base would build on my laptop in a reasonable time frame.</p>
+
+<p>Let say you modify <code>foo.cppm</code>. Your build system needs to see that and rebuild everything it needs.
+As an apart, let me tell you about the two kinds of build systems there are:</p>
+
+<ul>
+<li>Build systems that, upon a change in the codebase will always run the minimum and sufficient set of tasks to update the artifacts as to apply these changes.</li>
+<li>Build systems that are garbage. Expect more of your tools!</li>
+</ul>
+
+<p>But many things may have happened:</p>
+
+<ul>
+<li>You renamed the module (changed <code>export module cor3ntin.foo</code> to <code>export module cor3ntin.gadget</code> )</li>
+<li>You added an import</li>
+</ul>
+
+<p>And you might have done that to <em>any</em> modified file</p>
+
+<p>So, your build tool has to lex all your modified files again. And rebuild the dependency graph again. In the cmake world, that means running cmake again.
+The generators are simply not able to handle that</p>
+
+<p>Modifying your source code modify the dependency graph in all sort of ways. Which is is very new. I think it&rsquo;s also very cool because when it works it lets you focus on code
+rather than on translation units and build systems.</p>
+
+<p>But, on the flip side, you have to operate a full scan of modified files every single time you compile. On your computer, on the build farm, everywhere.
+Which maybe takes 5 seconds, maybe takes a few minutes.
+And if your code is fully modularized, which I hope it will be in a few years, the build system will likely have little to do until that scan is complete.</p>
+
+<p>Ok, enough talks about build systems, let&rsquo;s talk about IDEs.</p>
+
+<p>You decide to modify <code>main.cpp</code>, so you open your project in an IDE. Maybe Qt Creator, VS, VSCode, emacs&hellip; whatever tickles your fancy.
+That ide would like to offer completion because it&rsquo;s nice. And also, you know, that&rsquo;s what IDEs are for.
+So, your IDE goes on a quest to a list of all the symbols in all the imported modules.
+Modules are not portable, so the IDE will try to read the source file of the modules instead.
+It sees that you imported a module <code>cor3ntin.foo</code> so it starts to frantically lex all the files of your project and its dependencies until it finds one
+that declares the appropriate module. It has to do that for every and all import declaration.
+Your MacBook is now so hot you discover a new state of matter. And, hopefully, after a few minutes, you have a usable symbol index</p>
+
+<p>Or maybe the IDE defers to an external symbol server such as <code>clangd</code>. Which require a compilation database. Which has to be rebuilt every time a source change.</p>
+
+<p>In fact, any kind of tool that needs to index symbols or run static analysis or anything else will either need to have access to the precompiled BMIs of all your import or be
+able to map a module name to a file name.</p>
+
+<h1 id="possible-solutions-to-the-tooling-issuies">Possible solutions to the tooling issuies</h1>
+
+<h2 id="module-map">Module map</h2>
+
+<p>The no-longer pursued clang proposal for modules has a &ldquo;module map&rdquo; file that map a module name to a file name.
+This is morally equivalent - albeit more portable - than declaring all your modules explicitly in a build script.
+There is still a lot of duplication and the risks of things not kept in sync</p>
+
+<h2 id="module-mapping-protocol">Module mapping protocol</h2>
+
+<p><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p1184r0.pdf">P1184</a> proposes a protocol such that the compiler can query the build system and ask the location of a BMI matching a given name.
+This is somewhat different because presumably, it would allow you to run all your compilation at one, which is desirable in a parallel system
+and then each compilation will presumably be idle until the build system notifies them that a BMI is available.
+Very cautious not to turn our compilers into build systems, we are considering turning them into servers.</p>
+
+<p>What could possibly go wrong 👻 ?</p>
+
+<p>Such a system specifically does not work with a meta build system such as cmake.
+Personally, I hate meta build systems, so I would not mind, but, it&rsquo;s worth keeping that in mind.</p>
+
+<h2 id="put-the-name-of-the-module-in-the-name-of-the-file-that-declares-it">Put the name of the module in the name of the file that declares it.</h2>
+
+<p>This is my favorite solution. I think it was discussed and rejected.</p>
+
+<p>The idea is simple.
+Instead of having a file <code>foo.cppm</code>, requires that the file encodes the module name <code>cor3ntin.foo.cppm</code>. And make <code>.cppm</code> a mandated extension for modules.
+Such that:</p>
+
+<ul>
+<li>The build system can assume which files are modules and which are not.</li>
+<li>Upon encountering <code>import cor3ntin.foo</code>, we know immediately what files to scan next.</li>
+</ul>
+
+<p>This is particularly desirable for tools other than build systems, but it also helps build systems construct the dependency graph in an orderly fashion, which means
+that individual tasks can be scheduled sooner and more predictably.
+When a module interface file is edited, it may still modify the graph, but only add or remove vertices to the one node corresponding to that file.</p>
+
+<p>From a performance standpoint, scanning directories is much faster than lexing c++. Although performance is still a concern on windows, where scanning files is routinely 10x slower than on most other mainstream OS.</p>
+
+<p>It solves the duplication issue, although most languages elect to have the information in both the source file and the file name, most likely for robustness.</p>
+
+<h3 id="some-drawback-of-this-proposal">Some drawback of this proposal</h3>
+
+<ul>
+<li>I would expect some bikeshedding over whether it should be encoded in the path or the filename, which doesn&rsquo;t really matter given modules have no semantical notion of hierarchy.</li>
+<li>It might be considered out of scope of wg21 because naming files fall outside of the scope of a language, right?
+Well, I guess that&rsquo;s true, except if you ignore the languages that do have semantically meaning full filenames:
+
+<ul>
+<li>Java</li>
+<li>Python</li>
+<li>Haskell</li>
+<li>Erlang</li>
+<li>D
+A certainly a few others.</li>
+</ul></li>
+</ul>
+
+<h3 id="the-woodstock-approach-to-standardization">The Woodstock approach to standardization</h3>
+
+<p>A lot of people seem to see the benefit of imposing some structure in the name or path of files declaring module interface.
+But they think it should be left to the vendors.
+The hope is that vendors of all the myriad of build systems, IDE and tools will come together and agree on a similar solution for similar reasons, with the power of&hellip; flowers, I guess.
+Which is great, but isn&rsquo;t C++ a standard because we know from experience this has absolutely no chance of working?
+And remember. The dream of a universal dependency manager can only come to life if we speak a common language.</p>
+
+<p>The standard would not even have to mention files. I guess something along the line of &lsquo;a module name <code>X</code> identifies a unique module declared by a resource <code>X.cppm</code>&rsquo;, would work.</p>
+
+<h1 id="more-issues-with-modules">More issues with modules</h1>
+
+<p>This is I think the major issue with modules but it is not the only one.
+For example, I don&rsquo;t think anyone knows how legacy headers are possibly toolable at the build system level.
+The module format is also not restricted at all.
+Which means that the build system behavior may depend on specifics compilers. For example, Microsoft BMI are more optimized than Clang&rsquo;s, so clang might trigger more rebuilds.</p>
+
+<h1 id="where-to-go-from-there">Where to go from there?</h1>
+
+<p>Modules will be discussed at San Diego. And they are great. They could be much better.</p>
+
+<p>But until we have a better picture of their integration with build systems and tools and the certitude that they deliver
+the build time gains the promised on both small and large project&hellip; I will remain cautiously pessimistic</p>
+
+<h1 id="further-reading">Further Reading</h1>
+
+<ul>
+<li><a href="https://wg21.link/P1300">Remember the FORTRAN</a></li>
+<li><a href="https://wg21.link/P1302">Implicit Module Partition Lookup</a></li>
+<li><a href="https://wg21.link/P1156">Merged Modules and Tooling</a></li>
+<li><a href="https://wg21.link/P1180">Response to P1156</a></li>
+<li><a href="https://wg21.link/P1299">Module Preamble is Unnecessary</a></li>
+<li><a href="https://wg21.link/p0804">Impact of the Modules TS on the C++ tools ecosystem</a></li>
+<li><a href="https://wg21.link/P0822R0">C++ Modules Are a Tooling Opportunity</a></li>
+<li><a href="https://www.youtube.com/watch?v=E8EbDcLQAoc">Building Module - Youtube</a></li>
+<li><a href="https://www.youtube.com/watch?v=5CadIjPRZpM">Progress With C++ Modules - Youtube</a></li>
+</ul>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules%2f&t=Modules%20are%20not%20a%20tooling%20opportunity" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

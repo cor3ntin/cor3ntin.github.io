@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Translation units considered harmful ? | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">October 29, 2018</h2>
+    <h1 class="title">Translation units considered harmful ?</h1>
+    
+    <div class="content">
+      
+
+<p>Let say you have some struct <code>square</code> you want to compute the area of.</p>
+
+<p><code>struct square { int width; }</code></p>
+
+<p>You could of course do that:</p>
+
+<p><code>int area(square s) { return s.width * s.width; }</code></p>
+
+<p>But, your friend Tony told you to use more functions, so instead you do that</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s) { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</code></pre></div>
+<p><code>area</code> being the function you really care about it is defined first - after all, code reads from top to bottom.<br />
+Or so argues <a href="https://en.wikipedia.org/wiki/Robert_C._Martin">Clean Code</a>.</p>
+
+<p>As you may have guessed from the lack of <code>;</code> after the struct&rsquo;s closing bracket, the above code is written in D.
+I figure my readership isn&rsquo;t really into D, so maybe you would prefer some <strong>Rust</strong>?</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rs" data-lang="rs"><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">area</span>(square: <span style="color:#b06;font-weight:bold">Square</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#888;font-weight:bold">i32</span> {<span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">return</span><span style="color:#bbb"> </span>width(s)<span style="color:#bbb"> </span>*<span style="color:#bbb"> </span>width(s)<span style="color:#bbb"> </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">width</span>(square: <span style="color:#b06;font-weight:bold">Square</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#888;font-weight:bold">i32</span> {<span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">return</span><span style="color:#bbb"> </span>s.width<span style="color:#bbb"> </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Square</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>width: <span style="color:#888;font-weight:bold">i32</span> }<span style="color:#bbb">
+</span><span style="color:#bbb"></span></code></pre></div>
+<p>You can even compute the area of you square <strong><em>at scale</em></strong> with go</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> Area(s square) <span style="color:#888;font-weight:bold">int</span> { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+<span style="color:#080;font-weight:bold">func</span> width(s square) <span style="color:#888;font-weight:bold">int</span> { <span style="color:#080;font-weight:bold">return</span> s.width }
+<span style="color:#080;font-weight:bold">type</span> square <span style="color:#080;font-weight:bold">struct</span> { width  <span style="color:#888;font-weight:bold">int</span> }</code></pre></div>
+<p>Or even <strong>Swift</strong>ly.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-swift" data-lang="swift"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">area</span>(s: Square) -&gt; <span style="color:#038">Int</span> { <span style="color:#080;font-weight:bold">return</span> width(s:s) * width(s:s); }
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">width</span>(s: Square) -&gt; <span style="color:#038">Int</span> { <span style="color:#080;font-weight:bold">return</span> s.width }
+<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Square</span> { <span style="color:#080;font-weight:bold">var</span> <span style="color:#369">width</span>:<span style="color:#038">Int</span> = <span style="color:#00d;font-weight:bold">0</span>; }</code></pre></div>
+<p>But of course, <em>you</em> will worry about the overhead and will want the language the most performant (that&rsquo;s not a word).
+Eager to please and impress, let me copy the D code and add that oh-so-important comma.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> square { <span style="color:#888;font-weight:bold">int</span> width; };
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s)  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</code></pre></div>
+<p>That&rsquo;s nice, isn&rsquo;t it?  Interesting how most languages look alike.
+Hum, wait, that doesn&rsquo;t work???!!!</p>
+
+<p><code>error: 'width' was not declared in this scope</code></p>
+
+<p>But, you stupid thing, it&rsquo;s <em>RIGHT THERE</em>.<br />
+I declared everything in the global scope like a maniac, can&rsquo;t you see?</p>
+
+<p>Alas, the standard makes the compiler blind.</p>
+
+<blockquote>
+<p>In the definition of a function that is a member of namespace N, a name used after the function&rsquo;s declarator-id23 shall be declared before its use in the block in which it is used or in one of its enclosing blocks ([stmt.block]) or shall be declared before its use in namespace N or, if N is a nested namespace, shall be declared before its use in one of N&rsquo;s enclosing namespaces.</p>
+</blockquote>
+
+<p>Of course, this makes no sense, a compiler can really easily parse the declaration independently of the definition, as
+proven by other languages. Or you know, C++ classes. (imagine replacing a big namespace with a class full of static methods and nested types)
+Unless of course, it&rsquo;s a performance thing.
+But, you are a very great engineer, so you wouldn&rsquo;t let a source file grow above a few hundred lines of code, would you?
+I bet your code is beautiful, like this small self-contained super useful program</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span> () {
+    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Hello world</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
+}
+</code></pre></div>
+<p>Which on my system expands to about <em>33000</em> lines of code. The freaking thing. But more on that later.</p>
+
+<p>Let&rsquo;s go back to square one.
+C++, in its infinite wisdom, lets us forward-declare functions, so we can write this:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> square { <span style="color:#888;font-weight:bold">int</span> width; };
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s);
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s)  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</code></pre></div>
+<p>Which is nice and dandy, if you squint.</p>
+
+<p>Besides requiring you to get the exact declaration of functions perfectly right - which is hard to maintain, lots of entities are not forward-declarable,
+notably type alias, templated types, etc.
+Which is an odd limitation given that where forward declaring a function require you
+to know the precise signature, for types you are merely trying to introduce a name.</p>
+
+<h2 id="noexcept">noexcept</h2>
+
+<p>You will notice that <code>area</code> never throws.
+That is, there is no subexpression of <code>area</code> that can throw, ever.</p>
+
+<p>You can check that it does not.</p>
+
+<p><code>static_assert(noexcept(area(square{})));</code></p>
+
+<p>Inevitably,  that fails.
+<code>error: static assertion failed</code>.
+We indeed forgot to tell the compiler that our function could not throw.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span>;
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span> { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span> { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</code></pre></div>
+<p>Notice that we need to add <code>noexcept</code> on all declarations, including the forward declarations.
+And, you can lie to the compiler pretty easily.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span> {
+    <span style="color:#080;font-weight:bold">return</span> width(s) * width(s);
+}
+
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) {
+    <span style="color:#080;font-weight:bold">throw</span> <span style="color:#00d;font-weight:bold">42</span>;
+}
+</code></pre></div>
+<p>The above code will <code>std::terminate()</code>, you know that the compiler knows that, everybody knows that.</p>
+
+<p>So&hellip;what functions should be marked <code>noexcept</code>?
+It&rsquo;s pretty simple actually. All the functions that can not throw.
+That is the functions that:</p>
+
+<ul>
+<li>Don&rsquo;t contain a <code>throw</code> exception</li>
+<li>Don&rsquo;t call non-noexcept functions</li>
+</ul>
+
+<p>Notice the double (triple?) negative.</p>
+
+<p>So you, as a developer striving to mark all function that can be <code>noexcept</code> as such,
+have to walk the call tree recursively until you can ascertain that the call chain will never throw
+or actually might (because one callee does throw, or is at a C interface boundary, etc).
+One argument against exceptions is that it makes reasoning about control flow harder:
+Exceptions more or less force you to reason about the control flow of the whole program at every time.
+<code>noexcept</code> is supposed to solve that, but, to put that <code>noexcept</code> keyword confidently, you still need
+to do that analyze. The chances you get it wrong are high.
+If you write generic code, you will have to tell the compiler that a symbol is noexcept
+if all of it&rsquo;s subexpression is noexcept manually.</p>
+
+<p>And the compiler can not trust you that the function will indeed not throw, so implementers will inject calls to <code>std::terminate</code>
+here and there, negating somewhat the performance benefits of marking the function <code>noexcept</code> in the first place.</p>
+
+<p>Let&rsquo;s rewrite our code using lambda instead</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">auto</span> width = [](<span style="color:#080;font-weight:bold">const</span> square&amp; s) -&gt; <span style="color:#888;font-weight:bold">int</span> {
+    <span style="color:#080;font-weight:bold">return</span> s.width;
+};
+<span style="color:#080;font-weight:bold">auto</span> area = [](<span style="color:#080;font-weight:bold">const</span> square&amp; s) -&gt; <span style="color:#888;font-weight:bold">int</span> {
+    <span style="color:#080;font-weight:bold">return</span> width(s) * width(s);
+};
+</code></pre></div>
+<p>Of course, lambdas cannot be forward declared.
+So I had to reorganize the code.</p>
+
+<p>And now, despite the lack of <code>noexcept</code> keyword,
+<code>static_assert(noexcept(area(square{})));</code> passes.</p>
+
+<p><strong>What is happening?</strong></p>
+
+<p>It turns out that the compiler is pretty good at knowing which functions are <code>noexcept</code>.
+In the case of lambdas, the definition will always be visible to the compiler before any invocation,
+so it can implicitly mark it no except and do the work for us. This allowed as part of C++20.</p>
+
+<h3 id="what-does-noexcept-even-mean">What does noexcept even mean?</h3>
+
+<p>I&rsquo;m not saying that <code>noexcept</code> would not be necessary in an ideal world, because it has more than one meaning
+and people use it differently. Notably, <code>noexcept</code> might mean:</p>
+
+<ul>
+<li>Do not generate exception handling code for this function</li>
+<li>This function does not throw</li>
+<li>This function will <em>never</em> throw</li>
+</ul>
+
+<p>The first statement is a request for the compiler, the second is an assertion for both the compiler and human readers,
+while the last one is exclusively for people.</p>
+
+<p>So <code>noexcept</code> would remain interesting at API boundary as a contract between people even if the compiler could decide
+for itself whether the function was actually non-throwing.</p>
+
+<h2 id="transaction-safe">transaction_safe</h2>
+
+<p>The Transactional Memory TS defines the notion of <em>transaction safe expression</em> as follow:</p>
+
+<blockquote>
+<p>An expression is transaction-unsafe if it contains any of the following as a potentially-evaluated subexpression (3.2[basic.def.odr]):\</p>
+
+<ul>
+<li>an lvalue-to-rvalue conversion (4.1 [conv.lval]) applied to a volatile glvalue<br /></li>
+<li>an expression that modifies an object through a volatile glvalue<br /></li>
+<li>the creation of a temporary object of volatile-qualified type or with a subobject of volatile-qualified type<br /></li>
+<li>a function call (5.2.2 expr.call) whose postfix-expression is an id-expression that names a non-virtual
+function that is not transaction-safe<br /></li>
+<li>an implicit call of a non-virtual function that is not transaction-safe<br /></li>
+<li>any other <strong>call of a function, where the function type is not &ldquo;transaction_safe function&rdquo;</strong></li>
+</ul>
+</blockquote>
+
+<p>(Emphasis mine)</p>
+
+<p>The details are not important, but, basically, a <code>transaction_safe</code> safe expression is one that doesn&rsquo;t touch volatile objects.
+And only call functions with the same properties.
+That&rsquo;s probably upward of 99% of functions - I suspect the very terrible default exists for compatibility reasons.
+The important part is that you have to tag all your functions or hope that the property holds true recursively.
+(Like <code>noexcept</code>, you can lie, by marking a function <code>transaction_safe</code> even if a callee is not itself <code>transaction_safe</code>, opening the door to UB).
+An issue that seems to hold this TS back.</p>
+
+<h2 id="constexpr">constexpr</h2>
+
+<p><code>constexpr</code> functions are a bit different. The compiler knows what functions are candidate <code>constexpr</code>.
+Most of the time it will constant evaluate them regardless of whether they are actually marked as such.
+The keyword is required to ensure that the compiler will actually do the constant evaluation when it can and, most importantly,
+because removing the constexpr-ness of a function may be a source breaking change - (if that function is called during the evaluation of a <code>constexpr</code> variable).
+By its very nature, <code>constexpr</code> implies that <code>constexpr</code> functions are defined somewhere is the TU. And everything not defined in the TU cannot be constant-evaluated.
+<a href="https://wg21.link/p1235">A proposal for C++20 proposes to make it implicit in some cases</a></p>
+
+<p>For now, we are left with the following code, and it is on you to use the appropriate qualifiers.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe;
+<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</code></pre></div>
+<p>As of C++20, <code>constexpr</code> functions can throw. The committee is also considering making <code>new</code> expressions
+<code>noexcept</code> by 23 or 26 so we are slowly getting to a place where 95%+ of functions will be both <code>constexpr</code> and <code>noexcept</code>
+eligible and will have to be marked manually.</p>
+
+<p><strong>Is there a better way ?</strong></p>
+
+<h1 id="back-to-the-c-compilation-model">Back to the C++ compilation model.</h1>
+
+<p>A source file and its included headers form a translation unit.
+Multiple translations units form a program.</p>
+
+<p>Sounds simple enough right?
+It&rsquo;s actually <em>simpler</em> than right.</p>
+
+<p>Headers and sources files are a bit of a lie we tell ourselves.
+As far as I can tell, the term &ldquo;header&rdquo; only appear in the standard as to name the &ldquo;standard library headers&rdquo;.
+And in practice, headers do not have to be actual files, they identify a thing that can be understood by the compiler
+as a sequence of tokens.</p>
+
+<p>In practice, we use the preprocessor - a tech implemented by a drunk bell labs intern on LSD sometime in the late 60s, early 70s -
+to stitch together a collection of files that we are never <em>quite</em> sure where in the system they come from.
+We call them headers and source files, but really, you can include a <code>.cpp</code> file in a <code>.h</code> or elect to
+use the <code>.js</code> extension for headers, <code>.rs</code> for sources files and your tools would not care.
+You can, of course, create circular header dependencies.</p>
+
+<p>The preprocessor is so dumb you have to tell it explicitly which files it already included with
+the crappiest possible pattern called include guard.
+This could have been fixed, but you see, it has not because some people are concerned about hardlinking bits of their workspaces together.</p>
+
+<p>In the end, <code>#include</code> directives works like <code>cat</code> - except <code>cat</code> is better as its job.</p>
+
+<p>Oh and of course, because anything can define macros anywhere, any &ldquo;header&rdquo; can rewrite all of your code
+at compile time in a chaotic manner (here chaotic means deterministic, but well beyond the cognitive capacities of any human being).</p>
+
+<p>In this context, it&rsquo;s easy to understand why the compiler doesn&rsquo;t go look a few ten thousands lines ahead to see whether or not you declared a referenced symbols.
+Well, is it a good enough reason?
+I don&rsquo;t know&hellip;
+But, as a consequence (I <em>think</em> this is not really voluntary), Overload and name lookup work as first-good match rather than best match.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#888;font-weight:bold">double</span> x) { <span style="color:#080;font-weight:bold">return</span> x * <span style="color:#00d;font-weight:bold">2</span>; }
+<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> a = f(<span style="color:#00d;font-weight:bold">1</span>);
+<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#888;font-weight:bold">int</span> x) { <span style="color:#080;font-weight:bold">return</span> x * <span style="color:#00d;font-weight:bold">4</span>; }
+<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> b = f(<span style="color:#00d;font-weight:bold">1</span>);
+</code></pre></div>
+<p>Pop quiz: What&rsquo;s the value of <code>a</code> and <code>b</code>?</p>
+
+<p>If you are neither wrong nor aghast, you may be suffering for Stockholm syndrome. There is no cure.
+And, because the order of declarations may impact the semantics of a program, and because macros can rewrite everything,
+there is no cure for C++ either.</p>
+
+<p>The common wisdom is to put the declarations in headers and the implementations in source files.
+That way your very small sources files all including the same hundred thousands lines of header files will compile faster.
+At least they will compile less often.
+We also established earlier than most code can be constexpr and constexpr declarations must be visible to all translation units.
+So, looking at your templated, conceptified constexpr-ified code always using auto, you wonder what you can split up to a source file.
+Probably nothing. Unless you stick to C++98 I guess; or make extensive use of type-erasure.
+For example, you may use <code>span</code>, the best type C++20 has to offer.</p>
+
+<p>And then, of course, the linker will take the various translations units and will
+make a program out of it. At this point, the infamous <code>One Definition Rule</code> comes into play.
+You shall only define each symbol once.
+Your hundred of headers expanding to hundred thousands of line of code in various order, with various set of macros defined
+in a way specific to that project, on your system, on that day, <em>shall not</em> redefine anything.
+Best case scenario you get a linker error. More likely, you get UB. Is your code violating ODR to some extent right now? In all likelihood, it does.
+But really, it <em>shall</em> not.
+ODR is a direct consequence of your compiler not knowing what names exist in your codebase.</p>
+
+<p>It turns out that Titus Winters talk at length about ODR in great new talk <a href="https://www.youtube.com/watch?v=IY8tHh2LSX4">C++ Past vs. Future</a>.
+You should definitively watch this.</p>
+
+<p><strong>But linkers are pretty great</strong></p>
+
+<p>They can make static libraries - basically a zip with multiple translations units.
+When consuming that library, the linker may conveniently not link otherwise not-referenced static objects.
+They didn&rsquo;t get the memo that constructors may have side effects.</p>
+
+<p>They can also make dynamic libraries. The best terrible idea we still believe in.
+You probably can get away with making dynamic libraries. It will probably work.
+Or not, you will know at runtime.</p>
+
+<p>No, really, linkers <em>are</em> pretty great.</p>
+
+<p>They can optimize the <em>whole program</em> because, unlike compilers, linkers get to see <em>all of your code</em>.
+So all the code, that you were very careful to split into multiple source files at the expense of a very complicated build system is in the end stitched together by the linker anyway and optimized as a whole that way.</p>
+
+<p>Of course, you are able to run lots of build in parallel, across a distributed build farm, where all of your
+gazillion CPU are all parsing <code>&lt;vector&gt;</code> at the same time.
+The flip side of that is that the compiler itself, expecting you to run multiple jobs at the same time, will not implement any kind of concurrency in its implementation.</p>
+
+<p>What is not used in the call graph starting from the <code>main()</code> function or the global constructors is then
+thrown away.</p>
+
+<h1 id="what-about-modules">What about modules?</h1>
+
+<p>Well, C++ modules help, a tiny bit.</p>
+
+<p>What are C++ modules you might ask? <strong>Standardized precompiled headers is what modules are</strong>.
+You get your &ldquo;headers&rdquo; in predigested binary form, which makes the compilation faster.
+Assuming you don&rsquo;t have to rebuild everything all the time anyway.
+I suspect they will really help if you have big third parties implemented in headers.
+When tooling figure how to deal with modules.</p>
+
+<p>Note that I believe that modifying a module interface modifies all module interfaces
+transitively, even if you don&rsquo;t modify existing declarations.</p>
+
+<p>Importantly, modules are not</p>
+
+<ul>
+<li>A scoping mechanism, or a way to replace namespaces.</li>
+</ul>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">//MyFoo.cppm
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module my.foo;
+<span style="color:#080;font-weight:bold">export</span> <span style="color:#080;font-weight:bold">namespace</span> my::foo {
+    <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> f() {}
+}
+
+<span style="color:#888">//MyBar.cpp
+</span><span style="color:#888"></span>import my.foo;
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    my::foo::f();
+}
+</code></pre></div>
+<ul>
+<li>A way to permit used-before-declared symbols.</li>
+</ul>
+
+<p>I guess they <em>could</em> have been. Modules being closed, it seems reasonable to consider all the declarations in the same module before doing any parsing of definitions,
+but this would make &ldquo;porting to modules&rdquo; harder, and &ldquo;porting to modules&rdquo; is an important part of the TS.
+Unless <em><em>you</em></em> want to write a paper about that?!</p>
+
+<ul>
+<li>A way to sandbox macros</li>
+</ul>
+
+<p>There is a strong incentive to get modules working on 20yo codebases without actually putting any work into it,
+Consequently, the current proposal let you declare and use macros more or less anywhere you want, and possibly export them from modules,
+which&hellip;I have opinions about. Namely, I think it remains to be seen how modules codebases will actually be built efficiently.</p>
+
+<ul>
+<li>A way to modernize C++</li>
+</ul>
+
+<p>There have been <a href="https://wg21.link/P0997">some proposals</a> to disallow or fix some specific constructs in module contexts, I don&rsquo;t expect they will fare well,
+once again because people are more concerned about existing codebases than future code.
+Python 2 is often used as a cautionary tale in these circumstances.</p>
+
+<ul>
+<li>Modules</li>
+</ul>
+
+<p>Being glorified compiled headers, C++ modules do not strive to replace the translation units model.
+A module is still split as its interface (the compiler can transform the source of that module into a BMI - binary module interface -),
+and the definition of the things implemented in the interface (an object file).
+In fact, the following code will not link</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">//m1.cppm
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module m1;
+<span style="color:#080;font-weight:bold">export</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>() {
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">0</span>;
+}
+<span style="color:#888">//main.cpp
+</span><span style="color:#888"></span>import m1;
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    f();
+}
+clang++ -fmodules-ts --precompile m1.cppm -o m1.pcm
+clang++ -fmodules-ts -fmodule-file=m1.pcm main.cpp
+</code></pre></div>
+<p>because the <code>m1</code> module binary <em>interface</em> will not consider the definition of <code>f()</code>, unless you mark it inline,
+or build a .o out of it.
+Despite that, the BMI on my system definitively contains the definition of the function, as changing it also changes the
+BMI. leading to a rebuild of all dependencies anyway.</p>
+
+<p>So modules are not, a self-sufficient unit like they are in other languages.
+Luckily, they do require that the implementation of a given module is done in a single translation unit.</p>
+
+<h1 id="a-set-of-definitions">A set of definitions</h1>
+
+<p>People think about their code as a cohesive whole, the colloquial term being a &ldquo;project&rdquo;.
+The more the compiler sees about your code, the more it will be able to optimize it.
+An increasing majority of C++ constructs need to be visible to the compiler at all time.
+<code>constexpr</code> methods, templates (and concepts), lambdas, reflection&hellip;</p>
+
+<p>Yet, the compilation model encourages us to make our tools helplessly blind and our lives harder.
+The solution to these problems is not trivial.</p>
+
+<p>A core issue is that a program, regardless of the language its written in, is a collection of definitions,
+but development tools manipulate files, and there is a certain mismatch there.</p>
+
+<p>For a long time, the C++ community had the deep belief that the separation of definitions and declarations, the source/header model was superior.
+But we see an increasing number of header-only libraries, that may be slightly slower to compile but are, at the end of the day,
+much easier to use and reason about. For people, for tools, for compilers.
+I would not be surprised if future libraries shipped as modules will be &ldquo;module-interface-only&rdquo; as well.
+I think it does not matter that single-header libraries ship as one file. What matter is that they can be consumed by including a single file.
+It expresses &ldquo;this is the set of declarations that constitute my library.&rdquo;</p>
+
+<p>We should of course not handwave away the problem of long compilation time.
+But it is well accepted that most FX/3D artists need a $4000 or more machine to do their job. Studios understand that as the cost of doing business.
+And maybe, compiling C++ requires expensive hardware too. And maybe that&rsquo;s okay. Hardware is cheap, people are not. <em>Especially</em> good software engineers.</p>
+
+<p>I don&rsquo;t know if we will ever manage to get rid of object files, static libraries, and dynamic libraries.
+I don&rsquo;t know if we will ever stop caring about ABI outside of very specific libraries.</p>
+
+<p>But as the C++ community dreams of better tools, and dependency managers, maybe it would help to define the fundamentals
+more accurately: Our programs are a set of <em>definitions</em>, some of which are provided and maintained out-of-tree by other people.
+I think the more closely our tools adhere to that model, the better off we will fare in the long run.</p>
+
+<p>So maybe we need to ask fundamental questions about the compilation model and examine
+some beliefs we hold (For example &ldquo;Compilers and build system need to be kept separated&rdquo;. Do they? To what extent?).</p>
+
+<p>There are definitively immense technical roadblocks, social and legal ones (LGPL, you should be ashamed of yourself).
+It seems impossible, but the reward would be, ô so great. In the meantime, fully aware I don&rsquo;t have any answer, I&rsquo;ll shout on the Internets.</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2ftranslation_units%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2ftranslation_units%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2ftranslation_units%2f&t=Translation%20units%20considered%20harmful%20%3f" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

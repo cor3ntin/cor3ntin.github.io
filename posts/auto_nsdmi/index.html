@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>The case for Auto Non-Static Data Member Initializers | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">August 12, 2018</h2>
+    <h1 class="title">The case for Auto Non-Static Data Member Initializers</h1>
+    
+    <div class="content">
+      
+
+<p>In this article, we talk about Auto Non-Static Data Member Initializers in C++.
+All code snippet can be tested on Compiler Explorer thanks to Matt Godbolt and the CE team.
+The clang patch to enable this feature was authored by Faisal Vali 5 years ago,
+but I have crudely rebased it on top of clang trunk (~ 7.0).</p>
+
+<p>In fact, the main motivation for this article is to put this feature in the hand of people
+to prove that it works and that it would be a great addition to the standard.</p>
+
+<p>Having the capacity to test proposed features on Compiler Explorer is a great way to better
+understand a feature and its corner case. <strong>So I encourage you to play with the code snippets</strong>.</p>
+
+<p>But first thing first.</p>
+
+<h2 id="what-are-auto-non-static-data-member-initializers-abbr-title-non-static-data-member-initializers-nsdmi-abbr">What are Auto Non Static Data Member Initializers (<abbr title="Non Static Data Member Initializers">NSDMI</abbr>) ?</h2>
+
+<h3 id="data-member-initializers">Data Member Initializers</h3>
+
+<p>In C++, you can introduce a default value for a member variable, that will be used to initiate a variable if you don&rsquo;t initialize explicitly,
+either in a constructor member initializer list or by using an aggregate initialization.</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    <span style="color:#080;font-weight:bold">struct</span> S {
+        <span style="color:#888;font-weight:bold">int</span> a = <span style="color:#00d;font-weight:bold">42</span>;
+    };
+    S s;
+    <span style="color:#080;font-weight:bold">return</span> s.a;
+}
+</code></pre></div>
+</div>
+
+
+<p>This is called <em>Data Member Initializers</em>.
+The initializer is only evaluated if the member isn&rsquo;t initialized explicitly.
+For example, in the following example, <code>main</code> returns 0;</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#888;font-weight:bold">int</span> ret = <span style="color:#00d;font-weight:bold">0</span>;
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span> () {
+    <span style="color:#080;font-weight:bold">struct</span> {
+        <span style="color:#888;font-weight:bold">int</span> x = ++ret;
+    } x = {<span style="color:#00d;font-weight:bold">0</span>};
+    <span style="color:#080;font-weight:bold">return</span> ret;
+}
+</code></pre></div>
+</div>
+
+
+<h3 id="static-data-member-initializers">Static Data Member Initializers</h3>
+
+<p>In a similar fashion, static members can have an initializer, although, the rules are a bit different.
+First, a static data member initializer is always evaluated and supersedes out-of-class definition.</p>
+
+<p>The following code fails because we try to define <code>s::foo</code> twice:
+<div class="compiler_explorer compiler_explorer_block highlight"  >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">struct</span> s {
+    <span style="color:#080;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">int</span> foo = <span style="color:#00d;font-weight:bold">42</span>;
+};
+<span style="color:#888;font-weight:bold">int</span> s::foo = <span style="color:#00d;font-weight:bold">42</span>;
+</code></pre></div>
+</div>
+</p>
+
+<p>Only static data members that represent a literal value can have a data member initializer. This is because
+otherwise, that static member needs to have linkage (be addressable at runtime, if you will) and as such only be defined
+in the whole program. Otherwise, you would run into ODR violations. <em>gasp</em>.</p>
+
+<h3 id="auto-static-data-member-initializers">Auto Static Data Member Initializers</h3>
+
+<p>Static data members that have a <em>data member initializer</em> can be declared with auto.</p>
+
+<p><div class="compiler_explorer compiler_explorer_block highlight"  >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">struct</span> s {
+    <span style="color:#080;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> foo = <span style="color:#00d;font-weight:bold">42</span>;
+};
+</code></pre></div>
+</div>
+
+In this case, <code>foo</code> is deduced to be of type <code>int</code> and it works exactly the same as any declaration of a variable with <code>auto</code>:
+The right-hand side expression is evaluated and its type determines the type of the variable, in this case, the static data member.</p>
+
+<h3 id="auto-non-static-data-member-initializers">Auto Non-Static Data Member Initializers</h3>
+
+<p>With all those pieces, we can now see what an NSDMI is, simply a class or struct data member with an initializer, whose type is deduced.</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">struct</span> s {
+    <span style="color:#080;font-weight:bold">auto</span> foo = <span style="color:#00d;font-weight:bold">42</span>;
+};
+</code></pre></div>
+</div>
+
+
+<p>However, this won&rsquo;t compile: the standard forbids it.</p>
+
+<h2 id="the-case-for-auto-nsdm">The case for auto NSDM</h2>
+
+<p>So, <em>Auto Non-Static Data Member Initializers</em> aren&rsquo;t actually a thing neither in C++17 or the upcoming C++20. It was last proposed in 2008,
+and haven&rsquo;t generated a lot of discussions since - This blog post attempts to address that!</p>
+
+<p>So, should the above code be valid? I definitively think so.
+The argument really is&hellip; why not?</p>
+
+<h3 id="always-auto-not-quite">Always Auto? Not quite.</h3>
+
+<p>That may sound like a poor argument, but data members are the only entity that can not be declared with <code>auto</code>.
+<code>auto</code> can declare any kind of variables in all kind of contexts, but this one. And that kind of exception defies expectations.
+Users might try to use them naturally, wonder why they don&rsquo;t work and then you would have to come up with a good explanation.</p>
+
+<h3 id="expressiveness-of-auto">Expressiveness of auto</h3>
+
+<p>The reason why you may want to use auto NSDMI is the same you would use <code>auto</code> in any other context. I think the strongest showcase at the moment would type deduction</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> s {
+    <span style="color:#080;font-weight:bold">auto</span> v1 = std::vector{<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">5</span>};
+    std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; v2 = std::vector{<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">5</span>};
+};
+</code></pre></div>
+</div>
+
+
+<p><code>make_unique</code> and <code>make_shared</code> would also make good candidates, along with all <code>make_</code> functions</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;memory&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> s {
+    <span style="color:#080;font-weight:bold">auto</span> ptr = std::make_shared&lt;Foo&gt;();
+    std::shared_ptr&lt;Foo&gt; ptr2 = std::make_shared&lt;Foo&gt;();
+};
+</code></pre></div>
+</div>
+
+
+<p>Literals can also make good candidates, however, they require a <code>using namespace</code> which you should avoid doing in headers. Which is more a problem with literals
+and the inability to do using namespace at class-scope.</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;chrono&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">using</span> <span style="color:#080;font-weight:bold">namespace</span> std::chrono_literals;
+<span style="color:#080;font-weight:bold">struct</span> doomsday_clock {
+    <span style="color:#080;font-weight:bold">auto</span> to_midnight = <span style="color:#00d;font-weight:bold">2</span>min;
+};
+</code></pre></div>
+</div>
+
+
+<h3 id="it-already-works">It already works</h3>
+
+<p>As noted in <a href="https://wg21.link/n2713">N2713 - Allow auto for non-static data members - 2008</a>, almost anything that can be expressed by <code>auto</code> can be expressed with <code>decltype</code></p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">struct</span> s {
+    <span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#00d;font-weight:bold">42</span>) foo = <span style="color:#00d;font-weight:bold">42</span>;
+};
+</code></pre></div>
+</div>
+
+
+<p>In fact, we can devise a macro ( please, don&rsquo;t try this at home )</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#c00;font-weight:bold">#define AUTO(var, expr) decltype(expr) var = (expr)
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> s {
+    AUTO(foo, <span style="color:#00d;font-weight:bold">42</span>);
+};
+</code></pre></div>
+</div>
+
+
+<p>And, if it works with a less convenient syntax, why not make people life easier?</p>
+
+<h3 id="lambda-data-members">Lambda data members</h3>
+
+<p>There is one thing that cannot be achieved with <code>decltype</code> however: lambda as data member.
+Indeed, each lambda expression as a unique type so <code>decltype([]{}) foo = []{};</code> can&rsquo;t work,
+and because of that lambda as data member cannot be achieved, unless of course by resorting to some
+kind of type erasure, for example <code>std::function</code>.</p>
+
+<p>I suppose there isn&rsquo;t much value in using lambdas instead of member functions.
+Except that, lambdas having capture group, you could store variables specific to a single callable within the capture group,
+giving you less data member to care about.</p>
+
+<p>For example, the following example captures a global variable (again, don&rsquo;t try this at home!) at construction time.</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">/*
+</span><span style="color:#888">  prints 10 9 8 7 6 5 4 3 2 1
+</span><span style="color:#888">*/</span>
+<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;range/v3/view/reverse.hpp&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span>
+<span style="color:#888;font-weight:bold">int</span> counter = <span style="color:#00d;font-weight:bold">0</span>;
+<span style="color:#080;font-weight:bold">struct</span> object {
+    <span style="color:#080;font-weight:bold">auto</span> id = [counter = ++counter] { <span style="color:#080;font-weight:bold">return</span> counter;};
+};
+
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    std::vector&lt;object&gt; v(<span style="color:#00d;font-weight:bold">10</span>);
+    <span style="color:#080;font-weight:bold">for</span>(<span style="color:#080;font-weight:bold">auto</span> &amp; <span style="color:#369;font-style:italic">obj</span> : v | ranges::view::reverse) {
+        std::cout &lt;&lt; obj.id() &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#39; &#39;</span>;
+    }
+}
+</code></pre></div>
+</div>
+
+
+<h2 id="so-why-are-auto-nsdmi-not-in-the-standard">So&hellip; why are auto NSDMI not in the standard?</h2>
+
+<p>They apparently almost got in in 2008, there were some concerns so they were removed and a bit forgotten a bit, despite
+<a href="https://wg21.link/n2713">N2713</a> proposing to add them.</p>
+
+<p>When parsing a class, the compiler first parses the declarations (functions signatures, variables definitions, nested classes, etc),
+then parse the inline definitions, method default parameters, and data member initializers.</p>
+
+<p>That lets you initialize a member with an expression depending on a member not yet declared.</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">struct</span> s {
+    <span style="color:#888;font-weight:bold">int</span> a = b();
+    <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">b</span>();
+};
+</code></pre></div>
+</div>
+
+
+<p>However, if you introduce auto members, things aren&rsquo;t that simple. Take the following valid code</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">struct</span> s{
+    <span style="color:#080;font-weight:bold">auto</span> a = b();
+    <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">b</span>() {
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">42</span>;
+    };
+} foo;
+</code></pre></div>
+</div>
+
+
+<p>Here, what happens is</p>
+
+<ol>
+<li><p>The compiler creates a member <code>a</code> of <code>auto</code> type, at this stage the variable <code>a</code> has a name, but no actual, usable type.</p></li>
+
+<li><p>The compiler creates a function <code>b</code> of type int;</p></li>
+
+<li><p>The compiler parses the initializer of <code>a</code> and <code>a</code> becomes an <code>int</code>, however, <code>b()</code> is not called.</p></li>
+
+<li><p>The compiler parses the definition of <code>b</code></p></li>
+
+<li><p>The compiler construct foo and calls <code>b()</code> to initialize <code>a</code></p></li>
+</ol>
+
+<p>In some cases, the class is not yet complete when the compiler deduces a data member type, leading to an ill-formed program:</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">struct</span> s {
+    <span style="color:#080;font-weight:bold">auto</span> a = <span style="color:#080;font-weight:bold">sizeof</span>(s);
+    <span style="color:#080;font-weight:bold">auto</span> b = <span style="color:#00d;font-weight:bold">0</span>;
+};
+</code></pre></div>
+</div>
+
+
+<p>Here:</p>
+
+<ol>
+<li>The compiler creates a member <code>a</code> of <code>auto</code> type, at this stage the variable <code>a</code> has a name, but no actual, usable type.</li>
+<li>The compiler  creates a member <code>b</code> of <code>auto</code> type</li>
+<li>The compiler parses the initializer of <code>a</code> in order to determine its type</li>
+<li>At this stage, neither the size of a or b is known, the class is &ldquo;incomplete&rdquo; and <code>sizeof</code> expression is ill-formed: <code>error: invalid application of 'sizeof' to an incomplete type 's'</code>.</li>
+</ol>
+
+<p>So there are certain things you can not do within auto-nsdmi: calling <code>sizeof</code> referring to <code>*this</code> (even in decltype), constructing an instance of the class, etc.
+All of this makes sense and you would run with the same issue with <code>decltype</code>. Or simply by doing</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">struct</span> s {
+    s nope;
+};
+</code></pre></div>
+</div>
+
+
+<p>Another gotcha is that an <code>auto</code> data member cannot depend on another data member declared after:</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#080;font-weight:bold">struct</span> s {
+    <span style="color:#080;font-weight:bold">auto</span> a = b;
+    <span style="color:#080;font-weight:bold">auto</span> b = <span style="color:#00d;font-weight:bold">0</span>;
+};
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    <span style="color:#080;font-weight:bold">return</span> s{}.a;
+}
+</code></pre></div>
+</div>
+
+
+<p>Here:</p>
+
+<ol>
+<li>The compiler creates a member <code>a</code> of <code>auto</code> type, at this stage the variable <code>a</code> has a name, but no actual, usable type.</li>
+<li>The compiler creates a member <code>b</code> of <code>auto</code> type, at this stage the variable <code>b</code> has a name, but no actual, usable type.</li>
+<li>The compiler parses the initializer of <code>a</code> in order to determine its type. the type of <code>b</code> is unknown and therefore the program is ill-formed.</li>
+</ol>
+
+<p>Which again, should feel natural to most c++ developers. Alas, these quirks were enough for the feature never to make in the working draft.</p>
+
+<h3 id="binary-compatibility">Binary compatibility</h3>
+
+<p>Changing <code>struct S { auto x = 0; };</code> to <code>struct S { auto x = 0.0 ; };</code> breaks abi compatibility. While this may indeed be a bit confusing, functions with <code>auto</code>
+return type have the same issue. In general exposing binary-stable interfaces in C++ is a complicated exercise that should be avoided.
+This proposed feature does not significantly exacerbate the issue.
+If for some reason you care about binary compatibility, avoid using <code>auto</code> in your exported interfaces. And maybe avoid using <em>data member initializers</em> altogether.</p>
+
+<h2 id="is-a-paper-coming">Is a paper coming?</h2>
+
+<p>It&rsquo;s not something I plan to do, I just wanted to start a discussion again!
+The <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2713.html">original paper</a> is too old to be still relevant.</p>
+
+<p>The author noted at the time:</p>
+
+<blockquote>
+<p>Recently, it was pointed out on comp.lang.c++.moderated that one can get the same effect anyway, just with uglier code, using decltype.
+Because of that, the author believes that the objection to auto has softened.</p>
+</blockquote>
+
+<p>The wording of the standard changed significantly since then. Enough that it took me a while to find what exactly prevents auto NSDMI in today&rsquo;s standard, so let&rsquo;s look at some wording.</p>
+
+<blockquote>
+<p><a href="http://eel.is/c++draft/dcl.spec.auto">dcl.spec.auto</a> The type of a variable declared using auto or decltype(auto) is deduced from its initializer. This use is allowed in an initializing declaration ([dcl.init]) of a variable. auto or decltype(auto) shall appear as one of the decl-specifiers in the decl-specifier-seq and the decl-specifier-seq shall be followed by one or more declarators, each of which shall be followed by a non-empty initializer.</p>
+</blockquote>
+
+<p>That first paragraph makes <code>auto foo = ...</code> valid, and was easy to find. However, it says nothing about excluding data members ( nor explicitly allowing static data members).</p>
+
+<blockquote>
+<p><a href="http://eel.is/c++draft/basic#6">basic</a> A variable is introduced by the declaration of a reference other than a non-static data member or of an object. The variable&rsquo;s name, if any, denotes the reference or object.</p>
+</blockquote>
+
+<p>I was stuck for quite some time before I thought of checking up the normative definition of <code>variable</code>, which single-out non-static data members. Neat.</p>
+
+<p>So, adding auto NSDMI to the standard would only requiere to add:</p>
+
+<blockquote>
+<p><a href="http://eel.is/c++draft/dcl.spec.auto">dcl.spec.auto</a> The type of a variable <span style="background-color:#e6ffed;"> or data-member</span> declared using auto or decltype(auto) is deduced from its initializer. This use is allowed in an initializing declaration ([dcl.init]) of a variable.</p>
+</blockquote>
+
+<p>But the committee may also want to specify exactly the way auto-NSDMI and late class parsing interact, which is easy enough to explain in a blog post but much harder to write wording for.</p>
+
+<h2 id="acknowledgments">Acknowledgments</h2>
+
+<ul>
+<li>Matt Godbolt and the compiler explorer team for helping my put this experimental branch on compiler explorer.</li>
+<li>Faisal Vali who authored the initial clang support.</li>
+<li>Alexandr Timofeev who motivated me to write this article.</li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<ul>
+<li><a href="https://wg21.link/n2713">N2713 - Allow auto for non-static data members - 2008</a></li>
+<li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2712">N2712 - Non static data member initializers</a></li>
+<li><a href="http://eel.is/c++draft/">C++ Working draft</a></li>
+</ul>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fauto_nsdmi%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fauto_nsdmi%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fauto_nsdmi%2f&t=The%20case%20for%20Auto%20Non-Static%20Data%20Member%20Initializers" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

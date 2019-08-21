@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>A C&#43;&#43; Hello World And The Rose Gold Walled Garden Of Doom | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">January 29, 2018</h2>
+    <h1 class="title">A C&#43;&#43; Hello World And The Rose Gold Walled Garden Of Doom</h1>
+    
+    <div class="content">
+      
+
+<p>This is Part 3 on my series about cross-compilation. You can check out <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part 1</a> 1 and <a href="https://cor3ntin.github.io/posts/helloworld_p2/">part 2</a> 2 first !</p>
+
+
+<figure>
+    
+        <img src="linux.png" />
+    
+    
+    <figcaption>
+        <h4>linuxnewbieguide.org</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>You cannot caters to the needs of Windows and Linux users while ignoring the third major, well, second actually, desktop operating system.</p>
+
+<p>The Operating System I’m talking about is of course developed and commercialized by a company best known as the one who gave Clang to the world, is mostly responsible for maintaining WebKit (after most of the industry moved to Chromium), and created some other amazing open sources softwares such as CUPS.</p>
+
+<p>And for that we should be grateful.</p>
+
+<p>You would think that a company who went to the trouble of starting a completely new compiler to offer a better user experience would make it easy to cross-compile to their platform.</p>
+
+<p>However.</p>
+
+<p>That company is Apple.</p>
+
+<p>Like on Linux and Windows, we will need to acquire and setup 3 pieces. A compiler, some system headers and libraries like libc++ and a Sdk for desktop integration purposes.</p>
+
+<p>If you have done OS X development before, you know that all off that can be found in XCode, a 5GB package of bundled tools most of which we won’t need.</p>
+
+<p>XCode is free software. As in beer. Which we will need a lot of. XCode is however proprietary, which is fine.</p>
+
+<p>The issue is that if you read the <a href="https://www.apple.com/legal/sla/docs/xcode.pdf">Terms and condition attached to XCode</a>, you will find the following clause.
+&gt; <strong>2.7 Restrictions; No Other Permitted Uses</strong> The grants set forth in this Agreement do not permit You to, and You agree not to, install, use or run the Apple Software or Apple Services on any non-Apple-branded computer or device, or to enable others to do so.</p>
+
+<p>I’m not a lawyer. However it seems to me that Apple is actively forbidding cross-compilation using their libraries, regardless of the technical do-ability.</p>
+
+<p><strong>Therefore, some of the ideas discussed in the rest of the article could, if applied, void any agreement you have with Apple.</strong></p>
+
+<p>You need an Apple ID, and so you need to create an account on apple.com. I don’t recall having a more terrible account creation experience in a while. The biggest offense is certainly their antiquated security policies.</p>
+
+
+<figure>
+    
+        <img src="form.png" />
+    
+    
+    <figcaption>
+        <h4>How not to do account creation and security, courtesy of Apple</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>They will then send you an email for verification, which is great. But instead of having a link in the email you will get a code that you cannot even paste and have to type in manually.</p>
+
+<p>You will then search for XCode. Fortunately, some good Samaritans maintain <a href="https://stackoverflow.com/a/10335943">valid download links</a> on Stackoverflow since 2012.</p>
+
+<p>This turned into a “All software is terrible” rant again. I’m sorry.</p>
+
+<p>On a more positive note, someone already set up a nice collection of scripts to get you started with building an OsX toolchain on Unix. Works with Cygwin too !</p>
+
+<p>You will need to clone it.
+<a href="https://github.com/cor3ntin/osxcross/">cor3ntin/osxcross - OS X cross toolchain for Linux, BSD and Windows</a></p>
+
+<p>It’s a fork from <a href="https://github.com/tpoechtrager/osxcross">Thomas Pöchtrager</a>’s work which I had to patch up.</p>
+
+<p>XCode 7.3 is shipped as a DMG and while this is an osx-specific file format, osxcross come with a script to extract it, making good use of <strong>Darling</strong>. More on that later.</p>
+
+<pre><code>osxcross/tools/gen_sdk_package.sh Xcode_xxx.dmg
+</code></pre>
+
+<p>Unfortunately, the open source community is still waiting on apple to release a ld64 linker with support for TBD files v2 that are used in later version of osx to not have to ship the .dylib in the sdk.</p>
+
+<p>TBD files are pretty cool, they are a YAML representation of the symbols included in a dynamic library, alleviating the need to ship the actual library. They are pretty similar in concept to the .lib files that are generated by MSVC when building a DLL. I think TBD files could be used across platforms but for now <a href="http://lists.llvm.org/pipermail/llvm-dev/2017-September/117264.html">LLVM can’t handle them (yet ?) </a>and the open-source ld64 can’t handle the new version.</p>
+
+<p>So we will have to stick to a 10.11 SDK. It’s reasonable ! I went to the trouble of supporting xip files that are used to package the later versions of XCode. A format that is inspired by babushka dolls, but with compressed archives instead. Unfortunately, we can’t use anything more recent than XCode 7.3. I hope it will change soon !</p>
+
+<p>You can then run move the generatedMacOSX10.11.sdk.tar.xz to osxcross/tarballs then launch <code>SDK_VERSION=10.11 ./osxcross/build.sh</code></p>
+
+<p>You will also need to run <code>osxcross/build_llvm_dsymutil.sh</code></p>
+
+<p>And in no time, you will have a complete toolchain for OSX, for both i386 and x86_64 ( even if you have absolutely 0 reason to build anything in 32 bits when targeting OSX ).</p>
+
+<p>It evens builds my personal favorites : otool and install_name_tool. If you ever built something on OSX, you know how terrible these tool ares. Or rather how terrible the OSX loader is.</p>
+
+<p>I’m properly impressed by the work that went into <strong>osxcross</strong>.</p>
+
+<p>Configuring QBS is rather straight forward, though there are some things to take care of.</p>
+
+<p>In <code>osxcross/target/bin</code>, run:</p>
+
+<pre><code>ln -s x86_64-apple-darwin15-ld ld
+cp osxcross-llvm-dsymutil x86_64-apple-darwin15-dsymutil
+</code></pre>
+
+<p>This will later help clang finding the proper tools. If you want to support multiple tool-chains, put ldin a subfolder</p>
+
+<p>Here is my profile configuration than you can adapt</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\qbs\architecture</span>=<span style="color:#d20;background-color:#fff0f0">x86_64</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\qbs\toolchain</span>=<span style="color:#d20;background-color:#fff0f0">unix,clang,llvm,gcc</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\qbs\targetOS</span>=<span style="color:#d20;background-color:#fff0f0">macos,darwin</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\compilerName</span>=<span style="color:#d20;background-color:#fff0f0">clang++</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\driverFlags</span>=<span style="color:#d20;background-color:#fff0f0">--prefix,/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin/</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\minimumMacosVersion</span>=<span style="color:#d20;background-color:#fff0f0">10.11</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\compilerPathByLanguage.cpp</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin/x86_64-apple-darwin15-clang++</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\compilerPathByLanguage.c</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin/x86_64-apple-darwin15-clang</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\toolchainInstallPath</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\systemIncludePaths</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/SDK/MacOSX10.11.sdk/usr/include/c++/v1</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\libraryPaths</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/SDK/MacOSX10.11.sdk/usr/lib,/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/SDK/MacOSX10.11.sdk/usr/lib/system</span>
+<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\toolchainPrefix</span>=<span style="color:#d20;background-color:#fff0f0">x86_64-apple-darwin15-</span></code></pre></div>
+<p>The -prefix options tells clang where to find the proper ld(ld64) since the system linker is not suitable to link Mach-O application.</p>
+
+<p>The rest is just giving qbs the proper search paths.</p>
+
+<p>Unfortunately, support for .plist in qbs is not portable, so you will encountered an error</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ERROR: TypeError: Result of expression <span style="color:#d20;background-color:#fff0f0">&#39;PropertyList&#39;</span> [[object Object]] is not a constructor.
+            at JavaScriptCommand.sourceCode
+            at Rule.prepare in /opt/qtcreator/share/qbs/modules/cpp/DarwinGCC.qbs:262:18</code></pre></div>
+<p>Comment out the rule in DarwinGCC.qbs to fix the issue.</p>
+
+<p>Of course, not being able to create info.plist files will be very limitating and it would be great if QBS could handle those files in a platform-agnostic manner.</p>
+
+<p>For now, in all our .qbs project files, we will put the following to disable bundling and therefore Info.plist generation</p>
+
+<pre><code>Depends {
+    name: &quot;bundle&quot;
+}
+bundle.isBundle: false
+</code></pre>
+
+<p>At that point, we are able to build the simple console Hello World seen in <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part one</a>.</p>
+
+
+<figure>
+    
+        <img src="term1.png" />
+    
+    
+</figure>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#888"># file helloworld
+</span><span style="color:#888"></span>Mach-O <span style="color:#00d;font-weight:bold">64</span>-bit x86_64 executable, flags:&lt;NOUNDEFS|DYLDLINK|TWOLEVEL|WEAK_DEFINES|BINDS_TO_WEAK|PIE&gt;</code></pre></div>
+<p>But can it run ?</p>
+
+<h3 id="oh-darling">Oh, darling !</h3>
+
+<p>To run our windows application we used wine. There is a rather recent effort — It started in 2012 while WINE started in 1993; Windows 3.1 was just released !— to offer a translation layer, called <strong><em>darling.</em></strong> The project is far from being as mature and it doesn’t seems to have any kind of financial support. I hope it will catch on.
+<a href="https://darlinghq.org/">Darling - macOS translation layer for Linux</a></p>
+
+<p>You can clone and build darling, F<a href="https://github.com/darlinghq/darling">ollow the instructions on github</a>. On my machine, it took a bit under one hour for the whole thing. Once installed, it’s about 800MB. which is unsurprising as it is a complete system which comes with all the usual tools including g++, ruby, python, Perl, git, bash, swift, ssh…</p>
+
+<p>But, the build complete with no error, and amazingly, it works, and seems very reactive. Being more modern that wine, it is containerized !</p>
+
+
+<figure>
+    
+        <img src="term2.png" />
+    
+    
+    <figcaption>
+        <h4>Oh, Hi Mac</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h3 id="adding-magic-with-binfmt">Adding magic with binfmt</h3>
+
+<p>So now we can run a mac command, but what if we could just hide the magic away ?</p>
+
+<p>Using a <a href="https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html">kernel facility</a> and a <a href="https://www.freedesktop.org/software/systemd/man/binfmt.d.html">systemd service</a> , I was able to create a file /etc/binfmt.d/darling.conf so that the kernel can handle launching Mach-O files.</p>
+
+<pre><code>:Mach-O 64b:M::\xcf\xfa\xed\xfe::/usr/bin/darling_interpreter:
+:Mach-O 32b:M::\xce\xfa\xed\xfe::/usr/bin/darling_interpreter:
+:Mach-O FAT:M::\xca\xfe\xba\xbe::/usr/bin/darling_interpreter:
+</code></pre>
+
+<p><code>/usr/bin/darling_interpreter</code> is a script that launches <code>darling shell</code> - it should be executable.</p>
+
+<pre><code>#!/bin/bash
+/usr/local/bin/darling shell &quot;$1&quot;
+</code></pre>
+
+<p>The darling documentation suggests that darling <binary> should work, but it does not.</p>
+
+<p>After restarting the binfmt service ( systemctl restart systemd-binfmt ), we are able to launch OSX application transparently.</p>
+
+<p>Which mean we can do this</p>
+
+
+<figure>
+    
+        <img src="term3.png" />
+    
+    
+    <figcaption>
+        <h4>Any sufficiently advanced technology is indistinguishable from magic</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Oh, and by the way, you can do the same thing for windows executables and WINE. Some distributions do that out of the box.</p>
+
+<p>In part 2, I attempted to install the win32 version of the Qt Framework on Linux without using windows. I failed.</p>
+
+<h3 id="can-we-get-qt-for-mac-without-a-mac">Can we get Qt for mac without a mac ?</h3>
+
+<p>I did download the installer. It’s a .dmg. It would be an issue, but <a href="https://github.com/darlinghq/darling-dmg">with the power of darling</a> we can mount DMGs on Linux. No problem at all. It’s the kind of things we do here.</p>
+
+<p>But mounting the Qt installer dmg reveals that it contain a binary and a .dat file rather than a simple folder or something manageable.</p>
+
+<p>Presumably, the binary is the installer. Maybe it runs on darling ? No. Hard dependency on the OpenGL framework.</p>
+
+<p>Great software bundled in crappy unusable packages seems to be a recurring theme.</p>
+
+<p>Is all hope lost again ? Not this time.</p>
+
+<p>We can build Qt for mac, like we attempted for Windows. But it will work. Mac has make . It knows about clang and gcc, it’s very much like Linux in a lot of aspects. There is an UNIX under there after all ( But I always had the feeling that OSX internals are terrible, hidden under a nice user interface. For starter, <a href="https://robservatory.com/behind-os-xs-modern-face-lies-an-aging-collection-of-unix-tools/">a large number of tools haven’t been maintained after their upstream version moved to GPLv3</a>, 10 years ago ).</p>
+
+<p>Alas, it means dealing with Qt’s complex build system. It took some time to hack the qmake build files. See, Qt makes the terrible assumption that all toolchain on osx involve xcode. We don’t have xcode.</p>
+
+<p>But once you bypass all the automatic probes and assumptions about what’s installed on the system&hellip;</p>
+
+<p>&hellip;you can get it to work !</p>
+
+<pre><code>#configure -release -opensource -confirm-license -xplatform macx-cross-clang -skip qtwebengine -nomake examples -nomake tests    -prefix /home/cor3ntin/dev/cross-compilers/osx/qt5_10
+</code></pre>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">Building on: linux-g++ (x86_64, CPU features: mmx sse sse2)
+Building <span style="color:#080;font-weight:bold">for</span>: macx-cross-clang (x86_64, CPU features: cx16 mmx sse sse2 sse3 ssse3)
+Configuration: cross_compile sse2 aesni sse3 ssse3 sse4_1 sse4_2 avx avx2 avx512f avx512bw avx512cd avx512dq avx512er avx512ifma avx512pf avx512vbmi avx512vl compile_examples f16c largefile precompile_header rdrnd shani shared qt_framework rpath release c++11 c++14 c++1z concurrent dbus no-pkg-config reduce_exports stl
+Build options:
+  Mode ................................... release
+  Optimize release build <span style="color:#080;font-weight:bold">for</span> size ........ no
+  Building shared libraries .............. yes
+  Using C++ standard ..................... C++1z
+  Using ccache ........................... no
+  Using gold linker ...................... no
+  Using precompiled headers .............. yes
+  Using LTCG ............................. no
+  App store compliance ................... no
+Qt modules and options:
+  Qt Concurrent .......................... yes
+  Qt D-Bus ............................... yes
+  Qt D-Bus directly linked to libdbus .... no
+  Qt Gui ................................. yes
+  Qt Network ............................. yes
+  Qt Sql ................................. yes
+  Qt Testlib ............................. yes
+  Qt Widgets ............................. yes
+  Qt Xml ................................. yes
+Qt Network:
+  CoreWLan ............................... yes
+  .....
+Qt Gui:
+  FreeType ............................... yes
+    Using system FreeType ................ no
+  HarfBuzz ............................... yes
+    Using system HarfBuzz ................ no
+  Fontconfig ............................. no
+  Image formats:
+    GIF .................................. yes
+    ICO .................................. yes
+    JPEG ................................. yes
+      Using system libjpeg ............... no
+    PNG .................................. yes
+      Using system libpng ................ no
+  EGL .................................... no
+  OpenVG ................................. no
+  OpenGL:
+    Desktop OpenGL ....................... yes
+    OpenGL ES <span style="color:#00d;font-weight:bold">2</span>.0 ........................ no
+  Vulkan ................................. no
+  Session Management ..................... yes
+Qt Widgets:
+  GTK+ ................................... no
+  Styles ................................. Fusion macOS Windows
+Qt PrintSupport:
+  CUPS ................................... yes
+Qt QML:
+  QML interpreter ........................ yes
+  QML network support .................... yes
+Qt Quick:
+  Direct3D <span style="color:#00d;font-weight:bold">12</span> ............................ no
+  AnimatedImage item ..................... yes
+  Canvas item ............................ yes
+  Support <span style="color:#080;font-weight:bold">for</span> Qt Quick Designer .......... yes
+  Flipable item .......................... yes
+  GridView item .......................... yes
+  ListView item .......................... yes
+  Path support ........................... yes
+  PathView item .......................... yes
+  Positioner items ....................... yes
+  ShaderEffect item ...................... yes
+  Sprite item ............................ yes
+Note: Also available <span style="color:#080;font-weight:bold">for</span> Linux: linux-clang linux-icc
+
+Note: No wayland-egl support detected. Cross-toolkit compatibility disabled.
+
+Qt is now configured <span style="color:#080;font-weight:bold">for</span> building. Just run <span style="color:#d20;background-color:#fff0f0">&#39;make&#39;</span>.
+Once everything is built, you must run <span style="color:#d20;background-color:#fff0f0">&#39;make install&#39;</span>.
+Qt will be installed into <span style="color:#d20;background-color:#fff0f0">&#39;/home/cor3ntin/dev/cross-compilers/osx/qt5_10&#39;</span>.
+
+Prior to reconfiguration, make sure you remove any leftovers from
+the previous build.</code></pre></div>
+<p>It was not quite the end of the road. Qt Widgets failed to build because of missing dependencies. QtLocation failed to build because the libc++ headers were too old or broken ( I fixed that by copying the latest libc++ version within the OSX SDK. It worked). Then QtLocation complained because std::auto_ptr was not defined so I hacked a few headers.</p>
+
+<p>I tried to get qwebengine(chromium ) to build, but it uses another build system still, and I had done enough build system hacking for one night.</p>
+
+<p>But in the end most of Qt did build.</p>
+
+
+<figure>
+    
+        <img src="term4.png" />
+    
+    
+    <figcaption>
+        <h4>It took me a few hours but I got Qt compiling!</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>And what we have then, is something quite interesting. The binaries are natives Linux ELF, while the frameworks and libraries are Macho-O. That will be handy in a minute.</p>
+
+
+<figure>
+    
+        <img src="term5.png" />
+    
+    
+    <figcaption>
+        <h4>Hello, I’m a Mac — And I’m a PC. And I am a Mac too. — What ?</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Qt is a big piece of software making full use of the underlying system capabilities, in term of OS integration. If we can build that, we can build almost anything.</p>
+
+<p>I initially called my mkspec file darling-clang. I was a bad name. it also prevented qbs to understand that it was a mac build. Rather than renaming the mkspec and rebuilding Qt, I modified qbs. the code of qbs-setup-qt is actually parsing the mkspec’s .conffiles with regular expressions. Somehow, it works. Just don’t breathe on it.</p>
+
+<p>Eventually, once I gave qbs what it expected to understand that we were dealing with mac, I was able to call</p>
+
+<pre><code>qbs-setup-qt osx/qt5_10/bin/qmake osx-x64-qt510
+</code></pre>
+
+<p>Which created the right profiles and modules. I cleaned up my profiles manually to merge clang-osx and osx-x64-qt510</p>
+
+<p>And then we can compile or magnificent <em>Hello World</em> app !</p>
+
+
+<figure>
+    
+        <img src="term6.png" />
+    
+    
+    <figcaption>
+        <h4>Compiling an OSX application based on Qt on Linux, using qbs : check</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>What now ?</p>
+
+<p>Well, we have a complete toolchain, maybe we can check some things ?</p>
+
+<p>
+<figure>
+    
+        <img src="term7.png" />
+    
+    
+    <figcaption>
+        <h4>Using otool -L , the osx equivalent of ldd we can assert that we indeed link to some libraries</h4>
+        
+    </figcaption>
+    
+</figure>
+
+We can use other tools. such as nm or strings or the dreaded <code>install_name_tool</code>.</p>
+
+<p>Unfortunately, Darling can’t handle anything remotely graphical yet, So we need a Mac to actually launch our app.</p>
+
+<p>A real mac; It is illegal to visualize Mac OSX, unless it’s on a mac. Some words comes to mind. Imagine my French.</p>
+
+<p>Let’s talk about the mac. <em>The Mac</em>. You probably know the one. Most companies have it.</p>
+
+
+<figure>
+    
+        <img src="mini.png" />
+    
+    
+    <figcaption>
+        <h4>This is a true story. True.</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>It used to belong to Bob. It’s Bob’s mac. But then, 5 years ago, Bob died, so <em>The Mac</em> was offered to Alice. Alice left the company soon after - Pure coincidence, probably.</p>
+
+<p>Yet <em>The Mac</em> was always <em>The Mac</em>. It has no master. It has no puppet either. You can connect to it at ssh bob@mac.yourcompany.com. The password is simply pass. It’s not in the same LAN as the other servers running on virtual machines somewhere. It’s not administered in anyway, presenting a convenient back door in an otherwise tightly secured network.</p>
+
+<p>When it’s running. Sometime it’s just down for days at a time. It’s not just like people don’t care, they also don’t know where it’s physically located. A mac mini is easy to loose. Under someone desk, wedging an old chair, used as a coffee table.</p>
+
+<p>Last time it crashed, you had to track it down for three days straight, like chasing after a big cat in the mountains. You even tried to call Bob’s widow.</p>
+
+<p>You finally found <em>the mac</em> sandwiched between Carol’s screen and the Oxford Dictionary. “It was the prefect height!”, objected Carol when you took back her 800$ monitor stand. You traded <em>the mac</em> for an old IKEA catalog that Carol found to be as practical, if not more, than a Mac-Mini.</p>
+
+<p>You plugged <em>the mac</em> back in and diligently updated it it to the last version of OSX, “Cougar” (or something, it’s hard to keep track).</p>
+
+<p>And when, a few days later, your coworker got a new car and you lost your home, I was left wondering : Is it appropriate to require a credit card to apply free security fixes ?</p>
+
+<p>But truth is, <em>the mac</em> is doing an important job. Running all the tasks that can only be run on <em>the mac</em>. Signing installers, doing mac packages, iOS stuff, running the New York stock exchange… you are not quite sure, it’s Bob’s after all.</p>
+
+<p>Maybe life would have been different if we could virtualize OSX.</p>
+
+<p>I do happen to have a 2011 mac-mini, gift of a former employer. Its life was a a bit different than <em>the mac</em> ’s. It was never loved and spent the last two years in a box. It only gets to see the life of the day for the needs of this article. It is also the reason why I’m 4 days late in my publication schedule. I tried to install High Sierra — Grey screen; I had to reformat, install Lion, then install El Captain. So El captain is what we will be using. It features a whooping 2GB of memory, the system using <sup>3</sup>&frasl;<sub>4</sub> of that.</p>
+
+<p>You should enable VNC, remote share and SSH in the systems parameters of your mac.</p>
+
+<p>This article is starting to be a bit long. So here is a quick visual summary of the work achieved so far:</p>
+
+
+<figure>
+    
+        <img src="jobs.png" />
+    
+    
+    <figcaption>
+        <h4>Definitively improving our productivity</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>We should stop fooling around.</p>
+
+<ul>
+<li><p>Copy you OSX build of Qt on the OSX Machine. You can use scp -r , rsync or a shared folder ( through samba )</p></li>
+
+<li><p>Copy your helloworld-gui on the machine, again, using scp -r .</p></li>
+
+<li><p>Our cross-compiled build of Qt does not contain macdeployqt. You could get it by installing the official version of Qt on the mac directly. To avoid doing that and to not have to deal with <a href="http://doc.qt.io/qt-5/osx-deployment.html">the hairy mess of install_name_tool</a>, we can set up <code>DYLD_FALLBACK_FRAMEWORK_PATH</code> to point to the folder containing all the Qt*.framework . <code>DYLD_FALLBACK_FRAMEWORK_PATH</code> is somewhat sane but may not work and has some associated security risks. Please don’t use it in shipped applications.</p>
+
+<p>export <code>DYLD_FALLBACK_FRAMEWORK_PATH</code>=/Users/cor3ntin/dev/cross-compilation/qt5_10/lib</p></li>
+
+<li><p>Like on windows, we need to provide a qt.conf file next to our helloworld-gui, to tell Qt where to load its plugins from ( the application will simply not run otherwise ). Mine looks like that</p></li>
+</ul>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#080;font-weight:bold">[Paths]</span>
+<span style="color:#369">Prefix</span>=<span style="color:#d20;background-color:#fff0f0">/Users/cor3ntin/dev/cross-compilation/qt5_10/</span>
+<span style="color:#369">Plugins</span>=<span style="color:#d20;background-color:#fff0f0">plugins</span></code></pre></div>
+<p>Now, connected to the mac through ssh, you can execute your application and it will appear on the mac screen and on the remote display / VNC session.</p>
+
+
+<figure>
+    
+        <img src="mountain.png" />
+    
+    
+    <figcaption>
+        <h4>It feels like we climbed a mountain !</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h2 id="can-we-make-all-that-legal">Can we make all that legal ?</h2>
+
+<p>Clang, LLVM, ld64 and the associated tools are open source projects. That does not mean the open source versions match the version Apple is using.</p>
+
+<p>In fact, Apple’s Clang is a modified version of Clang proper and they lag a few versions behind upstream. Which is ironic given they started the project.</p>
+
+<p>LD64 And the “cctools” are released under the “Apple Open Source licence” And the versions of that tools used by XCode are 2 years ahead of what the open source community has access too.</p>
+
+<p>The frameworks themselves are not open source, and, as I mention at the beginning, not redistributable.</p>
+
+<p>And the open source alternative cocotron which is now only maintain by the Darling people is insufficient.</p>
+
+<p>There are a few issues with it</p>
+
+<ul>
+<li><p>They do not have a build script to actually build an SDK and only install the .dylib . this could probably be fixed rather easily.</p></li>
+
+<li><p>They have a limited set of frameworks and that set is insufficient to build Qt. Qt uses the following framework, those prefixed by 🍎 are missing in Darling</p>
+
+<ul>
+<li>AppKit</li>
+<li>ApplicationServices</li>
+<li>🍎 AssetsLibrary</li>
+<li>AudioToolbox</li>
+<li>🍎 AudioUnit</li>
+<li>🍎 AVFoundation</li>
+<li>🍎 Carbon</li>
+<li>Cocoa</li>
+<li>🍎 CoreAudio</li>
+<li>🍎 CoreBluetooth</li>
+<li>CoreFoundation</li>
+<li>CoreGraphics</li>
+<li>🍎 CoreLocation</li>
+<li>🍎 CoreMedia</li>
+<li>🍎 CoreMotion</li>
+<li>CoreServices</li>
+<li>CoreText</li>
+<li>CoreVideo</li>
+<li>🍎 fftreal</li>
+<li>Foundation</li>
+<li>ImageIO</li>
+<li>🍎 IOBluetooth</li>
+<li>IOKit</li>
+<li>🍎 OpenCL</li>
+<li>QuartzCore</li>
+<li>Security</li>
+<li>🍎 SystemConfiguration</li>
+</ul></li>
+
+<li><p>You could possibly compile the Qt Framework on OSX and then copy them to your Linux machine, it would probably work in most cases.</p></li>
+
+<li><p>Utilizing an SDK that is not the official SDK kinda defeats the purpose of cross compiling to test your software works on mac. you are just testing it works on Darling. There is no guarantee that Darling SDK headers match the official one. Mingw suffers from that issue too.</p></li>
+</ul>
+
+<p>So it’s technically possible to cross compile complex applications ( including Qt and Qt based one) for Mac on Linux. It’s even possible to run non-graphical applications and unit tests directly and seamlessly.</p>
+
+<p>But it’s illegal to use the SDK making the whole exercise a bit pointless depending your legislation. Open sources alternative exist but may not be sufficient and sufficiently reliable.</p>
+
+<p>And while we can be hopeful, it’s doubtful Apple will ever have more developer friendly politics.</p>
+
+<p>And on that terrible disappointment, it’s time to end !</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fhelloworld_p3%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fhelloworld_p3%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fhelloworld_p3%2f&t=A%20C%2b%2b%20Hello%20World%20And%20The%20Rose%20Gold%20Walled%20Garden%20Of%20Doom" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

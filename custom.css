@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:500&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i');
+
+pre code{
+    margin-top : 1em  !important;
+    margin-bottom : 1em  !important;
+    font-size: 120% !important ;
+    font-family: 'IBM Plex Mono', monospace !important;
+    background-color: #FFFCF1 !important;
+}
+
+pre {
+    margin:0  !important;
+    padding:0  !important;
+    background-color: #FFFCF1 !important;
+}
+
+.compiler_explorer_block pre code {
+    margin-top : 0em  !important;
+    margin-bottom : 0em  !important;
+    padding-top:0 !important;
+}
+
+.highlight {
+    background-color: #FFFCF1 !important;
+}
+
+.compiler_explorer_block {
+    position: relative;
+    width:100%;
+}
+
+.compiler-explorer-view-button {
+    width:15%;
+    margin:0;
+    padding: 0;
+    position: absolute;
+    right:0;
+    bottom:0%;
+    z-index: 0;
+    border-bottom:none !important;
+    opacity: 0.7;
+    margin-bottom:5x;
+    margin-right:5px;
+}
+
+.compiler-explorer-view-button:hover {
+    opacity: 1;
+}
+
+.compiler-explorer-view-button-img {
+    margin:0;
+    padding: 0;
+}
+
+figure img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  vertical-align: top;
+}
+
+figure figcaption {
+    margin-top: 1em;
+    margin-bottom: 3em;
+    text-align: center;
+}
+.videoDiv {
+    margin: 0 auto;
+    width: 300px;
+}
+
+figure {
+  display: block !important;
+  margin-bottom: 5em !important;
+}
+
+body {
+    font-family: Aramaic, OldPersian, 'Open Sans', sans-serif;
+}
+
+code.has-jax {font: inherit;
+              font-size: 100%;
+              background: inherit;
+              border: inherit;
+            }
+
+
+div#socialshareDiv {
+    display: block !important;;
+    margin-top: 50px !important;
+    float: right;
+    margin-bottom:25px !important;
+}
+
+#socialshareDiv h1 {
+    display:inline !important;
+    margin-right:25px;
+    vertical-align: middle;
+}
+
+.icon-share-span > a {
+    vertical-align:center;
+    height:2em !important;
+    width :2em !important;
+    margin-right:15px;
+    display:inline-block !important;
+    vertical-align: middle;
+}
+
+.icon-share-twitter > svg {
+    fill: #1DA1F2;
+}
+
+.icon-share-reddit > svg {
+    fill: #FF5700;
+}
+
+.icon-share-hn > svg {
+    fill: #ff6600;
+}
+
+

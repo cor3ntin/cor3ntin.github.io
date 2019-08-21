@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>A C&#43;&#43; Hello World And A Glass Of Wine, Oh My ! | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">January 22, 2018</h2>
+    <h1 class="title">A C&#43;&#43; Hello World And A Glass Of Wine, Oh My !</h1>
+    
+    <div class="content">
+      
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span>
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Hello, World</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
+}
+</code></pre></div>
+<p>Nothing to remove, nothing to add.</p>
+
+<p>This is the proper “<strong><em>Hello World</em></strong>” in C++. All the others <em>Hello World</em> are <strong><a href="https://www.youtube.com/watch?v=6WeEMlmrfOI">wrong</a></strong>.
+But this is not where I rant about how using namespace std; crystallizes everything messed up with the teaching of C++. Another time perhaps.</p>
+
+<p>Today we are gonna be compiling that <em>hello world</em> so that it can be executed on a <strong>target system.</strong></p>
+
+<p>But first, let me tell you a few things about me. I use Linux for fun and profit. I happen to think it is the best system. For me. As a developer. Sometimes, I look down on developers using Windows, wondering how the eff they manage to get anything done by clicking on things. And it is likely that a vim user on Arch looks down on me for using Ubuntu. Nobody’s perfect.</p>
+
+<p>Anyway, let’s fire up a terminal</p>
+
+<pre><code># sudo apt-get install g++
+# g++ -o helloworld helloworld.cpp
+# ./helloworld
+Hello, World!
+#
+</code></pre>
+
+<p>Nice, That’s simple, let’s go home and have a beer 🍻 !</p>
+
+<p>But then, enters my boss. They are in the business of selling software to people who use Windows. I try to show them that I can make a cow speak and that I can resize my terminal so we should obviously move all our business to Linux at once, they say something incomprehensible about market shares and apparently, they can resize their command prompt too.</p>
+
+
+<figure>
+    
+        <img src="mrrobot.png" />
+    
+    
+</figure>
+
+
+<p>After looking down at each other for a while like we are stuck in an Escher painting, I grudgingly remember that I’m in the business of making my clients happy, and so we are going to port our <em>hello world</em> application to Windows. Our boss doesn’t care what environment we use to create that ground breaking app, and they don’t have an issue with me continuing working on the Linux version at the same time, so I’ve decided to develop that application for Windows, <strong>on</strong> Linux; what could possibly go wrong ?</p>
+
+<p>Besides, it will then be far easier to set up a build farm and continuous integration. You could even have your CI provision fresh docker containers on the fly to build the windows app in a controlled and fresh environment. While I tend to think that Dockers is a bit of a cargo cult, Using Docker along Jenkins is actually something that makes a lot of sense. And if you like your sysadmin, don’t force them to deal with Windows servers.</p>
+
+<p>We should strive to make your application as portable and platform agnostic as possible, so having a windows version of our application may actually make our code better. That’s what I try to tell myself.</p>
+
+<p>As it turns out, Microsoft is nice enough to offer a compiler for windows called msvc, and I have the feeling that msvcis a better choice on windows than g++since that’s the compiler the whole ecosystem is designed around. And hopefully Microsoft knows their own tools, formats and calling convention best. I never went the extra mile to benchmark that though, and you will find proponents of either approach on internet. But, <a href="https://blogs.msdn.microsoft.com/vcblog/2017/03/07/msvc-the-best-choice-for-windows/">The MSVC team agrees with me.</a> Shocker.</p>
+
+<p>Anyway, for now, let’s stick to that.</p>
+
+<pre><code># apt-get install msvc
+E: Unable to locate package msvc
+</code></pre>
+
+<p>Surprisingly, that doesn’t work. You can’t blame a guy for trying. But to explain why, let me tell you how a compiler works.</p>
+
+<p>A compiler opens a file, transforms the content of that file into something that can be executed, and writes that out to some other file. Sometime you have more than one source file, so you need a linker which is a program which opens a bunch of files and writes an executable down. An executable is a file, nothing magical about it. Sometimes you need libraries. A library is a file. And you mostly likely need tons of headers which are… you get it, files. plain old boring files. The executable is then loaded by another executable which is also a file, it’s files all the way down. Ok, maybe not, Plan 9 has more files.</p>
+
+<p>To be clear, compilers are extremely complex pieces of engineering, especially C++ compilers and you should offer a cookie to all the compiler writers you meet. However, from a system-integration point-of-view, they are as trivial as it gets. Most compilers don’t even bother with threads. They let the build system deal with that. Which is unfortunate since most build systems have yet to learn how to tie their shoe laces.</p>
+
+<p>Anyway…here is the list of kernel facilities you need to write a compiler:</p>
+
+<ul>
+<li><p>Opening, Reading and Writing files</p></li>
+
+<li><p>Reading directories content</p></li>
+
+<li><p>Allocating memory</p></li>
+</ul>
+
+<p>You may therefore be thinking that this is a reasonable enough list, and so, you wonder why msvc isn’t available on Linux. Sure, having msvc build Linux/ELF applications would be a huge and probably pointless undertaking, but all we want is to build an application <em>for</em> Windows, and surely Microsoft would make it easy as possible for me to do so, right?</p>
+
+<p>But there is this thing. Windows is an <strong><em>“ ecosystem “</em></strong>. It means they want to sell their OS to both their users and their developers, sell their tools to developers, and make sure nobody learn about that other OS legends speak of. So if you want to build a windows application, you need Windows. Crap.</p>
+
+<p>Fortunately, someone rewrote Windows on Linux and called that wine. Probably because they had to be very drunk to even think about doing it. It took merely 15 years for wine to reach 1.0. But it’s in 3.0now, so maybe we can use it ? There are minor miracles in the open source community and WINE is certainly one of them.</p>
+
+<p>For a very long time, MSVC was bundled with Visual Studio. Which mean that if you wanted to compile a C++ app on windows using Qt creator, CLion, Eclipse or notepad++, you still had to have Visual Studio. Ecosystem and all that.</p>
+
+<p>Things are better now, you can install the “build tools” such that you will only need to install about 5GB of… stuffs. Let’s do that.</p>
+
+<p>Oh, apparently the compiler is distributed as an executable which then downloads stuffs you didn’t asked for over the internet. Maybe it’s better than a 40GB zip ?</p>
+
+<pre><code># wine vs_BuildTools.exe
+The entry point method could not be loaded
+</code></pre>
+
+<p>Are you surprised? My dreams are crushed. We <strong>do</strong> need a windows to do some windows development ( spoiler : it gets better ).</p>
+
+<p>Let’s fire up a VM. If you want to follow along, I recommend that you use a new or cloned Windows 10 VM. We are gonna install a lot of weird things and it will be next to impossible to clean up after ourselves. Afterwards you may <a href="https://www.youtube.com/watch?v=z0wK6s-6cbo">get rid of the VM</a>.</p>
+
+
+<figure>
+    
+        <img src="vs1.png" />
+    
+    
+    <figcaption>
+        <h4>Isn’t he cute ? Maybe I should send my resume to Oracle</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Once that’s done, <a href="https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017">we can go and download the VS build tools</a>.</p>
+
+<p>Scroll down until you get carpal tunnel. The build tools is the second to last item. Download that.</p>
+
+<p>I had a few issues launching the installer. I think they try to contact a server that managed to get itself in a list of ad servers so my DNS blocked it. Don’t ask.</p>
+
+
+<figure>
+    
+        <img src="vs2.png" />
+    
+    
+    <figcaption>
+        <h4>That took way more than a minute</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Installers with loading screens, it’s perfectly normal. Once it’s done, it loads the main UI, slowly and painfully but then we get to check boxes. I’m having a blast.</p>
+
+<figure>
+    <div class="videoDiv">
+    <video autoplay="true" width="400px">
+    <source src="components.webm" type="video/mp4" />
+    </video>
+    <figcaption><h4>Shopping list.</h4></figcaption>
+</figure>
+
+
+<p>You won’t need the static analysis tools, but they get checked when you install a compiler no matter what. That’s fine.</p>
+
+<p>We need a C++ toolset — the thing everybody else calls a toolchain. I’m not sure what is newer, v141 or 15.4 v14.11. Use a die ?</p>
+
+<p>We also need a C runtime too, that’s handy. I’m not sure whether we need the CRT or the URT so, we will just install both. The URT/CRT is nice though. Before it came into existence, everything was much, much harder.</p>
+
+<p>Finally, we will probably need to use some windows features so we should get the Windows SDK. Apparently that depends on some C# components. And some JS libraries, *obviously. *To be clear, you can’t do anything remotely useful without the Windows SDK, better get it now.</p>
+
+
+<figure>
+    
+        <img src="vs4.png" />
+    
+    
+    <figcaption>
+        <h4>WIN32_LEAN_AND_MEAN</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Time to have a coffee pot while Visual Studio gets into every recess of your hard drive. At some point though, it’s done so you can go do some bicycle with the butterflies. Nice.</p>
+
+
+<figure>
+    
+        <img src="vs5.png" />
+    
+    
+    <figcaption>
+        <h4>Improving my editorial line with pretty pictures, courtesy of Microsoft</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>A butterfly isn’t enough to make me want to ditch Linux, so let’s see if what we have just installed can be used without a Windows box.</p>
+
+<p>Copy the following outside of your VM:</p>
+
+<ul>
+<li><p>C:\Program Files (x86)\Windows Kits\10\Include</p></li>
+
+<li><p>C:\Program Files (x86)\Windows Kits\10\Lib</p></li>
+
+<li><p>C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Tools\MSVC</p></li>
+</ul>
+
+<p>The first two paths are the Windows SDK, the last one is the toolchain, containing the compiler, the linker, the STL and the VC runtime libraries, for all architectures.</p>
+
+<p>In my installation I have URT files all over the places, So I guess that if you install the Windows 10 SDK you actually get the CRT so you don’t need to activate it separately when you select the components to install. Compared to only a few years ago the situation is much better. Microsoft has been busy.</p>
+
+
+<figure>
+    
+        <img src="vs6.png" />
+    
+    
+    <figcaption>
+        <h4>Copy all the things !</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>I put everything in a folder called windows, I have the msvc compiler with the runtime, the STL and the redistribuables on one side, and the windows 10 SDK in a separate folder. I didn’t keep any information about which version of the SDK or the toolchain I was using, you may want to do that more properly.</p>
+
+<p>In the Windows Sdk there are some useful binaries &amp; dll likerc.exe Put them alongside in msvc2017/bin/Hostx64/x64 where the toolchain binaries are located, including cl.exe.</p>
+
+<p>If you are not familiar with windows development:</p>
+
+<ul>
+<li><p>cl.exe is the compiler</p></li>
+
+<li><p>link.exe is the linker</p></li>
+
+<li><p>rc.exe is a tool to deal with resources files, including icons and manifests</p></li>
+</ul>
+
+<p>You may need various other tools if you have to deal with drivers, cab files, MSI installers, etc.</p>
+
+<p>The whole thing is about <strong>2.9GB</strong>. About half what we had to install on the windows VM.</p>
+
+
+<figure>
+    
+        <img src="term1.png" />
+    
+    
+    <figcaption>
+        <h4>The road so far</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Let’s have some wine again 🍷. Visit <a href="https://wiki.winehq.org/Ubuntu">https://wiki.winehq.org/Ubuntu</a> and <a href="https://github.com/Winetricks/winetricks">https://github.com/Winetricks/winetricks</a> to make sure your wine setup is up to date. I will be using wine-3.0.</p>
+
+<p>Then, install the redistribuable for VC 2017. The process is mostly automatic. We will use a dedicated wine prefix to keep everything kosher. What that means is that it’s actually easier to have multiple msvc installations under wine that it is on windows.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#369">WINEPREFIX</span>=windows/vs-buildtools2017-wine64 <span style="color:#369">WINEARCH</span>=win64 winetricks vcrun2017</code></pre></div>
+<p>Then in your windows folder, create a bin64 folder in which you can write a small bash script with the following content.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#c00;font-weight:bold">#!/bin/bash
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#038">set</span> -ex
+<span style="color:#369">DIR</span>=<span style="color:#d20;background-color:#fff0f0">&#34;/home/cor3ntin/dev/cross-compilers/windows/bin64&#34;</span>
+<span style="color:#038">export</span> <span style="color:#369">WINEPREFIX</span>=<span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#369">$DIR</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>/../vs-buildtools2017-wine64
+<span style="color:#038">export</span> <span style="color:#369">WINEARCH</span>=win64
+<span style="color:#038">export</span> <span style="color:#369">WINEDEBUG</span>=-all
+<span style="color:#369">PROGRAM</span>=<span style="color:#080;font-weight:bold">$(</span>readlink -f <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#369">$0</span><span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">)</span>
+<span style="color:#369">PROGRAM</span>=<span style="color:#080;font-weight:bold">$(</span>basename <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#369">$PROGRAM</span><span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#080;font-weight:bold">)</span>
+
+<span style="color:#369">ARGS</span>=( <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#369">$@</span><span style="color:#d20;background-color:#fff0f0">&#34;</span> )
+<span style="color:#369">x</span>=<span style="color:#00d;font-weight:bold">0</span>;
+<span style="color:#080;font-weight:bold">while</span> [ <span style="color:#33b;background-color:#fff0f0">${</span><span style="color:#369">x</span><span style="color:#33b;background-color:#fff0f0">}</span> -lt <span style="color:#33b;background-color:#fff0f0">${#</span><span style="color:#369">ARGS</span>[*]<span style="color:#33b;background-color:#fff0f0">}</span> ]; <span style="color:#080;font-weight:bold">do</span>
+    <span style="color:#080;font-weight:bold">if</span> [[ <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#33b;background-color:#fff0f0">${</span><span style="color:#369">ARGS</span>[<span style="color:#369">$x</span>]<span style="color:#33b;background-color:#fff0f0">}</span><span style="color:#d20;background-color:#fff0f0">&#34;</span> ==  <span style="color:#d20;background-color:#fff0f0">&#39;/&#39;</span>* ]] &amp;&amp; [ -e <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#33b;background-color:#fff0f0">${</span><span style="color:#369">ARGS</span>[<span style="color:#369">$x</span>]<span style="color:#33b;background-color:#fff0f0">}</span><span style="color:#d20;background-color:#fff0f0">&#34;</span> ]; <span style="color:#080;font-weight:bold">then</span>
+        ARGS[<span style="color:#369">$x</span>]=<span style="color:#080;font-weight:bold">$(</span>sed <span style="color:#d20;background-color:#fff0f0">&#39;s/\//\\/g&#39;</span> &lt;&lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#33b;background-color:#fff0f0">${</span><span style="color:#369">ARGS</span>[<span style="color:#369">$x</span>]<span style="color:#33b;background-color:#fff0f0">}</span><span style="color:#d20;background-color:#fff0f0">&#34;</span> <span style="color:#080;font-weight:bold">)</span>
+    <span style="color:#080;font-weight:bold">fi</span>
+    <span style="color:#369">x</span>=<span style="color:#080;font-weight:bold">$((</span>x + <span style="color:#00d;font-weight:bold">1</span><span style="color:#080;font-weight:bold">))</span>
+<span style="color:#080;font-weight:bold">done</span>
+
+wine <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#369">$DIR</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>/../msvc2017/bin/Hostx64/x64/<span style="color:#369">$PROGRAM</span> <span style="color:#33b;background-color:#fff0f0">${</span><span style="color:#369">ARGS</span>[@]<span style="color:#33b;background-color:#fff0f0">}</span></code></pre></div>
+<p>That script will first set up wine to use our prefix . Then we do Linux -&gt; windows path separator translation ( / to \ ) before forwarding the arguments to the actual windows PE binary running on wine.</p>
+
+<p>We will use a tool called <a href="https://github.com/neurobin/shc">shc</a> to convert that wrapper into a proper elf executable. Otherwise we may have issues down the road. Another solution would be to write a C++ wrapper instead of bash. the shc has a few drawbacks, starting with the need for a hard coded install path.</p>
+
+<pre><code>shc -f cl-wine.sh -o cl.exe
+shc -f cl-wine.sh -o link.exe
+</code></pre>
+
+<p>You can create a bin32 folder in the same manner, just changing the last line to wine &ldquo;$DIR&rdquo;/../msvc2017/bin/Hostx64/<strong>x86</strong>/$PROGRAM</p>
+
+<p>To have a x86 target compiler. I’m not sure why you need two sets of separate binaries to support another architecture, but we do. Finally, the x86 linker may complain about missing libraries so we are gonna create some symlinks.</p>
+
+<pre><code>cd windows/msvc2017/bin/Hostx64/x86/
+for x in $(ls ../x64/ms*.dll); do ln -s $x .; done
+</code></pre>
+
+
+<figure>
+    
+        <img src="term2.png" />
+    
+    
+    <figcaption>
+        <h4>We are going places !</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>One last thing before we can do some serious work. We need to delete vctip.exe as it doesn’t work. It’s a telemetry tool so we don’t need it. It’s located in windows/msvc2017/bin/Hostx*/**. If you don’t follow that step you will encounter weird stack traces.</p>
+
+<p>Time to build our Hello World application ! It’s actually straightforward</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">windows/bin64/cl.exe                   <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /nologo /EHsc                        <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  test/helloworld.cpp                  <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /I windows/msvc2017/include/         <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /I windows/sdk_10/include/ucrt/      <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /link                                <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /LIBPATH:windows/msvc2017/lib/x64/   <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /LIBPATH:windows/sdk_10/lib/um/x64   <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /LIBPATH:windows/sdk_10/lib/ucrt/x64 <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /out:helloworld.exe</code></pre></div>
+<p>We are building an executable that depends on the compiler headers ( including the STL ), the C runtime, and some windows libs such as kernel32.lib.</p>
+
+
+<figure>
+    
+        <img src="term3.png" />
+    
+    
+    <figcaption>
+        <h4>🎉 😎 🍻!</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>For completeness, here is the x86 build</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">windows/bin32/cl.exe                   <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /nologo /EHsc                        <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  test/helloworld.cpp                  <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /I windows/msvc2017/include/         <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /I windows/sdk_10/include/ucrt/      <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /link                                <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /LIBPATH:windows/msvc2017/lib/x86/   <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /LIBPATH:windows/sdk_10/lib/um/x86   <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /LIBPATH:windows/sdk_10/lib/ucrt/x86 <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>  /out:helloworld.exe</code></pre></div>
+<p>Truth is, the whole endeavor is reasonably simple, perhaps more so than using windows proper. No messing about with vcvarsall.batand all your favorites tools such as perl, git, python, sed, the terminal, zsh…are there and work properly.</p>
+
+<h2 id="build-system">🔨 Build System</h2>
+
+<p>We got cl.exeworking on linux, yeah ! Before we go further, we should add that alien toolchain to a nice, modern build system. As I’m not in the mood to deal with the hotmess that is cmake, we will be using <strong>QBS</strong>, my favorite build system.</p>
+
+<p>Setting up qbs to use our wine/msvc compiler should be easy…</p>
+
+<p>QBS can detect toolchains automatically, however, there are a few issues. First the tools assumes MSVC only exists on windows so some code paths are disabled away. I think this could be fixed in a few hours, it would merely require implementing the CommandLineToArgv function in a portable manner.</p>
+
+<p>However, there is something to be said about tools being too clever. QBS attempts to parse vcvars.bat at an assumed location. That’s one file we happily got rid of.</p>
+
+<p>Reality check, we are not going to get any sort of automatic detection. We don’t really need to. We can set up the toolchain manually and treat it as a separate thing from the msvc-on-windows-proper. Detection isn’t really an issue since all we have are a couple of include directories and library paths.</p>
+
+<p>I’ve started to push some files to GitHub, it’s very much a work in progress. Debug builds are completely broken at the moment. It’s a module which offers some understanding of our wine toolchain. It mostly disables all probing and assumes everything is already configured properly.
+<a href="https://github.com/cor3ntin/qbs-wine-toolchain">cor3ntin/qbs-wine-toolchain</a></p>
+
+<p>So we have to do all the work of setting the profile manually. But if our endeavor proved anything, it’s that even a toolchain as hairy as VC++ can be reduced to a handful of variables ( compiler, linker, tools path, includes, defines, library paths). So, h<a href="https://gist.githubusercontent.com/cor3ntin/85eda9db218bd194f235b8098226d185/raw/4f0f951c5c8b78c77152acfb54dfe0e36c15d9de/qbs_config_x64.conf">ere is my QBS profile configuration</a>.</p>
+
+<p>And finally, we can write a small qbs build script</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#080;font-weight:bold">import</span> qbs <span style="color:#00d;font-weight:bold">1.0</span>
+
+CppApplication {
+    name  : <span style="color:#d20;background-color:#fff0f0">&#34;helloworld&#34;</span>
+    files : [<span style="color:#d20;background-color:#fff0f0">&#34;helloworld.cpp&#34;</span>]
+
+    Group {
+        name: <span style="color:#d20;background-color:#fff0f0">&#34;app&#34;</span>
+        fileTagsFilter: <span style="color:#d20;background-color:#fff0f0">&#34;application&#34;</span>
+        qbs.install: <span style="color:#080;font-weight:bold">true</span>
+        qbs.installDir: <span style="color:#d20;background-color:#fff0f0">&#34;bin&#34;</span>
+    }
+}
+</code></pre></div>
+<p>Which we can then run and <em>Voilà !</em></p>
+
+
+<figure>
+    
+        <img src="term4.png" />
+    
+    
+    <figcaption>
+        <h4>Bonsoir Eliot.</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>runner.sh is a <a href="https://gist.github.com/cor3ntin/ecd136ad792f54dd7feb89cb094dcf75">small script</a> that sets up the wine prefix before launching the freshly built windows executable. Nothing too fancy.</p>
+
+<p>So here you have it. A Microsoft compiler, wrapped in a bash script compiled to ELF, building 64 bits PE executables, driven by a modern build system run on Linux. That’s pretty satisfying.</p>
+
+<p>Our hypothetical Boss is knocking on the door. See you in <a href="https://cor3ntin.github.io/posts/helloworld_p2/">part 2</a>.</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fhelloworld_p1%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fhelloworld_p1%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fhelloworld_p1%2f&t=A%20C%2b%2b%20Hello%20World%20And%20A%20Glass%20Of%20Wine%2c%20Oh%20My%20%21" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

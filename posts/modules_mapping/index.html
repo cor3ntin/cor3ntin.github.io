@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Towards Better C&#43;&#43; Modules - Part 1: Modules mapping | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">November 26, 2018</h2>
+    <h1 class="title">Towards Better C&#43;&#43; Modules - Part 1: Modules mapping</h1>
+    
+    <div class="content">
+      
+
+<p>In this blog post, we will talk about modules mapping.
+Modules mapping is a mechanism by which is a module name is associated with the source file that defines that module&rsquo;s interface.</p>
+
+<p>A module is closed and self-contained.
+Which mean that for every module name there must exist one and only source file defining that module.</p>
+
+<p>Module mapping is not useful to the compiler per-say.
+By the time the compiler encounters an <code>import</code> declaration, the module <em>binary</em> interface must exist and be known
+to the compiler.</p>
+
+<p>However, module mapping is very important to <em>tooling</em>. It is notably something build systems will have to perform
+constantly since module mapping is necessary to build the dependency graph.</p>
+
+<p>Remember that modules make the dependency graph more dynamic and notably the dependency graph needs to be refreshed
+every time a file is modified.</p>
+
+<h1 id="module-where-you-at">Module, where you at?</h1>
+
+<p>Before we can find one module, we need to find all modules.
+Every time a header exists in an include world, a module may exist in an import universe.</p>
+
+<ul>
+<li>Your code will both consume and produce modules, just like it uses and produces headers.</li>
+<li>The STL will most likely be a snowflake module - that will just be there</li>
+<li>System libraries may use - Why would they not? So all the development packages in Debian might have module interface.</li>
+<li>Non-System third-party libraries - Maybe these are in a git submodule, Conan, Vcpkg, a folder somewhere on a shared drive mounted from that computer in Dennis&rsquo;s office downstairs.</li>
+<li>Maybe even the module you are looking for isn&rsquo;t even in your computer at all. Because if you write <code>import sg15.io2d</code> your awesome build system will fetch the corresponding module on the internet for you. That&rsquo;s a story for another time.</li>
+</ul>
+
+<p>In short, while there are some expectations that modules will be easier to collect than headers since modules don&rsquo;t suffer the issues related to paths management,
+a builds tool will have to look in a number of places to collect a <em>list of files that may declare a module</em>.</p>
+
+<p>Armed with a list of places where you might find files that may declare modules, we must collect individual module-declaring files.
+A simple way to do that is to look at each file&rsquo;s extension.
+Might a <code>.h</code> declare a module ? A <code>.hpp</code> ? A <code>.hppm</code> ? A <code>.cpp</code> ? A <code>.cppm</code> ? A <code>.cxx</code> ? <code>.mpp</code> ? <code>.mxx</code> ?
+The thing is, The standard doesn&rsquo;t concern itself with file extensions, so a build system,
+one that will scan files for you will have to poke at anything that might possibly declare a module. And yeah, that probably means all existing <code>.h</code> and <code>.hpp</code>
+out of habit, because nobody will tell them to, people will write libraries that use this scheme.</p>
+
+<h1 id="poking-at-modules">Poking at modules</h1>
+
+<p>To get the name of the modules declared in a given file, you must open it and preprocess and lex it until you get an <code>export module name;</code> declaration.
+This can be hundreds of lines into the file and the file might also declare a module global fragment which the build system doesn&rsquo;t care about -
+but which need possible for modules to include non-modular code.
+I will come back to the preprocessor in a later article.
+For now, it&rsquo;s enough to say that extracting the name of a module from a file is non-trivial and require a full-fledged compiler.</p>
+
+<p>And, if a translation unit, for example, depends on a module <code>foo</code>, you may have to open hundreds of files, until you find one that declares <code>foo</code>.
+On some system, opening files and launching process can be costly and so mapping a module to a file may take a while.</p>
+
+<p>You might argue that the same problem exists for dependency extraction.
+And that&rsquo;s true, files need to be open, preprocessed and lexed in order to extract build dependencies.</p>
+
+<p>But there are other use cases to consider:
+For example, An IDE will need to be able to do a quick-mapping in order to provide completion for a single-translation unit.
+Tools providing completion, metrics on dependencies (including package manager), etc will have to provide that mapping.</p>
+
+<p>To be clear, module&lt;-&gt;file mapping isn&rsquo;t the biggest toolability concern of modules, but it is one.</p>
+
+<h1 id="easier-mapping">Easier Mapping</h1>
+
+<p>A few solutions have been proposed to make it easier for tooling to map a name to a file.</p>
+
+<h2 id="manually-describe-the-mapping-in-the-build-system">Manually describe the mapping in the build system</h2>
+
+<p>The idea is to let developers describe modules in the build system directly.
+For example, if you use cmake, you could write:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake">    <span style="color:#038">add_module</span>(<span style="color:#d20;background-color:#fff0f0">foo,</span> <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>)</code></pre></div>
+<p>But this is not about cmake, for example, <code>build2</code> supports exactly that</p>
+
+<pre><code>    mxx{foo}@./: cxx.module_name = foo
+</code></pre>
+
+<p>This is a bit cumbersome, as one might have hundreds of modules.
+It also duplicates information (Modules names are encoded in source files and in the build systems).
+It forces you to know what modules each of your dependencies use and  in general, makes it very hard to migrate from one build system to another, or for example
+use a library originally wrote with Meson in a Bazel build.</p>
+
+<h2 id="standard-ish-module-mapping-file">Standard-ish Module Mapping file</h2>
+
+<p>The idea is a bit similar to describing the mapping in the build system, but instead of putting the mapping in a <code>CMakeLists.txt</code> or <code>Makefile</code>,
+you would put it in another file that whose syntax would be specified in a Standing Document
+(in the hope of making it an industry standard even though it would not be standard).</p>
+
+<p>Conceptually this file would be very simple:</p>
+
+<pre><code>foo: foo.cppm
+bar: bar.mpp
+</code></pre>
+
+<p>This solves the issue of portability across build system. But the other issue remains: The module name is still duplicated.
+This also poses interesting challenges: For example, how to handle modules generated during the build?
+But more importantly, where are these files located within the source tree of third parties? How do they work on package-based systems such as Debian?</p>
+
+<h2 id="standard-layouts">Standard layouts.</h2>
+
+<p><a href="https://wg21.link/P1302">A paper</a> proposes that module mapping can be encoded as part of the file <em>path</em> where <code>core.io</code> would map to <code>core/io.cxx</code>.
+There are a few issues with that design
+ * While filesystems are understood to be hierarchical, modules are not. Remember that despite <code>.</code> being a valid character within a module identifier, it has no semantic meaning.
+<code>core</code> is not necessarily a superset of <code>core.io</code>
+ * It&rsquo;s unclear to me how that system would work with external and system libraries
+ * It can not be enforced
+ * People would argue about which layout is the best and we would get nowhere. It actually what happened at San Diego. People do not want to adapt a layout, even if, regardless of modules,
+standard layouts would have benefits in term of dependency management.</p>
+
+<h2 id="make-the-module-name-part-of-the-file-name">Make the module name part of the file name</h2>
+
+<p>This is I think the approach that is the simplest, the saner and the easier to agree upon.</p>
+
+<p><strong>A module <code>foo</code> would have to be declared by a file whose name is <code>foo.cppm</code>, a module <code>foo.bar</code> would have to be declared by a file whose name is <code>foo.bar.cppm</code>.</strong>
+And that would be it - it&rsquo;s quite simple.</p>
+
+<p>This would solve the issue exposed above while being a rather small constraint.
+It would make refactoring code easier and the dependency graph slightly less dynamic (Renaming a file is easier to track by a build system than just modifying the <code>export module foo</code> expression).</p>
+
+<p>Given that the characters used by modules identifiers are a subset of what is supported by most of all build system, there would be a 1 to 1 correspondence between file name and module name.
+The only thing we would have to agree upon is an extension. Which seems doable once we agree that this is a problem that needs solving.</p>
+
+<p>I could argue there is precedence for that. after all, there is a 1 to one correspondence between the directive <code>#include 'foo.hpp'</code> and the file <code>foo.hpp</code>.</p>
+
+<p>This scheme is actually implemented by <code>build2</code>. <a href="https://build2.org/build2/doc/build2-build-system-manual.xhtml#cxx-modules-build">The build2 documentation</a> explains:</p>
+
+<blockquote>
+<p>To perform this resolution without a significant overhead, the implementation delays the extraction of the actual module name from module interface units (since not all available module interfaces are necessarily imported by all the translation units). Instead, the implementation tries to guess which interface unit implements each module being imported based on the interface file path. Or, more precisely, a two-step resolution process is performed: first a best match between the desired module name and the file path is sought and then the actual module name is extracted and the correctness of the initial guess is verified.</p>
+
+<p>The practical implication of this implementation detail is that our module interface files must embed a portion of a module name, or, more precisely, a sufficient amount of &ldquo;module name tail&rdquo; to unambiguously resolve all the modules used in a project. Note also that this guesswork is only performed for direct module interface prerequisites; for those that come from libraries the module names are known and are therefore matched exactly.</p>
+</blockquote>
+
+<p>Unfortunately, <code>build2</code> module&lt;-&gt;file mapping is fuzzy and as such more brittle.
+The documentation argues that:</p>
+
+<blockquote>
+<p>While we could call our interface files hello.core.mxx and hello.extra.mxx, respectively, this doesn&rsquo;t look particularly good and may be contrary to the file naming scheme used in our project.</p>
+</blockquote>
+
+<p>However, is this flexibility worth the added complexity? I really don&rsquo;t think so!</p>
+
+<p>Enforcing the same, trivially implementable mapping also guarantees that all build system behave similarly.</p>
+
+<p>Designing a C++ build system is hard.
+Let&rsquo;s not make it harder.</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules_mapping%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules_mapping%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules_mapping%2f&t=Towards%20Better%20C%2b%2b%20Modules%20-%20Part%201%3a%20Modules%20mapping" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

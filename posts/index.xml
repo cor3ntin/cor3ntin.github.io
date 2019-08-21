@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on cor3ntin</title>
+    <link>https://cor3ntin.github.io/posts/</link>
+    <description>Recent content in Posts on cor3ntin</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 27 Apr 2019 16:18:53 +0200</lastBuildDate>
+    
+	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Characters sets: A bad idea since the bronze age</title>
+      <link>https://cor3ntin.github.io/posts/characterset/</link>
+      <pubDate>Sat, 27 Apr 2019 16:18:53 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/characterset/</guid>
+      <description>You who shall hereafter see this tablet, which I have written, or these sculptures, do not destroy them, but preserve them so long as you live!   In 522 BC, 𐎭𐎠𐎼𐎹𐎢𐏁 also known as Dārīus was king of the Persian Empire. Kings crave fame as they do power and so Darius (who the greek later called Δαρεῖος) had his henchmen carve his name in stone. One such stone is the Behistun Inscription, which is really more a mountain than a stone.</description>
+    </item>
+    
+    <item>
+      <title>Kona: A trip report</title>
+      <link>https://cor3ntin.github.io/posts/kona2019/</link>
+      <pubDate>Thu, 28 Feb 2019 14:11:03 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/kona2019/</guid>
+      <description>I was lucky enough to participate in a third wg21 committee meeting in a row, this time in Kona, Hawaii, a mere 13000 kilometers away.
+  Kona   As is tradition, Bryce and others wrote a rather thorough trip report on Reddit and you should check it out. However, if you want to read more details about my experience and some of the proposals I find important, please read on (knowing that your time is limited, and doing so will leave less time to read other blog posts).</description>
+    </item>
+    
+    <item>
+      <title>Parentheses</title>
+      <link>https://cor3ntin.github.io/posts/parentheses/</link>
+      <pubDate>Tue, 26 Feb 2019 07:00:36 -1000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/parentheses/</guid>
+      <description>foo();  This is foo. But what is foo? An astute reader may assume foo is a function.
+What kind of function? It is obviously not a virtual function. But it might be a function pointer. It might be a function object. It might even be a shiny post-modern lambda. Or the constructor of some class foo.
+It doesn&amp;rsquo;t matter. All these things amount to plain, old and boring functions.</description>
+    </item>
+    
+    <item>
+      <title>What is C&#43;&#43; ?</title>
+      <link>https://cor3ntin.github.io/posts/what_is_cpp/</link>
+      <pubDate>Sun, 06 Jan 2019 10:06:24 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/what_is_cpp/</guid>
+      <description>These past few weeks have been quite difficult for me. I have therefore not followed closely the ongoing discussions about C++, ranges, game developers and iota.
+I&amp;rsquo;m afraid my current outlook on things is rather cynical and I&amp;rsquo;ve been told I might be too assertive and opinionated. So, rather than another exercise in quixotism, or a pointless opinion on how best name a function that creates a sequence, let me ask a few questions.</description>
+    </item>
+    
+    <item>
+      <title>Towards Better C&#43;&#43; Modules - Part 2: Modules naming</title>
+      <link>https://cor3ntin.github.io/posts/modules_naming/</link>
+      <pubDate>Thu, 06 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/modules_naming/</guid>
+      <description>In case you have been napping, in the last installment we talked about modules mapping, and so now we must talk about modules naming.
+You see, modules have names and names are hard. In this case, names serve to identify uniquely each module used through the program.
+The end of this article proposes to govern module naming through an official WG21 standing document and I would love your opinion. But be patient!</description>
+    </item>
+    
+    <item>
+      <title>Towards Better C&#43;&#43; Modules - Part 1: Modules mapping</title>
+      <link>https://cor3ntin.github.io/posts/modules_mapping/</link>
+      <pubDate>Mon, 26 Nov 2018 20:26:40 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/modules_mapping/</guid>
+      <description>In this blog post, we will talk about modules mapping. Modules mapping is a mechanism by which is a module name is associated with the source file that defines that module&amp;rsquo;s interface.
+A module is closed and self-contained. Which mean that for every module name there must exist one and only source file defining that module.
+Module mapping is not useful to the compiler per-say. By the time the compiler encounters an import declaration, the module binary interface must exist and be known to the compiler.</description>
+    </item>
+    
+    <item>
+      <title>RangeOf: A better span</title>
+      <link>https://cor3ntin.github.io/posts/rangeof/</link>
+      <pubDate>Sun, 25 Nov 2018 11:50:51 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/rangeof/</guid>
+      <description>I don&amp;rsquo;t like span.
+Since that article was posted, the committee improved span quite a bit by removing operator== and making it&amp;rsquo;s size() consistent with that of vector after a lot of discussions. And I mean a lot.
+What is span: 30 seconds refresher If you have N T laid out contiguously in memory, you can build a span&amp;lt;T&amp;gt; over them. Span being a value type you can move it around, copy it and so forth.</description>
+    </item>
+    
+    <item>
+      <title>San Diego Committee Meeting: A Trip Report</title>
+      <link>https://cor3ntin.github.io/posts/sandiego/</link>
+      <pubDate>Fri, 16 Nov 2018 13:42:44 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/sandiego/</guid>
+      <description>As I left Rapperswil earlier this year, I said very firmly that I would not go to the San Diego Meeting.
+Crossing an ocean to work on C++ 12 hours a day for a week is indeed madness.
+And so naturally, I found myself in a San Diego hotel straight from the 60s, to do some C++ for a week. With the exception of the author of this blog, all people there are incredibly smart and energetic, and so a lot of great work was done.</description>
+    </item>
+    
+    <item>
+      <title>Modules are not a tooling opportunity</title>
+      <link>https://cor3ntin.github.io/posts/modules/</link>
+      <pubDate>Wed, 31 Oct 2018 23:16:15 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/modules/</guid>
+      <description>C++ Modules are going through the standardization process and current plans would have them merged in the C++ Standard in time for C++20. They are a great language feature, offering a number of benefits over headers
+ They feel more modern They are much faster to parse They provide protections against macros They provide some protections against ODR violations.  I really can&amp;rsquo;t wait to be able to replace headers with them in my code bases.</description>
+    </item>
+    
+    <item>
+      <title>Translation units considered harmful ?</title>
+      <link>https://cor3ntin.github.io/posts/translation_units/</link>
+      <pubDate>Mon, 29 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/translation_units/</guid>
+      <description>Let say you have some struct square you want to compute the area of.
+struct square { int width; }
+You could of course do that:
+int area(square s) { return s.width * s.width; }
+But, your friend Tony told you to use more functions, so instead you do that
+int area(square s) { return width(s) * width(s); } int width(square s) { return s.width; }  area being the function you really care about it is defined first - after all, code reads from top to bottom.</description>
+    </item>
+    
+    <item>
+      <title>Commas</title>
+      <link>https://cor3ntin.github.io/posts/commas/</link>
+      <pubDate>Tue, 21 Aug 2018 23:08:53 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/commas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>The case for Auto Non-Static Data Member Initializers</title>
+      <link>https://cor3ntin.github.io/posts/auto_nsdmi/</link>
+      <pubDate>Sun, 12 Aug 2018 11:27:00 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/auto_nsdmi/</guid>
+      <description>In this article, we talk about Auto Non-Static Data Member Initializers in C++. All code snippet can be tested on Compiler Explorer thanks to Matt Godbolt and the CE team. The clang patch to enable this feature was authored by Faisal Vali 5 years ago, but I have crudely rebased it on top of clang trunk (~ 7.0).
+In fact, the main motivation for this article is to put this feature in the hand of people to prove that it works and that it would be a great addition to the standard.</description>
+    </item>
+    
+    <item>
+      <title>Concept and template syntax take 836</title>
+      <link>https://cor3ntin.github.io/posts/template_syntax/</link>
+      <pubDate>Sat, 07 Jul 2018 11:16:27 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/template_syntax/</guid>
+      <description>The return of the adjective syntax A couple of weeks ago, I made an article on concept terse syntax and I thank the people who took the time to take the poll, it was quite revealing.
+And since then a new paper, P1141 - Yet another approach for constrained declarations came out. Despite the name, it&amp;rsquo;s pretty much the Adjective syntax, repacked with an impressive authors list including Herb Sutter (author of the In-Place syntax proposal), Bjarne Stroustrup and Gabriel Dos Reis (authors of &amp;ldquo;minimal solution&amp;rdquo; proposals) and Thomas Köppe (author of one of the adjective syntax proposal), so it would seem that we are converging towards a solution that pleases a large number of people (and that is, after all, the name of the game).</description>
+    </item>
+    
+    <item>
+      <title>The tightly-constrained design space of convenient syntaxes for generic programming</title>
+      <link>https://cor3ntin.github.io/posts/concepts_syntax/</link>
+      <pubDate>Wed, 13 Jun 2018 11:32:09 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/concepts_syntax/</guid>
+      <description>Please take the quick survey on concept syntax at the end of this article.  Did you know that the Concept TS was merged into the Working Draft in July 2017, in Toronto? And we are a Planck length away from merging the Range TS in C++20 as well, including a few goodies such as projections, contiguous ranges/iterators and ranges adaptors? We also added a bunch of general-purpose concepts in the std namespace in Rapperswil.</description>
+    </item>
+    
+    <item>
+      <title>Rapperswil Committee Meeting: A Trip Report</title>
+      <link>https://cor3ntin.github.io/posts/rapperswil/</link>
+      <pubDate>Mon, 11 Jun 2018 12:26:11 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/rapperswil/</guid>
+      <description>This was my first committee meeting. I arrived Sunday morning at Jona, the next town over where I had a lovely AirBnB in a very nice, peaceful suburb. I settled to visit Rapperswil but met some people from Nvidia going to the meeting. So we naturally started to talk about C++. The meeting was to last 6 days and until the very end, we talked about C++, every minute of every hour.</description>
+    </item>
+    
+    <item>
+      <title>A Json Parser Part 1 : Reading a file</title>
+      <link>https://cor3ntin.github.io/posts/read_a_file/</link>
+      <pubDate>Wed, 23 May 2018 20:03:48 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/read_a_file/</guid>
+      <description>The year is 2021. A rainy Sunday afternoon. It&amp;rsquo;s getting increasingly more difficult to ignore the looming shadow of The Great Rewrite.
+But you ran out of cacao and there is nothing on HBO. So you guzzle a fourth cup of coffee and decide to start a new project. In C++ of course. You sacrificed too much to reevaluate your life choices now.
+But you need to do something new.</description>
+    </item>
+    
+    <item>
+      <title>A can of span</title>
+      <link>https://cor3ntin.github.io/posts/span/</link>
+      <pubDate>Mon, 14 May 2018 12:36:14 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/span/</guid>
+      <description>The papers that will be discussed at the next C++ committee meeting are out. The listing contains a number of interesting and controversial papers. Among them, Herbceptions, a number of concurrent concurrency proposals, a proposal calling for major design changes in the coroutines TS, And an easy-to-review, 200 pages long proposal to unify the Range TS in the std namespace.
+In total, there are about 140 papers all rather interesting.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; Attributes</title>
+      <link>https://cor3ntin.github.io/posts/attributes/</link>
+      <pubDate>Sun, 22 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/attributes/</guid>
+      <description>In C++11, attributes were added as a way to standardized features such as gnu __attribute__and msvc’s __declspec.
+The language provisions for standard attributes as well as non-standard attributes through the use of namespaces, though the behavior of non-standard attributes was only settled for C++17. And sadly, as of 2018, neither GCC nor MSVC offer their vendor-specific attributes though the portable C++ standard syntax.
+Most standard attributes were added in C++14 and 17.</description>
+    </item>
+    
+    <item>
+      <title>Accio Dependency Manager</title>
+      <link>https://cor3ntin.github.io/posts/dep_manager/</link>
+      <pubDate>Sat, 03 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/dep_manager/</guid>
+      <description>You may have noticed a number of “What should go in the Standard Library” posts over the last few days. These posts have generated quite a bit of comments on Reddit and discussions on Slack. I hope more people chime in.
+The conclusion is that we pretty much all agree to disagree on what the STL is or should be. I’m not sure we can even agree on what C++ is.</description>
+    </item>
+    
+    <item>
+      <title>A cake for your cherry: what should go in the C&#43;&#43; standard library?</title>
+      <link>https://cor3ntin.github.io/posts/what_should_go_in_stl/</link>
+      <pubDate>Wed, 21 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/what_should_go_in_stl/</guid>
+      <description>This is a reply to Guy Davidson’s article “Batteries not included: what should go in the C++ standard library?”.
+Over the past few years there has been a push to include a graphics library into the C++ standard. It would be something a bit like cairo. Or SDL. The proposal, in its current form, is here
+In its current state, the library proposal can draw some shapes on a pre-allocated surface, has some support for images, and there are of courses projects to add text, maybe some input in the form of mouse / keyboard handling.</description>
+    </item>
+    
+    <item>
+      <title>On the state of cross-compilation in the C&#43;&#43; World</title>
+      <link>https://cor3ntin.github.io/posts/cross_compilation/</link>
+      <pubDate>Fri, 02 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/cross_compilation/</guid>
+      <description>I wrote a series of article where I compile simple Windows and OSX applications from Linux.
+I hope you enjoyed it. For me, it certainly was quite the journey. Or the beginning of one. There is lot of rooms for improvement and we left some area unexplored, including some other major Operating systems like Android and iOS. I also did not talk about debugging.
+The open source community is amazing.</description>
+    </item>
+    
+    <item>
+      <title>A C&#43;&#43; Hello World And The Rose Gold Walled Garden Of Doom</title>
+      <link>https://cor3ntin.github.io/posts/helloworld_p3/</link>
+      <pubDate>Mon, 29 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/helloworld_p3/</guid>
+      <description>This is Part 3 on my series about cross-compilation. You can check out part 1 1 and part 2 2 first !
+  linuxnewbieguide.org   You cannot caters to the needs of Windows and Linux users while ignoring the third major, well, second actually, desktop operating system.
+The Operating System I’m talking about is of course developed and commercialized by a company best known as the one who gave Clang to the world, is mostly responsible for maintaining WebKit (after most of the industry moved to Chromium), and created some other amazing open sources softwares such as CUPS.</description>
+    </item>
+    
+    <item>
+      <title>A C&#43;&#43; Hello World And the Cute Heartless Rainbow</title>
+      <link>https://cor3ntin.github.io/posts/helloworld_p2/</link>
+      <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/helloworld_p2/</guid>
+      <description>This is Part two of a series wherein we build a “Hello World” application. If you are late to the party, I encourage you to check part 1 first.
+  Hic Sunt Arcūs   So, our Boss came in to check on our progress. They were starting to wonder why it takes a whole day to port a 3 lines application to a new system. But the real reason of their visit was to ask for a new feature.</description>
+    </item>
+    
+    <item>
+      <title>A C&#43;&#43; Hello World And A Glass Of Wine, Oh My !</title>
+      <link>https://cor3ntin.github.io/posts/helloworld_p1/</link>
+      <pubDate>Mon, 22 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/helloworld_p1/</guid>
+      <description>#include &amp;lt;iostream&amp;gt; int main() { std::cout &amp;lt;&amp;lt; &amp;#34;Hello, World\n&amp;#34;; }  Nothing to remove, nothing to add.
+This is the proper “Hello World” in C++. All the others Hello World are wrong. But this is not where I rant about how using namespace std; crystallizes everything messed up with the teaching of C++. Another time perhaps.
+Today we are gonna be compiling that hello world so that it can be executed on a target system.</description>
+    </item>
+    
+    <item>
+      <title>An Ode To Code Formatting Tools</title>
+      <link>https://cor3ntin.github.io/posts/ode_formatting/</link>
+      <pubDate>Sat, 20 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/ode_formatting/</guid>
+      <description>Your modifications fix the calculation
+But I’m afraid you forgot a tabulation.
+This is the beginning of your tribulation.
+Your perfect correction won’t bring you elation.
+If there was a way to just automate,
+Maybe you could avoid arguing with your mate.
+Should there be a space after the bracket
+How many white spaces, How many line breaks
+Did you know tools could format your troubles away?
+You have to choose, there is no midway</description>
+    </item>
+    
+    <item>
+      <title>Undefining the C&#43;&#43; Pre-processor</title>
+      <link>https://cor3ntin.github.io/posts/undef_preprocessor/</link>
+      <pubDate>Wed, 10 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/undef_preprocessor/</guid>
+      <description>There are only two kinds of languages: the ones people complain about and the ones nobody uses — Bjarne Stroustrup
+I like that quote. it explains both JavaScript and Haskell. And by that measure the preprocessor is a great language in that people use it, a lot. It’s never considered separately from C and C++, but if it was, it would be the number one language on TIOBE. The preprocessor is both extremely useful, and pervasive.</description>
+    </item>
+    
+    <item>
+      <title>Stranded with a C&#43;&#43; compiler and a bunch of queues</title>
+      <link>https://cor3ntin.github.io/posts/stack_queue/</link>
+      <pubDate>Mon, 31 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/stack_queue/</guid>
+      <description>A friend had a phone interview for a job in a company that I won’t name - It’s Microsoft. One of the questions was about describing how he would write a stack, only using standard queues.
+I was confounded, because long before an algorithm could form in my mind, I already decided that there was no solution that would actually be useful in any real life scenario.
+template &amp;lt;typename T, typename Container = std::queue&amp;lt;T&amp;gt;&amp;gt; classstack { public: void push(const T &amp;amp;); void pop(); T&amp;amp; top(); std::size_t size() const; bool empty() const; private: void transfer(); Container a, b; }; template &amp;lt;typename T, typename Container&amp;gt; void stack&amp;lt;T, Container&amp;gt;::push(const T&amp;amp; t) { a.</description>
+    </item>
+    
+  </channel>
+</rss>

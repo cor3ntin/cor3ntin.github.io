@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/characterset/</loc>
+    <lastmod>2019-04-27T16:18:53+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/kona2019/</loc>
+    <lastmod>2019-02-28T14:11:03+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/parentheses/</loc>
+    <lastmod>2019-02-26T07:00:36-10:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/what_is_cpp/</loc>
+    <lastmod>2019-01-06T10:06:24+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/modules_naming/</loc>
+    <lastmod>2018-12-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/modules_mapping/</loc>
+    <lastmod>2018-11-26T20:26:40+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/rangeof/</loc>
+    <lastmod>2018-11-25T11:50:51+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/sandiego/</loc>
+    <lastmod>2018-11-16T13:42:44+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/modules/</loc>
+    <lastmod>2018-10-31T23:16:15+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/translation_units/</loc>
+    <lastmod>2018-10-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/commas/</loc>
+    <lastmod>2018-08-21T23:08:53+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/auto_nsdmi/</loc>
+    <lastmod>2018-08-12T11:27:00+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/template_syntax/</loc>
+    <lastmod>2018-07-07T11:16:27+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/concepts_syntax/</loc>
+    <lastmod>2018-06-13T11:32:09+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/rapperswil/</loc>
+    <lastmod>2018-06-11T12:26:11+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/read_a_file/</loc>
+    <lastmod>2018-05-23T20:03:48+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/span/</loc>
+    <lastmod>2018-05-14T12:36:14+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/attributes/</loc>
+    <lastmod>2018-04-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/dep_manager/</loc>
+    <lastmod>2018-03-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/what_should_go_in_stl/</loc>
+    <lastmod>2018-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/cross_compilation/</loc>
+    <lastmod>2018-02-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/helloworld_p3/</loc>
+    <lastmod>2018-01-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/helloworld_p2/</loc>
+    <lastmod>2018-01-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/helloworld_p1/</loc>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/ode_formatting/</loc>
+    <lastmod>2018-01-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/undef_preprocessor/</loc>
+    <lastmod>2018-01-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/stack_queue/</loc>
+    <lastmod>2016-10-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/</loc>
+    <lastmod>2019-04-27T16:18:53+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/</loc>
+    <lastmod>2019-04-27T16:18:53+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

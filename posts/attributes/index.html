@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>C&#43;&#43; Attributes | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">April 22, 2018</h2>
+    <h1 class="title">C&#43;&#43; Attributes</h1>
+    
+    <div class="content">
+      
+
+<p>In C++11, attributes were added as a way to standardized features such
+as gnu <code>__attribute__</code>and msvc’s <code>__declspec</code>.</p>
+
+<p>The language provisions for standard attributes as well as non-standard
+attributes through the use of namespaces, though the behavior of
+non-standard attributes was only settled for C++17. And sadly, as of
+2018, neither GCC nor MSVC offer their vendor-specific attributes though
+the portable C++ standard syntax.</p>
+
+<p>Most standard attributes were added in C++14 and 17. You can find a list
+on
+<a href="http://en.cppreference.com/w/cpp/language/attributes">cppreference</a>.</p>
+
+<p>At some point before C++11 came out, the C++ Standard draft defined the
+<code>[[override]]</code> and <code>[[final]]</code> attributes. These features
+were later converted to contextual keywords <code>override</code> and <code>final</code>. The
+original proposal even suggested that default and deleted methods could
+be made possible with the use of attributes. We now know these features
+as <code>=default</code> and <code>=delete</code>.</p>
+
+<p>And ever since, when adding a language feature to C++, the question of
+whether that feature would be better served by a keyword or an attribute
+needs to be asked and answered.</p>
+
+<p>It recently came up for the now accepted <code>[[no_unique_address]]</code>
+and the currently discussed <code>[[move_relocates]]</code> (which would, to the
+extent of my understanding, be akin to a destructive move, a nice
+performance optimization in some cases).</p>
+
+<p>Systematically, a committee member will point out that “*A compiler
+should be free to ignore attributes*”. One other will add “*Well,
+actually, an attribute should not change the semantic of a program*”. Or
+more accurately,</p>
+
+<blockquote>
+<p>Compiling a valid program with all instances of a particular attribute
+ignored must result in a correct implementation of the original
+program</p>
+</blockquote>
+
+<p><em>source :</em><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0840r0.html"><em>p0840r0</em></a></p>
+
+<p>This is sort of an unwritten rule, it’s not actually anywhere in the
+standard, though I found this quote in the initial attribute proposal:</p>
+
+<blockquote>
+<p>What makes this a good candidate for attributes is that code that runs
+with these attributes also runs identically if the attributes are
+ignored, albeit with less type checking.</p>
+</blockquote>
+
+<p>It makes a lot of sense in the case of non-standard attributes. We
+should let the dark past of not-portable code and vendor-extensions
+behind us. So having non-standard attributes being simply skipped over
+is very useful and desirable indeed.</p>
+
+<p>But what about standard attributes ? The compilers are free to ignore
+those too.</p>
+
+<p>So let’s say you use a <code>[[fallthrough]]</code>
+attribute and have a 0-warning policy (say you compile with -WError),
+the compiler is free to emit a warning and to fail the build.</p>
+
+<p>In the case of <code>[[no_unique_address]]</code> ,
+<code>sizeof</code> may return a different result
+depending on whether the attribute is ignored or not, thereby letting
+you affecting the semantic of the program. Which both show that the
+committee doesn’t necessarily follow their own rules, but most
+importantly that attribute being ignorable do not match the developer’s
+intent.</p>
+
+<p>Even as people learned to expect that vendors often implement the
+standard in partial and opinionated ways, they probably don’t sprinkle
+attributes just for kicks, or to give their code some artsy Christmas
+ornaments. If someone goes to the trouble of marking a function
+<code>[[nodiscard]]</code>, they probably really
+want the result of a function to be checked. Maybe not checking the
+return value could, for some reason, lead to a critical failure. Rockets
+blowing up, patients dying.</p>
+
+<p>There is, for existing attributes, no implementability concern either.
+They all can be implemented on all hardware as they don’t impose
+hardware requirement. I suppose there are some hardware for which
+<code>[[caries_dependencies]]</code> makes no sense,
+but on such hardware, <code>std::memory_order</code>
+wouldn’t make sense either, making the point moot.</p>
+
+<p>I’ve tried to ask several committee members the nagging question :
+<strong>Why ? Why attributes need to have no semantic meaning ?</strong></p>
+
+<p>The answer I got was : <em>Because.</em></p>
+
+
+<figure>
+    
+        <img src="https://cdn-images-1.medium.com/max/800/1*arziEb8HG5FkhINW70umHw.gif" />
+    
+    
+    <figcaption>
+        <h4>It is so</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>And it was hard for me to find more rationale behind that. And there is
+nothing quite irksome as a rule without rationale.</p>
+
+<p>A reason that I was given is that the committee might, in absence of
+strong guidelines, use attributes to shovel more keywords into the
+language, since adding attributes is easier than adding keywords:
+introducing keywords might break someone’s code and understandably calls
+for a stronger motivation. And letting attributes be everything might
+make the language an ungodly soup of attributes.</p>
+
+<p>That is certainly a valid concern. However, does the committee really
+needs to impose rules onto itself ? They still need to vote on each and
+every standard attribute that goes into the standard, and need to study
+the relevance of the attribute with or without the existence of this
+weird unwritten rule.</p>
+
+<p>I don’t think there is a good general answer to whether attributes
+should be keyword, or whether they should be imbued with semantic
+meaning or not.</p>
+
+<p>Instead, that question needs to be answered on a per-attribute basis.
+Should <code>alignas</code> be a keyword ? Maybe not. Should <code>[[fallthrough]]</code>be one ?
+Probably; that’s a good example of shoving a keyword as an attribute to
+avoid breaking user’s code.</p>
+
+<p>Ultimately, that sort of consideration is highly subjective, but I doubt
+introducing seemingly arbitrary rules makes the design process any
+easier, probably quite the opposite.</p>
+
+<p>Instead, each proposed standard attribute (or keyword) needs to be
+studied on its own merits, and maybe we will find attributes for which
+it makes sense that they could be ignored — Which I don’t think is the
+case for any of the existing attributes.</p>
+
+<p>This might sound like bickering, and to some extent, it is. However it
+might matter in the context of reflection.</p>
+
+<h4 id="reflection-on-attributes"><strong>Reflection on attributes</strong></h4>
+
+<p>I think reflection on attributes may be the most important aspect of
+reflection. Let say you want to serialize a class, and using reflection
+to visit all the members, you may need to filter out some members that
+you don’t want to serialize. One way to do that would be to (ab)use the
+type system but a better system would probably be to use attributes to
+tag the relevant members. That could open the door to amazing
+serialization, RCP and ORM libraries (…even though you probably should
+not use an ORM !)</p>
+
+<p>Most people appear to see the value of such feature, however some argue
+that it would be better to add another syntax, that could be called
+<em>decorator.</em> It would essentially be the same thing as attributes, used
+in the same place as attributes, but with a new syntax that would be
+exempt of the “attribute should be ignorable” debate.</p>
+
+<p>To me this really does not make sense. First, if a user chooses to
+impart semantic meaning to attributes by the mean of reflection, then
+it’s the user’s choice rather than the compiler’s, so portability
+concerns do not apply. And of course, this feature may and would be used
+to develop framework-specific behaviors and idioms, which some people
+seem to be rather strongly against. But that is a need that exists and
+is emulated today by the means of complicated macros or code generation,
+often both (Qt).</p>
+
+<p>Adding a new syntax, giving it another name over some philosophical
+subtlety that will be loss on non-expert, would almost certainly add no
+value to the language. And would of course add delay while that new
+syntax is argued about. C++ is running out of tokens.</p>
+
+<p>For example, which of the following do you think is the most readable ?</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">[[deprecated]] QSignal&lt;<span style="color:#888;font-weight:bold">void</span>&gt; f();
+[[deprecated]] <span style="color:#a61717;background-color:#e3d2d2">@@</span>qt::signal<span style="color:#a61717;background-color:#e3d2d2">@@</span> <span style="color:#888;font-weight:bold">void</span> f();
+[[deprecated]] [[qt::signal]] <span style="color:#888;font-weight:bold">void</span> f();
+</code></pre></div>
+<p>There are other challenges with reflecting on attributes. Attributes can
+take parameters that are presently defined as being a token soup. Hem, I
+mean token-sequence sorry. A well balanced token-soup-sequence. Which I
+guess makes total sense for tooling and compilers. But is pretty
+pointless when it comes to reflection.</p>
+
+<p>I think there are solutions to this problem, namely that
+reflectable-attributes be declared in the source before use and allow
+literals and <code>constexptr</code>as their
+parameters, rather than arbitrary tokens.</p>
+
+<p>I’ve put more details on that on GitHub. Note that this is not a
+proposal and I don’t intend to make one, at least not while the
+“attribute should be ignorable” mantra exists.</p>
+
+<p><a href=" ref &quot;https://github.com/cor3ntin/CPPProposals/blob/master/attributes/attributes.rst&quot; ">cor3ntin/CPPProposals</a></p>
+
+<p>In the end, attributes could have a variety of uses:</p>
+
+<ul>
+<li><p>Compiler directives for optimizations and diagnostics</p></li>
+
+<li><p>Instructions and meta data for external tooling</p></li>
+
+<li><p>Filtering and decoration by the use of both reflection of code
+injection (code injection, would let people use attributes as full
+blown decorators similar in expressiveness to the feature of the
+same name offered by Python)</p></li>
+
+<li><p>Contracts ( <code>[[expects:]]</code>and <code>[[ensures:]]</code>) ; though these
+syntax are different enough that i’m not sure they still qualify as
+attributes.</p></li>
+</ul>
+
+<p>But as things stand, I feel like attributes are criminally underused and
+crippled.</p>
+
+<p>What attributes would you like to see ?</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fattributes%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fattributes%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fattributes%2f&t=C%2b%2b%20Attributes" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

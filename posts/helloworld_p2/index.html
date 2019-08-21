@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>A C&#43;&#43; Hello World And the Cute Heartless Rainbow | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">January 24, 2018</h2>
+    <h1 class="title">A C&#43;&#43; Hello World And the Cute Heartless Rainbow</h1>
+    
+    <div class="content">
+      
+
+<p>This is Part two of a series wherein we build a “Hello World” application. If you are late to the party, I encourage you to check <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part 1</a> first.</p>
+
+
+<figure>
+    
+        <img src="dragon.png" />
+    
+    
+    <figcaption>
+        <h4>Hic Sunt Arcūs</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>So, our Boss came in to check on our progress. They were starting to wonder why it takes a whole day to port a 3 lines application to a new system. But the real reason of their visit was to ask for a new feature. While our “Hello world” business is booming, the marketing department thinks the lack of graphical UI is hurting sales.</p>
+
+<p>See, nobody escapes software bloat.</p>
+
+<p>Still. Eager to make the boss forget the time it takes to setup MSVC on Linux, I went above and beyond and completed a full rewrite of our app.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;QMessageBox&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;QApplication&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span>
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>(<span style="color:#888;font-weight:bold">int</span> argc, <span style="color:#888;font-weight:bold">char</span>** argv) {
+    QApplication a(argc, argv);
+    QString message = <span style="color:#d20;background-color:#fff0f0">&#34;Hello, World !!!!!!!&#34;</span>;
+
+    QMessageBox::information(<span style="color:#080;font-weight:bold">nullptr</span>, <span style="color:#d20;background-color:#fff0f0">&#34;Hello World v2.0&#34;</span>, message,
+                             QMessageBox::Yes | QMessageBox::No);
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">0</span>;
+}
+</code></pre></div>
+<p>Of course, we also provide a small nifty build file.</p>
+
+<pre><code>import qbs 1.0
+
+QtGuiApplication {
+    name  : &quot;helloworld-gui&quot;
+    files : [&quot;helloworld.cpp&quot;]
+
+    Depends {
+        name : &quot;Qt.widgets&quot;
+    }
+
+    Group {
+        name: &quot;app&quot;
+        fileTagsFilter: &quot;application&quot;
+        qbs.install: true
+        qbs.installDir: &quot;bin&quot;
+    }
+}
+</code></pre>
+
+<p>The Linux version is still building fine. Duh.</p>
+
+
+<figure>
+    
+        <img src="term1.png" />
+    
+    
+    <figcaption>
+        <h4>The author likes to pretend all Linux machines are born with Qt And QBS installed. Just play along.</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+
+<figure>
+    
+        <img src="stupiddialog.png" />
+    
+    
+    <figcaption>
+        <h4>In case of nuclear disaster, click “no”</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Let’s enthusiastically build the Windows version:</p>
+
+
+<figure>
+    
+        <img src="term2.png" />
+    
+    
+    <figcaption>
+        <h4>Not so Qt.</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>I went to download Qt on <a href="https://www.qt.io/download">https://www.qt.io/download</a>. That site is getting worse by the day. The Qt company tries to dissuade people to get the open source version. But if you go to <a href="https://download.qt.io/">https://download.qt.io/</a> you have all the tarballs and installers.</p>
+
+<p>Speaking of installers, they do not offer a 64 bits version for Windows. in 2018. We may have to restrict ourselves to 32 bits builds and extract that with WINE. Except it doesn’t work because the Qt installer framework has no silent mode ( apparently, you can script a silent mode in 100 lines of JavaScript ) and uses some Windows methods unsupported by WINE.</p>
+
+<p>Nevermind. I will build Qt myself to prove how awesome my WINE toolchain is. And it will be 64 bits. I’ll get promoted and the intern who has 4 PHD will bring me cappuccinos. Maybe people will even use my name as a verb ( If you don’t <a href="https://godbolt.org/">Godbolt</a> yet, you should definitively check it out !).</p>
+
+<p>Except. Qt still uses qmake to build itself. And qmake exists only to make cmake look cool and modern. There is an <a href="http://code.qt.io/cgit/qt/qtbase.git/log/?h=wip/qbs2">ongoing effort </a>to build Qt with qbs and while this is very exciting, it may be a bit too cutting edge, even for this blog.</p>
+
+<p>So, we are stuck with qmake .qmakeis a build system generator which unfortunately conflates toolchains and build systems. I did attempt to create configuration for my wine toolchain, it was actually rather simple, and it did generates some Makefiles with the proper commands. But they were Makefiles for nmake which is a make-like tool for windows albeit with a format that is not quite compatible with the original make. I tried using nmake (which works fine) but then all the subsequents cl.exe / link.execalls happen in the wine environment which means it executes the actual cl.exe rather than our wrapper and so our crude slashes-to-backslashes transformation script never gets run and the compilation fails because cl.exe assumes anything starting with <code>/</code> is an option. And we can’t get nmake to call our fake cl.exe wrapper since nmake is a windows process and windows doesn’t know about ELF.</p>
+
+<p>It is left as an exercise to the reader to calculate how many millions of dollars Windows using <code>\</code> as a path separator and is costing the industry.</p>
+
+<p>The solution would be to patch qmake. Which even the maintainer of qmake actively avoid to do. So let’s not do that.</p>
+
+<p>I’m very sorry, but we will go back to our Windows VM and build Qt from there.
+&gt; # That should be simple, right ?</p>
+
+<p>Of course, the VC build tools are unable to set up their environment properly.</p>
+
+<p>How many Microsoft Engineers does it take to set up a build environment ? Certainly quite a few, since I was able to find about 1900 lines of batch scripts serving that purpose, in 20 or so files. There are probably more.</p>
+
+<p>I manage to get my environment sorted in 3 lines. Remember, regardless of how complex your build system is, it boils down to a handful of variables. A compiler doesn’t needs much.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#038">set</span> <span style="color:#d20;background-color:#fff0f0">&#34;INCLUDE=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Tools\MSVC\14.12.25827\include; %INCLUDE%&#34;</span>
+<span style="color:#038">set</span> <span style="color:#d20;background-color:#fff0f0">&#34;LIB=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Tools\MSVC\14.12.25827\lib\x64\;%LIB%&#34;</span>
+<span style="color:#038">set</span> <span style="color:#d20;background-color:#fff0f0">&#34;PATH=%PATH%;C:\Users\cor3ntin\Documents\qtbase-everywhere-src-5.10.0\gnuwin32&#34;</span></code></pre></div>
+<p>After that, it was a matter of downloading Qt 5.10 setting up a x64 build environment ( I used vcvars64.bat + the three lines above, but you can set up PATH manually and not bother with vcvars.bat at all).</p>
+
+<p>Make sure perl is installed and in the PATH.</p>
+
+<p>For the purpose of this article, I only need Qt Base (Core, Gui, Network… ) so that’s what I’m building. Building QtWebEngine - which uses chromium - is a bit more involved.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">configure -release -opensource -confirm-license <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>          -platform win32-msvc -nomake examples -nomake tests
+nmake
+nmake install</code></pre></div>
+<p>Once Qt has done building, copy the folders back to your linux host. You need at least bin, include, lib, plugins . put them in a new directory. I called mine qt5_10base-x64 .</p>
+
+<p>I had issues with the includes referencing src. So you can run perl bin\syncqt.pl -copy -windows -version 5.10.0 -outdir cpy from the Qt directory on windows and use the include folder generated in cpy . Even then I had to copy a few files manually ( qconfig.h, q{core,gui,widgets,network,xml}-config.h) from the src folder to their respective include folder. Definitively a bit fiddly but eventually you will get there.</p>
+
+
+<figure>
+    
+        <img src="term3.png" />
+    
+    
+    <figcaption>
+        <h4>My Linux is slowly morphing into a Windows Box. I expect Clippy to appear at any moment now</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>So now we have Qt. But how can we tell QBS to actually use it ?</p>
+
+<p>The profile system of QBS is one of the things that make it great. You can set up compiler toolchain globally and switch from one to another effortlessly.</p>
+
+<p>However to works with Qt, qbs needs a complete set of modules per profile. The gcc profile we used earlier is made of 160 qbs files setting each Qt library and component.</p>
+
+<p>Fortunately, all you need to do is to call this handy tool.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qbs-setup-qt -h
+This tool creates qbs profiles from Qt versions.
+
+Usage:
+
+    qbs-setup-qt [--settings-dir &lt;settings directory&gt;] --detect
+
+    qbs-setup-qt [--settings-dir &lt;settings directory&gt;] &lt;path to qmake&gt; &lt;profile name&gt;
+
+    qbs-setup-qt -h|--help
+
+The first form tries to auto-detect all known Qt versions, looking them
+up via the PATH environment variable.
+
+The second form creates one profile <span style="color:#080;font-weight:bold">for</span> one Qt version.</code></pre></div>
+<p>Except we can’t call that tool from linux because the built qmake is a windows application expected to run on Windows. Hopefully, someday we will get rid of qmake entirely, but for now, back to our Windows machine.</p>
+
+<p>We first <a href="https://doc.qt.io/qbs/installing.html">install a windows build</a> of qbs and run the tool.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qbs-windows-x86_64-1.10.0<span style="color:#04d;background-color:#fff0f0">\b</span>in<span style="color:#04d;background-color:#fff0f0">\q</span>bs-setup-qt.exe <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>    --settings-dir . bin<span style="color:#04d;background-color:#fff0f0">\q</span>make.exe msvc14-x64-qt</code></pre></div>
+<p>That should create a qbs folder with the proper Qt configuration. Move that folder to your linux machine in the qt5_10base-x64 folder created earlier.</p>
+
+<p>If you open on of the .qbs file, say 1.10.0/profiles/msvc14-x64-qt/modules/Qt/gui/gui.qbs , you will notice a reference to a path. For some reason, in mine it’s /usr/local/Qt-5.10.0 . I guess I messed up somewhere since we should have a windows path. In any case we need to transform that path to the actual locations of Qt on our Linux machine, which is easy to do, just use sed.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">find -name <span style="color:#d20;background-color:#fff0f0">&#34;*.qbs&#34;</span> -exec sed -i -e <span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>    <span style="color:#d20;background-color:#fff0f0">&#39;s\#/usr/local/Qt-5.10.0\#/home/cor3ntin/dev/cross-compilers/windows/qt-5.10-msvc-x64\#g&#39;</span> {} <span style="color:#04d;background-color:#fff0f0">\;</span></code></pre></div>
+<p>We then need to modify our qbs.conf to use those qt modules. Edit the QBS file created in part one to reference them:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qt-project<span style="color:#04d;background-color:#fff0f0">\q</span>bs<span style="color:#04d;background-color:#fff0f0">\p</span>rofiles<span style="color:#04d;background-color:#fff0f0">\m</span>svc14-x86_64<span style="color:#04d;background-color:#fff0f0">\p</span>references<span style="color:#04d;background-color:#fff0f0">\q</span><span style="color:#369">bsSearchPaths</span>=<span style="color:#04d;background-color:#fff0f0">\
+</span><span style="color:#04d;background-color:#fff0f0"></span>    /home/cor3ntin/dev/Qt/qbs-wine-toolchain,/home/cor3ntin/dev/cross-compilers/windows/qt5_10base-x64/qbs/1.10.0/profiles/msvc14-x64-qt</code></pre></div>
+<p>I realize it’s all a bit tricky. Eventually though, we can run qbs and it compiles our Qt-based hello world for Windows.</p>
+
+
+<figure>
+    
+        <img src="term4.png" />
+    
+    
+    <figcaption>
+        <h4>$?==0</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>It won’t run because it can’t find the Qt dll. You can either copy the dll to the build directory, or make sure they are in the PATH. The windows/wine PATH that is.</p>
+
+<p>The only way I found to do that is to run regedit — make sure to do it from the appropriate WINEPREFIX and add the location of the Qt’s bin directory to Path which is under <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment</code>.</p>
+
+<p>If you know a way to script that away, please let me know.</p>
+
+
+<figure>
+    
+        <img src="regedit.png" />
+    
+    
+    <figcaption>
+        <h4>Using regedit on Linux. What would I not do for my readers ?</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>We also need to put a qt.conf file next to our built helloworld.exe binary to tell Qt where to load the plugins from. In my case</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#080;font-weight:bold">[Paths]</span>
+<span style="color:#369">Prefix</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/windows/qt5_10base-x64/</span>
+<span style="color:#369">Plugins</span> = <span style="color:#d20;background-color:#fff0f0">plugins</span></code></pre></div>
+<p>And that’s it ! It wasn’t too hard, was it ?</p>
+
+
+<figure>
+    
+        <img src="hello1.png" />
+    
+    
+    <figcaption>
+        <h4>I made a clicky thing !</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h3 id="and-so-microsoft-studio-visual-c-compiler-is-the-greatest-thing-ever">And So, Microsoft Studio Visual C++ Compiler is the greatest thing ever !</h3>
+
+<p>A recent study conducted on two preschoolers shows that millennials like rainbows. I was immediately asked to made our app more rainbow-y. Ambiguously labeled buttons are apparently the horsemen of the pretend apocalypse so we will also get rid of them.</p>
+
+<p>What we need to do is iterate over our string an inject some html markup around each character so that they are render in different colors.</p>
+
+<p>Iterating over some container will require us to use range-v3. There is <em>literally</em> no other way.</p>
+
+
+<figure>
+    
+        <img src="rainbow1.png" />
+    
+    
+    <figcaption>
+        <h4>Making WordArt Great Again.</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Isn’t that great ?</p>
+
+<p>But, and I’m sure you you will be utterly flabbergasted to learn that msvc is not capable of compiling range-v3. I know, it’s a total blow, and a complete let down.</p>
+
+<h3 id="microsoft-studio-visual-c-compiler-defeated">Microsoft Studio Visual C++ Compiler Defeated.</h3>
+
+<p>There is absolutely nothing we can do. It’s not like there exists a <a href="https://github.com/Microsoft/Range-V3-VS2015">msvc-compatible port of range-v3</a>or <a href="http://en.cppreference.com/w/cpp/language/range-for">some other way</a> to transform our string. Please stop saying I purposefully made up a contrived story just so I could use ranges and defeat msvc with rainbows. That would be <em>mean</em>.</p>
+
+<p>The only reasonable thing is to ditch msvc and replace it by something else. But what ? Mingwdoesn’t understand the MSVC headers and libs, icc is quite expensive, Cfrontis no more maintained.</p>
+
+<p>By now, you certainly know where I’m coming at, don’t you ? clang-cl ! If you didn’t know about clang-cl, it’s a drop in replacement for cl.exe except it’s actually clang, so it will make you all warm and fuzzy inside.</p>
+
+<p>Clang was designed properly and it’s an amazing tool for a lot of reasons, but most importantly:</p>
+
+<ul>
+<li><p>It’s runs on all major OSes</p></li>
+
+<li><p>It doesn’t activate OS-specific features at compile time, but at runtime.</p></li>
+
+<li><p>Which means it will let you target anything from anywhere.</p></li>
+
+<li><p>It offers a driver ( a command line interface, if you like ) compatible with that of msvc</p></li>
+
+<li><p>It’s easy to build ( and if you ever attempted to build GCC, you know how hard building a compiler can be.)</p></li>
+
+<li><p>It’s open-source and its designed isn’t actively constrained by political motives.</p></li>
+</ul>
+
+<h3 id="so-let-s-use-clang">So, let’s use Clang !</h3>
+
+<p>If you don’t have clang follow the documentation of your Linux distribution, it should come with clang-cl by default ( it’s merely a symbolic link to clang ).</p>
+
+<p>Or if you are like me, checkout out and build the trunk, <a href="https://clang.llvm.org/cxx_status.html">it’s full of goodness</a> !</p>
+
+<p>Beside being a drop in replacement, there are a few things we need to do. The QBS toolchain module we wrote for wine does not quite work since it transforms slashes to backslashes.</p>
+
+<p>I did copy the toolchain modules and fixed some other details. That will end up on GitHub soon.</p>
+
+<p>Creating a QBS profile for clang-cl is straight forward, copy the one from wine and change the toolchain name from msvc to clang-cl and point the toolchainInstallPath to somewhere containing clang-cl and lld-link .</p>
+
+<p>Oh, didn’t I mention lld-link ? It’s a drop in replacement for link.exe. lld is also a replacement for ld on unix, and it’s much, much faster than ld and gold so you should <a href="https://lld.llvm.org/">check it out and use it</a>!</p>
+
+<p>We are not quite done yet.</p>
+
+
+<figure>
+    
+        <img src="monkey.jpeg" />
+    
+    
+    <figcaption>
+        <h4>Case consistency at Microsoft is a serious matter</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Microsoft Windows is designed around case insensitive file systems. Which I’m sure looked like a good idea at the time.</p>
+
+<p>However, unless you are masochistic enough to run your Linux machine on FAT, chances are your file-system is case sensitive. And that is an issue for us.</p>
+
+<p>How bad it is, really ? Well…
+<pre>
+<strong>A</strong>cl<strong>UI</strong>.<strong>L</strong>ib
+ahadmin.lib
+wdsClientAPI.<strong>LIB
+P</strong>sapi.<strong>L</strong>ib
+sensorsapi.lib
+<strong>S</strong>etup<strong>API</strong>.<strong>L</strong>ib
+</pre>
+This is just a small selection of files. I don’t suppose there is anything they can do to fix that now, it’s too late.</p>
+
+<p>We could attempt to fix the case issues by changing the filename of every library and header. But that will probably not work since third party libraries aren’t consistent either. So even if we attempt to fix our build files sooner or later we will run on a case issue.</p>
+
+<p>So, the “proper” (for some definition of proper) solution would be to trick the Linux kernel into being case insensitive. And to that we need to use a case-insensitive system. Fortunately, a file can be a file system, so we will create a file large enough to hold the windows SDK, format it with a case-insensitive filesystem such as EXFAT and put the SDK there. Please note that NTFS is case sensitive, even if the Windows kernel is not.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">dd <span style="color:#080;font-weight:bold">if</span>=/dev/zero <span style="color:#369">of</span>=win_sdk_10.fs <span style="color:#369">bs</span>=<span style="color:#00d;font-weight:bold">1024</span> <span style="color:#369">count</span>=<span style="color:#080;font-weight:bold">$((</span><span style="color:#00d;font-weight:bold">1024</span> * <span style="color:#00d;font-weight:bold">100</span> * <span style="color:#00d;font-weight:bold">3</span><span style="color:#080;font-weight:bold">))</span>
+mkfs.exfat win_sdk_10.fs
+mv sdk_10 sdk_10.bak
+mkdir sdk_10
+sudo mount win_sdk_10.fs
+mv sdk_10.bak/* sdk_10</code></pre></div>
+<p>You gotta love Linux.</p>
+
+<p>And now, compiling with clang-cl works. However, running the program exposes a bug.</p>
+
+
+<figure>
+    
+        <img src="term6.png" />
+    
+    
+    <figcaption>
+        <h4>Our program compiles with clang and runs but it exhibits a nasty bug.</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>And yet, the same executable copied to a virtual machine runs fine.</p>
+
+
+<figure>
+    
+        <img src="rainbow21.png" />
+    
+    
+    <figcaption>
+        <h4>Such greetings</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>I’m still not sure where the bug actually is. It appears to be either in range-v3 or my use thereof, and yet it seems odd that it would expose a different run-time behavior.</p>
+
+<p>But that’s what’s great about having a bigger set of development environments, if you have bugs, the are more likely to get exposed. For one, this nasty graphical glitch made me realized I should handle white spaces as a special case.</p>
+
+<p>Oh, and if you want to check what clang is actually doing, you can use Microsoft’s <code>dumpbin.exe</code> found in <code>msvc2017/bin/Hostx64/x64/</code> . This tool is equivalent of ldd and nm for unix.</p>
+
+
+<figure>
+    
+        <img src="term7.png" />
+    
+    
+</figure>
+
+
+<p>Interestingly, the clang artifact looks exactly like a msvc-produced one, albeit with few extra sections. Including the CRT and the vcruntime !</p>
+
+<p>Here is the MSVC built binary.</p>
+
+
+<figure>
+    
+        <img src="term8.png" />
+    
+    
+</figure>
+
+
+<p>Right now ldd-link is <a href="https://lld.llvm.org/windows_support.html">still experimental</a> and offers no support for debug info. clang-cl is <a href="https://clang.llvm.org/docs/MSVCCompatibility.html">mostly done</a> except for some exceptions handling. You can mix and match <code>cl.exe</code> <code>clang-cl</code> <code>link.exe</code> and <code>lld-link</code>.</p>
+
+<p>I can’t advise you to use clang-cl in production (yet, it’s getting there ) but it’s an amazing tool to add to your CI and development environment.</p>
+
+<p>It’s all I have for you today, I hope you’ve learned something!</p>
+
+<h2 id="one-more-thing-see-you-in-part-3-hahahugoshortcode-0xc420ee4000-16-hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fhelloworld_p2%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fhelloworld_p2%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fhelloworld_p2%2f&t=A%20C%2b%2b%20Hello%20World%20And%20the%20Cute%20Heartless%20Rainbow" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

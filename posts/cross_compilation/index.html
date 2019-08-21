@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>On the state of cross-compilation in the C&#43;&#43; World | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">February 2, 2018</h2>
+    <h1 class="title">On the state of cross-compilation in the C&#43;&#43; World</h1>
+    
+    <div class="content">
+      
+
+<p>I wrote a series of article where I compile simple Windows and OSX applications from Linux.</p>
+
+<p>I hope you enjoyed it. For me, it certainly was quite the journey. Or the beginning of one. There is lot of rooms for improvement and we left some area unexplored, including some other major Operating systems like Android and iOS. I also did not talk about debugging.</p>
+
+<p>The open source community is amazing. We should not take projects like llvm, wine, darling, or even osxcross for granted.</p>
+
+<p>And it actually works. We were able to build and even run applications for Windows and Mac, and it’s great.</p>
+
+<p>I of course, didn’t invent anything. Boris Kolpackov demonstrated cl.exe running on Linux in 2015. But it’s not something you will find a lot of documentation for. Linux people have been cross compiling for other architectures since the dawn of times, and mingw64 is quite popular.</p>
+
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="//www.youtube.com/embed/PxFrhYAYF3M" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+
+<p>There are however issues. Most issues can be sum-up as the target OS vendors making cross compilation difficult. Not compilers people, they are amazing. Packagers. All issues we had with windows, OSX and even Qt came done to legal considerations and packaging issues. Assumptions turned into black magic. Black Magic is not, as it turn out cross platform.</p>
+
+<p>Don’t assume my filesystem layout, my tools or my host architecture.</p>
+
+<p>If we had better, legal way to install the OSX and Windows SDK &amp; toolchains, I expect more people would be invested in improving the cross compilation. It wouldn’t take much.</p>
+
+<h2 id="why-even-bother">Why Even Bother ?</h2>
+
+<p>Alien toolchains may seem like a novelty thing to puzzle your friend, but they are incredibly useful.</p>
+
+<h3 id="automation">Automation</h3>
+
+<p>Doing Continuous Integration on Windows and OSX is not trivial. Linux has containerization support, a great virtualization story, a huge range of administration and monitoring tools. So if you have a choice, you will probably want to run your CI server and agents on linux. The ability to cross compile to Windows and Mac makes system administration much easier. And you would need less hardware, reducing costs and idle time of each node.</p>
+
+<h3 id="don-t-break-the-build">Don’t break the build</h3>
+
+<p>While you should have a gate keeper that checks every commit before it gets merge, if you have tested your code on more platforms, you will have the assurance that your code compile on all platforms.</p>
+
+<h3 id="faster-development">Faster development</h3>
+
+<p>If you write cross-platform applications, chances are, sooner or later, you will have to use platform specific APIs. Switching platforms to implement a feature takes an incredible amount of your time. The more you remain on a single development environment, the more productive you will be.</p>
+
+<h3 id="portability-and-reliability">Portability and Reliability</h3>
+
+<p>The more compilers and toolchains in your workflow, the more robust your code will be, and the more portable it will be. Different compilers have different warning sets and different behaviors. You can either let that fact of life be your downfall or use that as an asset!</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>While wine and darling are great, they are of course not suitable for Quality Assurance testing.</p>
+
+<p>If your software is supposed to run on windows 7 to 10, then you need to test it on all these platforms.</p>
+
+<p>However, if you are not shipping a Linux version of your application, which you should, maybe you can run in wine from time to time.</p>
+
+<p>But most your unit tests should work on wine / darling, use that to your advantage</p>
+
+<h2 id="an-aside-on-build-systems">An Aside On Build Systems</h2>
+
+<p>In this series, I used QBS. It’s a weird choice. Why write about something that virtually nobody uses ? Why not CMake ?</p>
+
+<p>Well, first, QBS is language agnostic. Everything pertaining to C++ and C++ tool-chains is scripted in JavaScript files. It make it quite hackable.</p>
+
+<p>And because of that it lends it self to cross toolchains more willingly than other build systems. It can also build multiple targets for various target system during the same invocation in parallel. I am aware of very few build systems that have that ability. build2 is probably your only other option. and build2 is, by all accounts, and amazing build system, in some regards better than QBS ( for one, it supports c++ modules).</p>
+
+<p>It has, however no support for Qt, and while this could in theory be fixed, qbs still has a major advantage.</p>
+
+<p>Both build2 and QBS having full control of the build graph they can do pretty wild things. Like build in parallel multiple independent targets, for different architectures.</p>
+
+<p>In fact, it can build for all the profiles it knows, at the same times. Here I build a hello world for all my compilers</p>
+
+
+<figure>
+    
+        <img src="qbs.png" />
+    
+    
+    <figcaption>
+        <h4>Your move CMake</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>QBS as another thing going for it. A sane, understood syntax: QML. And I truly do believe it offers the best language of any available build tools currently.</p>
+
+<p>QML is about 10 years old and are clear, established rules. And of course, it would be fashionable to hate on its use of JavaScript, however, the scripting is powerful, but not too powerful as to make your build files un-maintainable. For all intent and purposes, the syntax is declarative with an intuitive logic. in that, it avoids the issues scons, waf and other suffer from.</p>
+
+<p>It focus on user-friendliness rather than terseness.</p>
+
+<p>And most importantly, it’s a build system, not a build system generator. It properly detects changes in files, flags, etc and rebuild the graph accordingly.</p>
+
+<p>Of course build2 also has that capacity, as well as others.</p>
+
+<h3 id="cmake-however-has-none-on-these-properties">CMake however, has none on these properties.</h3>
+
+<p>I don’t believe being ubiquitous is a sufficient quality to redeem CMake which, in the end, is just another Makefiles generator with terrible syntax and worse documentation.</p>
+
+<p>In your future projects, consider using qbs or build2 . If you are a library writer, you can offer a cmake files so that your users can link to your libraries. It would be far easier to offer a great c++ package manager if the world settled on good build systems.</p>
+
+<p>QBS links to some Qt shared libraries. Of course that’s a downside. I hope it will get rewritten. Lend a hand if you can. But it’s not something that should stop you from considering QBS when starting your next project.</p>
+
+<h2 id="what-could-be-down-to-improve-the-cross-compilation-story">What could be down to improve the cross compilation story ?</h2>
+
+<h3 id="ask-microsoft-and-apple-to-offer-a-simpler-way-to-get-a-system-sdk">Ask Microsoft and Apple to offer a simpler way to get a System SDK</h3>
+
+<p>If both Microsoft and Apple were to ship their SDK as a tarball, without restrictions on how it can be redistributed, it would be far easier to the open source community to use them and great build Apps with them. It’s a win win. Since both XCode and Windows SDK has no license costs and it’s already possible to share them, albeit not legally, it should be a win-win situation.</p>
+
+<h3 id="don-t-bake-in-assumptions-about-hosts-and-target-system-in-your-build-tools">Don’t bake in assumptions about hosts and target system in your build tools</h3>
+
+<p>Ideally, all the facilities offered by a build tool should be cross platform such that adding targets is easy. However that’s often not the case as we have seen with Qt build scripts, and the inability of QBS to deal with .plist on Linux.</p>
+
+<p>Another issue that I did not touch is code signing. it’s possible to sign windows applications from Linux, the same can not be said for OSX applications. <a href="https://github.com/appknox/isign">Some open sources projects solve that</a>.</p>
+
+<h3 id="support-wine-and-darling">Support Wine and Darling</h3>
+
+<p>Wine and Darling are both fantastic open source projects. Their task is however enormous. Sure, wine is great for games but they should be seen as amazing development tools.</p>
+
+<p>Imagine having the iOS simulator running on Linux ?</p>
+
+<p>For that, they probably need funding, company backing and developer time.</p>
+
+<h3 id="be-grateful-for-llvm">Be grateful for LLVM</h3>
+
+<p>Most of what was presented here would not have been possible without LLVM. Fortunately, it’s a well funded project, but I’m sure they could use some help. Adding support for .tbd files on lld would be a cool project. I like the idea of tdb files, maybe they should be usable on all platforms ?</p>
+
+<h2 id="universal-toolchain-descriptor">Universal Toolchain Descriptor ?</h2>
+
+<p>I though I was being clever and original but apparently the idea was already discussed on the Cpp Slack.</p>
+
+<p>A toolchain is something relatively simple and well understood, as we saw in this series. It’s a compiler, a linker, some other tools for maybe compiling assembly, stripping symbols. It’s a bunch of include paths and library paths, in rare cases a bunch of flags.</p>
+
+<p>So, what if we created a file to describe any c++ toolchain, including aliens one. It would be very similar to our QBS profiles, but with a same syntax, like YAML.</p>
+
+<p>We could specify a standard location for that file on a variety of systems. And build systems could read it to discovers toolchains ( instead or in addition to relying on black magic ).</p>
+
+<p>Of course, it would only really work if all build systems are willing to use that file.</p>
+
+<p>Do you think that is something worth pursuing ?</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fcross_compilation%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fcross_compilation%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fcross_compilation%2f&t=On%20the%20state%20of%20cross-compilation%20in%20the%20C%2b%2b%20World" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

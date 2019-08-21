@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Towards Better C&#43;&#43; Modules - Part 2: Modules naming | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">December 6, 2018</h2>
+    <h1 class="title">Towards Better C&#43;&#43; Modules - Part 2: Modules naming</h1>
+    
+    <div class="content">
+      
+
+<p>In case you have been napping, <a href="/posts/modules_mapping">in the last installment we talked about modules mapping</a>, and so now we must talk
+about modules naming.</p>
+
+<p>You see, modules have names and names are hard.
+In this case, names serve to identify uniquely each module used through the program.</p>
+
+<p>The end of this article proposes to govern module naming through an official WG21 standing document and I would love <em>your</em> opinion.
+But be patient!</p>
+
+<h1 id="dotting-the-identifiers">Dotting the identifiers</h1>
+
+<p>An important point to make is that modules names are composed of a sequence of identifiers separated by dots.
+You might think dots have been granted some semantic meaning, the power of organizing the world hierarchically.
+And you would be wrong.
+Dots are dots. And nothing more.
+They have no more meaning than what you would be inclined to ascribe to them.
+And so, all modules are created equal. There are no submodules, no super module, no set or superset.</p>
+
+<p><code>foo.bar</code> and <code>foo.baz</code>, as far as The standard is concerned, are not related.
+<code>foo</code> and <code>foo.bar</code> aren&rsquo;t either.
+Importing  <code>foo</code> does especially not import the names of <code>foo.bar</code>.
+You can&rsquo;t go wild and <code>import foo.*;</code> because there is no such thing.</p>
+
+<p>What you can do, however, like all respectable spy agencies, is start an <code>export import</code> scheme.
+For example, given a module <code>foo.bar</code> (declared in <code>foo.bar.cppm</code>), you can further have a module
+<code>foo</code> in a file <code>foo.cppm</code></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">export</span> module foo;
+<span style="color:#080;font-weight:bold">export</span> import foo.bar;
+</code></pre></div>
+<p>Doing so makes all names exported by <code>foo.bar</code> visible to <code>foo</code> and all other translation units importing foo,
+thereby creating a hierarchy.
+But <code>foo</code> could equally <code>export import</code> <code>bar</code> or <code>foo_bar</code>;</p>
+
+<h1 id="say-my-name">Say my name.</h1>
+
+<p>You very enthusiastically decide to put all your core business logic in <code>core.cppm</code> and some useful bits in <code>utils.cppm</code>.</p>
+
+<p>Sometimes later, you start using a third party library which has 2 modules: <code>core.cppm</code> where lies the core of the library, and the aptly named <code>utils.cppm</code> containing
+some useful bits of that library.</p>
+
+<p>There was no collusion here, just a violent collision abruptly ending the compilation in a terrible slam.
+Obviously, you did nothing wrong. You were first to claim <code>core.cppm</code> for yourself.
+If only one can use that name, it should be you. <code>core</code> is a great name and it&rsquo;s yours. For now and ever.</p>
+
+<p>Others disagree, conflict arises, we are in a bit of a pickle.</p>
+
+<h1 id="a-bit-of-elvish">A bit of Elvish</h1>
+
+<p>Where would you find <code>namespace aragorn</code>? Well, in the <code>strider</code> module, as one would expect. In turn, that module is logically located
+in the <code>esstr</code> directory (Originally called <code>elessar_telcontar</code>, but that proved problematic in regard to <code>MAX_PATH</code> as windows developers didn&rsquo;t quite care for old Entish).
+The whole thing is part of the <code>Longshanks</code> project, that you will find on <code>github.com/Tolkien/D\&amp;#250;nadan</code>.</p>
+
+<p>It is fortunate indeed that linguists are not C++ developers.</p>
+
+<p>And while most reasonable projects are not as intricate as <em>The Silmarillion</em>, the fact remains that a lot of entities have to be created and named:
+Libraries, modules, directories, files, namespaces&hellip;</p>
+
+<p><a href="/posts/modules_mapping">In my previous article on module mapping</a>, I talked about the benefits of giving modules and files the same names.
+One thing I didn&rsquo;t mention is that names are hard to find and harder to remember. Naming things uniformly make for an easier to read codebase.</p>
+
+<p>Liberated of the pressure of naming files (<a href="https://www.youtube.com/watch?v=79DijItQXMM">What can I say except you&rsquo;re welcome?</a>), let&rsquo;s focus on libraries and namespaces.</p>
+
+<p>If a module is a collection of names, then a namespace is a named collection of names and a library is a named collection of names with a ribbon.
+Of course, a module can open several namespaces, a namespace can spread over several modules, and a library can be composed of several namespaces and modules.
+There are header-only libraries and there will be module-interfaces only libraries.</p>
+
+<p>Maurits Escher was 25 years old when John Venn died. Did they met?</p>
+
+
+<figure>
+    
+        <img src="doll.jpg" />
+    
+    
+    <figcaption>
+        <h4>Modules, libraries and namespaces</h4>
+        <p>
+        
+        <a href="http://angelsbarcelona.com/en/artists/jaime-pitarch/projects/chernobyl/192"> 
+            Jaime Pitarch
+        </a> 
+        </p> 
+    </figcaption>
+    
+</figure>
+
+
+<h3 id="a-daily-reminder">A daily reminder</h3>
+
+<p><strong>A module does not a namespace make</strong>.</p>
+
+<p>Modules are not namespaces and they do not introduce a namespace or provide any kind of namespacing or prefixing or anything of the sort to the names they export.
+Because modules are close-ended and namespaces can be reopened, I do not believe this could possibly be changed or improve upon. Sad Face Emoji</p>
+
+<p>This was your daily reminder that <strong>a module does not a namespace make</strong>.</p>
+
+<h2 id="namespaces-and-libraries">Namespaces and Libraries</h2>
+
+<p>We understand that putting names in the global namespace is bad.
+We also think that ADL makes namespaces terrible.</p>
+
+<p>That doesn&rsquo;t leave us a lot of places to put names.</p>
+
+<p>Being reasonable, we agree that each library should have one top-level namespace containing all its names and maybe avoid nested namespaces.</p>
+
+<p>We also know that putting names in other people namespaces will lead to breakage when they themselves introduce the same names and as such,
+opening other people&rsquo;s namespaces is frowned upon.</p>
+
+<p><strong>Top level namespaces, therefore, do not denote a cohesive set of names but rather signal ownership</strong>.</p>
+
+<p>Libraries also signal ownership. Even if there is a logical unity (a library often provides a cohesive set of features),
+the defining property of libraries is to have an owner, an entity that provides or maintains that library.</p>
+
+<p>And so, namespaces and libraries provide the same functionality: Signaling Ownership.
+Being two side of the same coins, maybe namespaces and libraries should share the same names?</p>
+
+<p>Did I mention Naming is hard? <a href="https://github.com/adishavit/argh"><code>Argh!</code></a></p>
+
+<p><a href="http://loki-lib.sourceforge.net/"><code>Loki</code></a>, a <a href="https://github.com/ipkn/crow"><code>crow</code></a> <a href="http://cute-test.com/"><code>CUTE</code></a> as a <a href="http://botan.randombit.net/"><code>botan</code></a>  <a href="https://github.com/facebook/wangle"><code>wangle</code>d</a> a <a href="http://pistache.io/"><code>pistache</code></a> while I drank this <a href="https://github.com/TonicAudio/Tonic"><code>Tonic</code></a> <a href="https://github.com/Equilibrium-Games/Acid"><code>Acid</code></a> <a href="https://github.com/yuzu-emu/yuzu"><code>Yuzu</code></a> <a href="https://github.com/julianstorer/JUCE"><code>juce</code></a> giving me a <a href="https://github.com/boostorg"><code>boost</code></a>.
+Is  <a href="https://github.com/nlohmann/json"><code>json</code></a> a good name? <a href="https://github.com/riolet/nope.c"><code>Nope</code></a>! <a href="https://github.com/emeryberger/Hoard"><code>Hoard</code></a> of projects are already called like that, it would be <a href="https://github.com/mattiasflodin/reckless"><code>reckless</code></a> <a href="https://github.com/facebook/folly"><code>folly</code></a>.</p>
+
+<p>(If you can make a fun sentence composed of C++ project names, I will retweet it !)</p>
+
+<p>Library and project names are usually creative.
+Yet, they need to be unique, and at the same time, on the shorter side if at all possible.</p>
+
+<p>But how can a name be short and creative while remaining creative and meaningful?</p>
+
+<h1 id="naming-through-the-ages">Naming through the ages</h1>
+
+<h2 id="java">Java</h2>
+
+<p>Java packages offer the same features as C++ modules and namespaces combined.
+The java documentation states</p>
+
+<blockquote>
+<p>Companies use their reversed Internet domain name to begin their package names—for example, com.example.mypackage for a package named mypackage created by a programmer at example.com.</p>
+
+<p>Name collisions that occur within a single company need to be handled by convention within that company, perhaps by including the region or the project name after the company name (for example, com.example.region.mypackage).</p>
+
+<p>Packages in the Java language itself begin with java. or javax.</p>
+</blockquote>
+
+<p>Java is almost 25 years old and yet wise enough to propose a naming scheme that guarantees uniqueness and signal ownership</p>
+
+<h2 id="c-sharp">C&sharp;</h2>
+
+<p><code>C#</code> has assemblies (≈ libraries) and namespaces and does not need modules.</p>
+
+<p>It provides an <a href="https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-namespaces">impressively detailed guideline</a>,
+for the naming of namespaces, which is summarized as:
+    <code>&lt;Company&gt;.(&lt;Product&gt;|&lt;Technology&gt;)[.&lt;Feature&gt;][.&lt;Subnamespace&gt;]</code></p>
+
+<blockquote>
+<p>✓ DO prefix namespace names with a company name to prevent namespaces from different companies from having the same name.</p>
+
+<p>✓ DO use a stable, version-independent product name at the second level of a namespace name.</p>
+</blockquote>
+
+<p>I&rsquo;m not familiar with <code>C#</code>, but I assume it doesn&rsquo;t suffer from the use of nested namespaces.
+Most importantly, <code>&lt;Company&gt;.&lt;Product&gt;</code>, should be unique, and be immutable.</p>
+
+<h2 id="go">Go</h2>
+
+<p>Go realized that packages are resources that need to be uniquely identified and so Go packages can be
+imported through an URL.</p>
+
+<p>It also offers some <a href="https://blog.golang.org/package-names">insights about good packages names</a>. Apparently, <code>util</code> is
+not a good package name. Who would have thought?</p>
+
+<h2 id="rust-and-javascript">Rust and Javascript</h2>
+
+<p>Yes, I dare to bundle these two together, I double dare.</p>
+
+<p>Rust has crates which are the combination of C++ libraries and modules. Rust also has modules, which are namespaces.
+The Javascript ecosystem has packages (libraries) made of modules behaving like namespaces, often implemented as functions.
+Confused?</p>
+
+<p>Fortunately, both Rust and Javascript have official or de-facto centralized package managers (cargo and npm respectively).
+That centralized package manager guarantees the uniqueness of package name, using a simple scheme:
+First arrived, first served.</p>
+
+<p>NPM offers the possibility to prefix a package name by an organization name (<code>google/foo_bar</code>), while cargo does not.
+This is, as it turns out, a recurring topic in these communities.</p>
+
+<h1 id="the-library-that-owns-itself">The library that owns itself</h1>
+
+<p>Let say you want to use <code>Qt</code>, a great library that does 2d graphics, audio and even encrypted networking.
+Qt was developed by Trolltech in the early 90s.
+So, Trolltech owns Qt, and because company names are reasonably unique, <code>trolltech.qt</code> is unique and would rename unique forever.</p>
+
+<p>In 2008, Trolltech was bought by Nokia. Then Nokia was bought by Microsoft and Qt was bought by Digia who then spawned The Qt Company.
+Meanwhile, Qt is also an open source project maintained by the <code>Qt Project</code> who exists in part thanks to the <code>KDE Free Qt Foundation</code>.
+In 2012, some people decide to create a new project called CopperSpice out of a fork of Qt.</p>
+
+<p>You probably know <code>Catch</code>. It&rsquo;s a great testing framework. But do you know Phil Nash, The great guy who created Catch?
+Since then, lots of people have contributed to Catch, which is developed at <a href="github.com/catchorg/catch2">github.com/catchorg/catch2</a>.
+So who maintains <code>Catch</code>? The <code>Catch</code> maintainers, obviously!</p>
+
+<p>In fact, most open source libraries are owned by their maintainers, which means they are own by everyone and no one at the same time.
+And so, should &lsquo;Catch&rsquo; be refered to as <code>catch</code> <code>philnash.catch</code> or <code>catch.catch</code> ? (<a href="https://godbolt.org/z/c2LrCM">oups, <code>catch</code> is a keyword</a>!)</p>
+
+<p>More importantly, projects can be forked.</p>
+
+<p>If Microsoft forks Google&rsquo;s fork of Webkit, is it still Google&rsquo;s? Should it be called <code>google.blink</code> or <code>microsoft.blink</code>?
+Or just <a href="https://chromium.googlesource.com/chromium/src.git/+/62.0.3178.1/third_party/WebKit/Source/platform/wtf/README.md"><code>apple.wtf</code></a> ?</p>
+
+<p>If Opera were to buy both Google and Microsoft, and all the modules and top-level namespaces names are different, would they be able to ever merge these 2 projects back together?</p>
+
+<p>These are real concerns (watch out Microsoft!), because names, like diamonds, are forever.
+Top level namespaces and module names even more so.</p>
+
+<p>Like top level namespaces, module names will be very invasive and spread like <em>The Great Plague</em>, or <em>The GPL</em>.
+Both modules and namespaces can have aliases (with <code>export import</code> for modules), but they can never disappear.</p>
+
+<p>If you look at old java projects, <code>import</code> declarations show the geological record of a bygone era when Sun shined on the ecosystem.</p>
+
+<p>It&rsquo;s not just a matter of API either, modules names can be made part of the ABI. They can&rsquo;t be renamed, <em>ever</em>.</p>
+
+<h1 id="making-sure-the-future-is-backward-compatible">Making sure the future is backward compatible</h1>
+
+<p>We don&rsquo;t have a dependencies manager of meaningful scale.
+But, unicity of names is central to any such tool. <code>vcpkg</code> for example use project names to identify packages and requires names to be unique.
+Having uniquely addressable packages offer many great benefits and opportunity for amazing tooling.
+Having further consistency between project names, module names and library names ensure there are no name collisions and that all libraries can be easily
+used in the same project.</p>
+
+<p>Imagine a tool that download boosts when you type <code>import boost.system.error;</code>  or one that inserts <code>import folly;</code> when you type <code>folly::</code>.</p>
+
+<h1 id="a-call-for-a-standing-document">A call for a standing document</h1>
+
+<p>While <em>The C++ Standard</em> cannot enforce good names, a great many languages provide guidelines for package/namespace/modules/etc
+naming and I think it is important C++ do the same.</p>
+
+<p>The goal is not to enforce unique names (because it is not possible), or to overly constrain naming scheme, but to make sure people do not name their projects in a way
+that would hinder the development of a larger ecosystem.</p>
+
+<p>The C++ Core Guidelines might be another area to explore,
+but they are less official and we can only reap the benefits of consistent naming if everybody follows the same rules.</p>
+
+<h2 id="rough-draft">Rough Draft:</h2>
+
+<ul>
+<li><strong>Prefix module names with an entity and/or a project name to prevent modules from different companies, entities and projects of declaring the same module names.</strong></li>
+<li><strong>Exported top-level namespaces should have a name identic to the project name used as part of the name of the module(s) from which it is exported.</strong></li>
+<li><strong>Do not export multiple top-level namespaces</strong></li>
+<li><strong>Do not export entities in the global namespace outside of the global module fragment.</strong></li>
+<li><strong>Organize modules hierarchically.</strong> For example, if both modules <code>example.foo</code> and <code>example.foo.bar</code> exist as part of the public API of <code>example</code>, <code>example.foo</code> should reexport <code>example.foo.bar</code></li>
+<li><strong>Avoid common names such as <code>util</code> and <code>core</code> for module name prefix and top-level namespace names.</strong></li>
+<li><strong>Use lower-case module names</strong></li>
+<li><strong>Do not use characters outside of the basic source character set in module name identifiers.</strong></li>
+</ul>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Modules might give the C++ community the rare opportunity to federate the ecosystem under a common set of rules.<br />
+This set of rules would permit the emergence of more modern module-oriented dependencies managers and tools.</p>
+
+<p>As modules cannot be renamed, these rules would have to be published along with the same C++ version that introduces modules as a language feature.</p>
+
+<p>What do you think?</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules_naming%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules_naming%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fmodules_naming%2f&t=Towards%20Better%20C%2b%2b%20Modules%20-%20Part%202%3a%20Modules%20naming" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+
