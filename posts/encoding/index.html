@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>C&#43;&#43; compilation: Fifty shades of Mojibake | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">August 17, 2019</h2>
+    <h1 class="title">C&#43;&#43; compilation: Fifty shades of Mojibake</h1>
+    
+    <div class="content">
+      
+
+<p>Interestingly, writing was initially invented as a way to keep track of numbers.
+Words came much later.</p>
+
+<p>Computers are good at numbers. It&rsquo;s the only thing they understand really.
+So text has to be represented as a sequence of numbers which are interpreted
+and ascribed meaning.</p>
+
+<p>Code, in the presence of arbitrary identifiers and string literals as to be considered as text.
+In the context of C++, how is the text of our program interepreted and transcoded during compilation?</p>
+
+<p>Let say we want to execute this program:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Γειά σου Κόσμε&#34;</span>;
+}
+</code></pre></div>
+<p>Possibly, what the compiler sees looks like this:</p>
+
+<pre><code>23696e636c756465203c696f73747265616d3e0a696e74206d
+61696e2829207b0a202020207374643a3a636f7574203c3c20
+22ce93ceb5ceb9ceac20cf83cebfcf8520ce9acf8ccf83cebc
+ceb5223b0a7d0a
+</code></pre>
+
+<p>These numbers represent characters, but which numbers represent which characters?
+How many bytes are used to represent individual characters?</p>
+
+<h2 id="that-s-where-encodings-come-in">That&rsquo;s where encodings come in.</h2>
+
+<p>An encoding is a method by which a sequence of 1 or more bytes is mapped to something we
+understand as being a character.
+There are some nuances there: there are a variety of encodings.</p>
+
+<ul>
+<li><p>Some encodings will map 1 byte (or less) to a unique character which means they can represent a ridiculously low number of characters - that is for example ascii or ebcdic.</p></li>
+
+<li><p>Some encodings will map a fixed number of bytes (often 2) to unique characters.
+Still widely insufficient to represent all characters used by people. That&rsquo;s for example UCS2.</p></li>
+
+<li><p>Some encodings will have a variadic number of bytes per characters, which make them memory efficient at the cost of 0(n) indexing - this is for example UTF-8.</p></li>
+</ul>
+
+<p>Ok, I lied.
+Encodings don&rsquo;t map to characters. <em>Character</em> is a really fuzzy, hard-to-define term.
+Some encodings map to glyphs - basically an index into the font file -  while more modern encodings map to a code point
+which is a number assigned to a character or part of a &ldquo;character&rdquo;.</p>
+
+<p>In any case, each encoding maps to a character set which is, to simplify the set of characters and an encoding can represent.</p>
+
+<p>An encoding maps to one specific character set, while the same character set can be represented with different encodings.
+For example ASCII is both an encoding and a character set, while UTF-8 and UTF-16 are two encoding that map to the <strong>Unicode</strong> character set.</p>
+
+<p>You can find the definition of all these things on the <a href="https://unicode.org/glossary/">Unicode glossary</a></p>
+
+<p>We have been encoding text for machines for over 150 years, and because of reasons that made sense at the time we have a lot of encodings.</p>
+
+<p>Over 250 officially registered.</p>
+
+<h1 id="physical-source-file-characters">Physical source file characters</h1>
+
+<p>You are caught up on the basis, so what&rsquo;s the encoding of the above snippet?
+And therein lies the rub: We don&rsquo;t know, the compiler doesn&rsquo;t know.</p>
+
+<p>Encodings are not stored along the rest of the sequence of bytes that constitute
+our piece of text. Encodings are not something we can observe.</p>
+
+<p>But we can&rsquo;t possibly interpret that sequence of numbers without
+knowing which encoding was used to create it.
+Just like you can&rsquo;t interpret a language without knowing what language is spoken.
+(You can&rsquo;t of course have text without encodings, like you can&rsquo;t have words without language.)</p>
+
+<p>Of course, we can ask the user, maybe the user knows (haha).</p>
+
+<p>Both GCC and MSVC have an option for that (<code>-finput-charset</code> and <code>/source-charset</code> respectively).</p>
+
+<p>That works as long as all your headers included in a given file share the same encoding.
+Do you know how the files that make up you third party libraries were encoded?
+Probably not.
+Might as well guess.
+Which is what compilers do by default. They guess.</p>
+
+<p>Clang and GCC guess everything is encoded in UTF-8, while MSVC derives the encoding from the locale of the computer you are compiling your program on.</p>
+
+<p>MSVC assumptions work great as long as people don&rsquo;t try to ever share their code,
+especially with people living in a different country, or using a different operating system.
+But why would anybody ever do that?</p>
+
+<p>You may have noticed that as long you stick to ASCII encoding,
+your program will compile just fine. This is because most 1 byte encodings, including UTF-8 are ASCII supersets - so they have the same mapping as ASCII for all
+codepoints in the ASCII range.
+The biggest exception to that is EBCDIC which is only used on IBM systems.
+Shift-JIS, - an encoding suitable to encode Japanese <sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> - is mostly ASCII compatible with a couple of exceptions.</p>
+
+<p>This is the first reason why people tend to avoid non-ASCII characters in source code.</p>
+
+<p>But what if you really want you have Greek in your source file?
+Well, GCC and clang will already support that as they assume UTF-8, MSVC has an option to interpret files as UTF-8, so everything is great, right?</p>
+
+<p>Well, not so fast.
+First, that puts the responsibility on downstream code they compile your code with the right flags.
+So some information <strong>necessary</strong> to build your code is offloaded to the build system, which is brittle and a maintenance burden.
+And as I said, compiler flags operate on translation units whereas you want to set the encoding on individual files.
+Modules will solve everything as in a fully modular world 1 file = 1 translation unit.</p>
+
+<p>In the meantime, maybe we can put the encoding in the source file, like <a href="https://www.python.org/dev/peps/pep-0263/">python does</a>?</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#pragma encoding &#34;UTF-8&#34;
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Γειά σου Κόσμε&#34;</span>;
+}
+</code></pre></div>
+<p>There is a couple of issues with is.
+First, it doesn&rsquo;t work for EBCDIC encodings at all.
+If interpreted as EBCDIC, the above UTF-8 file might look something like
+that</p>
+
+<pre><code>?/_/?&gt;?&gt;??????&gt;%??/_??&gt;?_/&gt;???#???????????l?ce?c???'?\
+</code></pre>
+
+<p><em>Doesn&rsquo;t look like C++ to me.</em></p>
+
+<p>Ok, so let&rsquo;s not care about EBCDIC<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">2</a></sup>, as people working on these systems already have to transcode everything.
+We can use that directive at the beginning of all and single files that is UTF-8?</p>
+
+<p>Except <a href="http://utf8everywhere.org/">UTF-8</a> is the right default, all open source code is UTF-8, and compiling in UTF-8 is at this point standard practice.</p>
+
+<p>So forcing people to write <code>#pragma encoding &quot;UTF-8&quot;</code> for the compiler to assume
+UTF-8 would be the bad default.</p>
+
+<p>Maybe we could force compiler to assume UTF-8 unless otherwise specified by a pragma (or some other mechanism)?
+That would break some code. How much is anyone&rsquo;s guess.
+Re-encoding an entire codebase from any encoding to UTF-8 should be a straight forward,
+not breaking operation in most cases, but, ironically, it is likely that some encoding test code would break.</p>
+
+<p>Nevertheless, very few languages don&rsquo;t assume UTF-8 by default, except of course C++.
+And it&rsquo;s becoming necessary, as every compiler speaking the same language as immediate benefits.</p>
+
+<p>First of, the UTF-8 string <code>const char8_t * = u8&quot;こんにちは世界&quot;;</code> might be interpreted by MSVC
+as <code>const char8_t * = u8&quot;ã“ã‚“ã«ã¡ã¯ä¸–ç•Œ&quot;;</code> <a href="https://en.wikipedia.org/wiki/Windows-1252">on many windows machines in the US an western europe</a>.</p>
+
+<p>Not what we want.</p>
+
+<p>Because of course <code>u8</code> string literals are not strings in UTF-8, but strings that will be converted from the source encoding to UTF-8.
+This is <a href="https://stackoverflow.com/questions/23471935/how-are-u8-literals-supposed-to-work?rq=1">confusing and not portable</a>.</p>
+
+<p>But of course it gets worse.
+Some compilers accept identifiers composed of codepoints outside
+of the basic source character set supported by the standard<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">3</a></sup>.</p>
+
+<p>This poses interesting questions:</p>
+
+<ul>
+<li>Can we mangle portably these symbols?</li>
+<li>Can we reflect portably on these symbols?</li>
+</ul>
+
+<p>If all parts of the systems do not expect and produced UTF-8,
+the results are inconsistent and therefore, not portable.</p>
+
+<p>I have no idea what the committee will elect to do,
+but I hope we will at least find a way to push implementers and user gently towards more UTF-8 sources files.</p>
+
+<p>Which is not even one half of the problem.
+Because so far, we only converted the source to the internal encoding - which is not specified but can be thought of as being Unicode.
+So internally, the compiler can represent any codepoint. Great.</p>
+
+<p><code>u8</code>, <code>u</code> and <code>U</code> character and string literals get then converted to UTF-8, utf-16 and utf-32 respectively,
+which is a lossless operation.</p>
+
+<p>So if you have a u8 literal inside a UTF-8 source file, it will be stored in your program memory unmodified -
+although this is not really guaranteed by the standard, an implementation could for example normalize unicode strings.
+Great!</p>
+
+<p>But then, there are <code>char</code> and <code>wchar_t</code> literals. This is where things start to really fall apart.</p>
+
+<p>So, remember that all strings need to be encoded to <em>something</em>. But what?
+C++ will encode all literals with the encoding it think will be used by the operating system of the computer the program will run on.</p>
+
+<p>Most compilers have an option for that but by default, implementations will assume that this is the same encoding as the one
+derived from the locale of the environment the compiler is running on.</p>
+
+<p>This is the <strong>execution encoding</strong>.</p>
+
+<h1 id="presumed-execution-encoding">Presumed execution encoding</h1>
+
+<p>The deeper assumption of course is that the Internet does not exist or all people have all the same locale<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">4</a></sup>
+or there is a binary per encoding.</p>
+
+<p>This of course works wonderfully well on most linux/OSX/Android systems because all components talk UTF-8,
+so the compiler will convert literals to UTF-8, which will then be interpreted as UTF-8 at runtime.</p>
+
+<p>Using MSVC on the other end, the execution encoding, by default, will depend on how your Windows is configured,
+which basically depends on where you live.</p>
+
+<p>All of that raise interesting challenges&hellip;</p>
+
+<ul>
+<li>Conversion from Unicode to non Unicode might be lossy. So they are lossy.
+Implementations are not required to emit a diagnostic and MSVC will happily drop characters
+on the floor<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">5</a></sup> while GCC will make that ill-formed.</li>
+<li>Of course, the assumption that the machine where the code is compiled matches the one of the machine is run is not illustrative
+of the reality.</li>
+<li>The presumed execution encoding is not exposed so the only conversion functions you can use are
+the <a href="https://en.cppreference.com/w/cpp/string/multibyte">delightful ones</a> provided by the C and C++ standards.</li>
+</ul>
+
+<h1 id="oh-so-you-want-to-execute-your-program">Oh, so you want to execute your program?</h1>
+
+<p>At runtime, your program will be confronted by standard facilities such as <code>iostream</code> that might (loosely) transcode
+your text to what they think the environment expects or produces (using wonderful interfaces such as <a href="https://en.cppreference.com/w/cpp/locale/codecvt">codecvt</a> and <a href="https://en.cppreference.com/w/cpp/locale">locale</a>.</p>
+
+<p>Or worse, strings that you want to display but you don&rsquo;t know their encodings (because they come from a part of the system you don&rsquo;t have control over),
+or strings that are simply not text - for example, paths are considering non-displayable bag of bytes on some platforms.</p>
+
+<p>And of course, many systems will produce UTF-8 which simply cannot be converted in the narrow encoding if it is not UTF-8, leading to loss of data - and therefore meaning.</p>
+
+<p>Unfortunately, the standard is somewhat limited there as there is nothing it can do to control its environment.</p>
+
+<p>Windows users can rejoice that it is becoming easier to have well behaving UTF-8 strings in your program thanks to
+the combination of:</p>
+
+<ul>
+<li>The <a href="https://docs.microsoft.com/en-us/cpp/build/reference/UTF-8-set-source-and-executable-character-sets-to-UTF-8?view=vs-2019"><code>/utf8</code> option</a> of MSVC</li>
+<li>The new <a href="https://github.com/microsoft/terminal">windows terminal</a> that should be able to support the full range of unicode codepoints depending on font availability.</li>
+<li>An <a href="https://docs.microsoft.com/en-us/windows/uwp/design/globalizing/use-utf8-code-page">ongoing work</a> to support UTF-8 in the system API - alleviating the need for <code>wchar_t</code>.</li>
+</ul>
+
+<p>I&rsquo;ve started to work on a <a href="https://github.com/cor3ntin/utf8-windows-demo">project to illustrates how this works</a>.</p>
+
+<p>That doesn&rsquo;t solve the problem for EBCDIC platforms and legacy codebases.</p>
+
+<p>Alas, it doesn&rsquo;t appear that the standard will be realistically able to move away from non-unicode encodings any time soon, and the
+narrow and wide literals are here to stay.</p>
+
+<p>Therefore, to properly support text, the standard might have to add <code>char8_t</code> overloads to any standard facilities dealing with text,
+from I/O to reflection, DNS, etc.</p>
+
+<p>I do not think it is worth it trying to patch <code>&lt;locale&gt;</code> or <code>&lt;iostream&gt;</code>, as the assumptions they were designed on are simply no longer valid,
+nor do I think it is worth trying to deprecate them as so much code depend on them.</p>
+
+<p>It will be interesting to see how that pans out from an education perspective. Nevertheless, that duplication is probably a necessary evil;
+Improved Unicode is what ultimately lead to <a href="https://snarky.ca/why-python-3-exists/">Python 3</a> and we might want to avoid that in C++.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">For a very loose definition of &ldquo;suitable&rdquo;. Shift-JIS can only encode a bit over 10% of Japanese characters.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:5"><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4210.pdf">C++ is mostly an ASCII-centric language now</a>
+ <a class="footnote-return" href="#fnref:5"><sup>[return]</sup></a></li>
+
+<li id="fn:2"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-a b c d e f g h i j k l m n o p q r s t u v w x y z" data-lang="a b c d e f g h i j k l m n o p q r s t u v w x y z">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+0 1 2 3 4 5 6 7 8 9
+_ { } [ ] # ( ) &lt; &gt; % : ; . ? * + - / ^ &amp; | ~ ! = , \ &#34; &#39;</code></pre></div> <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+
+<li id="fn:3"><p>It hurts writing that because the idea that locale and encoding are tied to begin with <a href="https://github.com/mpv-player/mpv/commit/1e70e82baa9193f6f027338b0fab0f5078971fbe">is bonkers</a> to begin with.
+But remember these assumptions were made 70 years ago.</p>
+ <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
+<li id="fn:4"><a href="D1854.pdf">I am hoping to make that ill-formed</a>.
+ <a class="footnote-return" href="#fnref:4"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fencoding%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fencoding%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fencoding%2f&t=C%2b%2b%20compilation%3a%20Fifty%20shades%20of%20Mojibake" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

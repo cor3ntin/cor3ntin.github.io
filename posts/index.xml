@@ -6,10 +6,21 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Apr 2019 16:18:53 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 17 Aug 2019 11:46:12 +0200</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>C&#43;&#43; compilation: Fifty shades of Mojibake</title>
+      <link>https://cor3ntin.github.io/posts/encoding/</link>
+      <pubDate>Sat, 17 Aug 2019 11:46:12 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/encoding/</guid>
+      <description>Interestingly, writing was initially invented as a way to keep track of numbers. Words came much later.
+Computers are good at numbers. It&amp;rsquo;s the only thing they understand really. So text has to be represented as a sequence of numbers which are interpreted and ascribed meaning.
+Code, in the presence of arbitrary identifiers and string literals as to be considered as text. In the context of C++, how is the text of our program interepreted and transcoded during compilation?</description>
+    </item>
     
     <item>
       <title>Characters sets: A bad idea since the bronze age</title>
