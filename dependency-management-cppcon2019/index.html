@@ -1,0 +1,2028 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>reveal.js</title>
+
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/white.css">
+        <link rel="stylesheet" href="css/custom.css">
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/seti.css">
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+
+        <script src="js/reveal.js"></script>
+        <script src="js/matter.js"></script>
+        <script src="js/jquery-3.4.1.min.js"></script>
+<style>
+    .tools-grid{
+        display:grid;
+        grid-template-columns: 33% 33% 33%;
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+    }
+    .standard-wording {
+        font-family: serif;
+        font-size: 40px;
+        hyphens: auto;
+        line-height: 2.5;
+    }
+    .flipped {
+        transform: scale(-1, 1);
+        display: inline-block;
+    }
+
+    .footer-left {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .footer-right {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+</style>
+
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+
+                <section data-transition="none" style="height:90%">
+                    <div style="width:100%; height:100%">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <h1>Dependency management</h1>
+                            <h2>At the end of the rainbow</h2>
+                        </div>
+                        <div class="footer-left">Corentin Jabot</div>
+                        <div class="footer-right" style="color:#38A1F3">@cor3ntin</div>
+                    </div>
+                </section>
+
+                <section data-transition="none" style="height:90%">
+                    <div style="width:100%; height:100%">
+                        <div class="footer-left">Corentin Jabot</div>
+                        <div class="footer-right" style="color:#38A1F3">@cor3ntin</div>
+
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <img src="assets/monkey.jpg" class="plain" />
+                        </div>
+                    </div>
+                </section>
+
+
+
+
+
+                </section>
+
+
+                <section>
+                    <blockquote cite="Gary Bernhardt">
+                        Let's talk about a language that doesn't suck
+                        <footer>- Gary Bernhardt</footer>
+                    </blockquote>
+                </section>
+
+
+                <section>
+                    This is a talk about Javascript
+                </section>
+
+                <section>
+                    <code>npm</code>
+                </section>
+
+                <section>
+                    <div style="position:relative" >
+                        <p class="fragment fade-in" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" data-fragment-index="0">
+                        Javascript Package Manager
+                        </p>
+                        <p class="fragment fade-out" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" data-fragment-index="0">
+                        Node Package Manager
+                        </p>
+                    </div>
+                    <aside class="notes">
+                        NPM 2009
+                    </aside>
+                </section>
+
+                <section>
+                    <code>npm install request</code>
+                    <p class="fragment fade-in"><b>fetch</b> a package called <code>request</code></p>
+                    <aside class="notes">
+                        FETCH
+                    </aside>
+                </section>
+
+                <section>
+                    <img src="assets/npm_depgraph_request.png" height=600 class="plain" />
+                </section>
+
+
+                <section>
+                    <img src="assets/request_universe.png" class=" fragment plain" />
+                    Over 1 000 000 packages - in the same universe
+                </section>
+
+
+                <section>
+                    <h1>The left-pad incident</h1>
+                    <p class="fragment fade-in">A package to add padding to a string</p>
+                    <p class="fragment fade-in">Removed by its author</p>
+                </section>
+
+                <section>
+                    <h1>Internet BROKE</h1>
+                </section>
+
+
+                <section>
+                    <h2>Lessons Learned by the JS community</h2>
+                    <ul>
+                    <li class="fragment fade-in">Published dependencies should be immutable</li>
+                    <li class="fragment fade-in">Pin your dependencies</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <h3>Unfortunately</h3>
+                    <h2>Internet was fixed</h2>
+                </section>
+
+                <section>
+                     <img src="assets/breaking-news.png"/>
+                     <aside class="notes">
+                      <ul>
+                        <li> Mostly people made fun of Javascript</li>
+                        <li class="fragment fade-in">Some concerns over micro packages</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <!--
+                <section>
+                    <ul>
+                    <li> Mostly people made fun of Javascript</li>
+                    <li class="fragment fade-in">Some concerns over micro packages</li>
+                    </ul>
+                </section>
+                -->
+
+                <section>
+                    <p> In the C++ community, we were slightly amused </p>
+                    <ul>
+                        <li class="fragment fade-in">It would never happen to us, we are superior beings</li>
+                        <li class="fragment fade-in">Too busy working on the latest command line parser ?</li>
+                        <li class="fragment fade-in">left-pad is trivially implementable</li>
+                    </ul>
+                    <pre class="fragment fade-in"><code data-trim data-noescape class="cpp">
+                    auto left_pad(std::string_view str, int n, char fill = ' ') {
+                        auto padded = right_pad(str, n, fill);
+                        <b>std::rotate</b>(padded.begin(),
+                                    padded.begin() + str.size(),
+                                    padded.end());
+                        return padded;
+                    }
+                    </code></pre>
+                    <p class="fragment fade-in"><em>That's a rotate!</em></p>
+                </section>
+
+                <section>
+                    <ul>
+                        <h3>So, left pad?</h3>
+                        <li class="fragment fade-in" data-fragment-index="1">Made by a junior developer</li>
+                        <li class="fragment fade-in" data-fragment-index="2">No existing functionality</li>
+                        <li class="fragment fade-in" data-fragment-index="3">
+                        <code class="fragment fade-in" data-fragment-index="6" class="js">left-pad/index.js</code>
+                        <pre><code data-trim data-noescape >
+                        <span class="fragment fade-in" data-fragment-index="4">function</span> <span class="fragment fade-in" data-fragment-index="5">leftPad</span> <span class="fragment fade-in" data-fragment-index="4">(str, len){ </span>
+                            var i = -1;
+                            len = len - str.length;
+
+                            while (++i &lt; len) {
+                                str = ' ' + str;
+                            }
+                            return str;
+                        <span class="fragment fade-in" data-fragment-index="4">}</span>
+                        </code></pre>
+                        </li>
+                        <li class="fragment fade-in" data-fragment-index="7">Wrote tests</li>
+                        <li class="fragment fade-in" data-fragment-index="8">Made the code available for other people to use</li>
+                    </ul>
+                </section>
+
+                <section>
+                    I'm pretty sure people still know how to program
+                </section>
+
+                <section>
+                    Sure that implementation is suboptimal and was since modified many times.
+                    <div class="fragment"> <p>How long would it take you to write an implementation that is:</p>
+                        <ul>
+                            <li >Correct</li>
+                            <li>Tested</li>
+                            <li>Efficient</li>
+                            <li>Reusable</li>
+                        </ul>
+                    </div>
+                    <p class="fragment"> <code>npm install left-pad </code> takes a few <b>seconds</b> </p>
+                </section>
+
+
+                <section>
+                    <h1>Package Managers</h1>
+                    <p>Package Managers (npm cargo, pip, etc) are tools that allow to consumme and produce sharable code <b>trivially</b></p>
+                    <ul>
+                        <li>Frictionless</li>
+                        <li>Allow people to focus on the important parts of their software</li>
+                        <li>At the center of a thriving ecosystem</li>
+                        <li>Easier to contribute to other people's projects</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>Package Managers</h1>
+                    <ul>
+                        <li class="fragment">With great power comes a new class of issues</li>
+                        <li class="fragment">Micro packages are inevitable</li>
+                        <li class="fragment">Dependencies are about trust</li>
+                        <li class="fragment">Developer are ultimately responsible of all their dependencies, transitively</li>
+                    </ul>
+                </section>
+
+
+                <section data-transition="none">
+                    <p> C++ developers are not superior beings </p>
+                    <p class="fragment">We just have terrible tools</p>
+                </section>
+
+
+                <section data-transition="none">
+                    <h1>Dependency management</h1>
+                    <h2>At the end of the rainbow</h2>
+                </section>
+
+                <section data-transition="none">
+                    <img src="assets/wd.jpg"/>
+                    <h2>At the end of the rainbow</h2>
+                </section>
+
+                <section data-transition="none">
+                    <img src="assets/wd-unicorn.jpg"/>
+                    <h2>At the end of the rainbow</h2>
+                </section>
+
+                <section  data-transition="none">
+                    <img src="assets/wd-unicorn-rainbow.jpg"/>
+                    <h2>At the end of the rainbow</h2>
+                </section>
+
+  <!--
+                <section>
+                    <blockquote cite="J. Robert Oppenheimer">
+                        Pragmatism is an intellectually safe but ultimately sterile philosophy.
+                        <footer>- J. Robert Oppenheimer</footer>
+                    </blockquote>
+
+                    <blockquote cite="Linus Torvalds" class="fragment">
+                        <span class="fragment"> I am pragmatic. That which works, works, and </span><span>theory can go screw itself.
+                        <p class="fragment">  However, my pragmatism also extends to maintainability, which is why I also want it done well. </p>
+                        <footer>- Linus Torvalds</footer>
+                    </blockquote>
+                </section>
+    -->
+
+                <section data-transition="none">
+                    <h2>Can we make Cargo in C++ ?</h2>
+                    <img src="assets/bjarne.png" class="plain" height=400/>
+                </section>
+
+                 <section data-transition="none">
+                    <h2>Can we make Cargo in C++ ?</h2>
+                    <img src="assets/wordcloud.png" class="plain" height=400/>
+                </section>
+
+                <section>
+                    <h2>This is not a talk about code</h2>
+                    <img src="assets/titus.png" class="fragment" height=400/>
+                </section>
+
+                <section data-transition="none">
+                    <h2 class="fragment">This is not a talk about code</h2>
+                    <h2>This is not a talk about tools</h2>
+
+                    <div  class="fragment">
+                        <h2>I have nothing to talk about</h2>
+                    </div>
+                </section>
+
+
+                <section data-transition="none">
+                <div class="tools-grid" style="z-index:10">
+
+
+                    <img class="plain" src="assets/screw.png" />
+                    <img class="fragment plain" data-fragment-index="2" src="assets/compilation-model.png"/>
+                    <img class="fragment plain" data-fragment-index="1" src="assets/hammer.png"/>
+                    <div>Code</div>
+                    <div class="fragment" data-fragment-index="2">Compilation model</div>
+                    <div class="fragment" data-fragment-index="1">Tools</div>
+                </div>
+                </section>
+
+
+                <section data-transition="none">
+                <div style="border:5px solid black">
+
+                    <img class="plain" src="assets/ecosystem.png" style="
+                        margin: 0 auto;
+                        left: 0;
+                        right: 0;
+                        display: inline-block; position: absolute; width:100%; z-index:-1" />
+                    <div class="tools-grid" style="z-index:10">
+                        <img class="plain" data-fragment-index="1" src="assets/screw.png" />
+                        <img class="plain" data-fragment-index="3" src="assets/compilation-model2.png"/>
+                        <img class="plain" data-fragment-index="2" src="assets/hammer.png"/>
+                        <div data-fragment-index="1">Code</div>
+                        <div data-fragment-index="3">Compilation model</div>
+                        <div data-fragment-index="2">Tools</div>
+                    </div>
+                 </div>
+                 <h3>C++ Ecosystem</h3>
+                </section>
+
+
+                <section>
+                    Dependency management is the glue.
+                </section>
+
+
+                <section>
+                    <h1> We have to talk about everything </h1>
+                    <img class="plain" src="assets/everything.jpg" height=400 />
+                </section>
+
+
+                <section>
+                    <h2>What is a </h2>
+                    <h1>dependency ?</h1>
+                </section>
+
+
+                <section>
+                    <h1> The stuffs needed by a program </h1>
+                </section>
+
+                <section>
+                    <h2>What is a </h2>
+                    <h1>C++ program ? </h1>
+                    <ul>
+                        <li class="fragment">A collection of libraries ?</li>
+                        <li class="fragment">A collection of symbols ?</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>What does the standard say ?</h2>
+                </section>
+
+                <section>
+                    <p class="standard-wording">A program consists of [...] translation units linked together.</p>
+                    <p class="standard-wording">The text of the program is kept in units called source files [...].
+                    <p class="standard-wording">A source file together with all the headers [...] is called a translation unit.</p>
+                </section>
+
+                <section>
+                    <h2>What is a </h2>
+                    <h1>C++ program ? </h1>
+                    <ul>
+                        <li>A collection of libraries ?</li>
+                        <li>A collection of symbols ?</li>
+                        <li>A collection of translation units ?</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Libraries don't exist</h2>
+                    <h3>The standard says nothing neither dynamic or static libraries </h3>
+                    <img class="plain" src="assets/notathing.png"/>
+                </section>
+
+
+                <section>
+                    <p class="standard-wording">A program consists of one or more translation units linked together.</p>
+                </section>
+
+                <section>
+                    <img class="plain" src="assets/tape.jpg" height=200/>
+                    <h2>Header files</h2>
+                     <ul>
+                        <li class="fragment">Copy pasted</li>
+                        <li class="fragment">Unbounded</li>
+                        <li class="fragment">Implementation not tied to interface</li>
+                        <li class="fragment">Not dependable</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p class="standard-wording">A module unit is a translation unit [...] </p>
+                </section>
+
+
+                <section>
+                    <h2>Use modules</h2>
+                    <p class="standard-wording"><span class='flipped'>🦄</span> A program consists of module units linked together. 🦄</p>
+                    <ul>
+                        <li class="fragment">Bounded</li>
+                        <li class="fragment">Consistent interface across the entire program</li>
+                        <li class="fragment">➥ Less ODR violations</li>
+                        <li class="fragment">More tracktable</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <p class="standard-wording">A translation unit consists of a sequence of declarations.</p>
+                    <p class="standard-wording">A declaration is said to be a definition of each entity that it defines.</p>
+                    <p class="standard-wording">Every program shall contain exactly one definition of every [...] function or variable
+                       that is odr-used in that program outside of a discarded statement.</p>
+                </section>
+
+                <section>
+                    <pre><code data-trim data-noescape >
+                        boost::asio::tcp::socket socket(...);
+                    </code></pre>
+                    <span class="fragment">This is what I want</span>
+                </section>
+
+                <section data-transition="none">
+                    <style>
+                    .parentbox {
+                        display:block;
+                        height:700px;
+                        width:200%;
+                        bottom:0;
+                        left:0;
+                    }
+
+                    .rightbox {
+                        display:block;
+                        left:530px;
+                    }
+
+                    .buildbox {
+                        position:absolute;
+                        bottom:0;
+                        left:0;
+                        display:block;
+                        padding:20px;
+
+                    }
+                    .buildboxdef{
+                        width :200px;
+                        height:100px;
+                        bottom:0;
+                        left:0;
+                        display:block;
+                        background-color:#66D9EF;
+                        z-index:100;
+                    }
+
+                    .buildboxnamespace{
+                        width :270px;
+                        height:170px;
+                        background-color:#A6E22E;
+                        z-index:99;
+                    }
+
+                    .buildboxmodule{
+                        width :380px;
+                        height:250px;
+                        background-color:#FD971F;
+                        z-index:98;
+                    }
+
+                    .buildboxfile{
+                        width :480px;
+                        height:320px;
+                        background-color:#F92672;
+                        z-index:97;
+                    }
+
+                    .buildboxtu{
+                        width :510px;
+                        height:380px;
+                        background-color:#75715E;
+                        z-index:96;
+                    }
+
+                    .buildboxlibrary{
+                        width :540px;
+                        height:430px;
+                        background-color:#F8F8F2;
+                        z-index:95;
+                    }
+
+                    .buildboxpackage{
+                        width :590px;
+                        height:510px;
+                        background-color:black;
+                        z-index:94;
+                        color:pink;
+                    }
+
+                     .blackbox{
+                        width :540px;
+                        height:430px;
+                        background-color:#000;
+                        z-index:1000;
+                    }
+
+                    </style>
+                    <div class="parentbox">
+                        <div class="fragment buildbox buildboxpackage" data-fragment-index="6">
+                                Package
+                        </div>
+                        <div class="fragment buildbox buildboxlibrary" data-fragment-index="5">
+                                <code><small>asio.lib</small></code>
+                        </div>
+
+                        <div class="fragment buildbox buildboxtu" data-fragment-index="4">
+                            <code><small>tcp.o</small></code>
+                        </div>
+
+                        <div class="fragment buildbox buildboxfile" data-fragment-index="3">
+                            <code><small>tcp.cppm</small></code>
+                        </div>
+
+                        <div class="fragment buildbox buildboxmodule" data-fragment-index="2">
+                            <code><small>module boost.asio.tcp;</small></code>
+                        </div>
+
+                        <div class="fragment buildbox buildboxnamespace" data-fragment-index="1">
+                            <code><small>boost::asio::tcp</small></code>
+                        </div>
+
+                        <div class="buildbox buildboxdef">
+                            <code>socket</code>
+                        </div>
+
+                        <div class="fragment buildbox blackbox" data-fragment-index="7">
+                        </div>
+                    </div>
+                </section>
+
+
+                <section id="matter-js-1" data-transition="none">
+                    <style>
+                    .parentbox {
+                        display:block;
+                        height:700px;
+                        width:200%;
+                        bottom:0;
+                        left:0;
+                    }
+
+                    .rightbox-s {
+                        display:block;
+                        left:530px;
+
+                    }
+
+                    .buildbox-s {
+                        position:absolute;
+                        bottom:0;
+                        left:0px;
+                        display:block;
+                        padding:20px;
+                        width :700px;
+                        height:700px;
+
+                    }
+
+                    #alan-key-quote {
+                        position:absolute;
+                        z-index:1000;
+                    }
+
+
+                    </style>
+                    <div class="parentbox">
+                        <div id="2dbox" class="buildbox-s">
+                        <blockquote cite="Alan Kay" id="alan-key-quote">
+                        Most software today is very much like an Egyptian pyramid with millions of bricks piled on top of each other, with no structural integrity, but just done by brute force and thousands of slaves.
+                        <footer>- Alan Kay</footer>
+                        </blockquote>
+
+                        <script>
+                        // module aliases
+                        var Engine = Matter.Engine,
+                            Render = Matter.Render,
+                            World  = Matter.World,
+                            Bodies = Matter.Bodies;
+
+                        engine = Engine.create();
+                        render = Render.create({
+                            element: document.getElementById("2dbox"),
+                            engine: engine,
+                            options: {
+                                wireframes: false,
+                                background: 'transparent' // or '#ff0000' or other valid color string
+                            }
+                        });
+
+
+                        // create runner
+                        var runner = Matter.Runner.create();
+
+                        function rand(min, max) {
+                            return Math.floor(Math.random() * (max - min + 1)) + min;
+                        }
+
+                        function run_sim() {
+                            World.clear(engine.world);
+                            Engine.clear(engine)
+                            for(i = 1; i < 7; i++) {
+                                for(j = 1; j < 6; j++) {
+                                    var w = rand(30, 90);
+                                    var h = rand(30, 90);
+                                    var offset_w= rand(-20, 20);
+                                    var bounce = 0.1;
+                                    var mass = rand(0, 1);
+
+
+                                    var boxA = Bodies.rectangle((100 * i)-(50+offset_w), (100* j)-50, w, h, { render: {
+                                        fillStyle: "black",
+                                        lineWidth: 4,
+                                    },
+                                    mass:mass,
+
+                                    }, true);
+                                    World.add(engine.world, boxA)
+                                }
+                            }
+                            var ground = Bodies.rectangle(0, 600, 1200, 1, { isStatic: true, render: {
+                                        fillStyle: "#FFFFFF",
+                                        strokeStyle: "#FFFFFF",
+                                        lineWidth: 0,
+                                    }});
+                            World.add(engine.world, [ground]);
+                            Render.run(render);
+                        }
+                        $('#alan-key-quote').hide()
+                        run_sim()
+
+
+                        Reveal.addEventListener( 'slidechanged', function( event ) {
+                            $('#alan-key-quote').hide()
+                            if(event.currentSlide.id === 'matter-js-1') {
+                                run_sim()
+                            }
+                            else {
+                                Matter.Render.stop(render);
+                                Matter.Runner.stop(runner);
+                            }
+                        } );
+
+
+                        Reveal.addEventListener( 'fragmentshown', function( event ) {
+                                if(event.fragment.id === 'ship-fragment') {
+                                    Matter.Runner.run(runner, engine);
+                                    $('#alan-key-quote').fadeIn(4000)
+                                }
+                            }
+                        );
+
+                        </script>
+
+                        </div>
+                        <div class="rightbox-s">
+                            <p>
+                            <ul>
+                                <li class="fragment">Compilers</li>
+                                <li class="fragment">Build Systems</li>
+                                <li class="fragment">Meta Build Systems</li>
+                                <li class="fragment">Meta Meta Build Systems</li>
+                                <li class="fragment">Loaders</li>
+                                <li class="fragment">Package Managers</li>
+                                <li class="fragment">Package Managers Managers</li>
+                            </ul>
+                            </p>
+                            <img class="plain fragment" src="assets/ships.jpg" width=300/>
+                            <div class="plain fragment" id="ship-fragment" />
+                        <div>
+                    </div>
+                </section>
+
+                <section>
+                    <h1>  What's a C++ program ? </h1>
+                    <ul>
+                        <li>Libraries ?</li>
+                        <li>Symbols ?</li>
+                        <li>Translation units ?</li>
+                        <li><b>Definitions</b></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2> What is a C++ program ? </h2>
+                    <div class="fragment">
+                        <h1>Dependency Graphs</h1>
+                        <img class="plain" src="assets/graphs.jpg"/>
+                    <div>
+                </section>
+
+                <section>
+                    <img class="plain" src="assets/tree.png"/>
+                    <h2>Exponential Complexity</h2>
+                    <aside class="notes">
+                        Need to keep individual nodes simple
+                    </aside>
+                </section>
+
+                <!--
+                <section>
+                    <blockquote cite="Edsger W. Dijkstra">
+                        Simplicity is a great virtue but it requires hard work to achieve it and education to appreciate it.
+                        <p>And to make matters worse: complexity sells better.</p>
+                        <footer>- Edsger W. Dijkstra</footer>
+                    </blockquote>
+                </section>
+                -->
+
+                <section>
+                    The infinite complexity of system provided libraries
+                </section>
+
+                <section data-transition="none">
+                    <div class="tools-grid" style="z-index:10">
+                        <img class="plain" src="assets/blackbox.png" />
+                        <div style="vertical-align:middle">
+                        <ul>
+                            <li class="fragment">Same ?</li>
+                            <li class="fragment">❝Compatible❞ ?</li>
+                            <li class="fragment">Malware ?</li>
+                            <li class="fragment">Evolution ?</li>
+                        </ul>
+                        </div>
+                        <img class="plain" src="assets/blackbox.png"/>
+                        <div><code>libfoo</code><p>System A (Development)</p></div>
+                        <div></div>
+                        <div><code>libfoo</code><p>System B (Deployment) </p></div>
+                    </div>
+                </section>
+
+                <section>
+                    <style>
+                        ul.arrow { list-style: none; padding: 0px; } ul.arrow li:before { content: '⤷'; margin: 0 1em; /* any design */ }
+                    </style>
+
+
+                    <h3>So you use system provided libraries?</h3>
+                    <ul class="arrow">
+                        <li class="fragment">Tied to the deployment platform</li>
+                        <li class="fragment">ABI</li>
+                        <li class="fragment">Tied to the platform compiler</li>
+                        <li class="fragment">Live at tail</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>ABI</h3>
+                    <img class="plain" src="assets/dont.png"/>
+                </section>
+
+                <section>
+                    <h1><span style="font-size:50%">Use</span> C</h1>
+                    <img class="plain fragment" src="assets/cppconlogo.png" height=300/>
+                </section>
+
+                <section data-transition="none">
+                    <h1><span style="font-size:50%">Use</span> C</h1>
+                    <h3 style="color:#888">COM, D-Bus, IPC,...</h3>
+                    <img class="plain" src="assets/hourglass.png" height=300/>
+                </section>
+
+
+                <section>
+                    <h3>Shared libraries can be useful...</h3>
+                    <img class="plain" src="assets/dll.jpg" height=400/>
+                    <h3 class="fragment"><small>(...as long as you don't share them)</small></h3>
+                </section>
+
+                <section>
+                    <h3>The Configuration step of build system</h3>
+                    <img class="plain" src="assets/find.png"/>
+                </section>
+
+                <section>
+                    <h3>The problem with Configuration</h3>
+                    <pre><code>find_package(boost::thread)</code></pre>
+                    <p class="fragment">What does <code>boost::thread</code> mean ?</p>
+                    <img class="fragment plain" src="assets/boostthread.png"/>
+                    <aside class="notes">
+                        <li>What does linux</li>
+                        <li>What does C++ means?</li>
+                    </aside>
+                </section>
+
+                <section>
+                    npm/cargo/dub/go's dep, etc don't find dependencies
+                    <h3>They know where they are</h3>
+                </section>
+
+                <section>
+                    <h3>Dependency management is about sharing a common understanding of names</h3>
+                </section>
+
+                <section>
+                    <h2>Take control over your environment</h2>
+                    <h1>Be the environment</h1>
+                </section>
+
+  <!--
+                <section>
+                    <pre><code data-trim data-noescape >
+                    export extern __declspec(dllimport) void WhereIsCode();
+                    </code></pre>
+                </section>
+
+  -->
+                <section>
+                    <span class="fragment" data-fragment-index="1"><sup><sup>☁️☁️☁️☁️☁️☁️☁️☁️☁️<span class='flipped'>🌈</span></sup>🦄</sup>
+                        <sub>ASPIRE TO</sub><sup><span class='flipped'>🦄</span><sup>🌈☁️☁️☁️☁️☁️☁️☁️☁️☁️</sup></sup></span>
+                    <h3>Build</h3>
+                    <h2>the world</h2>
+                    <h1>from source</h1>
+                    <span class="fragment" data-fragment-index="1"> In a consistent environment </span>
+                </section>
+
+                <section>
+                    <h2>Have source dependencies <span class="fragment" data-fragment-index="1">✱</span></h2>
+                    <div class="fragment" data-fragment-index="1">
+                        <img class="plain" src="assets/robert.png" height=250/>
+                        <br>(✱ if you need them)
+                    </div>
+                    <h5>&nbsp;</h5>
+                    <h3>Be assertive about it</h3>
+                    <h2>No conditional dependencies</h2>
+                </section>
+
+                <section>
+                    <h4>Avoid using the system package manager</h4>
+                    <h5>&nbsp;</h5>
+                    <h3>Do not bundle your dependencies</h3>
+                    <h5>&nbsp;</h5>
+                    <h2>Use a package manager <br>(like vcpkg)</h2>
+                </section>
+
+                <section>
+                    We already build from sources
+                    <h2>Header only libraries</h2>
+                    <ul>
+                        <li><code>template</code></li>
+                        <li><code>concept</code> / Generic programming</li>
+                        <li><code>inline</code></li>
+                        <li><code>auto</code> deduced return type</li>
+                        <li><code>constexpr</code> / <code>consteval</code></li>
+                        <li>Reflection</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Modern C++ really wants to be built from source</h3>
+
+                    <h1 class="fragment">Yet we make our tools blind</h1>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>No access to the sources</li>
+                        <li class="fragment">Save memory
+                            <img class="plain fragment fade-in" src="assets/ram.png"/>
+                        </li>
+                        <li class="fragment">C++ is slow to compile</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <h2>C++</h2>is<h1>slow to compile</h1>
+                    <img class="plain fragment fade-in" src="assets/drakedisgusted.png" height=300/>
+                </section>
+
+                <section>
+                    <h2>C++</h2>has<h1>zero cost abstractions</h1>
+                    <img class="plain fragment fade-in" src="assets/drake.png" height=300/>
+                </section>
+
+
+
+                <section>
+                    <h2>Compile times matter</h2>
+                </section>
+
+                <section>
+                    <h2>Improving c++ compile times</h2>
+                    <ul>
+                        <li>Throw hardware at it</li>
+                        <li>Faster compilers and linkers (lld, link.exe)</li>
+                    </ul>
+                </section>
+
+<!--
+                <section>
+                    <h2>Throw hardware at it</h2>
+                    <figure>
+                    <img class="plain" src="assets/corescpu.svg"/>
+                    <figcaption>Cores per CPU (consummer hardware)</figcaption>
+                    </figure>
+                </section>
+
+                <section>
+                    <h2>Better tools</h2>
+                    <ul>
+                        <li>lld</li>
+                    </ul>
+                    <figure>
+                        <img class="plain" src="assets/link.png"/>
+                        <figcaption>link.exe</figcaption>
+                    </figure>
+                </section>
+
+-->
+
+                <section>
+                    <h2>Improving c++ compile times</h2>
+                    <h2>Build <u><big>AS-IF</big></u> from source</h2>
+                    <ul>
+                        <li>Cache Translation units (ccache) </li>
+                        <li>Cache Interfaces (<b>modules</b>)</li>
+                        <li>Cache template instantiations ?</li>
+                    </ul>
+                    <figure>
+                        <img class="plain" src="assets/zapcc.png" height=370/>
+                    </figure>
+                </section>
+
+
+                <section>
+                    <h3>Improving c++ compile times</h3>
+                    <ul>
+                        <li>Modules</li>
+                        <li>"Module Interface only libraries"</li>
+                        <li>Improved tools</li>
+                        <li>Caching</li>
+                    </ul>
+                    <h2>Is that fast enough?</h2>
+                </section>
+
+                <section>
+                    That one weird trick to make C++ builds super fast
+                    <div class="fragment">
+                    <h2>Do nothing</h2>
+                        ∞
+                    </div>
+                </section>
+
+                <section>
+                    <div style="width:100%; display: flex; flex-direction: row;">
+                        <div style="width:1500px">
+                           <img class="plain" src="assets/qt.svg"/>
+                           <figcaption>QtCore (230 classes)</figcaption>
+                        </div>
+                        <div style="font-size:18pt; margin: auto;">
+                            <ul>
+                                <li>Text/Unicode</li>
+                                <li>2 regex engines</li>
+                                <li>Json</li>
+                                <li>XML</li>
+                                <li>Events</li>
+                                <li>Geometry</li>
+                                <li>Concurrency</li>
+                                <li>Dates/timezones</li>
+                                <li>Containers</li>
+                                <li>IO/Filesystem</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Write</h2>
+                    <h1>small libraries</h1>
+                    (one library per build script)
+
+                    <aside class="notes">
+                        Small libraries are a better alternative to configuration
+                    </aside>
+
+                </section>
+
+                <section>
+                    <h2>Libraries are logical units</h2>
+                    <h2>--</h2>
+                    <h2>Small libraries</h2>
+                        are more easily
+                    <p>
+                    <ul>
+                        <li>Reusable</li>
+                        <li>Maintainable</li>
+                        <li>Composable</li>
+                    </ul>
+                    </p>
+
+                    <aside class="notes">
+                    problem with header only libraries: they do to much
+                    </aside>
+
+
+                </section>
+
+
+                <section>
+                    <h2>Don't pay for what you don't use</h2>
+                </section>
+
+                <section>
+                    <h2>We end up with a lot of libraries and we hate our life</h2>
+                </section>
+
+                <section data-transition="none">
+                    <h2>The C++ Library-ing language</h2>
+                    <h2>&nbsp;</h2>
+                </section>
+
+                <section data-transition="none">
+                    <h2><s>The C++ Library-ing language</s></h2>
+                    <h2>We only care about programs</h2>
+                </section>
+
+                <section>
+                    <img class="plain" src="assets/mess.svg"/>
+                </section>
+
+                 <section>
+                    <img class="plain" src="assets/programs.svg"/>
+                    <aside class="notes">
+                        B2, qbs, etc
+                        Both vcpkg and conan can be configured to be launch from cmake
+                    </aside>
+                </section>
+
+                <section>
+                    <aside class="notes">
+                        So we simplified the workflow
+                    </aside>
+                    <h1>Compiler flags</h1>
+                </section>
+
+                <section>
+                    <h2>No Raw Compiler Flags</h2>
+                </section>
+
+                <section>
+                    <h3>Libraries should only have requirements and dependencies</h3>
+                    <img class="plain" src="assets/requirements.svg" height=400/>
+                </section>
+
+                <section>
+                    <h3>Libraries should only have requirements and dependencies</h3>
+                    <img class="plain" src="assets/flags.svg" height=400/>
+                     <aside class="notes">
+                        <li>Diamond problems</li>
+                        <li>Conan has a system of options</li>
+                        <li>Bazel don't offer a way to set flags</li>
+                    </aside>
+                </section>
+
+                <section>
+                    <h1>Use toolchain files</h1>
+                    Describe the tools (compiler, linker, etc) and their flags
+                    <code>cmake -DCMAKE_TOOLCHAIN_FILE=msvc-x64.cmake</code>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>Debug/Optimization: toolchain file, possibly controlable on a per library basis</li>
+                            <li>Diagnostic: toolchain file</li>
+                            <li>Sanitizers: toolchain file</li>
+                            <li>C++ standard version: requirements</li>
+                        </ul>
+                    </aside>
+
+                </section>
+
+                <section>
+                    <h1>Don't</h1>
+                    <ul>
+                        <li>Have global state</li>
+                        <li>Try to detect the environment</li>
+                        <li>Express anything but requirements and dependencies</li>
+                        <li>Express negatives requirements (such as no exceptions)</li>
+                    </ul>
+                </section>
+
+                <!--
+                <section>
+                    <code>-ffast-math</code>
+                    <ul>
+                        <li>Property of the library ?</li>
+                        <li>Property of the translation unit ? <br>
+                        <code>
+                        [[fastmath]] export module cor3ntin.lossymath;
+                        </code>
+                        </li>
+                        <li>Property of the code? <br>
+                            <code>
+                            template &lt;typename... Args&gt;
+                            [[fastmath]] auto add(Args... a) {}
+                            </code>
+                        </li>
+                        <li>Property of the type</li>
+                            <code>
+                                fast_double d = 0.1;
+                            </code>
+                        </li>
+                    </ul>
+                </section>
+                -->
+
+                <section>
+                    Is it a property of the tool or the code?
+                    <p>Prefer expressing semantics in C++ code!</p>
+                </section>
+
+                <!--
+
+                <section>
+                    <h1>Agenda</h1>
+                    <ul>
+                        <li>Javascript</li>
+                        <li class="fragment">Web Development</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <h3>PHP</h3>
+                    <pre><code data-trim>
+                        <h1>Hello {{name}} !</h1>
+                    </code></pre>
+
+                    <pre class="fragment fade-in"><code data-trim data-noescape >
+                    &lt;?php
+                        echo $templateEngine->render(
+                            template, array('name' => 'CppCon')
+                        );
+                    ?>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>JavaScript</h3>
+                    <pre><code data-trim data-noescape >
+                        const name = "CppCon"
+                        console.log(`Hello $(name) !`)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Ruby</h3>
+                    <pre><code data-trim >
+                        <% if name != "NONE" %>
+                            Hello <%= name %> !
+                        <% end %>
+                    </code></pre>
+
+                    <pre><code data-trim data-noescape >
+                        renderer = ERB.new(template)
+                        print renderer.result()
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Perl</h3>
+                    <h3>Python</h3>
+                    <h3>Haskell</h3>
+                    <h3>...</h3>
+                </section>
+
+
+                <section>
+                    <h3>Variables + template</h3>
+                    <h3>=> Billions of web pages in an instant!</h3>
+                </section>
+
+                <section>
+                    <h3>CPP</h3>
+                    <pre><code data-trim data-noescape >
+                    #ifdef NAME
+                    Hello NAME !
+                    #endif
+                    </code></pre>
+                    <pre class="fragment"><code class="nohighlight" data-trim data-noescape>
+                    cpp -P -DNAME=CppCon template.txt
+                    </pre></code>
+
+                    <pre class="fragment"><code class="nohighlight" data-trim data-noescape>
+                    Hello CppCon !
+                    </pre></code>
+                </section>
+
+                <section>
+                    <img class="plain" src="assets/pound.png"/>
+                </section>
+
+                <section>
+                     <blockquote cite="Dennis M. Ritchie">
+                        The preprocessor was originally considered an optional adjunct to the language itself. Indeed, for some years, it was not even invoked unless the source program contained a special signal at its beginning. This attitude persisted, and explains both the incomplete integration of the syntax of the preprocessor with the rest of the language and the imprecision of its description in early reference manuals.
+                        <footer>- Dennis M. Ritchie</footer>
+                    </blockquote>
+                </section>
+
+                -->
+
+                <section>
+                    Virtually every compiler flags can be observed from code.
+                     <aside class="notes">
+                        That brings an interesting question
+                    </aside>
+                </section>
+
+                 <section>
+                    <pre><code data-trim data-noescape class="cpp">
+                    #include &lt;iostream>
+                    int main() {
+                        std::cout << "Hello Word\n";
+                    }
+                    </pre></code>
+                    <h5> How many C++ programs on this slide?</h5>
+                    <p>
+                        <ul>
+                            <li class="fragment">0 (never expand to a valid program)</li>
+                            <li class="fragment">1</li>
+                        </ul>
+                    </p>
+                </section>
+
+
+                <section data-transition="none">
+                    <figure>
+                    <img class="plain" src="assets/deepfield.jpg"/>
+                    <figcaption>Hubble Deep Field (~3,000 distinct galaxies)</figcaption>
+                    </figure>
+                </section>
+
+
+                <section data-transition="none">
+                    <figure>
+                    <img class="plain" src="assets/dots/0.dot.png"/>
+                    <figcaption>2<sup>1</sup></figcaption>
+                    </figure>
+                </section>
+
+                <section data-transition="none">
+                    <figure>
+                    <img class="plain" src="assets/dots/1.dot.png"/>
+                    <figcaption>2<sup>2</sup></figcaption>
+                    </figure>
+                </section>
+
+
+                <section data-transition="none">
+                    <figure>
+                    <img class="plain" src="assets/dots/2.dot.png"/>
+                    <figcaption>2<sup>3</sup></figcaption>
+                    </figure>
+                </section>
+
+                <section data-transition="none">
+                    <figure>
+                    <img class="plain" src="assets/dots/3.dot.png"/>
+                    <figcaption>2<sup>4</sup></figcaption>
+                    </figure>
+                </section>
+
+                <section data-transition="none">
+                    <figure>
+                    <img class="plain" src="assets/dots/4.dot.png"/>
+                    <figcaption>2<sup>5</sup></figcaption>
+                    </figure>
+                </section>
+
+
+
+                <section>
+                    <pre><code data-trim data-noescape class="cpp">
+                    #include &lt;iostream>
+                    int main() {
+                        std::cout << "Hello Word\n";
+                    }
+                    </pre></code>
+                    <h4>How many C++ programs on this slide ? </h4>
+                    <h1><span style="font-size:33px;">0 -</span> 2 <sup class="fragment">550</sup></h1>
+                     <aside class="notes">
+                        10^82 atoms in in the univers
+                    </aside>
+                </section>
+
+                <section>
+                <div>
+                <pre><code data-trim data-noescape >
+                npm install lodash-modularized
+                    + lodash-modularized@0.0.2
+                    added 197 packages from 6 contributors
+                      and audited 1459 packages in 32.069s
+                </pre></code>
+                This is complex.
+                </div>
+
+                <div style="height:200px">
+                </div>
+
+                <div class="fragment">
+                <pre><code data-trim data-noescape class="cpp">
+                #include &lt;iostream>
+                int main() {
+                    std::cout << "Hello Word\n";
+                }
+                </pre></code>
+                This is chaotic.
+                </div>
+                </section>
+
+
+                <section>
+                    Do you test that code?
+                </section>
+
+
+
+                <section data-transition="none">
+                <pre><code data-trim data-noescape class="cpp">
+                fill_buffer();
+                // flush_buffer(); //Only useful on the zx spectrum, I think
+                write_next_line();
+                </pre></code>
+                </section>
+
+                <section data-transition="none">
+                <pre><code data-trim data-noescape class="cpp">
+                fill_buffer();
+                #ifdef 0
+                    flush_buffer();
+                #endif
+                write_next_line();
+                </pre></code>
+                </section>
+
+                <section data-transition="none">
+                <pre><code data-trim data-noescape class="cpp">
+                fill_buffer();
+                #ifdef COMMODORE64
+                    flush_buffer();
+                #endif
+                write_next_line();
+                </pre></code>
+                </section>
+
+
+                <section data-transition="none">
+                <pre><code data-trim data-noescape class="cpp">
+                fill_buffer();
+                #ifdef __linux__
+                    flush_buffer();
+                #endif
+                write_next_line();
+                </pre></code>
+                </section>
+
+                <section data-transition="none">
+                <pre><code data-trim data-noescape class="cpp">
+                #ifdef __linux__
+                    #define LPCTSTR const char*
+                #endif
+
+                HANDLE open_file(LPCTSTR fileename) {
+
+                #ifdef DEBUG
+                    log("Opening {}", fileename);
+                #endif
+
+                #ifdef WIN32
+                    return CreateFile(fileename,
+                                GENERIC_READ, FILE_SHARE_READ,
+                                nullptr, OPEN_ALWAYS,
+                                FILE_ATTRIBUTE_NORMAL, nullptr);
+                #elif __linux__
+                    return open(fileename,  O_RDONLY);
+                #else
+                    #error "Platform not supported"
+                #endif
+                }
+                </pre></code>
+                </section>
+
+                <section data-transition="none">
+                <pre><code data-trim data-noescape class="cpp">
+                #ifdef __linux__
+                    #define LPCTSTR const char*
+                #endif
+
+                HANDLE open_file(LPCTSTR <b>filename</b>) {
+
+                #ifdef DEBUG
+                    log("Opening {}", fileename);
+                #endif
+
+                #ifdef WIN32
+                    return CreateFile(<b>filename</b>,
+                                GENERIC_READ, FILE_SHARE_READ,
+                                nullptr, OPEN_ALWAYS,
+                                FILE_ATTRIBUTE_NORMAL, nullptr);
+                #elif __linux__
+                    return open(fileename,  O_RDONLY);
+                #else
+                    #error "Platform not supported"
+                #endif
+                }
+                </pre></code>
+                </section>
+
+                <section data-transition="none">
+                <pre><code data-trim data-noescape class="cpp">
+                #ifdef __linux__
+                    #define LPCTSTR const char*
+                #endif
+
+                HANDLE open_file(LPCTSTR filename) {
+
+                #ifdef WIN32
+                    return CreateFile(filename,
+                                GENERIC_READ, FILE_SHARE_READ,
+                                nullptr, OPEN_ALWAYS,
+                                FILE_ATTRIBUTE_NORMAL, nullptr);
+                #elif __linux__
+                    return open(fileename,  O_RDONLY);
+                #else
+                    #error "Platform not supported"
+                #endif
+                }
+                </pre></code>
+                </section>
+
+
+                <section data-transition="none">
+                <pre><code data-trim data-noescape class="cpp">
+                HANDLE open_file(LPCTSTR filename) {
+                    return CreateFile(filename,
+                                GENERIC_READ, FILE_SHARE_READ,
+                                nullptr, OPEN_ALWAYS,
+                                FILE_ATTRIBUTE_NORMAL, nullptr);
+                }
+                </pre></code>
+                </section>
+
+                <section data-transition="none">
+                <pre><code data-trim data-noescape class="cpp">
+                <b>void*</b> open_file(<b>const char*</b> filename) {
+                    return CreateFile<b>A</b>(filename,
+                                GENERIC_READ, FILE_SHARE_READ,
+                                nullptr, OPEN_ALWAYS,
+                                FILE_ATTRIBUTE_NORMAL, nullptr);
+                }
+                </pre></code>
+                </section>
+
+
+                <section>
+                    <h3>Portability in C++: achieved by hidding code from our compilers and tools</h3>
+                    <ul>
+                        <li class="fragment">❝Portable❞ code is in fact not portable</li>
+                        <li class="fragment">System programming is not dependable</li>
+                        <li class="fragment">Can we do better?</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                Every program shall contain exactly one definition of every [...] function or variable that is odr-used in that program outside of a discarded statement.
+                </section>
+
+
+                <section>
+                    <pre><code data-trim data-noescape>
+                    ??? open_file(const char* name) {
+                        if constexpr (???) {
+                            return CreateFileA(name,
+                                GENERIC_READ,
+                                FILE_SHARE_READ,
+                                nullptr,
+                                OPEN_ALWAYS,
+                                FILE_ATTRIBUTE_NORMAL,
+                                nullptr);
+                        }
+                        else if constexpr (???) {
+                            return open(name, O_CREAT | O_RDONLY);
+                        }
+                        static_assert(???, "Platform not supported");
+                    }
+                    </pre></code>
+                </section>
+
+
+                <section>
+                    <pre><code data-trim data-noescape class="cpp">
+                    <span>export module cor3ntin.sys_info;
+                    export</span> <span>namespace cor3ntin::sys_info { </span>
+                    #ifdef WIN32
+                        constexpr bool is_win32 = true;
+                    #else
+                        constexpr bool is_win32 = false;
+                    #endif
+
+                    #ifdef __unix__
+                        constexpr bool is_posix = true;
+                    #else
+                        constexpr bool is_posix = false;
+                    #endif
+                <span>}</span>
+                </pre></code>
+                </section>
+
+
+                <section>
+                    <pre><code data-trim data-noescape class="cpp">
+                    import cor3ntin.sys_info;
+                    ??? open_file(const char* name) {
+                        using namespace cor3ntin;
+                        if constexpr (sys_info::is_win32) {
+                            return CreateFileA(name,
+                                GENERIC_READ,
+                                FILE_SHARE_READ,
+                                nullptr,
+                                OPEN_ALWAYS,
+                                FILE_ATTRIBUTE_NORMAL,
+                                nullptr);
+                        }
+                        else if constexpr (sys_info::is_posix) {
+                            return open(name, O_CREAT | O_RDONLY);
+                        }
+                        static_assert(sys_info::is_posix || sys_info::is_win32,
+                            "Platform not supported");
+                    }
+                </pre></code>
+                </section>
+
+
+                <section>
+                    <pre><code data-trim data-noescape>
+                    <span class="fragment fade-in" data-fragment-index="2"> using native_handle = </span>
+                        <span class="fragment fade-in" data-fragment-index="1"> std::conditional_t &lt; </span>
+                            <span class="fragment fade-in" data-fragment-index="1">sys_info::is_win32, </span>
+                            void* <span class="fragment fade-in" data-fragment-index="1">,</span>
+                            int
+                        <span class="fragment fade-in" data-fragment-index="1">&gt</span> <span class="fragment fade-in" data-fragment-index="2">;</span>
+                </pre></code>
+                </section>
+
+                <section>
+                    <pre><code data-trim data-noescape class="cpp">
+                    import cor3ntin.sys_info;
+                    native_handle open_file(const char* name) {
+                        using namespace cor3ntin;
+                        if constexpr (sys_info::is_win32) {
+                            return CreateFileA(name,
+                                GENERIC_READ,
+                                FILE_SHARE_READ,
+                                nullptr,
+                                OPEN_ALWAYS,
+                                FILE_ATTRIBUTE_NORMAL,
+                                nullptr);
+                        }
+                        else if constexpr (sys_info::is_posix) {
+                            return open(name, O_CREAT | O_RDONLY);
+                        }
+                        static_assert(sys_info::is_posix || sys_info::is_win32,
+                            "Platform not supported");
+                    }
+                </pre></code>
+                </section>
+
+
+                <section>
+                    <pre><code data-trim data-noescape class="cpp">
+                <span class="fragment fade-in" data-fragment-index="2">export module cor3ntin.posix;
+                export</span> <span class="fragment fade-in" data-fragment-index="1">namespace cor3ntin::posix { </span>
+                    int open(const char *path, int oflag);
+                <span class="fragment fade-in" data-fragment-index="1">}</span>
+                </pre></code>
+                </section>
+
+
+                <section>
+                    C uses <code>#define</code> to declare constants.
+                    <figure>
+                    <img class="plain" src="assets/orly.jpg"/>
+                    <figcaption><code>O_RDONLY</code></figcaption>
+                    </figure>
+                </section>
+
+                <section>
+                    <pre><code data-trim data-noescape class="cpp">
+                module;
+                #ifdef __unix__
+                #   include &lt;fcntl.h>
+                #endif
+                export module cor3ntin.posix;
+                export namespace cor3ntin::posix {
+                    int open(const char *path, int oflag);
+
+                #ifdef O_RDONLY
+                    #define __O_RDONLY O_RDONLY
+                    # undef O_RDONLY
+                    constexpr int O_RDONLY = __O_RDONLY;
+                    # undef __O_RDONLY
+                #else
+                    constexpr int O_RDONLY = -1;
+                #endif
+
+                }
+                </pre></code>
+                </section>
+
+                <section>
+                <pre><code data-trim data-noescape class="cpp">
+                #ifdef __linux__
+                #include &lt;sys/stat.h>
+                #include &lt;fcntl.h>
+
+                #endif
+
+                module cor3ntin.posix;
+
+                #ifdef __linux__
+                namespace cor3ntin::posix {
+                    int open(const char *path, int oflag) {
+                        return ::open(path, oflag);
+                    }
+                }
+                #endif
+                </pre></code>
+                </section>
+
+                <!--
+                <section>
+                <pre><code data-trim data-noescape>
+                module;
+                #include &lt;cstdint>
+                export module cor3ntin.win32;
+                export namespace cor3ntin::win32 {
+                    struct SECURITY_ATTRIBUTES {
+                        uint32_t  nLength;
+                        void*     lpSecurityDescriptor;
+                        int       bInheritHandle;
+                    };
+                    void* CreateFileA(
+                        const char* lpFileName,
+                        uint32_t dwDesiredAccess,
+                        uint32_t dwShareMode,
+                        SECURITY_ATTRIBUTES* lpSecurityAttributes,
+                        uint32_t dwCreationDisposition,
+                        uint32_t dwFlagsAndAttributes,
+                        void* hTemplateFile);
+                    void* CreateFileW(/*...*/);
+
+                    constexpr uint32_t CREATE_NEW        = 1;
+                    //...
+                    constexpr uint32_t FILE_ATTRIBUTE_NORMAL = 0x80;
+                }
+                </pre></code>
+                </section>
+                -->
+
+
+                <section>
+                    <pre><code data-trim data-noescape class="cpp">
+                    import &lt;type_traits>
+                    import cor3ntin.posix;
+                    import cor3ntin.win32;
+                    import cor3ntin.sys_info;
+                    export module cor3ntin.io;
+                    export namespace cor3ntin::io {
+
+                    using native_handle = std::conditional_t &lt;sys_info::is_win32,
+                                                                  void*, int>;
+                    native_handle open_file(const char* name) {
+                        using namespace cor3ntin;
+                        if constexpr (sys_info::is_win32) {
+                            return win32::CreateFileA(name, /*...*/);
+                        }
+                        else if constexpr (sys_info::is_posix) {
+                            return posix::open(name, posix::O_CREAT | posix::O_RDONLY);
+                        }
+                        static_assert(sys_info::is_posix || sys_info::is_win32,
+                            "Platform not supported");
+                    }
+                    }
+                </pre></code>
+                </section>
+
+
+                <section>
+                    <h3>Concepts TS - not valid C++20 </h3>
+                    <pre><code data-trim data-noescape data-line-numbers="2,8" class="cpp">
+                native_handle
+                open_file(const char* name) requires sys_info::is_win32 {
+                    using namespace cor3ntin::win32;
+                    return CreateFileA(name, /*..*/);
+                }
+
+                native_handle
+                open_file(const char* name) requires sys_info::is_posix {
+                    using namespace cor3ntin::posix;
+                    return open(name, O_CREAT | O_RDONLY);
+                }
+                </pre></code>
+                </section>
+
+                <section>
+                    <pre><code class="rust">#[cfg(unix)]
+fn open_file(name: String) {}
+
+#[cfg(windows)]
+fn open_file(name: String) {}</pre></code>
+<h5>Maybe we can borrow ideas from Rust</h5>
+                </section>
+
+
+                <section>
+                    <h2>Scalable C</h2>
+                    <ul>
+                        <li>Modules</li>
+                        <li>Namespaces</li>
+                        <li><code>constexpr</code></li>
+                    </ul>
+                    <br><br><br><br>
+                    <img src="assets/c.png"/>
+                </section>
+
+
+                <section>
+                    <h2>Dependable interfaces</h2>
+                    <ul>
+                        <li>Use modules and namespaces</li>
+                        <li>Avoid conditional compilation</li>
+                        <li>Provide a single interface across all platforms and environments</li>
+                        <li>Push platform specific bits to <b>definitions</b> and implementations files</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <code>vcpkg install windows10-sdk</code>
+                    <h3 class="fragment">On linux<h3>
+                </section>
+
+                <section>
+                    <h1> What's a dependency ? </h1>
+                </section>
+
+
+                <section>
+                    <h2> A dependency </h2>
+                    is
+                    <h1> An immutable set of definitions</h1>
+                    with
+                    <h1> an universal name </h1>
+                </section>
+
+
+                <section>
+                    <h2> A library</h2>
+                    is
+                    <h1> a collection of modules</h1>
+                    with
+                    <h1> a name </h1>
+                </section>
+
+
+                <section>
+                    <h1> We don't need a package abstraction </h1>
+                </section>
+
+
+                <section>
+                   Almost Zero Configuration
+                <pre><code>
+[package]
+name = "rustls"
+version = "0.15.2"
+edition = "2018"
+description = "Rustls is a modern TLS library written in Rust."
+homepage = "https://github.com/ctz/rustls"
+repository = "https://github.com/ctz/rustls"
+categories = ["network-programming", "cryptography"]
+
+[dependencies]
+base64 = "0.10"
+log = "0.4.4"
+ring = "0.16.5"
+sct = "0.6.0"
+webpki = "0.21.0"
+                   </code></pre>
+                <aside class="notes">
+                Evoke
+                </aside>
+                </section>
+                <section>
+                    <h1>Agenda</h1>
+                    <ul>
+                        <li>Javascript</li>
+                        <li>The Build System Monade</li>
+                        <li class="fragment">Politics</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <img src="assets/unix.png" height=550/>
+                    <p class="fragment">A few developers</p>
+                    <p class="fragment">A few thousands lines of C code</p>
+                    <aside class="notes">Unix 8 - 1985 (Unix on arpanet:75)</aside>
+                </section>
+
+                <section>
+                    <img src="assets/google.jpg"/>
+                    <p class="fragment">A few thousands developers</p>
+                    <p class="fragment">250 millions lines of C++ Code</p>
+                </section>
+
+                <section>
+                    <video height=400 loop autoplay data-autoplay>
+                        <source src="assets/cute.mp4" type="video/mp4">
+                    </video>
+                    <p style="font-family:Comic Sans MS">That's Cute !</p>
+                </section>
+
+                <section>
+                    <img src="assets/earth.jpg"/>
+                    <p class="fragment">NPM &gt; 1 Million packages  </p>
+                    <p class="fragment">10 millions users</p>
+                    <p class="fragment">30 billions downloads. Per day</p>
+                </section>
+
+                <section>
+                    Packages managers are in effect mono repositories
+                    <p>This is necessary to maintain the common understanding of packages names and versions</p>
+                </section>
+
+
+                <section>
+                    How can we make 3 millions C++ developers share the same codebase?
+                </section>
+
+                <section>
+                    <h1>We need rules</h1>
+                </section>
+
+                <section>
+                    <h1>Rule №1</h1>
+                    <h1>Use THE tool</h1>
+                </section>
+
+                <section>
+                    <h2>Single build system</h2>
+                    <h1>Language</h1>
+                    (npm: yarn, ied, pnpm)
+                </section>
+
+                <section>
+                    <h1>Use vcpkg/conan and cmake</h1>
+                </section>
+
+
+                <section>
+                    <h1>Rule №2</h1>
+                    <h2>Use unique names for your libraries, modules, namespaces</h2>
+
+                    <aside class="notes">
+                    no using namespace std
+                    </aside>
+                </section>
+
+                <section>
+                    <h1>Respect boundaries and scopes</h1>
+                    <ul>
+                        <li>SD-8</li>
+                        <li>Provide package for your own libraries</li>
+                        <li>Do not modularize other people's libraries</li>
+                    </ul>
+
+                    <aside class="notes">
+                    no using namespace std
+                    </aside>
+                </section>
+
+                <!--
+                <section>
+                    <h1>Rule №3</h1>
+                    <h2></h2>
+
+                    <blockquote>
+                        A primary cause of complexity is that software vendors uncritically adopt almost any feature that users want.
+                        <footer>- Niklaus Wirth</footer>
+                    </blockquote>
+                </section>
+                -->
+
+                <section>
+                    <h2>Dependency management is hard</h2>
+                    <ul>
+                        <li>Not really a tool problem !</li>
+                        <li>Keep doing what we have been doing</li>
+                        <li>Put every single library in the standard</li>
+                        <li>Rewrite everything in rust</li>
+                        <li><b>Rewrite some of our tools and adapting some of our code</b></li>
+                    </ul>
+                </section>
+
+                <section>
+                     <style>
+                        ul.sparkles { list-style: none; padding: 0px; } ul.sparkles li:before { content: '✨'; margin: 0 1em; /* any design */ }
+                    </style>
+                    <h2>Dependency management</h2>
+                    <h3>Make all the code visible to all tools</h3>
+                    <ul class="sparkles">
+                        <li>Reliable Refactoring at scale</li>
+                        <li>Code Indexing</li>
+                        <li>Static Analysis</li>
+                        <li>Cross compilation</li>
+                        <li>Better IDE integration</li>
+                        <li>Libraries on compiler explorer</li>
+                        <li>...</li>
+                    </ul>
+                </section>
+
+                <section>
+                     <style>
+                        ul.thumb { list-style: none; padding: 0px; } ul.thumb li:before { content: '👍'; margin: 0 1em; /* any design */ }
+                    </style>
+                    <h2>Write dependable code</h2>
+                    <ul class="thumb">
+                        <li>Build from source</li>
+                        <li>Use modules</li>
+                        <li>Write small modules and libraries</li>
+                        <li>Write simple stateless build scripts</li>
+                        <li>No raw compiler flags in library build scripts</li>
+                        <li>Use toolchain files</li>
+                        <li>Have unconditional dependencies</li>
+                        <li>Provide portable and unconditional interfaces</li>
+                        <li>Live near the head, we have cookies </li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                width: 1024,
+                height: 800,
+                hash: true,
+                history: true,
+                fragmentInURL: true,
+                pdfSeparateFragments: false,
+
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true }
+                ]
+            });
+            Reveal.configure({ slideNumber: true });
+        </script>
+    </body>
+</html>

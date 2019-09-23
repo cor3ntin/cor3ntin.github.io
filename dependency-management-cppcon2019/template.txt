@@ -1,0 +1,3 @@
+#ifdef NAME
+    Hello NAME !
+#endif
