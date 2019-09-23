@@ -1,0 +1,659 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>reveal.js</title>
+
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/white.css">
+        <link rel="stylesheet" href="css/custom.css">
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/seti.css">
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+
+        <script src="js/reveal.js"></script>
+<style>
+
+    @font-face {
+        font-family: 'Noto Sans';
+        src: url('assets/fonts/NotoSans-Regular.ttf') format('truetype'),
+    }
+
+    @font-face {
+        font-family: 'Aaron UMdC Phonetic Alpha';
+        src: URL('assets/fonts/hieroglyphs.ttf') format('truetype');
+    }
+
+
+    @font-face {
+        font-family: 'BabelStone Mayan Numerals';
+        src: URL('assets/fonts/BabelStoneMayanNumerals.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Andron Scriptor Web';
+        src: URL('assets/fonts/medieval.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Noto Sans Brahmi';
+        src: URL('assets/fonts/NotoSansBrahmi-Regular.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Noto Sans Cuneiform';
+        src: URL('assets/fonts/NotoSansCuneiform-Regular.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Noto Sans Egyptian Hieroglyphs';
+        src: URL('assets/fonts/NotoSansEgyptianHieroglyphs-Regular.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Noto Sans Phoenician';
+        src: URL('assets/fonts/NotoSansPhoenician-Regular.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Noto Color Emoji';
+        src: URL('assets/fonts/NotoColorEmoji.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Noto Sans Imperial Aramaic';
+        src: URL('assets/fonts/NotoSansImperialAramaic-Regular.ttf') format('truetype');
+    }
+
+
+    body {
+        font-family: 'Noto Sans Imperial Aramaic', 'Noto Color Emoji', 'Noto Sans Phoenician', 'Noto Sans Egyptian Hieroglyphs', 'Noto Sans Cuneiform', 'Noto Sans Brahmi', "BabelStone Mayan Numerals", "Noto Sans", "Noto Sans CJK JP", sans-serif !important;
+    }
+
+    .tools-grid{
+        display:grid;
+        grid-template-columns: 33% 33% 33%;
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+    }
+    .standard-wording {
+        font-family: serif;
+        font-size: 40px;
+        hyphens: auto;
+        line-height: 2.5;
+    }
+    .flipped {
+        transform: scale(-1, 1);
+        display: inline-block;
+    }
+
+    .footer-left {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .footer-right {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    .manuscript {
+        text-align: justify;
+    }
+
+    .manuscript p::first-letter {
+        font-weight: bold;
+        color: #FF2400;
+        font-size: 200%;
+        float: left;
+        margin-right: 5px
+    }
+
+
+    table * {
+        font-size:16pt;
+        font-family: 'Noto Sans Brahmi', 'Andron Scriptor Web', "BabelStone Mayan Numerals", "Noto Sans", "Noto Sans CJK JP", sans-serif !important;
+    }
+
+    table.emoji * {
+        font-size:45pt  !important;
+    }
+
+    table, tr, td{
+        border: none !important;
+    }
+
+
+    ul.ul2columns {
+        columns: 2 !important;
+        -webkit-columns: 2;
+        -moz-columns: 2;
+        list-style-position: inside;
+    }
+
+
+
+</style>
+
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+
+                <section data-transition="none" style="height:90%">
+                    <div style="width:100%; height:100%">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <h1>Text</h1>
+                        </div>
+                        <div class="footer-left">Corentin Jabot</div>
+                        <div class="footer-right" style="color:#38A1F3">@cor3ntin</div>
+                    </div>
+                </section>
+
+                <section>
+                    <h5>A long time ago</h5>
+                    <img src="assets/Expansion_d_homo_sapiens.svg" class="plain" height=400 />
+                    <h5>In galaxy not far away at all</h5>
+                </section>
+
+                <section class="all-fonts" data-transition="none">
+                    <table cellspacing="0" cellpadding="0">
+                    <aside class="notes">
+                        Cuneiform,
+                        Hieroglyps,
+                        Chinese
+                        Phoenician,
+                        Aramaic
+                        Ancient greek,
+                        Etruscan,
+                        Roman,
+                        Brahmi,
+                        Mayan,
+                        Elder Futhark,
+                        lower case letters
+                        arabic,
+                        Japanese,
+                        Tibetan,
+                        Japanese,
+                        cyrillic,
+                        Japanese,
+                        Devanagari,
+                        Korean
+                    </aside>
+                    <tr>
+                        <td>3200  BCE</td>
+                        <td>𒁹  𒈫 𒐍 𒀭 𒅅 𒊓 𒋟</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>2000  BCE</td>
+                        <td>𓇍𓅓𓊵    𓃾 𓉐 𓌙 𓇯 𓀠 𓏲 𓏭 𓈈 𓄤 𓂝 𓂧 𓌅 𓈖 𓆓 𓊽 𓁹 𓂋 𓇑 𓃻 𓁶 𓌓 𓏴</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>1200  BCE</td>
+                        <td>目 人 木 魚 马 马 豕  丹佛你好</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>1100  BCE</td>
+                        <!-- Phoenician 1100  BCE-->
+                        <td>𐤕 𐤔 𐤓 𐤒 𐤑 𐤐 𐤏 𐤎 𐤍 𐤌 𐤋 𐤊 𐤉 𐤈 𐤇 𐤆 𐤅 𐤄 𐤃 𐤂 𐤁 𐤀</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>800  BCE</td>
+                        <!-- Aramaic 800  BCE -->
+                        <!--Abjad, right to left -->
+                        <td>𐡕 𐡔 𐡓 𐡒 𐡑 𐡐 𐡏 𐡎 𐡍 𐡌 𐡋 𐡊 𐡉 𐡈 𐡇 𐡆 𐡃 𐡄 𐡃 𐡂 𐡁 𐡀
+                         <!-- Old Greek --><br/>
+                        <span class="fragment"> Α Β Γ Δ Ε Ϝ Ζ Η Θ Ι Κ Λ 𐌌 Ν Ξ Ο Π Ϻ Ϙ Ρ Σ Τ Ͳ Υ Φ Χ Ψ Ω</span>
+                        </td>
+                    </tr>
+                     <tr class="fragment">
+                        <td>700  BCE</td>
+                        <td>
+                        𐌀 𐌂 𐌄 𐌅 𐌆 𐌇 𐌈 𐌉 𐌊 𐌋 𐌌 𐌍 𐌐 𐌑 𐌒 𐌓 𐌔 𐌕 𐌖 𐌗 𐌘 𐌙 𐌚 <br/>
+                        <span class="fragment">A B C D E F Z H I K L M N O P Q R S T V X</span>
+                        </td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>200  BCE</td>
+                        <td class="all-fonts">
+                        <!-- Brahmi (proto indian)-->
+                        𑀓 𑀔 𑀕 𑀖 𑀗 𑀘 𑀙 𑀚 𑀛 𑀜 𑀝 𑀞 𑀟 𑀠 𑀡 𑀢 𑀣 𑀤 𑀥 𑀦 𑀧 𑀨 𑀩 𑀪 𑀫 𑀬 𑀭 𑀮 𑀯 𑀰 𑀱 𑀲 𑀳<br/>
+                        <!-- mayan numerals -->
+                        <span class="fragment">𝋠	𝋡	𝋢	𝋣	𝋤	𝋥	𝋦	𝋧	𝋨	𝋩	𝋪	𝋫	𝋬	𝋭	𝋮	𝋯 𝋰	𝋱	𝋲	𝋳</span>
+                        </td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>200  CE</td>
+                        <td class="all-fonts">
+                        <!-- Elder Futhark-->
+                        ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚻ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛋ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛝ ᛟ ᛞ<br/>
+                        </td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>400  CE</td>
+                        <td class="all-fonts">
+                        a b c d e f h i j k l m n o p q r s t v x z<br/><span class="fragment">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        السلام عليكم
+                        </span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>600  CE</td>
+                        <td class="all-fonts">
+                        挨拶<br/>
+                        <span class="fragment">ༀ ༁ ༂ ༃ ༄ ༅ ༆ ༇ ༈ ༉ ༊ ༑ ༒ ༓ ༔ ༕  ༖ ༗ ࿐ ࿑ ࿒ ࿓ ࿉ ࿊ ࿋ ࿌</span>
+                    </td>
+                    </tr>
+                    <tr class="fragment">
+                    <td>900  CE</td>
+                    <td class="all-fonts">
+                    <!-- Hiragana (800)-->
+                    こんにちは<br/>
+                    <!-- cyrillic -->
+                    <span class="fragment">А В Г Д Е Ж Ѕ Ꙁ И І К Л М О П Р С Т ОУ Ф Х Ѡ Ц Щ ЪІ Ѣ Ꙗ Ѥ Ю Ѫ Ѭ Ѧ Ѩ Ѯ Ѱ Ѳ Ѵ Ҁ</span><br/>
+                     <!-- Katanaka (800)-->
+                    <span class="fragment">ハロー</span><br/>
+                    <!--Devanagari -->
+                    <span class="fragment">नमस्ते, दुनिया</span><br/>
+
+                    </td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>1400  CE</td>
+                        <td class="all-fonts">
+                        안녕하십니까<br/>
+                        </td>
+                    </tr>
+                    </table>
+                     <span class="fragment"></span>
+                </section>
+
+                <section class="all-fonts" data-transition="none">
+                    <table cellspacing="0" cellpadding="0">
+                    <tr >
+                        <td>3200  BCE</td>
+                        <td>□□□□□□□□□□□□□□□□□□□□□□□□□</td>
+                    </tr>
+                    <tr >
+                        <td>2000  BCE</td>
+                        <td>ð“‡ð“…“ð“Šµ    ð“ƒ¾ ð“‰ ð“Œ™ ð“‡¯ ð“€  ð“² ð“­ ð“ˆˆˆ– ð“† ð“‚‹ ð“‡‘ ð“ƒ» ð“¶ ð“Œ“ ð“´</td>
+                    </tr>
+                    <tr >
+                        <td>1200  BCE</td>
+                        <td>ç›® äºº æœ¨ é­š é©¬ é©¬ è±•  ä¸¹ä½›ä½ å¥½</td>
+                    </tr>
+                    <tr >
+                        <td>1100  BCE</td>
+                        <!-- Phoenician 1100  BCE-->
+                        <td>?% ?% ?# ?%? ?" ?" ?% "e% R ?ｷ?Q ?%S ?%T O%P ?%U ?%W ?%X</td>
+                    </tr>
+                    <tr >
+                        <td>800  BCE</td>
+                        <!-- Aramaic 800  BCE -->
+                        <!--Abjad, right to left -->
+                        <td>ð¡• ð¡” ð¡“ ð¡’ ð¡‘ ð¡ ð¡ ð¡Ž ð¡ ð¡Œ ð¡‹ ð¡Š ð¡‰ ð¡ˆ ð¡‡ ð¡† ð¡ƒ ð¡„ ð¡ƒ ð¡‚ ð¡ ð¡€
+                         <!-- Old Greek --><br/>
+                        <span > Î‘ Î’ Î“ Î” Î• Ïœ Î– Î— Î˜ Î™ Îš Î› ðŒŒ Î Îž ÎŸ Î  Ïº Ï˜ Î¡ Î£ Î¤ Í² Î¥ Î¦ Î§ Î¨ Î©</span>
+                        </td>
+                    </tr>
+                     <tr >
+                        <td>700  BCE</td>
+                        <td>
+                        ðŒ€ ðŒ‚ ðŒ„ ðŒ… ðŒ† ðŒ‡ ðŒˆ ðŒ‰ ðŒŠ ðŒ‹ ðŒŒ ðŒ ðŒ ðŒ˜ ðŒ™ ðŒš <br/>
+                        <span >A B C D E F Z H I K L M N O P Q R S T V X</span>
+                        </td>
+                    </tr>
+                    <tr >
+                        <td>200  BCE</td>
+                        <td class="all-fonts">
+                        <!-- Brahmi (proto indian)-->
+                        ð‘€“ ð‘€” ð‘€• ð‘€– ð‘€— ð‘€˜ ð‘€™ ð‘€š ð‘€› ð‘€œ ð‘€ ð‘€ž ð‘€Ÿ ð€¯ ð‘€° ð‘€± ð‘€² ð‘€³<br/>
+                        <!-- mayan numerals -->
+                        <span >ð‹ð‹¡     ð‹¢     ð‹£     ð‹¤     ð‹¥     ð‹¦     ð‹§     ð‹¨     ð‹©     ð‹ª     ð‹«     ð‹¬     ð‹­     ð‹®     ð‹¯ ð‹° ð‹±     ð‹²     ð‹³</span>
+                        </td>
+                    </tr>
+                    <tr >
+                        <td>200  CE</td>
+                        <td class="all-fonts">áš  áš¢ áš¦ áš¨ áš± áš² áš· áš¹ áš» áš¾ á› á›ƒ á›‡ á›ˆ á›‰ á›‹ á› á›’ á›– á›— á›š á›œ á› á</td>
+                    </tr>
+                    <tr >
+                        <td>400  CE</td>
+                        <td class="all-fonts">
+                        a b c d e f h i j k l m n o p q r s t v x z<br/><span >
+                        Ø§Ù„Ø³Ù„Ø§Ù… Ø¹Ù„ÙŠÙƒÙ…
+                        </span></td>
+                    </tr>
+                    <tr >
+                        <td>600  CE</td>
+                        <td class="all-fonts">
+                        æŒ¨æ‹¶<br/>
+                        <span >ｧ｡?? ｧ｡?? ｧ｡?? ｧ｡?? ｧ｡?? ｧ｡?? ｧ｡?? ｧ｡?? ｧ｡?? ｧ｡?? ｧ｡?ｨ｢ｩ ｧ｡?ｨｨ ｧ｡?ｨｪ ｧ｡?? ｧ｡?? ｧ｡?? ｧ｡?｢</span>
+                    </td>
+                    </tr>
+                    <tr >
+                    <td>900  CE</td>
+                    <td class="all-fonts">
+                    <!-- Hiragana (800)-->
+                    ã“ã‚“ã«ã¡ã¯<br/>
+                    <!-- cyrillic -->
+                    <span >Ð Ð’ Ð“ Ð” Ð• Ð– Ð… ê™€ Ð˜ Ð† Ðš Ð› Ðœ Ð Ðž ÐŸ Ð  ÐÐŸ ¡¦ Ñ¨ Ñ® Ñ° Ñ² Ñ´ Ò€</span><br/>
+                     <!-- Katanaka (800)-->
+                    <span >ãƒãƒ­ãƒ¼</span><br/>
+                    <!--Devanagari -->
+                    <span >à¤¨à¤®à¤¸à¥à¤¤à¥‡, à¤¦à¥à¤¨à¤¿à¤¯à¤¾</span><br/>
+
+                    </td>
+                    </tr>
+                    <tr >
+                        <td>1400  CE</td>
+                        <td class="all-fonts">
+                        ì•ˆë…•í•˜ì‹­ë‹ˆê¹Œ<br/>
+                        </td>
+                    </tr>
+                    </table>
+                     <span ></span>
+                </section>
+                <section>
+                    <h2>Text is complicated</h2>
+                </section>
+
+                <section>
+                    <p><em>What do you mean when you say nothing at all ?</em><br/><b> - Kate Gregory</b></p>
+                    <p class="fragment"><em>What do you mean?</em><br/><b>- Kevlin Henney</b></p>
+                    <p class="fragment"><em>What do you mean when you say æ–‡å—åŒ–ã‘?</em></p>
+                </section>
+
+                <section>
+                    <h2>Text is just semantics</h2>
+                </section>
+
+                <section>
+                    <h2>No need to care about text...</h2>
+                    <div  class="fragment">
+                    <h2>... unless you have users</h2>
+                    <ul class="ul2columns">
+                        <li>Communication</li>
+                        <li>Payroll</li>
+                        <li>Trading</li>
+                        <li>Commerce</li>
+                        <li>UI</li>
+                        <li>User-facing i/o</li>
+                        <li>CppCon Badges</li>
+                    </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>ASCII ?</h2>
+                    <img src="assets/asciimap.png" class="plain" />
+                </section>
+                <section>
+                <h1>ASCII <h1>
+                <h4>Seriously Can't Interchange Information</h4>
+                <ul class="ul2columns">
+                <li>ångströms</li>
+                <li>café</li>
+                <li>resumé</li>
+                <li>piñata</li>
+                <li>Beyoncé</li>
+                <li>naïve</li>
+                <li>façade</li>
+                <li>hāngi</li>
+                <li>belovèd</li>
+                <li>latté</li>
+                </ul>
+                </section>
+
+                <!--
+                <section>
+                    <img src="assets/Writing_systems_worldwide.png" class="plain" />
+                </section>
+                -->
+                <section>
+                    <img src="assets/writin-systems.svg" class="plain" />
+                </section>
+                <!--<section>
+                    <h2> Latin covers a large base <h2>
+                    <h1>&#8230;<h1>
+                    <h1> ⍰ ? ¿ ❔❓ ？ ⁇ ﹖<h1>
+                </section>-->
+                <section>
+                <div style="font-size:20pt; line-height: 20pt;">
+                0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | }Ā ā Ă ă Ą ą Ć ć Ĉ ĉ Ċ ċ Č č Ď ď Đ đ Ē ē Ĕ ĕ Ė ė Ę ę Ě ě Ĝ ĝ Ğ ğ Ġ ġ Ģ ģ Ĥ ĥ Ħ ħ Ĩ ĩ Ī ī Ĭ ĭ Į į İ ı Ĳ ĳ Ĵ ĵ Ķ ķ ĸ Ĺ ĺ Ļ ļ Ľ ľ Ŀ ŀ Ł ł Ń ń Ņ ņ Ň ň ŉ Ŋ ŋ Ō ō Ŏ ŏ Ő ő Œ œ Ŕ ŕ Ŗ ŗ Ř ř Ś ś Ŝ ŝ Ş ş Š š Ţ ţ Ť ť Ŧ ŧ Ũ ũ Ū ū Ŭ ŭ Ů ů Ű ű Ų ų Ŵ ŵ Ŷ ŷ Ÿ Ź ź Ż ż Ž ž ſ ƀ Ɓ Ƃ ƃ Ƅ ƅ Ɔ Ƈ ƈ Ɖ Ɗ Ƌ ƌ ƍ Ǝ Ə Ɛ Ƒ ƒ Ɠ Ɣ ƕ Ɩ Ɨ Ƙ ƙ ƚ ƛ Ɯ Ɲ ƞ Ɵ Ơ ơ Ƣ ƣ Ƥ ƥ Ʀ Ƨ ƨ Ʃ ƪ ƫ Ƭ ƭ Ʈ Ư ư Ʊ Ʋ Ƴ ƴ Ƶ ƶ Ʒ Ƹ ƹ ƺ ƻ Ƽ ƽ ƾ ƿ ǀ ǁ ǂ ǃ Ǆ ǅ ǆ Ǉ ǈ ǉ Ǌ ǋ ǌ Ǎ ǎ Ǐ ǐ Ǒ ǒ Ǔ ǔ Ǖ ǖ Ǘ ǘ Ǚ ǚ Ǜ ǜ ǝ Ǟ ǟ Ǡ ǡ Ǣ ǣ Ǥ ǥ Ǧ ǧ Ǩ ǩ Ǫ ǫ Ǭ ǭ Ǯ ǯ ǰ Ǳ ǲ ǳ Ǵ ǵ Ƕ Ƿ Ǹ ǹ Ǻ ǻ Ǽ ǽ Ǿ ǿ Ȁ ȁ Ȃ ȃ Ȅ ȅ Ȇ ȇ Ȉ ȉ Ȋ ȋ Ȍ ȍ<div style="font-size:28pt; display: inline-block; margin:30px;">Latin: &nbsp;>1000 characters</div>  Ȏ ȏ Ȑ ȑ Ȓ ȓ Ȕ ȕ Ȗ ȗ Ș ș Ț ț Ȝ ȝ Ȟ ȟ Ƞ  ȡ Ȣ ȣ Ȥ ȥ Ȧ ȧ Ȩ ȩ Ȫ ȫ Ȭ ȭ Ȯ ȯ Ȱ ȱ Ȳ ȳ ȴ ȵ ȶ ȷ ȸ ȹ Ⱥ Ȼ ȼ Ƚ Ⱦ ȿ ɀ Ɂ ɂ Ƀ Ʉ Ʌ Ɇ ɇ Ɉ ɉ Ɋ ɋ Ɍ ɍ Ɏ ɏ Ḁ ḁ Ḃ ḃ Ḅ ḅ Ḇ ḇ Ḉ ḉ Ḋ ḋ Ḍ ḍ Ḏ ḏ Ḑ ḑ Ḓ ḓ Ḕ ḕ Ḗ ḗ Ḙ ḙ Ḛ ḛ Ḝ ḝ Ḟ ḟ Ḡ ḡ Ḣ ḣ Ḥ ḥ Ḧ ḧ Ḩ ḩ Ḫ ḫ Ḭ ḭ Ḯ ḯ Ḱ ḱ Ḳ ḳ Ḵ ḵ Ḷ ḷ Ḹ ḹ Ḻ ḻ Ḽ ḽ Ḿ ḿ Ṁ ṁ Ṃ ṃ Ṅ ṅ Ṇ ṇ Ṉ ṉ Ṋ ṋ Ṍ ṍ Ṏ ṏ Ṑ ṑ Ṓ ṓ Ṕ ṕ Ṗ ṗ Ṙ ṙ Ṛ ṛ Ṝ ṝ Ṟ ṟ Ṡ ṡ Ṣ ṣ Ṥ ṥ Ṧ ṧ Ṩ ṩ Ṫ ṫ Ṭ ṭ Ṯ ṯ Ṱ ṱ Ṳ ṳ Ṵ ṵ Ṷ ṷ Ṹ ṹ Ṻ ṻ Ṽ ṽ Ṿ ṿ Ẁ ẁ Ẃ ẃ Ẅ ẅ Ẇ ẇ Ẉ ẉ Ẋ ẋ Ẍ ẍ Ẏ ẏ Ẑ ẑ Ẓ ẓ Ẕ ẕ ẖ ẗ ẘ ẙ ẚ ẛ ẜ ẝ ẞ ẟ Ạ ạ Ả ả Ấ ấ Ầ ầ Ẩ ẩ Ẫ ẫ Ậ ậ Ắ ắ Ằ ằ Ẳ ẳ Ẵ ẵ Ặ ặ Ẹ ẹ Ẻ ẻ Ẽ ẽ Ế ế Ề ề Ể ể Ễ ễ Ệ ệ Ỉ ỉ Ị ị Ọ ọ Ỏ ỏ Ố ố Ồ ồ Ổ ổ Ỗ ỗ Ộ ộ Ớ ớ Ờ ờ Ở ở Ỡ ỡ Ợ ợ Ụ ụ Ủ ủ Ứ ứ Ừ ừ Ử ử Ữ ữ Ự ự Ỳ ỳ Ỵ ỵ Ỷ ỷ Ỹ ỹ Ỻ ỻ Ỽ ỽ Ỿ ỿ ꜠ ꜡ Ꜣ ꜣ Ꜥ ꜥ Ꜧ ꜧ Ꜩ ꜩ Ꜫ ꜫ Ꜭ ꜭ Ꜯ ꜯ ꜰ ꜱ Ꜳ ꜳ Ꜵ ꜵ Ꜷ ꜷ Ꜹ ꜹ Ꜻ ꜻ Ꜽ ꜽ Ꜿ ꜿ Ꝁ ꝁ Ꝃ ꝃ Ꝅ ꝅ Ꝇ ꝇ Ꝉ ꝉ Ꝋ ꝋ Ꝍ ꝍ Ꝏ ꝏ Ꝑ ꝑ Ꝓ ꝓ Ꝕ ꝕ Ꝗ ꝗ Ꝙ ꝙ Ꝛ ꝛ Ꝝ ꝝ Ꝟ ꝟ Ꝡ ꝡ Ꝣ ꝣ Ꝥ ꝥ Ꝧ ꝧ Ꝩ ꝩ Ꝫ ꝫ Ꝭ ꝭ Ꝯ ꝯ ꝰ ꝱ ꝲ ꝳ ꝴ ꝵ ꝶ ꝷ ꝸ Ꝺ ꝺ Ꝼ ꝼ Ᵹ Ꝿ ꝿ Ꞁ ꞁ Ꞃ ꞃ Ꞅ ꞅ Ꞇ ꞇ ꞈ ꞉ ꞊ Ꞌ ꞌ Ɥ ꞎ ꞏ Ꞑ ꞑ Ꞓ ꞓ ꞔ ꞕ Ꞗ ꞗ Ꞙ ꞙ Ꞛ ꞛ Ꞝ ꞝ Ꞟ ꞟ Ꞡ ꞡ Ꞣ ꞣ Ꞥ ꞥ Ꞧ ꞧ Ꞩ ꞩ Ɦ Ɜ Ɡ Ɬ Ɪ ꞯ Ʞ Ʇ Ʝ Ꭓ Ꞵ ꞵ Ꞷ ꞷ ꟷ ꟸ ꟹ ꟺ ꟻ ꟼ ꟽ ꟾ ꟿ ꬰ ꬱ ꬲ ꬳ ꬴ ꬵ ꬶ ꬷ ꬸ ꬹ ꬺ ꬻ ꬼ ꬽ ꬾ ꬿ ꭀ ꭁ ꭂ ꭃ ꭄ ꭅ ꭆ ꭇ ꭈ ꭉ ꭊ ꭋ ꭌ ꭍ ꭎ ꭏ ꭐ ꭑ ꭒ ꭓ ꭔ ꭕ ꭖ ꭗ ꭘ ꭙ ꭚ ꭛ ꭜ ꭝ ꭞ ꭟ ꭠ ꭡ ꭢ ꭣ ꭤ ꭥ
+                </div>
+                </section>
+                <section>
+                <h3>Latine non est responsum</h3>
+                </section>
+
+                <section data-transition="none">
+                <code style="font-size:50pt">wchar_t</code>
+                </section>
+
+                <section data-transition="none">
+                <code style="font-size:50pt"><s>wchar_t</s></code>
+                </section>
+
+                <section>
+                <h1>Unicode<h1>
+                &amp;
+                <h1>UTF-8<h1>
+                </section>
+
+
+                <section data-transition="none">
+                Unicode
+                <h1>1988<h1>
+                </section>
+
+                 <section data-transition="none">
+                Unicode
+                <p><s>1988</s></p>
+                <h1>1996<h1>
+                </section>
+
+                 <section>
+                    <h3>Characters per character sets</h3>
+                    <img src="assets/unicode.svg" class="plain"  height=550/>
+                </section>
+
+                <section>
+                    <img src="assets/xkcd.png" class="plain"  height=600/>
+                </section>
+
+                <section data-transition="none">
+                    <h2>Writing systems are legacy<br/>&nbsp;</h2>
+                </section>
+
+                <section data-transition="none">
+                    <h2>Writing systems are <s>legacy</s> patrimoine</h2>
+                </section>
+
+
+                <section>
+                    <h4>All programming languages supporting Unicode...</h4>
+                    <ul class="ul2columns">
+                        <li>Swift</li>
+                        <li>Java/JavaScript</li>
+                        <li>Python 3</li>
+                        <li>Safe Rust</li>
+                        <li>D</li>
+                        <li>Perl</li>
+                        <li>PHP</li>
+                        <li>C#</li>
+                    </ul>
+                    <p>&nbsp;</p>
+                    <h4 class="fragment">... Except</h4>
+                    <ul class="fragment ul2columns">
+                        <li>C</li>
+                        <li>C++</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <h2>Libraries</h2>
+                    <ul>
+                        <li>ICU</li>
+                        <li>Qt</li>
+                        <li>Boost.Text</li>
+                        <li><s>std::locale</s></li>
+                    </ul>
+                </section>
+
+                 <section data-transition="none">
+                    <h2>SG-16 is working on it</h2>
+                    <ul>
+                        <li>C++20: <code>char8_t</code></li>
+                        <li>C++23: Many proposals</li>
+                    </ul>
+                    <p class="fragment" style="font-size:40pt">We meet every couple of weeks to talk about cafés and ıstambul</p>
+                </section>
+                <section data-transition="none">
+                    <h2>SG-16 is working on it</h2>
+                    <ul>
+                        <li>C++20: <code>char8_t</code></li>
+                        <li>C++23: Many proposals</li>
+                    </ul>
+                    <p style="font-size:40pt">We meet every couple of weeks to talk about cafés and <s>ıstambul</s> Istambul</p>
+                </section>
+
+                <section data-transition="none">
+                    <h2>SG-16 is working on it</h2>
+                    <ul>
+                        <li>C++20: <code>char8_t</code></li>
+                        <li>C++23: Many proposals</li>
+                    </ul>
+                    <p style="font-size:40pt">We meet every couple of weeks to talk about cafés and <s>ıstambul</s> <s>Istambul</s> istambul</p>
+                </section>
+
+                <section data-transition="none">
+                    <h2>SG-16 is working on it</h2>
+                    <ul>
+                        <li>C++20: <code>char8_t</code></li>
+                        <li>C++23: Many proposals</li>
+                    </ul>
+                    <p style="font-size:40pt">We meet every couple of weeks to talk about cafés and <s>ıstambul</s> <s>Istambul</s> <s>istambul</s> Constantinopole</p>
+                </section>
+
+                <section data-transition="none">
+                    <h4>Maybe Text is <em>too</em> complicated</h4><h4 class="fragment" data-fragment-index="1">Let's go back to hieroglyphs <span class="fragment" data-fragment-index="3"> 2.0 </span></h4>
+                    <table class="emoji">
+
+                    <tr class="fragment" data-fragment-index="2">
+                    <td>𓁶</td>
+                    <td>𓁃</td>
+                    <td>𓁹</td>
+                    <td>𓀠</td>
+                    <td>𓆛</td>
+                    <td>𓅓</td>
+                    <td>𓂝</td>
+                    <td>𓆉</td>
+                    </tr>
+                    <tr class="fragment" data-fragment-index="3">
+                    <td>🙂</td>
+                    <td>👨‍🌾</td>
+                    <td>👁️</td>
+                    <td>🤷</td>
+                    <td>🐟</td>
+                    <td>🦉</td>
+                    <td>💪</td>
+                    <td>🐢</td>
+
+                    <tr class="fragment" data-fragment-index="4">
+                    <td><img class="plain" src="assets/dodo.png"/></td>
+                    <td><img class="plain" src="assets/rock.png"/></td>
+                    <td><img class="plain" src="assets/mammoth.png"/></td>
+                    <td><img class="plain" src="assets/technologist.png"/></td>
+                    <td><img class="plain" src="assets/thong.png"/></td>
+                    <td><img class="plain" src="assets/accordion.png"/></td>
+                    <td><img class="plain" src="assets/cockroach.png"/></td>
+                    <td><img class="plain" src="assets/fondue.png"/></td>
+                    </tr>
+                    </table>
+                </section>
+
+                <section data-transition="none">
+                <aside class="notes">
+                Hana Dusíková
+                Me-how Dominiak
+                Martin Hořeňovský
+                </aside>
+                    <h4>7 bits of information</h4>
+                    <ul>
+                        <li class="fragment">Unicode consortium</li>
+                        <li class="fragment">Google□s Noto project</li>
+                        <li class="fragment">Windows 1903 <br/><small>(please update all windows system by the next WG21 meeting)</small></li>
+                        <li class="fragment">Peter Bindels' Unicode talk</li>
+                        <li class="fragment">JeanHeyd Meneide's encoding talk</li>
+                        <li class="fragment">Hana Dusｧ?\kovｧ?Q's CTRE</li>
+                        <li class="fragment">Michaｬﾖｦ｣ Dominiak<span class="fragment">, Martin Hoｬﾖ｡ﾃeｬﾖｦｨovskｬ?k</span> <span class="fragment">, ?ﾐ□?ﾐ□?ﾐ□ﾐｰﾐｲ, ?犂ﾜｺ?省???祥ﾅ?, ...</span></li>
+                </section>
+
+
+
+
+
+
+
+
+<!--
+ångströms
+Café
+resumé
+piñata
+Beyoncé
+naïve
+façades
+hāngi
+belovèd
+latté
+
+Häagen-Dazs
+-->
+
+
+            </div>
+        </div>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                hash: true,
+                history: true,
+                fragmentInURL: true,
+                pdfSeparateFragments: false,
+
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true }
+                ]
+            });
+            Reveal.configure({ slideNumber: true });
+        </script>
+    </body>
+</html>

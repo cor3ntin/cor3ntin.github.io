@@ -1,0 +1,13 @@
+@font-face {
+    font-family: "Liga Inconsolata-g";
+    src: url(lib/fonts/LigaInconsolata-g.ttf) format("truetype");
+}
+
+.reveal pre code {
+    display: block;
+    padding: 5px;
+    overflow: auto;
+    max-height: 700px;
+    word-wrap: normal;
+    font-family: "Liga Inconsolata-g";
+}

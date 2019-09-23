@@ -1,0 +1,34 @@
+ <section>
+                <div class="all-fonts manuscript">
+                Every program shall contain exactly one definition of every non-inline function or variable that is odr-used in
+                that program outside of a discarded statement; no diagnostic required. The definition can appear
+                explicitly in the program, it can be found in the standard or a user-defined library, or (when appropriate) it is
+                implicitly defined.
+                A definition of an inline function or variable shall be reachable in every translation unit in which it is odr-used outside of a discarded statement.
+                </div>
+                </section>
+
+                <section>
+                <div class="all-fonts manuscript">
+                Everich programma schal cǒnteinen juste oon diffinicioun of everich non-inline function or variare that is odr-used in
+                that programma ǒutwith of ān nihil statement; none diagnosis required. The diffinicioun cunnen aperen
+                expresseli in the programma, it cunnen been yfunden in the standard or ān usere-definen librarie, or it is
+                implīedlī defined.
+                A diffinicioun of an inline function or programma schal ben rechen in everich translacioun unite in whilk it is odr-used ǒutwith of a nihil statement.
+                </div>
+                </section>
+
+                <section>
+                <h3>𝖄𝕰 𝕮𝕻𝕷𝖀𝕾𝕻𝕷𝖀𝕾 𝕷𝕬𝕹𝕲𝕬𝕲𝕰</h3>
+                <div class="all-fonts manuscript">
+                <p>
+                𝕰verich pro schal c̄teinen jus oon diﬃnicioun of everich  n̄-inli function or via þͭ Ꝭ odr-used in
+                þͭ ꝓrogramma ǒutwith of ān nᷝ atement n̄ diagͦsis reqͥred ꞏ þͤ  diﬃnicioun cunnen aperen
+                exp̄ſꝉi in þͭ pro it cunnen been yfunden in þͤ andard or ān usr̄-definen librarie, or it Ꝭ implīedlī defined ꞏ
+                </p>
+                <p>
+                𝕬 diﬃnicioun of an inli function or pro schal ben rechen in everich translacioun uni in whilk it Ꝭ odr-used ǒutwith of a nᷝ atement
+                </p>
+                </div>
+
+                </section>

@@ -1,0 +1,19 @@
+Every program shall contain exactly one definition of every non-inline function or variable that is odr-used in
+that program outside of a discarded statement no diagnostic required. The definition can appear
+explicitly in the program, it can be found in the standard or a user-defined library, or (when appropriate) it is
+implicitly defined. A definition of an inline function or variable shall be reachable in every translation unit in which it is odr-used outside of a discarded statement.
+
+
+Everich programma schal cǒnteinen juste oon diffinicioun of everich non-inline function or variare that is odr-used in
+that programma ǒutwith of ān nihil statement none diagnosis required. The diffinicioun cunnen aperen
+expresseli in the programma, it cunnen been yfunden in the standard or ān usere-definen librarie, or it is
+implīedlī defined.
+A diffinicioun of an inline function or programma schal ben rechen in everich translacioun unite in whilk it is odr-used ǒutwith of a nihil statement.
+
+Everich pro schal c̄teinen juste oon diﬃnicioun of everich  n̄-inline function or viare þͭ Ꝭ odr-used in
+þͭ ꝓrogramma ǒutwith of ān nᷝ statement n̄ diagͦsis reqͥred ꞏ þͤ  diﬃnicioun cunnen aperen
+exp̄ſꝉi in þͭ pro, it cunnen been yfunden in the standard or ān usere-definen librarie, or it Ꝭ
+implīedlī defined
+A diffinicioun of an inline function or pro schal ben rechen in everich translacioun unite in whilk it Ꝭ odr-used ǒutwith of a nᷝ statement ꞏ
+
+Ꝭ

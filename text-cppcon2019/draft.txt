@@ -1,0 +1,71 @@
+
+
+
+                <!-- mayan numerals
+                -->
+
+
+                <section>
+                <!-- Egyptien papyrus -->
+                𓏛
+
+                </section>
+
+                <section>
+                16th century  BCE
+
+
+                <!-- Proto Sinaitic -->
+                𓃾  -> Aleph  -> A
+
+                𓉐 -> Bet -> B
+
+                𓈖 ->  mem -> M
+
+                𓁹 -> Ayin -> O
+
+                </section>
+
+
+                <section>
+                <!-- Phoenician 1100  BCE-->
+                <!--Abjad -->
+                𐤕 𐤔 𐤓 𐤒 𐤑 𐤐 𐤏 𐤎 𐤍 𐤌 𐤋 𐤊 𐤉 𐤈 𐤇 𐤆 𐤅 𐤄 𐤃 𐤂 𐤁 𐤀
+
+                <!-- Aramaic 800  BCE -->
+                <!--Abjad, right to left -->
+                𐡕 𐡔 𐡓 𐡒 𐡑 𐡐 𐡏 𐡎 𐡍 𐡌 𐡋 𐡊 𐡉 𐡈 𐡇 𐡆 𐡃 𐡄 𐡃 𐡂 𐡁 𐡀
+                </section>
+
+                <section>
+                <!-- Old greek -->
+                Α Β Γ Δ Ε Ϝ Ζ Η Θ Ι Κ Λ 𐌌 Ν Ξ Ο Π Ϻ Ϙ Ρ Σ Τ Ͳ Υ Φ Χ Ψ Ω
+                Α Β Γ Δ Ε   Ζ Η Θ Ι Κ Λ Μ  Ν Ξ Ο Π     Ρ Σ Τ Ͳ Υ Φ   Ψ Ω
+                </section>
+
+                <section>
+                <!-- Etruscan 700  BCE-->
+
+                </section>
+
+                <section>
+                <!-- Old latin 700  BCE-->
+                A B C D E F Z H I K L M N O P Q R S T V X
+                </section>
+
+                <section>
+                ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚻ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛋ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛝ ᛟ ᛞ
+                </section>
+
+                <section>
+                Scribal abbreviation
+                ⁊ &amp; % ‰ ₤ £ # @ ꝛc ſ
+                </section>
+
+
+
+                <section>
+                A Æ B C D Ð E F Ᵹ G	H I L M N O P R	S T Þ U Ƿ W X Y
+
+                A Æ B C D   E F ȝ G H I L M N O P R S T   Þ U W X Y
+

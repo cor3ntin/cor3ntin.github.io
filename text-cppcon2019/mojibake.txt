@@ -1,0 +1,88 @@
+<section class="all-fonts">
+                    <table cellspacing="0" cellpadding="0">
+                    <tr class="fragment">
+                        <td>3200  BCE</td>
+                        <td>𒁹  𒈫 𒐍 𒀭 𒅅 𒊓 𒋟</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>2000  BCE</td>
+                        <td>𓇍𓅓𓊵    𓃾 𓉐 𓌙 𓇯 𓀠 𓏲 𓏭 𓈈 𓄤 𓂝 𓂧 𓌅 𓈖 𓆓 𓊽 𓁹 𓂋 𓇑 𓃻 𓁶 𓌓 𓏴</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>1200  BCE</td>
+                        <td>目 人 木 魚 马 马 豕  丹佛你好</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>1100  BCE</td>
+                        <!-- Phoenician 1100  BCE-->
+                        <td>𐤕 𐤔 𐤓 𐤒 𐤑 𐤐 𐤏 𐤎 𐤍 𐤌 𐤋 𐤊 𐤉 𐤈 𐤇 𐤆 𐤅 𐤄 𐤃 𐤂 𐤁 𐤀</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>800  BCE</td>
+                        <!-- Aramaic 800  BCE -->
+                        <!--Abjad, right to left -->
+                        <td>𐡕 𐡔 𐡓 𐡒 𐡑 𐡐 𐡏 𐡎 𐡍 𐡌 𐡋 𐡊 𐡉 𐡈 𐡇 𐡆 𐡃 𐡄 𐡃 𐡂 𐡁 𐡀
+                         <!-- Old Greek --><br/>
+                        <span class="fragment"> Α Β Γ Δ Ε Ϝ Ζ Η Θ Ι Κ Λ 𐌌 Ν Ξ Ο Π Ϻ Ϙ Ρ Σ Τ Ͳ Υ Φ Χ Ψ Ω</span>
+                        </td>
+                    </tr>
+                     <tr class="fragment">
+                        <td>700  BCE</td>
+                        <td>
+                        𐌀 𐌂 𐌄 𐌅 𐌆 𐌇 𐌈 𐌉 𐌊 𐌋 𐌌 𐌍 𐌐 𐌑 𐌒 𐌓 𐌔 𐌕 𐌖 𐌗 𐌘 𐌙 𐌚 <br/>
+                        <span class="fragment">A B C D E F Z H I K L M N O P Q R S T V X</span>
+                        </td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>200  BCE</td>
+                        <td class="all-fonts">
+                        <!-- Brahmi (proto indian)-->
+                        𑀓 𑀔 𑀕 𑀖 𑀗 𑀘 𑀙 𑀚 𑀛 𑀜 𑀝 𑀞 𑀟 𑀠 𑀡 𑀢 𑀣 𑀤 𑀥 𑀦 𑀧 𑀨 𑀩 𑀪 𑀫 𑀬 𑀭 𑀮 𑀯 𑀰 𑀱 𑀲 𑀳<br/>
+                        <!-- mayan numerals -->
+                        <span class="fragment">𝋠	𝋡	𝋢	𝋣	𝋤	𝋥	𝋦	𝋧	𝋨	𝋩	𝋪	𝋫	𝋬	𝋭	𝋮	𝋯 𝋰	𝋱	𝋲	𝋳</span>
+                        </td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>200  CE</td>
+                        <td class="all-fonts">
+                        <!-- Elder Futhark-->
+                        ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚻ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛋ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛝ ᛟ ᛞ<br/>
+                        </td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>400  CE</td>
+                        <td class="all-fonts">
+                        a b c d e f h i j k l m n o p q r s t v x z<br/><span class="fragment">
+                        السلام عليكم
+                        </span></td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>600  CE</td>
+                        <td class="all-fonts">
+                        挨拶<br/>
+                        <span class="fragment">ༀ ༁ ༂ ༃ ༄ ༅ ༆ ༇ ༈ ༉ ༊ ༑ ༒ ༓ ༔ ༕  ༖ ༗ ࿐ ࿑ ࿒ ࿓ ࿉ ࿊ ࿋ ࿌</span>
+                    </td>
+                    </tr>
+                    <tr class="fragment">
+                    <td>900  CE</td>
+                    <td class="all-fonts">
+                    <!-- Hiragana (800)-->
+                    こんにちは<br/>
+                    <!-- cyrillic -->
+                    <span class="fragment">А В Г Д Е Ж Ѕ Ꙁ И І К Л М Н О П Р С Т ОУ Ф Х Ѡ Ц Ш Щ ЪІ Ь Ѣ Ꙗ Ѥ Ю Ѫ Ѭ Ѧ Ѩ Ѯ Ѱ Ѳ Ѵ Ҁ</span><br/>
+                     <!-- Katanaka (800)-->
+                    <span class="fragment">ハロー</span><br/>
+                    <!--Devanagari -->
+                    <span class="fragment">नमस्ते, दुनिया</span><br/>
+
+                    </td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>1400  CE</td>
+                        <td class="all-fonts">
+                        안녕하십니까<br/>
+                        </td>
+                    </tr>
+                    </table>
+                     <span class="fragment"></span>
+                </section>
