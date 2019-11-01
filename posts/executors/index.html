@@ -117,7 +117,7 @@ systematically implies asynchrony.</em>]</p>
 <h2 id="receiver">Receiver</h2>
 
 <p>A receiver represents the code we want to run on an execution context.
-In simplest terms, a function0
+In simplest terms, a function.
 But, an important point of the design of the executors proposal is to systematically provide error handling and error management so there are 3 functions we need to provide.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> Error, <span style="color:#080;font-weight:bold">typename</span>.... Value&gt;
 concept receiver = requires(R &amp;r Error... e, Value&amp;&amp;...v) {
