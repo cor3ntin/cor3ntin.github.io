@@ -12,6 +12,17 @@
     
     
     
+    <item>
+    <title>A Universal Async Abstraction for C&#43;&#43;</title>
+        <link>https://cor3ntin.github.io/posts/executors/</link>
+            <pubDate>Wed, 30 Oct 2019 17:56:01 +0100</pubDate>
+            
+            <guid>https://cor3ntin.github.io/posts/executors/</guid>
+            <description>Executors - of which P0443R11 is one of the latest iterations - is poised to be the most fundamental library addition to C++23.
+But what is it about?
+It is first and foremost a quest to find the most basic building blocks on top of which one could build asynchronous, concurrent and parallel code, whether it be on a small chip or a supercomputer with thousands of CPUs and GPUs.</description>
+        </item>
+        
         
     
     <item>
