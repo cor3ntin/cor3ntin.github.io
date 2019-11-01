@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://cor3ntin.github.io/posts/executors/</loc>
+    <lastmod>2019-10-30T17:56:01+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://cor3ntin.github.io/posts/encoding/</loc>
     <lastmod>2019-08-17T11:46:12+02:00</lastmod>
   </url>
@@ -144,7 +149,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/posts/</loc>
-    <lastmod>2019-08-17T11:46:12+02:00</lastmod>
+    <lastmod>2019-10-30T17:56:01+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -155,7 +160,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/</loc>
-    <lastmod>2019-08-17T11:46:12+02:00</lastmod>
+    <lastmod>2019-10-30T17:56:01+01:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -58,6 +58,8 @@
   <div class="container">
     
     
+    
+    
         <article id="article">
         <div class="subtitle is-6 is-pulled-right">
             
@@ -158,29 +160,6 @@ Most standard attributes were added in C++14 and 17.
 The conclusion is that we pretty much all agree to disagree on what the STL is or should be. I’m not sure we can even agree on what C++ is.
             
             <a class="button is-link" href="https://cor3ntin.github.io/posts/dep_manager/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">February 21, 2018</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/what_should_go_in_stl/">A cake for your cherry: what should go in the C&#43;&#43; standard library?</a></h1>
-        <div class="content">
-            This is a reply to Guy Davidson’s article “Batteries not included: what should go in the C++ standard library?”.
-Over the past few years there has been a push to include a graphics library into the C++ standard. It would be something a bit like cairo. Or SDL. The proposal, in its current form, is here
-In its current state, the library proposal can draw some shapes on a pre-allocated surface, has some support for images, and there are of courses projects to add text, maybe some input in the form of mouse / keyboard handling.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/what_should_go_in_stl/" style="height:28px">
             Read more
             <span class="icon is-small">
                 <i class="fa fa-angle-double-right"></i>
@@ -307,6 +286,7 @@ if (!doNotTrack) {
         "default" : {"compiler" : "g81", "options" : ""},
         "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
         "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+        "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"}
     }
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
@@ -332,7 +312,7 @@ if (!doNotTrack) {
             componentName: 'compiler',
             componentState: {
                 source: 1,
-                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true, libraryCode: true},
                 options : settings["options"],
                 compiler: settings["compiler"],
                 fontScale: 0.8,

@@ -562,6 +562,7 @@ if (!doNotTrack) {
         "default" : {"compiler" : "g81", "options" : ""},
         "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
         "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+        "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"}
     }
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
@@ -587,7 +588,7 @@ if (!doNotTrack) {
             componentName: 'compiler',
             componentState: {
                 source: 1,
-                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true},
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true, libraryCode: true},
                 options : settings["options"],
                 compiler: settings["compiler"],
                 fontScale: 0.8,
