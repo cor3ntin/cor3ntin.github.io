@@ -110,7 +110,7 @@ some customization points and a few algorithms to compose all of that.</p>
 That can, for example, be a thread pool, an event loop,
 Grand Central Dispatch, a GPU, a vectorization unit (although it&rsquo;s still unclear to me how that fits into the picture) or even the current thread - in which case we talk of <em>inline execution context</em>.</p>
 
-<p>[<em>Note: Because there are inline execution context,
+<p>[<em>Note: Because there are inline execution contexts,
 executing some work on an execution context does not
 systematically imply asynchrony.</em>]</p>
 
@@ -119,7 +119,7 @@ systematically imply asynchrony.</em>]</p>
 <p>A receiver represents the code we want to run on an execution context.
 In simplest terms, a function.
 But, an important point of the design of the executors proposal is to systematically provide error handling and error management so there are 3 functions we need to provide.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> Error, <span style="color:#080;font-weight:bold">typename</span>.... Value&gt;
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> Error, <span style="color:#080;font-weight:bold">typename</span>... Value&gt;
 concept receiver = requires(R &amp;r Error... e, Value&amp;&amp;...v) {
     set_value(r, v...); <span style="color:#888">// happy path
 </span><span style="color:#888"></span>    set_error(r, e); <span style="color:#888">// error
