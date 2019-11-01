@@ -69,13 +69,13 @@ the most fundamental library addition to C++23.</p>
 
 <p><em>But what is it about?</em></p>
 
-<p>It is first and foremost a quest to find the most basic building blocs on top of which one could build asynchronous, concurrent and parallel code, whether it be
+<p>It is first and foremost a quest to find the most basic building blocks on top of which one could build asynchronous, concurrent and parallel code, whether it be
 on a small chip or a supercomputer with thousands of CPUs and GPUs.</p>
 
 <p>This is not an easy task and has kept many experts
 and many companies busy for many years.</p>
 
-<p>An this is important work as it would allow, among other things:</p>
+<p>This is important work as it would allow, among other things:</p>
 
 <ul>
 <li>Parallel algorithms</li>
@@ -102,7 +102,7 @@ history in the committee</a> and I only took an interest in this whole thing rec
 <p>The result of that work will mostly be a few concepts,
 some customization points and a few algorithms to compose all of that.</p>
 
-<p>But first thing first.</p>
+<p>First thing first.</p>
 
 <h2 id="execution-context">Execution Context</h2>
 
@@ -143,6 +143,8 @@ Or even already executed.</p>
 allocated.</p>
 
 <p>But that is, to put it mildly, <a href="https://godbolt.org/z/PfVLT6">not optimal</a>.</p>
+
+<h2 id="sender-and-scheduler">Sender and Scheduler</h2>
 
 <p>So what we can do instead is to ask the execution context to reserve a slot. Eric Niebler calls that a lazy future, the name chosen for the concept is <code>sender</code>.
 <code>sender</code> because it sends its result to a receiver.</p>
@@ -209,6 +211,8 @@ Note that I invented nothing of what follows - there will be a paper about these
 <p>Everything can be improved by one more level of indirection,
 so let&rsquo;s do that.</p>
 
+<h2 id="operation">Operation</h2>
+
 <p>Instead of a <code>submit(sender, receiver)</code> that submits the work immediately, we can have a function that takes a sender, a receiver, and returns an aggregate of both, but do nothing else. Let&rsquo;s call that function <code>connect</code> :</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">thread_pool <span style="color:#06b;font-weight:bold">tp</span>(std::<span style="color:#080;font-weight:bold">thread</span>::hardware_concurrency());
 <span style="color:#080;font-weight:bold">auto</span> scheduler = tp.scheduler();
@@ -268,7 +272,7 @@ of our thread pool is held for a very short time.</p>
 <p>Of course, sometimes you will need to enqueue many operations at once or not want to wait for your operation
 to complete.</p>
 
-<p>In these case, you will need an extra function to heap
+<p>In these cases, you will need an extra function to heap
 allocate (or allocate with a custom allocator).
 The heap allocating function is called <code>spawn</code>.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">spawn</span>(sender, receiver);
@@ -282,7 +286,7 @@ destroyed the <code>operation</code> whenever one method of the receiver is call
 that has to deal with allocators (allocators themselves
 probably need to be transferred to senders for composed operations).</p>
 
-<p>To recap things a bit, here is a diagram of the entiere thing:</p>
+<p>To recap things a bit, here is a diagram of the entire thing:</p>
 
 <div style="text-align:center"><img src="state.png" alt="State machine"/></div>
 
@@ -291,18 +295,18 @@ probably need to be transferred to senders for composed operations).</p>
 <p>Thread pools usually have a <code>wait</code> method.</p>
 
 <p>But with the sender/receiver model, the thread pool can instead provide a method returning a sender and we can
-attach that sender to a receiver that will be invoked when the thread pool is empty, by the mean of a generic wait algorithm.</p>
+attach that sender to a receiver that will be invoked when the thread pool is empty, by the means of a generic wait algorithm.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">thread_pool p;
 <span style="color:#888">//...
 </span><span style="color:#888"></span>wait(p.depleted());
 </code></pre></div>
-<p>Many such algorithms can be providedm including:</p>
+<p>Many such algorithms can be provided, including:</p>
 
 <ul>
 <li><code>when_all</code></li>
 <li><code>when_any</code></li>
 <li><code>then</code> / <code>sequence</code></li>
-<li>An asyncronous version of <code>transform</code></li>
+<li>An asynchronous version of <code>transform</code></li>
 </ul>
 
 <p>These algorithms could be used to, for example, write a better future. But I haven&rsquo;t played with all of that yet.</p>
@@ -371,8 +375,8 @@ But with the right set of primitives, we might just be able to have our cake and
 
 <h1 id="customization-points">Customization points</h1>
 
-<p>Almost all functions I mentionned are customization points,
-which mean that they can be specialized for specific sender, or receivers, including:</p>
+<p>Almost all functions I mentioned are customization points,
+which means that they can be specialized for specific sender, or receivers, including:</p>
 
 <ul>
 <li><code>set_value(receiver)</code></li>
