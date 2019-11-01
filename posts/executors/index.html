@@ -130,7 +130,7 @@ concept receiver = requires(R &amp;r Error... e, Value&amp;&amp;...v) {
 
 <p>The standard will probably provide a receiver that wraps an <code>invokable</code>, throws on error and does nothing on cancellation.</p>
 
-<p>So maybe we could write something like that:</p>
+<p>So maybe we could write something like this:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">fugazzi_async(execution_context, as_receiver([] {
     fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Hello from an executor&#34;</span>);
 }));
