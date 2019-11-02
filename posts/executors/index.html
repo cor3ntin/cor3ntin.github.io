@@ -64,7 +64,7 @@
     <div class="content">
       
 
-<p>Executors - of which <a href="https//wg21.link/P0443R11">P0443R11</a> is one of the latest iterations - is poised to be
+<p>Executors - of which <a href="https://wg21.link/P0443R11">P0443R11</a> is one of the latest iterations - is poised to be
 the most fundamental library addition to C++23.</p>
 
 <p><em>But what is it about?</em></p>
@@ -97,7 +97,7 @@ If <code>iterator</code>s are the basis of operations of algorithms (of which ra
 <p>At this point, I should point out that despite doing my best not to mischaracterize anyone, and to be as technically accurate as I can, executors have a <a href="https://www.youtube.com/watch?v=iYMfYdO0_OU">very long
 history in the committee</a> and I only took an interest in this whole thing recently - <strong>I am a bull in a china shop, not a domain expert</strong>.</p>
 
-<p>That being said, I will not exactly focus on <a href="https//wg21.link/P0443R11">P0443R11</a>, but on something I find a bit more refined, not yet in a paper.</p>
+<p>That being said, I will not exactly focus on <a href="https://wg21.link/P0443R11">P0443R11</a>, but on something I find a bit more refined, not yet in a paper.</p>
 
 <p>The result of that work will mostly be a few concepts,
 some customization points and a few algorithms to compose all of that.</p>
@@ -182,7 +182,7 @@ submits the sender for execution.</p>
 the receiver will be enqueued and then executed on a thread of that thread pool (by calling <code>my_receiver.set_value()</code>).</p>
 
 <p>And some work will finally be done.
-And that&rsquo;s it? According to <a href="https//wg21.link/P0443R11">P0443R11</a>, yes, pretty much.</p>
+And that&rsquo;s it? According to <a href="https://wg21.link/P0443R11">P0443R11</a>, yes, pretty much.</p>
 
 <p>But there is a catch.</p>
 
@@ -205,7 +205,7 @@ And that&rsquo;s it? According to <a href="https//wg21.link/P0443R11">P0443R11</
 
 <p>Is there a better way?
 Yes.
-But at this point we diverge from <a href="https//wg21.link/P0443R11">P0443R11</a>.
+But at this point we diverge from <a href="https://wg21.link/P0443R11">P0443R11</a>.
 Note that I invented nothing of what follows - there will be a paper about these ideas in the future.</p>
 
 <p>Everything can be improved by one more level of indirection,
@@ -410,7 +410,7 @@ does not make any <a href="https://www.youtube.com/watch?v=FJIn1YhPJJc">forward 
 
 <h1 id="bulk-execution-and-properties">Bulk execution and properties</h1>
 
-<p><a href="https//wg21.link/P0443R11">P0443R11</a> also provides for bulk execution and a number of queryable properties to tune the behavior of executors&hellip;
+<p><a href="https://wg21.link/P0443R11">P0443R11</a> also provides for bulk execution and a number of queryable properties to tune the behavior of executors&hellip;
 These are not areas I am very comfortable with for now and this article is getting long, stay tuned.</p>
 
 <p>I also want to explore in the future how we can leverage executors and <code>io_uring</code>, Grand Central Dispatch and Windows Thread Pools.</p>
@@ -423,7 +423,7 @@ co_await socket.read(buffer);
 
 <h2 id="executors">Executors</h2>
 
-<p><a href="https:://wg21.link/P0761">P0761</a> explains</p>
+<p><a href="https://wg21.link/P0761">P0761</a> explains</p>
 
 <blockquote>
 <p>An executor is an object associated with a specific execution context. It provides one or more execution
