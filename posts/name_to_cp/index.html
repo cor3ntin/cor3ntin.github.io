@@ -97,9 +97,9 @@ are generated:
 For example <strong>木</strong> (the Han Pictogram for tree, U+6728) is called <code>CJK Unified Ideograph-6728</code>, so it is easy to infer from
 the name what the code point is. Arguably this makes names less useful, but it will save us a lot of space!</p>
 
-<p>The other generated names are Hangul characters, which are composed of few syllables. There are over a thousand hangul characters,
-but only a few syllables. Hangul code points are laid out in the Unicode database in such a way that their codepoint can be computed
-only knowing what syllables make the character. Which is super neat. Here is an <a href="http://gernot-katzers-spice-pages.com/var/korean_hangul_unicode.html">article that describes that in more detail</a>.</p>
+<p>The other generated names are Hangul characters, which are composed of few components called Jamo. There are over a thousand hangul characters,
+but only a few Jamo. Hangul code points are laid out in the Unicode database in such a way that their codepoint can be computed
+only knowing what Jamo make the character. Which is super neat. Here is an <a href="http://gernot-katzers-spice-pages.com/var/korean_hangul_unicode.html">article that describes that in more detail</a>.</p>
 
 <p>With the generated names taken care of, we can deal with the ~31000 characters with a custom name.
 Dumping all these names in a file create 812KB of data. This is not all the information we needed because we also need to store the code points, but it gives some idea.
