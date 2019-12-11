@@ -14,10 +14,10 @@
     
     <item>
     <title>Storing Unicode: Character Name to Codepoint Mapping</title>
-        <link>https://cor3ntin.github.io/posts/cp_to_name/</link>
+        <link>https://cor3ntin.github.io/posts/name_to_cp/</link>
             <pubDate>Wed, 11 Dec 2019 10:41:18 +0100</pubDate>
             
-            <guid>https://cor3ntin.github.io/posts/cp_to_name/</guid>
+            <guid>https://cor3ntin.github.io/posts/name_to_cp/</guid>
             <description>Unicode Characters have a name, which makes it easier to talk about them without having to know their codepoint. For example, the character λ (U+03BB) is called GREEK SMALL LETTER LAMDA.
 Given a character name, we want to be able to know its code point. There are a few use cases for that, the main one being to be able to put Unicode characters by name in string literals, a feature offered by Python, Perl and Perl 6 Raku.</description>
         </item>

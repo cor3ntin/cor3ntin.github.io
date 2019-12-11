@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Storing Unicode: Character Name to Codepoint Mapping | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">December 11, 2019</h2>
+    <h1 class="title">Storing Unicode: Character Name to Codepoint Mapping</h1>
+    
+    <div class="content">
+      
+
+<p><img src="cloud.svg" alt="Word cloud" /></p>
+
+<p>Unicode Characters have a name, which makes it easier to talk about them without having to
+know their codepoint.
+For example, the character <strong>λ</strong> (U+03BB) is called <code>GREEK SMALL LETTER LAMDA</code>.</p>
+
+<p>Given a character name, we want to be able to know its code point.
+There are a few use cases for that, the main one being to be able to put Unicode characters
+by name in string literals, a feature offered by <a href="https://repl.it/repls/EveryNanoPercent">Python</a>, Perl
+and <del>Perl 6</del> Raku.
+It&rsquo;s also a <a href="https://wg21.link/p1097r2">proposed feature for C++</a> and this post is
+an implementation experience report. And this is the function we want to implement:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">char32_t</span> <span style="color:#06b;font-weight:bold">cp_from_name</span>(std::string_view) <span style="color:#080;font-weight:bold">noexcept</span>;
+</code></pre></div>
+<p>It seems simple enough. Alas, there are many Unicode codepoints - Currently 137,928 in Unicode 12,
+The challenge will be to minimize the size footprint of that function.</p>
+
+<h1 id="analyzing-the-data">Analyzing the data</h1>
+
+<p>The <a href="https://www.unicode.org/ucd/">Unicode Character Database</a> is delivered as a set of hard to parse text files,
+that looks a bit like CSV but aren&rsquo;t. Fortunately, there is also an XML document describing each character.</p>
+
+<p>Feeding that to a python script, we can start to count characters, and get a better idea of the size of the
+data we will need:</p>
+
+<div style="text-align:center"><img height=400 src="characters_count.png" alt="Analyzing the data"/></div>
+
+<p>Most of the character names are generated and can be associated with a codepoint computationally
+The <a href="http://www.unicode.org/versions/Unicode12.1.0/">Unicode standard</a>, describes two methods by which character names
+are generated:
+For example <strong>木</strong> (the Han Pictogram for tree, U+6728) is called <code>CJK Unified Ideograph-6728</code>, so it is easy to infer from
+the name what the code point is. Arguably this makes names less useful, but it will save us a lot of space!</p>
+
+<p>The other generated names are Hangul characters, which are composed of few syllables. There are over a thousand hangul characters,
+but only a few syllables. Hangul code points are laid out in the Unicode database in such a way that their codepoint can be computed
+only knowing what syllables make the character. Which is super neat. Here is an <a href="http://gernot-katzers-spice-pages.com/var/korean_hangul_unicode.html">article that describes that in more detail</a>.</p>
+
+<p>With the generated names taken care of, we can deal with the ~31000 characters with a custom name.
+Dumping all these names in a file create 812KB of data. This is not all the information we needed because we also need to store the code points, but it gives some idea.
+Compressing that data with lzma gives us a 96KB file.
+Unicode codepoints have at most 21 bits of information, so we need something around 80KB to store the codepoints
+This gives us a nice lower bound of what we can hope to achieve - we know we will need at least 180KB, although it is very unlikely we will achieve that.
+We would like our function to have low overhead so relying on compression scheme that cannot be read by random access or that otherwise use a large amount of memory - in addition
+to the static data - are not considered.
+What the high success of the LZMA compression also tells us, is that there is a lot of repeated sequences in our data.
+In fact, splitting the names by spaces shows that some words are repeated a lot</p>
+
+<div style="text-align:center"><img height=400 src="words_count.png" alt="Analyzing the data"/></div>
+
+<p>Many names share common prefixes. There are 400 or so code points starting with <code>GREEK</code>.</p>
+
+<h1 id="radix-trees">Radix trees</h1>
+
+<p>One way to represent our data is to create a tree in which each node is a letter, and children are the next letter in each name.</p>
+
+<p><div style="text-align:center"><img width=100% height=500 src="digits_graph1.svg" alt="Digits"/></div>
+The worst case size of that data structure would be about 750&rsquo;000 nodes (There are on average 25 letters per name, and about 30000 unique names).
+But of course, many nodes only have one child, so that can be greatly compacted, by merging all the nodes that have only one child (and no value).</p>
+
+<p><div style="text-align:center"><img src="digits_graph2.svg" alt="Digits"/></div><br/></p>
+
+<p>This is called a Radix tree, or prefix tree. Lookup is $\mathcal{O}( size(name) )$, not great, not terrible - Unicode names are relatively short.</p>
+
+<p>Each node has a label (the common prefix) and may have a value (the code point of the character), and children.
+While all leaves have a value, some nodes that are not leaf also have a value: <code>YI SYLLABLE MEX</code> and <code>YI SYLLABLE ME</code>
+are both character names for example.</p>
+
+<h1 id="serialization">Serialization</h1>
+
+<p>Now that we made sense of the data, time to lay it in memory.
+Each byte count. Each bit count.</p>
+
+<p>How many bits do we need per node, to store the value, the name, and a way to access children nodes?</p>
+
+<h2 id="name">Name</h2>
+
+<p>Many nodes will have a single letter name, so we can use 1 byte for a 1-letter name.
+But many other nodes will have a longer name
+For example <code>in Business Suit Levitating</code> might be a node name.
+We could simply store the entire name of the node but some words and subsequence are used a lot!
+The word <code>suit</code> appears several times for example.</p>
+
+<p>So instead, we can build a dictionary of all node names.
+We put the largest names first, so that <code>in Business Suit Levitating</code> can provide <code>in</code>, <code>Suit</code>, <code>ing</code> etc.
+There are of course repetition in the dictionary but it comes out at under 50K - critically under 65K so we
+can index it with 2 bytes.
+So for names longer than 1 character, we will use 3 bytes.</p>
+
+<h3 id="ascii-subset">ASCII subset</h3>
+
+<p>Unicode names only use the letter <code>A</code> to <code>Z</code>, <code>0</code> to <code>9</code> and <code>-</code>. They are insensitive to case and spacing.
+Therefore a valid character can be represented using 6 bits.
+The simple way to do that is to encode a character as the index in a string such as <code>0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-</code></p>
+
+<p>We can then use a bit to discriminate between the single character case and the longer name case.</p>
+
+<p><style>
+.tg  {border-collapse:collapse;border-spacing:0; width:80%; margin-left:auto;margin-right:auto;}
+.tg td{width:auto; font-size:12px;padding:5px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{width:auto; font-size:12px;font-weight:normal;padding:5px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-0lax{text-align:center;vertical-align:top}
+.tg .tg-0pky{border-color:inherit;text-align:center;vertical-align:middle}
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">0</th>
+    <th class="tg-0pky">1</th>
+    <th class="tg-0pky">2</th>
+    <th class="tg-0pky">3</th>
+    <th class="tg-0pky">4</th>
+    <th class="tg-0pky">5</th>
+    <th class="tg-0pky">6</th>
+    <th class="tg-0pky">7</th>
+    <th class="tg-0pky">8</th>
+    <th class="tg-0pky">9</th>
+    <th class="tg-0pky">10</th>
+    <th class="tg-0pky">11</th>
+    <th class="tg-0pky">12</th>
+    <th class="tg-0pky">13</th>
+    <th class="tg-0pky">14</th>
+    <th class="tg-0pky">15</th>
+    <th class="tg-0pky">16</th>
+    <th class="tg-0pky">17</th>
+    <th class="tg-0pky">18</th>
+    <th class="tg-0pky">19</th>
+    <th class="tg-0pky">20</th>
+    <th class="tg-0pky">21</th>
+    <th class="tg-0pky">22</th>
+    <th class="tg-0pky">23</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky" rowspan="2">Has long name</td>
+    <td class="tg-0pky" rowspan="2" style="background-color: grey"></td>
+    <td class="tg-0pky" colspan = "6">Letter</td>
+    <td class="tg-0pky" colspan="16" style="background-color: grey"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky" colspan = "6">Name Size</td>
+    <td class="tg-0pky" colspan = "17">Index</td>
+  </tr>
+</table></p>
+
+<p>Using this scheme, the name of a single node is limited to 32 ($2 ^6 $), but that is not an issue as very long names can simply
+be split into multiple nodes.</p>
+
+<h2 id="codepoint">Codepoint</h2>
+
+<p>Many nodes, including all leaf nodes, have a value, which is the code points.
+But some nodes do not have a value at all and we should avoid encoding wasting a byte for something null as that immediately many kilobytes wasted.
+Fortunately, we still have a free bit available!</p>
+
+<p><div style="text-align:center"><img src="1bit.jpg" alt="Digits"/></div><br/></p>
+
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">0</th>
+    <th class="tg-0pky">1</th>
+    <th class="tg-0pky">2</th>
+    <th class="tg-0pky">3</th>
+    <th class="tg-0pky">4</th>
+    <th class="tg-0pky">5</th>
+    <th class="tg-0pky">6</th>
+    <th class="tg-0pky">7</th>
+    <th class="tg-0pky">8</th>
+    <th class="tg-0pky">9</th>
+    <th class="tg-0pky">10</th>
+    <th class="tg-0pky">11</th>
+    <th class="tg-0pky">12</th>
+    <th class="tg-0pky">13</th>
+    <th class="tg-0pky">14</th>
+    <th class="tg-0pky">15</th>
+    <th class="tg-0pky">16</th>
+    <th class="tg-0pky">17</th>
+    <th class="tg-0pky">18</th>
+    <th class="tg-0pky">19</th>
+    <th class="tg-0pky">20</th>
+    <th class="tg-0pky">21</th>
+    <th class="tg-0pky">22</th>
+    <th class="tg-0pky">23</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky" rowspan="2">Has long name</td>
+    <td class="tg-0pky" rowspan="2" style="background-color: yellow">Has value</td>
+    <td class="tg-0pky" colspan = "6">Letter</td>
+    <td class="tg-0pky" colspan="16" style="background-color: grey"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky" colspan = "6">Name Size</td>
+    <td class="tg-0pky" colspan = "17">Index</td>
+  </tr>
+</table>
+
+<p>Unicode uses 21 bits per code point. leaving us with 3 bits. Exciting.
+The 21 bits size of Unicode codepoints is something that can be exploited with many other Unicode properties:</p>
+
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">24-44</th>
+    <th class="tg-0pky">45</th>
+    <th class="tg-0pky">46</th>
+    <th class="tg-0pky">47</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky">Value</td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+  </tr>
+</table>
+
+<p>We could encode the value as a variable int (using 2 or 3 bytes) depending on the value of the code point,
+using one of the free bit as discriminant - would probably save about 8K.
+It makes it a bit harder to serialize, so it&rsquo;s not something I have implemented yet.</p>
+
+<h2 id="children">Children</h2>
+
+<p>We need a way for a node to indicate where the child nodes are.
+Despite my best effort, we will need 3 bytes for that, but we can make it more palatable.
+Most nodes with a value do not have children.
+So we can use one of our 3 free bits (that&rsquo;s luxury), to indicate whether we have some children or not:</p>
+
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">24-44</th>
+    <th class="tg-0pky">45</th>
+    <th class="tg-0pky">46</th>
+    <th class="tg-0pky">47</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky">Value</td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: yellow"> Has children</td>
+  </tr>
+</table>
+
+<p>If the node does not have a value, we know it has at least one child, which means our &ldquo;has value&rdquo; bit actually stores 2 bits of information. Nice :D</p>
+
+<p>Knowing we have children still require a way to jump to them.
+I originally add a list of offset to jump to but that was incredibly wasteful.
+It took me a while but I realized I could store the offset of the first children and lay all the direct children of a given parent sequentially.</p>
+
+<p>Taking the example of the radix tree with the digits, we can lay it memory in breadth-first order:</p>
+
+<p><code>DIGIT | ZERO | ONE | T | F | S | EIGHT | NINE | WO | WHERE | OUR | IVE | IX | EVEN</code></p>
+
+<p>And then we only need to store in the data for <code>DIGIT</code> the offset of the node <code>ZERO</code>.</p>
+
+<p>The last thing we need is a termination condition after the first children of a given node.
+Fortunately, we have a few bits left - we used 24 bits for the offset - where 19 would suffice given our
+serialized radix is about 200KB. We also have 2 bits left next to the value:</p>
+
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">24-44</th>
+    <th class="tg-0pky">45</th>
+    <th class="tg-0pky">46</th>
+    <th class="tg-0pky">47</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky">Value</td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: yellow">   Has sibling </td>
+    <td class="tg-0pky"> Has children</td>
+  </tr>
+</table>
+
+<h1 id="result-and-future-improvements">Result and future Improvements</h1>
+
+<p>In my current <a href="https://github.com/cor3ntin/ext-unicode-db/tree/name_to_cp">WIP implementation</a>, for the entire Unicode 12 database, (including aliases) the dictionary is 48.6KB and the radix tree is 213Ki. which is about 8 bytes per non-generated name!
+This can be confirmed using a tool such as <a href="https://github.com/google/bloaty">Bloaty McBloatface</a> - I am not making this up!</p>
+
+<p>It is possible to reduce the data further.
+For example, the dictionary can be shrunk by 25% using the fact that the letters making the characters name can be encoded using only 6 bits.</p>
+
+<h2 id="code-point-to-name">Code point to name</h2>
+
+<p>I might explore that in a further article, but the codepoint to name mapping requires different tricks and data structures.
+Even if it is technically possible to scan the entire radix tree to reconstruct a name it is inefficient, and more critically we do not keep track of the types of names (there are names and aliases).</p>
+
+<p>A popular solution used by python and rust is to store only the Code point to name mapping and then use perfect hashing to get from a name to a code point,
+convert it back and check the result.
+It is a useful solution when one needs both mappings.</p>
+
+<p>There might be other improvements possible or clever way to do that.</p>
+
+<p>You can play with the code on <a href="https://godbolt.org/z/96iqvS">Compiler Explorer</a>.</p>
+
+<p>Compressing Unicode data is a very fun challenge, consider giving it a trie!</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fname_to_cp%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fname_to_cp%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fname_to_cp%2f&t=Storing%20Unicode%3a%20Character%20Name%20to%20Codepoint%20Mapping" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+        "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"}
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true, libraryCode: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+
