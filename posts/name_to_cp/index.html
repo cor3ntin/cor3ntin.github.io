@@ -134,7 +134,7 @@ are both character names for example.</p>
 <h1 id="serialization">Serialization</h1>
 
 <p>Now that we made sense of the data, time to lay it in memory.
-Each byte count. Each bit count.</p>
+Every byte counts. Every bit counts.</p>
 
 <p>How many bits do we need per node, to store the value, the name, and a way to access children nodes?</p>
 
@@ -303,7 +303,7 @@ So we can use one of our 3 free bits (that&rsquo;s luxury), to indicate whether 
 <p>If the node does not have a value, we know it has at least one child, which means our &ldquo;has value&rdquo; bit actually stores 2 bits of information. Nice :D</p>
 
 <p>Knowing we have children still require a way to jump to them.
-I originally add a list of offset to jump to but that was incredibly wasteful.
+I originally added a list of offset to jump to but that was incredibly wasteful.
 It took me a while but I realized I could store the offset of the first children and lay all the direct children of a given parent sequentially.</p>
 
 <p>Taking the example of the radix tree with the digits, we can lay it memory in breadth-first order:</p>
