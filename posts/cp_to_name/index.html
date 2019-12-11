@@ -84,7 +84,7 @@ The challenge will be to minimize the size footprint of that function.</p>
 <h1 id="analyzing-the-data">Analyzing the data</h1>
 
 <p>The <a href="https://www.unicode.org/ucd/">Unicode Character Database</a> is delivered as a set of hard to parse text files,
-that looks a bit like CVS but aren&rsquo;t. Fortunately, there is also an XML document describing each character.</p>
+that looks a bit like CSV but aren&rsquo;t. Fortunately, there is also an XML document describing each character.</p>
 
 <p>Feeding that to a python script, we can start to count characters, and get a better idea of the size of the
 data we will need:</p>
@@ -348,8 +348,11 @@ Even if it is technically possible to scan the entire radix tree to reconstruct 
 convert it back and check the result.
 It is a useful solution when one needs both mappings.</p>
 
-<p>There might be other improvements possible or clever way to do that.
-Compressing Unicode data is a very fun challenge, consider giving it a trie!</p>
+<p>There might be other improvements possible or clever way to do that.</p>
+
+<p>You can play with the code on <a href="https://godbolt.org/z/96iqvS">Compiler Explorer</a>.</p>
+
+<p>Compressing Unicode data is a very fun challenge, consider giving it a trie!</p>
 
       
     <div id="socialshareDiv">
