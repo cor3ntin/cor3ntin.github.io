@@ -498,11 +498,23 @@ It might be a bit nasty. But I don&rsquo;t care because</p>
 <p>By the way, this is why distributing compiled modules is a terrible idea: The serialization
 can never be optimized once people start to do that. Don&rsquo;t.</p>
 
-<p>We can now do some benchmarks</p>
+<h3 id="we-can-now-do-some-benchmarks-with-modules">We can now do some benchmarks with modules</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">// Baseline
+</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">int</span> i[] = {<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#888">/*...*/</span>, <span style="color:#00d;font-weight:bold">1</span>};
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {}
 
+<span style="color:#888">//Module
+</span><span style="color:#888"></span>module M;
+<span style="color:#080;font-weight:bold">export</span> <span style="color:#888;font-weight:bold">int</span> i[] = {<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#888">/*...*/</span>, <span style="color:#00d;font-weight:bold">1</span>};
+
+<span style="color:#888">//importer
+</span><span style="color:#888"></span>import M;
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {}
+</code></pre></div>
 <iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="600px" src="/arrays_benchmark/benchmark_modules1.html"></iframe>
 
-<p>Unfortunately, it seems tha</p>
+<p>Modules do seem to provide some performance benefits,
+alas, for our use case, this benefits doesn&rsquo;t appear dramatic.</p>
 
 <h2 id="a-bittersweet-conclusion">A bittersweet conclusion</h2>
 
