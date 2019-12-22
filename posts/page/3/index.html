@@ -58,6 +58,8 @@
   <div class="container">
     
     
+    
+    
         <article id="article">
         <div class="subtitle is-6 is-pulled-right">
             
@@ -137,29 +139,6 @@ In fact, the main motivation for this article is to put this feature in the hand
 In total, there are about 140 papers all rather interesting.
             
             <a class="button is-link" href="https://cor3ntin.github.io/posts/span/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">April 22, 2018</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/attributes/">C&#43;&#43; Attributes</a></h1>
-        <div class="content">
-            In C++11, attributes were added as a way to standardized features such as gnu __attribute__and msvc’s __declspec.
-The language provisions for standard attributes as well as non-standard attributes through the use of namespaces, though the behavior of non-standard attributes was only settled for C++17. And sadly, as of 2018, neither GCC nor MSVC offer their vendor-specific attributes though the portable C++ standard syntax.
-Most standard attributes were added in C++14 and 17.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/attributes/" style="height:28px">
             Read more
             <span class="icon is-small">
                 <i class="fa fa-angle-double-right"></i>
@@ -287,6 +266,8 @@ if (!doNotTrack) {
         "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
         "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
         "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"}
+        "meta"         : {"lang": "cppx",
+                          "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
     }
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
@@ -304,7 +285,8 @@ if (!doNotTrack) {
                 id: 1,
                 source: source,
                 options: {compileOnChange: true, colouriseAsm: true},
-                fontScale: 1
+                fontScale: 1,
+                lang: settings["lang"] || "c++"
             }
         });
         content.push({

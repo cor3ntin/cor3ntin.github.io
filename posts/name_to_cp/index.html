@@ -471,6 +471,8 @@ if (!doNotTrack) {
         "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
         "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
         "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"}
+        "meta"         : {"lang": "cppx",
+                          "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
     }
     const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
     for (let i = 0, len = ce_nodes.length; i < len; i++) {
@@ -488,7 +490,8 @@ if (!doNotTrack) {
                 id: 1,
                 source: source,
                 options: {compileOnChange: true, colouriseAsm: true},
-                fontScale: 1
+                fontScale: 1,
+                lang: settings["lang"] || "c++"
             }
         });
         content.push({
