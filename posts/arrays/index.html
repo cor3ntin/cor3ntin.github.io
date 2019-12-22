@@ -68,7 +68,8 @@
 
 <p>This blog post features iframes, interactive SVG files, and graphs
 which may not render properly on handheld devices.
-Sorry about that!</p>
+Sorry about that.
+The charts are however interactive, so you can zoom in an see the exact values.</p>
 
 <h1 id="if-i-were-a-compiler-i-would-simply-put-all-your-bytes-in-your-binary">If I were a compiler, I would simply put all your bytes in your binary</h1>
 
@@ -101,7 +102,10 @@ If you want these features to be <code>constexpr</code>, you can&rsquo;t use lin
 <p>You may have noticed I am working on <a href="https://cor3ntin.github.io/posts/name_to_cp/">unicode properties</a>, and even with careful bit packing,
 these tables have thousands of elements.</p>
 
-<p>Other people embed assets, tests&hellip;</p>
+<p>Twitter had many other interesting use cases, to share, for example people embed neural network
+weights on binaries targeting embeded platforms!</p>
+
+<p><blockquote class="twitter-tweet" data-lang="en" data-theme="light"><p lang="en" dir="ltr">Hey <a href="https://twitter.com/hashtag/cplusplus?src=hash&amp;ref_src=twsrc%5Etfw">#cplusplus</a> twitter, what&#39;s your use cases for very large embedded binary data / const int arrays in C++ ?</p>&mdash; Corentin (@Cor3ntin) <a href="https://twitter.com/Cor3ntin/status/1208389050698215427?ref_src=twsrc%5Etfw">December 21, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
 
 <p>There is a well know trick to make your programs significantly faster:
 Use string literals!</p>
@@ -511,10 +515,10 @@ can never be optimized once people start to do that. Don&rsquo;t.</p>
 </span><span style="color:#888"></span>import M;
 <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {}
 </code></pre></div>
-<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="600px" src="/arrays_benchmark/benchmark_modules1.html"></iframe>
+<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="600px" src="/arrays_benchmark/benchmark_modules2.html"></iframe>
 
-<p>Modules do seem to provide some performance benefits,
-alas, for our use case, this benefits doesn&rsquo;t appear dramatic.</p>
+<p>Modules do seem to provide some performance benefits, but these benefits
+are not obvious until the array is outlandishly big, over 100MB of binary data.</p>
 
 <h2 id="a-bittersweet-conclusion">A bittersweet conclusion</h2>
 
