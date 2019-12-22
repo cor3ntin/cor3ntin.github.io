@@ -66,7 +66,7 @@
 
 <h3 id="before-we-start">Before we start</h3>
 
-<p>This blog post features iframes, interactive SVG files and graphs
+<p>This blog post features iframes, interactive SVG files, and graphs
 which may not render properly on handheld devices.
 Sorry about that!</p>
 
@@ -125,7 +125,7 @@ Why are strings literals so much faster than arrays?
 There are a few tools to help us peek under the hood of the compiler.
 One such tool is the <code>-ast-dump</code> option of <code>clang</code> which&hellip; well dumps its
 internal representation.
-That tool is convinently available on compiler explorer</p>
+That tool is conveniently available on compiler explorer</p>
 
 <iframe width="100%" height="500px" src="https://godbolt.org/e?readOnly=true&hideEditorToolbars=true#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZugHZEDKqAhgDbYgCMALOQCse5dq3qhUAUgBMAIRmzyAZ2ydURAg2rZ6mAMLp2AVwC29HgDZyOzABkC9bADlTAI2yke3cgAd0S4k16A2MzS19/QIZ7RxcTd09ubxU1DQYmIlZSIhDTc24rFOx1IIysohjnNw8vZUzs3LCCuvLKuISvAEpldCNSVC4AclQkLIBqVjHJAFZ5aYARKYBmRckABgBBGWkZvQAPNd2Do8Pp/e5t9a3pHbPju9P9x72Lm6vLh5Ovu9edzY%2Bnt9AT9Lv83p8IcDzqDrrcofd4b93uD4c9nkiwXCEdj0TCATigS88SiCZCiW8lrJBt12CBBtNBuRzIM1oz0HS9AoFGMlL1%2BtgptIltxGUQ6azOt0ANYgXjTAB0crWAE5ptxVdMlgB2ZU3aYiOm8RkmWUADnlwqWvF1awsVptVmZrPI7MGjKUIDW5DFLOp5DgsBQGBw%2BGIZEo1DojBYHC4fEEIGkIjEEi5cmUqmKaXMEBsjXMvC9Nja1USEQC2fzsq9fgrQRL8RqyUzJXS9Ryhjy1YzqVK7YbHWS7arhZa2QHTe6vL6AzpDiIExmc1WKymWtk3jGm%2B35C3u53e8PFy180klL9tPpjKdbI5adkPL5A0FS2kovF1O6SGwrBwnggNKGsaIBqvKFimhY0xrDqSyQdBypLEyH4unS7qet6H6SuQMrSFq8rKmsax8OBvDSKaWqmtwNwGoMSzXshrrvr63QBgg8AQEG6AmD4BCcBQVAQBg3G8TUqCiOIAD6RCkEY9BSuQNC8UQHgehArjIa4DhZAAnnSIrkEJJg6EQADy9DsLpvrkDgJgppwyGEKQWYEAAbtgHpWdgezFEYyl6Yy86qMh7AEK4pA6QYOD%2Bd6pAECagwit0UbMGw9nxkISbiamcgKCIoUepA3ToD42YeQAtEoRCYGe8xSDlcjSKw7ottm2i6FW3jFg4VSNmWtZRMEnZNOWA0TmWRStvQZQNEN%2BQ9s5batN17RNmOHahHNlVLbEpY8FOT5xoBV5IVZrp7BBZUWLwYxiSmYwQNJslSp092hiQpAvpuBjCXxL7SC9nL1VSGHMdKib6peRrkCa3DytwhGmq%2BhG8BYWrcNMFGITeKFuso6E%2BhK/qIBxICsJVEa5oQ70EJgwjJTGaX8Bl82TW1%2BizcIXU7b1wj9ZWHPeHz9bLbtza9otM0bcIE3ZtNFQizzQ7lB1a1jXtR0MidzpnRdV03Vl92PXJL0bJVYwAGoENgADuHivVTZCfbu308b9Mivp0TESkdUMmij8qamqaPw5BaPSNM%2BrY4xeNegTfqsSTQmux4FNJyJni3ZJRvyYp7DKaQqnqVZmn0Dp0WGcZZkWQ52C2eI9lWY5zluR5zpeT5fkJQFjBBVZIVhRFWBDPp0lxf5SUMClsY8EzwhZWg955a4BUAS6JVBB5zXizmeYC9Yuhq4LkT81LR91tECuDizsvDnvMt9ttPVX1tktdkr46X5OPQzlw/00ZrUc6TnQsJda6mdgCGxksbe2YYPruyTGMF26dPoA3vF7T85Bvy/hqKvSGwFYbwySLBLU4d0Y6mVI6BiqEY4g0JgnFAZMiAU2wA7WKtMkz01SnGWeYsFo73ahzaQnUD6f08PwIWDAqxCJGtmNW/B74S3Wl2LU18H4f25h0eRt8pYqJfvLDRNReBYUvAAqhgxgGgP1ndB6UDnpjFNguS2Ns7YQDeo7eBzsuLJzgUKbgntaEYLwdDECsNpAWDIhYIidppjKmVOqLWt5cYeljphMGJD5QqmVKaTUZCqLcFNKaGidEEk43QcYukb4SnRzjlhNyBcgiyiAA"></iframe>
 
@@ -385,9 +385,9 @@ size, the result is then divided by 1000 to give us an average time per array.</
 <p>It would seem the improvement is visible for small arrays.
 Take that with a big pinch of salt:
 The modifications probably pessimize the non-array cases.
-But on the graph below, the compile time decrease by over 70% on average for
+But on the graph below, the compile-time decrease by over 70% on average for
 all array sizes.
-(For asmall values, the benchmarked source file contain 1000 arrays of the given size)</p>
+(For small values, the benchmarked source file contain 1000 arrays of the given size)</p>
 
 <h2 id="astsmtwriter-and-modules">AstSmtWriter And Modules</h2>
 
@@ -431,7 +431,7 @@ This would lay in memory:</p>
 
 <p><code>ListOfLiteralExpr instance| unsigned: number of bytes | char[Bytes]: the values</code></p>
 
-<p><code>char[]</code> ?</p>
+<p><code>char[]</code>?</p>
 
 <p>Yes,
 <code>ListOfLiteralExpr</code> is meant to store any kind of integer literal and these can be of different sizes.
@@ -524,7 +524,7 @@ Profilers and pretty graphs are seductive.
 Overfitting is a sure way to produce stupendous numbers.
 And the cost of that is added complexity in clang.
 Is that added complexity worth the trouble? I don&rsquo;t think I am qualified to answer that.
-Truth is, it is quite clear to me that, a few <code>//FIXME</code> here and there not withstanding,
+Truth is, it is quite clear to me that, a few <code>//FIXME</code> here and there notwithstanding,
 LLVM is a well-optimized machine, and I was only able to get
 some <a href="https://www.youtube.com/watch?v=rHIkrotSwcc">improvements by peeling off layers of abstractions</a>.
 Would clang maintainers welcome the increased complexity?</p>
@@ -539,13 +539,13 @@ A few microseconds here and there in Clang benefits millions of people.</p>
 <h1 id="references-and-tools">References And Tools</h1>
 
 <p>This blog post ended up representing about a week of work.
-Confronted with a large code base, I can only recommend beefy hardware and tools:</p>
+Confronted with a large codebase, I can only recommend beefy hardware and tools:</p>
 
 <ul>
 <li><a href="https://valgrind.org">Valgrind</a>, <a href="https://software.intel.com/en-us/vtune">Vtune</a>, <a href="https://en.wikipedia.org/wiki/Perf_(Linux)">Perf</a> and <a href="https://github.com/KDAB/hotspot">Hotspot</a> for performance analysis</li>
-<li><a href="http://embed.cs.utah.edu/creduce/">C-Reduce</a> a very handy tool to find the smallest code that reproduce a compiler crash</li>
+<li><a href="http://embed.cs.utah.edu/creduce/">C-Reduce</a> a very handy tool to find the smallest code that reproduces a compiler crash</li>
 <li><a href="https://godbolt.org">Compiler Explorer</a>, the only C++ compiler one should ever need</li>
-<li><a href="http://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html">FlameGraph</a> and <a href="https://plot.ly/python/">Plotly</a> to generate the charts for the present blog post, with the help of a few  off-putting python scripts.</li>
+<li><a href="http://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html">FlameGraph</a> and <a href="https://plot.ly/python/">Plotly</a> to generate the charts for the present blog post, with the help of a few off-putting python scripts.</li>
 </ul>
 
       
