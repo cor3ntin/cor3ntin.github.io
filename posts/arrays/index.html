@@ -376,6 +376,15 @@ f.write(<span style="color:#d20;background-color:#fff0f0">&#34;}; int main (int 
 <p>We made compile time 3 times better. Not bad!
 It takes under 10 seconds to generate a file with 200MB of data.</p>
 
+<p>Using <code>-ftime-trace</code>, we get a better sense of the gains:
+You can read more about <code>-ftime-trace</code>: <a href="https://aras-p.info/blog/2019/01/16/time-trace-timeline-flame-chart-profiler-for-Clang/">here</a>.
+Very handy tool, especially to measure and optimize the compile times of your own code!</p>
+
+<p>It turns out that chrome even support comparing multiple framgraph by hacking the rendered file.
+I couldn&rsquo;t find any vizualizer beside <code>chrome://tracing</code>, so a png will have to do:</p>
+
+<p><img src="time_trace.png" /></p>
+
 <p>Interestingly, memory usage does not seem to have improved much.</p>
 
 <iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_memory_2.html"></iframe>
