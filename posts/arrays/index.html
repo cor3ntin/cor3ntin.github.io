@@ -224,7 +224,7 @@ return a new type of expression:</p>
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">if</span>(NextToken().is(tok::numeric_constant)) {
  ExprResult E = ParseListOfLiteralsInitializer();
  <span style="color:#080;font-weight:bold">if</span>(!E.isInvalid()) {
- <span style="color:#080;font-weight:bold">return</span> E;
+    <span style="color:#080;font-weight:bold">return</span> E;
  }
  <span style="color:#888">//otherwise carry on
 </span><span style="color:#888"></span>}
@@ -322,15 +322,15 @@ I am penalizing the general case for the sake of large arrays.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">if</span>(<span style="color:#080;font-weight:bold">auto</span>* ListExpr = dyn_cast_or_null&lt;ListOfLiteralExpr&gt;(Initializer)) {
  <span style="color:#888">// TODO CORENTIN: HANDLE MORE CASES
 </span><span style="color:#888"></span> <span style="color:#080;font-weight:bold">if</span> (<span style="color:#080;font-weight:bold">const</span> ArrayType *DestAT = Context.getAsArrayType(DestType)) {
- <span style="color:#888">//Nasty
-</span><span style="color:#888"></span> <span style="color:#080;font-weight:bold">if</span>(DestAT-&gt;getElementType()-&gt;isIntegerType()) {
- TryListOfLiteralInitialization(S, Entity, Kind, ListExpr, *<span style="color:#080;font-weight:bold">this</span>,
- TreatUnavailableAsInvalid);
- <span style="color:#080;font-weight:bold">return</span>;
- }
+    <span style="color:#888">//Nasty
+</span><span style="color:#888"></span>    <span style="color:#080;font-weight:bold">if</span>(DestAT-&gt;getElementType()-&gt;isIntegerType()) {
+        TryListOfLiteralInitialization(S, Entity, Kind, ListExpr, *<span style="color:#080;font-weight:bold">this</span>,
+        TreatUnavailableAsInvalid);
+        <span style="color:#080;font-weight:bold">return</span>;
+    }
  }
  <span style="color:#080;font-weight:bold">else</span> {
- <span style="color:#888">//Convert back ListOfLiteralExpr to InitListExpr
+    <span style="color:#888">//Convert back ListOfLiteralExpr to InitListExpr
 </span><span style="color:#888"></span> }
 }
 </code></pre></div>
@@ -362,7 +362,7 @@ all the constexpr goodness and constant folding happens:</p>
  Result = APValue(APValue::UninitArray(),
  std::min(E-&gt;getNumInits(), Elts), Elts);
  <span style="color:#080;font-weight:bold">for</span>(<span style="color:#888;font-weight:bold">unsigned</span> I = <span style="color:#00d;font-weight:bold">0</span>; I &lt; E-&gt;getNumInits(); I++ )
- Result.getArrayInitializedElt(I) = APSInt(E-&gt;getInit(I));
+    Result.getArrayInitializedElt(I) = APSInt(E-&gt;getInit(I));
  <span style="color:#080;font-weight:bold">return</span> <span style="color:#038">true</span>;
 }
 </code></pre></div>
@@ -420,23 +420,25 @@ space can ask the allocators to lay out the extra data after the object.</p>
  <span style="color:#080;font-weight:bold">private</span> llvm::TrailingObjects&lt;ListOfLiteralExpr, <span style="color:#888;font-weight:bold">unsigned</span>, <span style="color:#888;font-weight:bold">char</span>&gt;
 {
  <span style="color:#888;font-weight:bold">unsigned</span> numTrailingObjects(OverloadToken&lt;<span style="color:#888;font-weight:bold">unsigned</span>&gt;) <span style="color:#080;font-weight:bold">const</span> {
- <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">1</span>;
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">1</span>;
  }
  <span style="color:#888;font-weight:bold">unsigned</span> numTrailingObjects(OverloadToken&lt;<span style="color:#888;font-weight:bold">char</span>&gt;) <span style="color:#080;font-weight:bold">const</span> {
- <span style="color:#080;font-weight:bold">return</span> *getTrailingObjects&lt;<span style="color:#888;font-weight:bold">unsigned</span>&gt;();
+    <span style="color:#080;font-weight:bold">return</span> *getTrailingObjects&lt;<span style="color:#888;font-weight:bold">unsigned</span>&gt;();
  }
+
  ListOfLiteralExpr*
  ListOfLiteralExpr::Create(ASTContext &amp;Context,
- SourceLocation LBraceLoc,
- ArrayRef&lt;uint64_t&gt; Values,
- QualType Ty,
- SourceLocation RBraceLoc) {
- <span style="color:#888;font-weight:bold">void</span> *Mem = Context.Allocate(totalSizeToAlloc&lt;<span style="color:#888;font-weight:bold">unsigned</span>, <span style="color:#888;font-weight:bold">char</span>&gt;(<span style="color:#00d;font-weight:bold">1</span>,Bytes),
- <span style="color:#080;font-weight:bold">alignof</span>(ListOfLiteralExpr));
- <span style="color:#080;font-weight:bold">auto</span> * E = <span style="color:#080;font-weight:bold">new</span> (Mem)
- ListOfLiteralExpr(Context, LBraceLoc, Values, Ty, RBraceLoc);
- *E-&gt;getTrailingObjects&lt;<span style="color:#888;font-weight:bold">unsigned</span>&gt;() = Bytes;
- <span style="color:#080;font-weight:bold">return</span> E;
+        SourceLocation LBraceLoc,
+        ArrayRef&lt;uint64_t&gt; Values,
+        QualType Ty,
+        SourceLocation RBraceLoc) {
+
+    <span style="color:#888;font-weight:bold">void</span> *Mem = Context.Allocate(totalSizeToAlloc&lt;<span style="color:#888;font-weight:bold">unsigned</span>, <span style="color:#888;font-weight:bold">char</span>&gt;(<span style="color:#00d;font-weight:bold">1</span>,Bytes),
+    <span style="color:#080;font-weight:bold">alignof</span>(ListOfLiteralExpr));
+    <span style="color:#080;font-weight:bold">auto</span> * E = <span style="color:#080;font-weight:bold">new</span> (Mem)
+    ListOfLiteralExpr(Context, LBraceLoc, Values, Ty, RBraceLoc);
+    *E-&gt;getTrailingObjects&lt;<span style="color:#888;font-weight:bold">unsigned</span>&gt;() = Bytes;
+    <span style="color:#080;font-weight:bold">return</span> E;
 }
 </code></pre></div>
 <p>Lots of complex machinery in there!
@@ -464,9 +466,9 @@ I utterly didn&rsquo;t care.</p>
  <span style="color:#080;font-weight:bold">template</span> <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> <span style="color:#369;font-style:italic">dummy</span> :
  std::tuple&lt;uint8_t, uint16_t, uint32_t, uint64_t&gt;()) {
 
- <span style="color:#080;font-weight:bold">if</span>(byte_size == <span style="color:#080;font-weight:bold">sizeof</span>(dummy)) {
- <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">reinterpret_cast</span>&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">decltype</span>(dummy)*&gt;(bytes)[index];
- }
+    <span style="color:#080;font-weight:bold">if</span>(byte_size == <span style="color:#080;font-weight:bold">sizeof</span>(dummy)) {
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">reinterpret_cast</span>&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">decltype</span>(dummy)*&gt;(bytes)[index];
+    }
  }
  __builtin_unreachable();
 }
