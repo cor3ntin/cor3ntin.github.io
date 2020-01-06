@@ -6,10 +6,21 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 11 Dec 2019 10:41:18 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 06 Jan 2020 11:48:33 +0000</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Waiting for std::embed: Very Large Arrays in Clang</title>
+      <link>https://cor3ntin.github.io/posts/arrays/</link>
+      <pubDate>Mon, 06 Jan 2020 11:48:33 +0000</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/arrays/</guid>
+      <description>Before we start This blog post features iframes, interactive SVG files, and graphs which may not render properly on handheld devices. Sorry about that. The charts are however interactive, so you can zoom in an see the exact values.
+If I were a compiler, I would simply put all your bytes in your binary There have been a few interesting and passionate discussions about std::embed lately.
+std::embed would surely be a great tool to have in one&amp;rsquo;s toolbox, and I&amp;rsquo;m sure some version of it will be adopted in time, once a consensus in reach (I have yet to find someone not sold on the usefulness of that proposal).</description>
+    </item>
     
     <item>
       <title>Storing Unicode: Character Name to Codepoint Mapping</title>
