@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>A Universal I/O Abstraction for C&#43;&#43; | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">January 28, 2020</h2>
+    <h1 class="title">A Universal I/O Abstraction for C&#43;&#43;</h1>
+    
+    <div class="content">
+      
+
+<p>This article is the sequel to <a href="https://cor3ntin.github.io/posts/executors/">A Universal Async Abstraction for C++</a>,
+in which I talk about the <a href="https://wg21.link/P0443">Executor proposal</a> targeting C++23.
+Quite a bit happened since then.</p>
+
+<p>SG-1<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>, the study group charged of all things concurrency and parallelism made forward progress
+and send the proposal to LEWG with the hope of landing a future revision in the C++23 draft.
+This is rather big news given that this work has been brewing for about a decade.</p>
+
+<p>The split of <code>submit</code> into <code>connect</code> and <code>start</code> is now <a href="https://wg21.link/p2006">the object of a paper</a>. This is a very important piece of the puzzle and I look forward to see it discussed in Prague next month.</p>
+
+<p>You can also read a short history of executors in <a href="https://wg21.link/p2033r0.pdf">this paper</a>.</p>
+
+<p>Lastly, but maybe more importantly, Facebook published an open-source implementation of sender/receivers and scheduler called <a href="https://github.com/facebookexperimental/libunifex">libunifex</a>.
+This is not an exact implementation of <a href="https://wg21.link/P0443">P0443</a> and it has a lot more features and algorithms, but it implements the same basic design and architecture.
+Unfortunately, it doesn&rsquo;t use concepts yet so I foolishly keep to trying to implement my C++20
+library. And luckily Coroutines were merged into GCC and Concepts were merged into clang so there
+are now many compilers which can implement the executors proposal.
+Exciting times.</p>
+
+<p>Last time we discussed two base concepts:</p>
+
+<ul>
+<li>The <code>scheduler</code> concept which let you schedule an operation on a given context (such as a thread pool)</li>
+<li>The <code>executor</code> concept on which let you execute a function on a given context (such as a thread pool).
+We saw how <code>executor</code> were rather not worthy of a concept as <code>executor::execute(Func)</code>
+could simply be a <abbr title="Customization Point Object">CPO</abbr> for <code>std::schedule(sheduler, std::as_receiver(Func))</code> <sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</li>
+</ul>
+
+<p>Being able to run code on an execution context, such as a thread is great.
+But, what if you wanted to run code later? Maybe some piece for code needs to run every 5 minutes:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">child</span>() {
+    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+        fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Are we there yet?&#34;</span>);
+        this_thread::sleep(<span style="color:#00d;font-weight:bold">5</span>min);
+    }
+}
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    scheduler <span style="color:#080;font-weight:bold">auto</span> s = <span style="color:#888">/*...*/</span>
+    execution::schedule(s, as_receiver(child));
+}
+</code></pre></div>
+<p>This will work.
+But nothing else will ever run on that thread which is a rather poor usage of resources.
+Threads are less expensive than processes but they still take time to create: Avoid having one thread per task if you have thousands of tasks.
+What we would want is for the <em>task</em> rather than the <em>thread</em> to be interrupted for 5 minutes.</p>
+
+<p>In fact, there are may instances when a task needs to wait, iddling a thread:
+ * Sleeping
+ * Waiting for data to be read from a socket or a file
+ * Waiting for a device to be flushed
+ * Waiting for a process to complete</p>
+
+<p>All these operations can be are refered as &ldquo;I/O&rdquo; and on platforms with a kernel, they are usually handled be handled by the kernel.</p>
+
+<p>When calling the <code>::read</code> function for example the kernel will suspend the calling thread until
+some data is available for that device and schedule another thread.
+When data is available, the thread can be scheduled back.</p>
+
+<p>This dance has a cost. A rather small one, you would need to create hundreds or thousands
+of thread to notice. In fact most of the cost probably comes from cache invalidation rather
+than the context switch itself.</p>
+
+<p>Instead of letting the kernel do the scheduling, there are system apis that less us do the
+scheduling in user space.</p>
+
+<p>The basic principal is rather simple:</p>
+
+<ul>
+<li>Request the kernel to notify us when data is available on a file descriptor or handle</li>
+<li>Do something else</li>
+<li>On another thread, wait for at least one request to complete</li>
+<li>Run a callback associated to a request</li>
+</ul>
+
+<h2 id="asynchronous-i-o-apis">Asynchronous I/O APIs</h2>
+
+<h3 id="select-poll-epoll">select, poll, epoll</h3>
+
+<p>These POSIX (<code>epoll</code> is Linux specific) APIS have different behavior
+which are not worth covering here as <a href="https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/">Julia Evans covered that topic</a> better than I could.</p>
+
+<p>Their principle is however identical:</p>
+
+<ul>
+<li>Register a set of file descriptor you wish to monitor</li>
+<li>Call the API</li>
+<li>It returns when one file descriptor is ready to be read or written to.</li>
+</ul>
+
+<h3 id="aio-and-iocp">aio and IOCP</h3>
+
+<h3 id="io-uring">io_uring</h3>
+
+<h2 id="the-reactor-pattern">The Reactor Pattern</h2>
+
+<h3 id="cancellation">Cancellation</h3>
+
+<h2 id="asynchronous-algorithms">Asynchronous Algorithms</h2>
+
+<h3 id="on">on</h3>
+
+<h3 id="when-all">when_all</h3>
+
+<h2 id="implementing-go-channels-in-c">Implementing Go Channels in C++</h2>
+
+<h2 id="threads-are-shared-resources">Threads are shared resources</h2>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">A group which is in fact not chaired by Jack O&rsquo;Neill. I never went there by fear of speaking out of order. Legend says they eat at round tables and fight for the forks.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:2">A hill I&rsquo;d rather not die on!
+ <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fiouring%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fiouring%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fiouring%2f&t=A%20Universal%20I%2fO%20Abstraction%20for%20C%2b%2b" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+        "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"},
+        "meta"         : {"lang": "cppx", "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1,
+                lang: settings["lang"] || "c++"
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true, libraryCode: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

@@ -6,10 +6,20 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 06 Jan 2020 11:48:33 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 28 Jan 2020 14:43:18 +0100</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>A Universal I/O Abstraction for C&#43;&#43;</title>
+      <link>https://cor3ntin.github.io/posts/iouring/</link>
+      <pubDate>Tue, 28 Jan 2020 14:43:18 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/iouring/</guid>
+      <description>This article is the sequel to A Universal Async Abstraction for C++, in which I talk about the Executor proposal targeting C++23. Quite a bit happened since then.
+SG-11, the study group charged of all things concurrency and parallelism made forward progress and send the proposal to LEWG with the hope of landing a future revision in the C++23 draft. This is rather big news given that this work has been brewing for about a decade.</description>
+    </item>
     
     <item>
       <title>Waiting for std::embed: Very Large Arrays in Clang</title>
