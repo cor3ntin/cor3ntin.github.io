@@ -411,7 +411,7 @@ active threads as there are active threads.</p>
 I/O libraries might create their own even loops, as does pretty much every graphics framework.</p>
 
 <p>The standard library use threads internally for parallel algorithms and <code>std::async</code>.
-Under some implementations, there is a thread started for every <code>std::async</code> call (one of the many reason <code>std::async</code> is terrible).</p>
+Under some implementations, there is a thread started for every <code>std::async</code> call (one of the many reason why <code>std::async</code> is terrible).</p>
 
 <p>And while we can transform 1000 elements of a vector one time,
 it is harder to transform 1000 elements of 1000 vectors 1000 times at the same time. <a href="https://en.wikipedia.org/wiki/La_Cité_de_la_peur">Or something</a>.</p>
