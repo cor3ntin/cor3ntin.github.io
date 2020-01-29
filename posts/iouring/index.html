@@ -341,7 +341,7 @@ While this may not appear to be a problem, with newer standards such as PCI4/PCI
 cases. <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2052r0.pdf">P2052</a> advocate for
 supporting such mode in the standard.</p>
 
-<h2 id="the-simplest-io-operation-schedule-at">The simplest IO/Operation: schedule_at</h2>
+<h2 id="the-simplest-i-o-operation-schedule-at">The simplest I/O Operation: schedule_at</h2>
 
 <p>In <a href="https://cor3ntin.github.io/posts/executors/">A Universal Async Abstraction for C++</a>, we discussed
 the <code>schedule</code> algorithm which runs an operation on the execution context associated
@@ -371,6 +371,15 @@ The only difference is that the <code>start</code> method will lead to a timeout
 <p><img src="schedule_deadline.svg" alt="IO uring Proactor"/></p>
 
 <p><code>io_uring</code> happens to have built-in timout support. Other scheduler may use <a href="http://man7.org/linux/man-pages/man2/timerfd_create.2.html"><code>timerfd</code></a> or <a href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpooltimer?"><code>CreateThreadpoolTimer</code></a> on windows.</p>
+
+<p>Beside timers, most Asynchronous APIS support:</p>
+
+<ul>
+<li>Reading, Writing to/from file descriptors (file, sockets, pipes, other &ldquo;file-like&rdquo; objects) in various modes</li>
+<li>Polling from file descriptors (waiting for data without actually reading it)</li>
+<li>Opening, syncing and closing file descriptors</li>
+<li>Connecting to a remote socket and accepting connexions</li>
+</ul>
 
 <h3 id="cancellation-and-stop-tokens">Cancellation and stop tokens</h3>
 
