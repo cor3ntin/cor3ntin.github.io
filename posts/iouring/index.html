@@ -450,9 +450,15 @@ can cook up something for scratch.</p>
 
 <h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">5</a></sup> are not Goroutines</h2>
 
-<p>In Go, Goroutines</p>
+<p>Goroutines, a feature of the Go programming language, in addition of being stackful, are very
+different of C++ coroutines in that they are both a resumption mechanism and a scheduling mechanism.
+Go provides you with a baked-in i/o and coroutines scheduler which will handle on behalf of the
+program interrupting a goroutiners when it performs an i/o, try tyo acquire a lock or any other blocking operation.</p>
 
-<p>Coroutines,</p>
+<p>C++ coroutines are not Goroutines. <strong>C++ Coroutines do not imply asynchrony, let alone scheduling</strong>.
+C++ is not the kind of language that will bake-in an i/o scheduler as it would go
+against the &ldquo;Don&rsquo;t pay for what you don&rsquo;t use&rdquo; mantra. In fact, it would make C++ unusable on many
+environments.</p>
 <div class="footnotes">
 
 <hr />
