@@ -341,6 +341,37 @@ While this may not appear to be a problem, with newer standards such as PCI4/PCI
 cases. <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2052r0.pdf">P2052</a> advocate for
 supporting such mode in the standard.</p>
 
+<h2 id="the-simplest-io-operation-schedule-at">The simplest IO/Operation: schedule_at</h2>
+
+<p>In <a href="https://cor3ntin.github.io/posts/executors/">A Universal Async Abstraction for C++</a>, we discussed
+the <code>schedule</code> algorithm which runs an operation on the execution context associated
+with a given scheduler</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">oneway_task <span style="color:#06b;font-weight:bold">do_something</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
+    co_await execution::schedule(s);
+    fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>); <span style="color:#888">//runs in the context associated to the scheduler s
+</span><span style="color:#888"></span>}
+</code></pre></div>
+<p>Now that we understand io contexts, aka execution contexts in which we can run
+io operations, we can add a <code>deadline</code> parameter to the <code>schedule</code> algorithm.
+I stole the idea of deadline from <a href="https://wg21.link/p1031">P1031 - Low level file i/o library</a>.
+It is a simple utility which can represent a time, either relative or absolute</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">oneway_task <span style="color:#06b;font-weight:bold">annoying_child</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
+    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+        <span style="color:#888">//Suspend the task for 5 minutes,
+</span><span style="color:#888"></span>        <span style="color:#888">//The thread is free to do something else in the meantime
+</span><span style="color:#888"></span>        co_await execution::schedule(s, <span style="color:#00d;font-weight:bold">5</span>min);
+        fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Are we there yet?&#34;</span>);
+    }
+}
+</code></pre></div>
+<p>Here, <code>execution::schedule(s, 5min);</code> returns a sender, like we saw last time for the <code>schedule</code>
+algorithm.
+The only difference is that the <code>start</code> method will lead to a timeout &ldquo;i/o&rdquo; operation being scheduled by the kernel.</p>
+
+<p><img src="schedule_deadline.svg" alt="IO uring Proactor"/></p>
+
+<p><code>io_uring</code> happens to have built-in timout support. Other scheduler may use <a href="http://man7.org/linux/man-pages/man2/timerfd_create.2.html"><code>timerfd</code></a> or <a href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpooltimer?"><code>CreateThreadpoolTimer</code></a> on windows.</p>
+
 <h3 id="cancellation-and-stop-tokens">Cancellation and stop tokens</h3>
 
 <h2 id="asynchronous-algorithms">Asynchronous Algorithms</h2>
