@@ -399,6 +399,45 @@ task <span style="color:#06b;font-weight:bold">read_data</span>(execution::sched
 <p>If you wonder why <code>f.close()</code> is not simply handled by RAII, read <a href="https://wg21.link/p1662r0">P1662</a>
 and weep.</p>
 
+<h2 id="threads-are-shared-resources">Threads are shared resources</h2>
+
+<p>There is a limited, fixed number of hardware threads, and unlike RAM,
+it is not possible to <a href="https://downloadmoreram.com">download more</a>.</p>
+
+<p>So ideally a program should use at most about the same number of frequently
+active threads are there are active threads.</p>
+
+<p>Unfortunately, independent libraries may use their own threads and thread pools.
+I/O libraries might create their own even loops, as does pretty much every graphics framework.</p>
+
+<p>The standard library use threads internally for parallel algorithms and <code>std::async</code>.
+Under some implementations, there is a thread started for every <code>std::async</code> call (one of the many reason <code>std::async</code> is terrible).</p>
+
+<p>And while we can transform 1000 elements of a vector one time,
+it is harder to transform 1000 elements of 1000 vectors 1000 times at the same time. <a href="https://en.wikipedia.org/wiki/La_Cité_de_la_peur">Or something</a>.</p>
+
+<p>This is why <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2079r0.pdf">P2079 - Shared execution engine for executors</a> makes the case for a globally accessible <em>execution</em> context.</p>
+
+<p>I do like that paper, but what we really need is a globally accessible <em>io context</em>. Or more specifically, a globally accessible <em>io scheduler</em>.</p>
+
+<p>I/O contexts being a strict superset of execution contexts.</p>
+
+<p>Before you make this face 😵 (which <a href="http://www.unicode.org/L2/L2019/19303-face-with-x-eyes.pdf">might not be the right face</a>), confusingly horrified and at the idea of adding a singleton to the standard, it is worth noting that some platforms reached that conclusion long ago and expose a
+global i/o context to all applications:</p>
+
+<ul>
+<li>Windows <a href="https://docs.microsoft.com/en-us/windows/win32/procthread/thread-pools">Threads Pools</a> expose a default thread pool to which work, including io request can be executed. This is used
+by Microsoft&rsquo;s STL implementation.</li>
+<li>Apple platforms have <a href="https://en.wikipedia.org/wiki/Grand_Central_Dispatch">Grand Central Dispatch</a></li>
+</ul>
+
+<p>There is no equivalent, de-facto solution on other posix platforms.
+And while a one-thread context is simple enough, user space scheduling is scheduling still, and
+<a href="https://tokio.rs/blog/2019-10-scheduler/">scheduling is hard</a>.</p>
+
+<p>There have some libraries that can be used on linux such as libdispatch or libuv, or implementers
+can cook up something for scratch.</p>
+
 <h3 id="cancellation-and-stop-tokens">Cancellation and stop tokens</h3>
 
 <h2 id="asynchronous-algorithms">Asynchronous Algorithms</h2>
@@ -408,8 +447,6 @@ and weep.</p>
 <h3 id="when-all">when_all</h3>
 
 <h2 id="implementing-go-channels-in-c">Implementing Go Channels in C++</h2>
-
-<h2 id="threads-are-shared-resources">Threads are shared resources</h2>
 <div class="footnotes">
 
 <hr />
