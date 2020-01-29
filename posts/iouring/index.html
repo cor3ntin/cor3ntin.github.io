@@ -355,7 +355,7 @@ with a given scheduler</p>
 io operations, we can add a <code>deadline</code> parameter to the <code>schedule</code> algorithm.
 I stole the idea of deadline from <a href="https://wg21.link/p1031">P1031 - Low level file i/o library</a>.
 It is a simple utility which can represent a time, either relative or absolute</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">oneway_task <span style="color:#06b;font-weight:bold">annoying_child</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">annoying_child</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
     <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
         <span style="color:#888">//Suspend the task for 5 minutes,
 </span><span style="color:#888"></span>        <span style="color:#888">//The thread is free to do something else in the meantime
@@ -380,6 +380,24 @@ The only difference is that the <code>start</code> method will lead to a timeout
 <li>Opening, syncing and closing file descriptors</li>
 <li>Connecting to a remote socket and accepting connections</li>
 </ul>
+
+<p>While it is possible to imagine low level apis such as</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">read_file</span>(scheduler, native_handle, buffers) -&gt; read_sender;
+<span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">close_file</span>(scheduler, native_handle) -&gt; close_sender;
+</code></pre></div>
+<p>It is more likely than instead we get few io objects such as files and sockets</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;execution::scheduler scheduler = std::default_scheduler&gt;
+<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">file</span>;
+
+task <span style="color:#06b;font-weight:bold">read_data</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s, buffers &amp; buffs) {
+    file f(s);
+    co_await f.open(<span style="color:#d20;background-color:#fff0f0">&#34;myfile.txt&#34;</span>);
+    co_await f.read(buffs);
+    co_await f.close();
+}
+</code></pre></div>
+<p>If you wonder why <code>f.close()</code> is not simply handled by RAII, read <a href="https://wg21.link/p1662r0">P1662</a>
+and weep.</p>
 
 <h3 id="cancellation-and-stop-tokens">Cancellation and stop tokens</h3>
 
