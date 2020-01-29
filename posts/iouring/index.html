@@ -72,7 +72,7 @@ Quite a bit happened since then.</p>
 and send the proposal to LEWG with the hope of landing a future revision in the C++23 draft.
 This is rather big news given that this work has been brewing for about a decade.</p>
 
-<p>The split of <code>submit</code> into <code>connect</code> and <code>start</code> is now <a href="https://wg21.link/p2006">the object of a paper</a>. This is a very important piece of the puzzle and I look forward to see it discussed in Prague next month.</p>
+<p>The split of <code>submit</code> into <code>connect</code> and <code>start</code> is now <a href="https://wg21.link/p2006">the object of a paper</a>. This is a very important piece of the puzzle and I look forward to seeing it discussed in Prague next month.</p>
 
 <p>You can also read a short history of executors in <a href="https://wg21.link/p2033r0.pdf">this paper</a>.</p>
 
@@ -80,7 +80,7 @@ This is rather big news given that this work has been brewing for about a decade
 This is not an exact implementation of <a href="https://wg21.link/P0443">P0443</a> and it has a lot more features and algorithms, but it implements the same basic design and architecture.
 Unfortunately, it doesn&rsquo;t use concepts yet so I foolishly keep to trying to implement my C++20
 library. And luckily Coroutines were merged into GCC and Concepts were merged into clang so there
-are now many compilers which can implement the executors proposal.
+are now many compilers that can implement the executors proposal.
 Exciting times.</p>
 
 <p>Last time we discussed two base concepts:</p>
@@ -107,29 +107,32 @@ But, what if you wanted to run code later? Maybe some piece for code needs to ru
 </code></pre></div>
 <p>This will work.
 But nothing else will ever run on that thread which is a rather poor usage of resources.
-Threads are less expensive than processes but they still take time to create: Avoid having one thread per task if you have thousands of tasks.
-What we would want is for the <em>task</em> rather than the <em>thread</em> to be interrupted for 5 minutes.</p>
+Threads are less expensive than processes but they still take time to create: Avoid having one thread per task if you have thousands of tasks.</p>
 
-<p>In fact, there are may instances when a task needs to wait, iddling a thread:
- * Sleeping
- * Waiting for data to be read from a socket or a file
- * Waiting for a device to be flushed
- * Waiting for a process to complete</p>
+<p>What we would want is for the <em>task</em> rather than the <em>thread</em> to be interrupted for 5 minutes.</p>
 
-<p>All these operations can be are refered as &ldquo;I/O&rdquo; and on platforms with a kernel, they are usually handled be handled by the kernel.</p>
+<p>In fact, there are many instances when a task needs to wait, iddling a thread:</p>
 
-<p>When calling the <code>::read</code> function for example the kernel will suspend the calling thread until
+<ul>
+<li>Sleeping</li>
+<li>Waiting for data to be read from a socket or a file</li>
+<li>Waiting for a device to be flushed</li>
+<li>Waiting for a process to complete</li>
+</ul>
+
+<p>All these operations can be are referred to as &ldquo;I/O&rdquo; and, on platforms with a kernel, they are usually handled by the kernel.</p>
+
+<p>When calling the <code>::read</code> function, for example, the kernel will suspend the calling thread until
 some data is available for that device and schedule another thread.
 When data is available, the thread can be scheduled back.</p>
 
 <p>This dance has a cost. A rather small one, you would need to create hundreds or thousands
-of thread to notice. In fact most of the cost probably comes from cache invalidation rather
+of threads to notice.  Most of the cost probably comes from cache invalidation rather
 than the context switch itself.</p>
 
-<p>Instead of letting the kernel do the scheduling, there are system apis that less us do the
-scheduling in user space.</p>
+<p>Instead of letting the kernel do the scheduling, there are system APIs that let us do the scheduling in user-space.</p>
 
-<p>The basic principal is rather simple:</p>
+<p>The basic principle is rather simple:</p>
 
 <ul>
 <li>Request the kernel to notify us when data is available on a file descriptor or handle</li>
@@ -140,26 +143,205 @@ scheduling in user space.</p>
 
 <h2 id="asynchronous-i-o-apis">Asynchronous I/O APIs</h2>
 
-<h3 id="select-poll-epoll">select, poll, epoll</h3>
+<h3 id="reactors-select-poll-epoll">Reactors: select, poll, epoll</h3>
 
-<p>These POSIX (<code>epoll</code> is Linux specific) APIS have different behavior
+<p>These POSIX (<code>epoll</code> is Linux specific) APIs have different behavior
 which are not worth covering here as <a href="https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/">Julia Evans covered that topic</a> better than I could.</p>
 
 <p>Their principle is however identical:</p>
 
 <ul>
-<li>Register a set of file descriptor you wish to monitor</li>
-<li>Call the API</li>
-<li>It returns when one file descriptor is ready to be read or written to.</li>
+<li>On thread A:
+
+<ul>
+<li>Ask thread B to register the file descriptor a task wishes to monitor</li>
+<li>Thread A can now run some other task</li>
+</ul></li>
+<li>On thread B:
+
+<ul>
+<li>Call the API (ie call <code>select</code> on that set of files)</li>
+<li>It blocks until one file descriptor is ready to be read or written to</li>
+<li>Call the continuation (callback) associated with a file ready to be read</li>
+<li>Perform the read</li>
+<li>Repeat until all callbacks have been executed</li>
+</ul></li>
 </ul>
 
-<h3 id="aio-and-iocp">aio and IOCP</h3>
+<p>Of course, synchronization between thread A and B is necessary
+to register file descriptors. More on that later!
+This general workflow is the <strong>reactor</strong> pattern.</p>
+
+<h3 id="proactors-aio-and-iocp">Proactors: AIO and IOCP</h3>
+
+<p>One problem with reactors is that for each <code>read</code> operation of a file, for example, we have to:</p>
+
+<ul>
+<li>Register the file (1 syscall)</li>
+<li>Poll until <em>some</em> data is available (1 syscall)</li>
+<li>Read the data (1 syscall)</li>
+<li>Repeat until enough data is available</li>
+</ul>
+
+<p>System calls are <em>relatively</em> expensive, so is resuming tasks before they have enough data.
+To palliate to that problem, more modern asynchronous I/O APIs such as <code>AIO</code> (POSIX) or IOCP (Windows), will merge the polling and reading operations.</p>
+
+<p>This allows a more straightforward workflow:</p>
+
+<ul>
+<li>On thread A:
+
+<ul>
+<li>Ask thread B to register the file descriptor along with a set of buffers fo fill</li>
+<li>Thread A can now run some other task</li>
+</ul></li>
+<li>On thread B:
+
+<ul>
+<li>Suspend or periodically check that an I/O request has completed</li>
+<li>Call the continuation (callback) associated with the completed request</li>
+<li>Repeat until all callbacks have been executed</li>
+</ul></li>
+</ul>
+
+<p>This reduces the number of syscalls and lets us only resume tasks when the desired I/O have been fulfilled.
+Internally the kernel may spawn its own popl of working threads to perform the I/O operations,
+nothing is ever truly free.
+However, this is a lot more efficient than performing more system calls.
+This workflow is the <strong>proactor</strong> pattern.</p>
+
+<p>But (There is always a but, isn&rsquo;t there ?).
+While people have been doing Asynchronous I/O on Windows for ages (maybe because file operation on Windows are <a href="https://github.com/microsoft/WSL/issues/873#issuecomment-425272829">Painfully Slow</a>),
+<code>AIO</code> on Linux is either deemed unnecessary (synchronous I/O is fast enough) - or inadequate (too much latency).
+In fact <code>AIO</code> on linux is implemented in user space - but a similar kernel APIs <code>io_submit</code> can be used instead. In any case, this APIs is designed to handle file i/o and it is either not possible or not recommended to use it for sockets as <code>epoll</code> would perform better in all cases.</p>
+
+<p>Maybe more of interest to C++, people believe it was not possible to design an efficient interface that would cohesively handle both files and sockets.
+Maybe this explains why we have both <strong>ASIO</strong> and <strong>AFIO</strong> as different projects with different interfaces, instead of some general asynchronous system like <a href="https://libuv.org"><code>libuv</code></a> or <a href="https://github.com/tokio-rs/tokio">Tokio</a>.</p>
+
+<p>Beyoncé said that if you like it, you should put a ring on it<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>.
+Well, I quite like senders/receivers and the idea of a standard general-purpose yet efficient
+i/o scheduler, so maybe we should put a ring on it. More specifically, an <code>io_uring</code>.</p>
 
 <h3 id="io-uring">io_uring</h3>
 
-<h2 id="the-reactor-pattern">The Reactor Pattern</h2>
+<p><code>io_uring</code> is an exciting new feature in the Linux kernel which can allow the design of highly efficient, asynchronous frameworks that works just as well for (buffered and unbuffered) file I/O and other devices such as sockets.
+<code>io_uring</code> was added to Linux 5.1<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup> as a replacement to <code>AIO</code> and <code>io_submit</code>,
+but has since then improved support for sockets and might morph into a general asynchronous system call interface.</p>
 
-<h3 id="cancellation">Cancellation</h3>
+<p><code>io_uring</code> is based on 2 queues (one for submission and one for completion) that are shared between the kernel.
+The kernel can read from the submission queue while the application thread can read from the
+completion queue even as the kernel reads to it.</p>
+
+<p><img src="uring.svg" alt="IO uring Proactor"/></p>
+
+<p>The queues are lock-free single consumer, single producer rings (hence the name).
+Since Linux 5.5 the kernel will maintain an overflow list to hold completion until
+there is space in the completion queue.</p>
+
+<p>Similarly, the application must take care not to overflow the submission queue.
+Moreover, access to the submission queue can only happen from a single thread.</p>
+
+<p>Once work has been added to the ring, a single system <code>io_uring_enter</code> can be used
+to both submit all new work in the submission queue and wait for entries to be added to
+the completion queue.</p>
+
+<p>Here is a pseudo implementation of an i/o thread:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> io_context::run() {
+    io_uring ring;
+    io_uring_queue_init(URING_ENTRIES, &amp;ring, <span style="color:#00d;font-weight:bold">0</span>);
+    <span style="color:#080;font-weight:bold">struct</span> io_uring_cqe* cqe;
+    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+        add_pending_operations_to_io_uring();
+        io_uring_wait_cqe(&amp;ring, &amp;cqe); <span style="color:#888">// single syscall to submit and wait
+</span><span style="color:#888"></span>        <span style="color:#080;font-weight:bold">auto</span>* operation = operation_from_completion(cqe);
+        io_uring_cqe_seen(&amp;ring, cqe);
+        execute_completion(cqe);
+    }
+    io_uring_queue_exit(&amp;m_ring);
+}
+</code></pre></div>
+<p>This slide code features the <a href="https://github.com/axboe/liburing">liburing</a> library
+which handles the very low-level user-space ruing management for us.</p>
+
+<p><code>run</code> can be executed on several threads, each with its own ring.
+However, each queue can only be accessed from a single thread at once.
+Moreover, <code>io_uring_wait_cqe</code> being, as the name subject a blocking call,
+how can we add work to the queue?</p>
+
+<p>First, we need a thread-safe way to push an operation to the queue
+represented on the graphic above as a green rectangle.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">io_context</span> {
+    std::mutex mutex;
+    std::queue&lt;operation*&gt; pending;
+    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">start_operation</span>(operation* op) {
+        std::unique_lock _(mutex);
+        pending.push(op);
+    }
+};
+</code></pre></div>
+<p>In practice, we would use a non-allocating linked list for the queue,
+and try to make it lock-free.</p>
+
+<p>But, if the i/o thread is currently blocked in an <code>io_uring_wait_cqe</code>,
+how can it see that we added elements to the queue?</p>
+
+<p>A naive solution is to use <code>io_uring_wait_cqe_timeout</code> but this has
+a few issues:</p>
+
+<ul>
+<li>Entering and leaving the <code>io_uring</code> processing incurs a syscall and a context switch and more generally wastes CPU cycles.</li>
+<li>Depending on the value of the timeout, it would increase latency and causes a delay between
+when the operation is started and when the kernel starts to execute the i/o request.</li>
+</ul>
+
+<p>Instead, we can schedule a read operation on a dummy file handle in the io/thread,
+and, in the sender thread, write to that file descriptor, which will cause the <code>io_uring_wait_cqe</code>
+to return.</p>
+
+<p>On Linux, we can use <code>eventfd</code>, which, as far as I can tell is the most efficient way to do that
+little dance.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">io_context</span> {
+    std::mutex mutex;
+    std::queue&lt;operation*&gt; pending;
+    <span style="color:#888;font-weight:bold">int</span> fd = ::eventfd(<span style="color:#00d;font-weight:bold">0</span>, O_NONBLOCK);
+    eventfd_t dummy;
+    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">run</span>() {
+        schedule_notify();
+        <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+            <span style="color:#888">// --
+</span><span style="color:#888"></span>            io_uring_wait_cqe(&amp;ring, &amp;cqe);
+            <span style="color:#080;font-weight:bold">if</span>(cqe-&gt;user_data == <span style="color:#080;font-weight:bold">this</span>) {
+            schedule_notify(); <span style="color:#888">// re-arm
+</span><span style="color:#888"></span>            }
+            <span style="color:#888">//...
+</span><span style="color:#888"></span>        }
+    }
+    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">schedule_notify</span>() {
+        <span style="color:#080;font-weight:bold">auto</span> sqe = io_uring_get_sqe(&amp;m_ring);
+        io_uring_prep_poll_read(sqe, fd, &amp;dummy, <span style="color:#080;font-weight:bold">sizeof</span>(dummy));
+        io_uring_set_data(sqe, <span style="color:#080;font-weight:bold">this</span>);
+    }
+    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">start_operation</span>(operation* op) {
+        std::unique_lock _(mutex);
+        pending.push(op);
+        eventfd_write(fd, <span style="color:#00d;font-weight:bold">0</span>); <span style="color:#888">// causes io_uring_wait_cqe to return
+</span><span style="color:#888"></span>    }
+};
+</code></pre></div>
+<p>This mechanism to enqueue work is not specific to <code>io_uring</code> and would also be used
+with <code>epoll</code>, <code>select</code>, <code>io_submit</code>, etc.</p>
+
+<h4 id="polling">Polling</h4>
+
+<p>This way of notifying the queue and waiting for completion events incur some overhead
+which starts to be visible after a few hundred thousands of IOPS.
+While this may not appear to be a problem, with newer standards such as PCI4/PCI5, and corresponding drives and network hardware, i/o starts to be CPU bound with the kernel being a bottleneck.</p>
+
+<p>To this effect, <code>io_uring</code> provides a polling mode, which allows very high throughput in some use
+cases. <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2052r0.pdf">P2052</a> advocate for
+supporting such mode in the standard.</p>
+
+<h3 id="cancellation-and-stop-tokens">Cancellation and stop tokens</h3>
 
 <h2 id="asynchronous-algorithms">Asynchronous Algorithms</h2>
 
@@ -175,10 +357,14 @@ which are not worth covering here as <a href="https://jvns.ca/blog/2017/06/03/as
 <hr />
 
 <ol>
-<li id="fn:1">A group which is in fact not chaired by Jack O&rsquo;Neill. I never went there by fear of speaking out of order. Legend says they eat at round tables and fight for the forks.
+<li id="fn:1">A group that is in fact not chaired by Jack O&rsquo;Neill. I never went there by fear of speaking out of order. Legend says they eat at round tables and fight for the forks.
  <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
 <li id="fn:2">A hill I&rsquo;d rather not die on!
  <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li id="fn:3">Something you would learn in <a href="https://www.amazon.com/Software-Engineering-Google-Lessons-Programming/dp/1492082791/">Software Engineering at Google: Lessons Learned from Programming Over Time</a>, along with many great insights about software engineering.
+ <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
+<li id="fn:4">Linux 5.6 will come with many improvements such as a redesigned worker threads.
+ <a class="footnote-return" href="#fnref:4"><sup>[return]</sup></a></li>
 </ol>
 </div>
 
