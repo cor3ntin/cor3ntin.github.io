@@ -401,11 +401,11 @@ and weep.</p>
 
 <h2 id="threads-are-shared-resources">Threads are shared resources</h2>
 
-<p>There is a limited, fixed number of hardware threads, and unlike RAM,
+<p>There are a limited, fixed number of hardware threads, and unlike RAM,
 it is not possible to <a href="https://downloadmoreram.com">download more</a>.</p>
 
 <p>So ideally a program should use at most about the same number of frequently
-active threads are there are active threads.</p>
+active threads as there are active threads.</p>
 
 <p>Unfortunately, independent libraries may use their own threads and thread pools.
 I/O libraries might create their own even loops, as does pretty much every graphics framework.</p>
