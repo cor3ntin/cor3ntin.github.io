@@ -263,16 +263,13 @@ how can we add work to the queue?</p>
 submission queue buffer<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">5</a></sup> represented on the graphic above as a green rectangle.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">io_context</span> {
     std::mutex mutex;
-    std::queue&lt;operation*&gt; pending;
+    intrusive_queue&lt;operation*&gt; pending;
     <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">start_operation</span>(operation* op) {
         std::unique_lock _(mutex);
         pending.push(op);
     }
 };
 </code></pre></div>
-<p>In practice, we would use a non-allocating linked list for the queue,
-and try to make it lock-free.</p>
-
 <p>But, if the i/o thread is currently blocked in an <code>io_uring_wait_cqe</code>,
 how can it see that we added elements to the queue?</p>
 
