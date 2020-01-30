@@ -600,11 +600,79 @@ Let&rsquo;s talk about a Golang.</p>
 <p>Goroutines, a feature of the Go programming language, in addition of being stackful, are very
 different from C++ coroutines in that they are both a resumption mechanism and a scheduling mechanism.
 Go provides you with a baked-in i/o and coroutines scheduler which will handle on behalf of the
-program interrupting a goroutiners when it performs an i/o, try to acquire a lock or any other blocking operation.</p>
+program interrupting a goroutine when it performs an i/o, try to acquire a lock or any other blocking operation.</p>
 
 <p>C++ coroutines are not Goroutines. <strong>C++ Coroutines do not imply asynchrony, let alone scheduling</strong>.
 C++ is not the kind of language that will bake-in an i/o scheduler as it would go
 against the &ldquo;Don&rsquo;t pay for what you don&rsquo;t use&rdquo; mantra. In fact, it would make C++ unusable in many environments.</p>
+
+<p>That being said&hellip;</p>
+
+<p>The combination of coroutines, sender receivers, and i/o schedulers, can emulate goroutine (well, stacklessness non-whistanding).
+C++ coroutines can also be used as simple synchronous generators. It is a much more general
+and extensible system.</p>
+
+<p>I think the end goal would be for every single potentially blocking call to be an
+asynchronous expression instead. Like in <code>go</code>.
+Not bake-in in the language mind you, but as library solutions.</p>
+
+<p>For example, <code>libunifex</code> implement <a href="https://github.com/facebookexperimental/libunifex/blob/master/include/unifex/async_mutex.hpp">async mutexes</a> (not unlike <code>asio</code>&rsquo;s strands),
+such that you can acquire a lock by resuming a coroutine:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task s::f() {
+    co_await m_mutex.lock();
+    <span style="color:#888">// Do stuff
+</span><span style="color:#888"></span>    m_mutex.unlock();
+}
+</code></pre></div>
+<h3 id="channel-your-inner-gopher">Channel your inner Gopher</h3>
+
+<p>Along Goroutines, go offers channels, which are one of the best feature of go.
+Channels are, conceptually relatively simple.
+A channel is a multi-producers, multi consummers queue.
+Reading from the queue suspend the goroutine until data is available.
+Writing can be either buffered (The written data is saved and the writer can continue on its
+merry way) - or Unbuffered (The writer is suspended until a reader is ready to take the data).
+Well&hellip;</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">using</span> <span style="color:#080;font-weight:bold">namespace</span> cor3ntin::corio;
+<span style="color:#080;font-weight:bold">template</span> &lt;execution::scheduler scheduler&gt;
+oneway_task go_write(scheduler sch, <span style="color:#080;font-weight:bold">auto</span> w) {
+    <span style="color:#888;font-weight:bold">int</span> i = <span style="color:#00d;font-weight:bold">10</span>;
+    <span style="color:#080;font-weight:bold">while</span>(i) {
+        co_await sch.schedule(std::chrono::milliseconds(<span style="color:#00d;font-weight:bold">100</span>));
+        co_await w.write(--i);
+    }
+}
+
+<span style="color:#080;font-weight:bold">template</span> &lt;execution::scheduler scheduler&gt;
+oneway_task go_read(scheduler sch, <span style="color:#080;font-weight:bold">auto</span> r, stop_source&amp; stop) {
+    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+        <span style="color:#888;font-weight:bold">int</span> value = co_await r.read();
+        std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Got value &#34;</span> &lt;&lt; value &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
+        <span style="color:#080;font-weight:bold">if</span>(value == <span style="color:#00d;font-weight:bold">0</span>) {
+            stop.request_stop();
+            <span style="color:#080;font-weight:bold">break</span>;
+        }
+    }
+}
+
+<span style="color:#888;font-weight:bold">int</span> main() {
+    stop_source stop;
+    io_uring_context ctx;
+    std::<span style="color:#080;font-weight:bold">thread</span> t([&amp;ctx, &amp;stop] { ctx.run(stop.get_token()); });
+
+    <span style="color:#080;font-weight:bold">auto</span> c = make_channel&lt;<span style="color:#888;font-weight:bold">int</span>&gt;(ctx.scheduler());
+
+    go_write(ctx.scheduler(), c.write());
+    go_read(ctx.scheduler(), c.read(), stop);
+    t.join();
+}
+</code></pre></div>
+<p>Nothing C++ can&rsquo;t do!</p>
+
+<p>My implementation of channels is not quite ready yet, and this article is already long enough.
+I might come back to the implementation of channels, and the few utilities required to implement them, including <code>async_mutex</code>, the <code>on</code> algorithm and the <code>get_scheduler</code> customisation point!</p>
+
+<p>Until then, take care! Thanks for reading.</p>
 
 <p>fair to consider <code>std::thread</code> deprecated, and maybe reflect on how we got into this infortunate situation.</p>
 <div class="footnotes">
