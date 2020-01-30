@@ -673,8 +673,6 @@ oneway_task go_read(scheduler sch, <span style="color:#080;font-weight:bold">aut
 I might come back to the implementation of channels, and the few utilities required to implement them, including <code>async_mutex</code>, the <code>on</code> algorithm and the <code>get_scheduler</code> customisation point!</p>
 
 <p>Until then, take care! Thanks for reading.</p>
-
-<p>fair to consider <code>std::thread</code> deprecated, and maybe reflect on how we got into this infortunate situation.</p>
 <div class="footnotes">
 
 <hr />
@@ -696,7 +694,7 @@ I might come back to the implementation of channels, and the few utilities requi
  <a class="footnote-return" href="#fnref:8"><sup>[return]</sup></a></li>
 <li id="fn:9"><a href="https://wg21.link/p1677r2">P1677 - Cancellation is not an error</a> is a paper worth reading if only because it contains 54 instances of the word <strong>serendipitous</strong>.
  <a class="footnote-return" href="#fnref:9"><sup>[return]</sup></a></li>
-<li id="fn:10"><a href="https://en.cppreference.com/w/cpp/thread/jthread"><code>std::jthread</code></a> is now the recommended way to start a thread in C++ - I think it would be
+<li id="fn:10"><a href="https://en.cppreference.com/w/cpp/thread/jthread"><code>std::jthread</code></a> is now the recommended way to start a thread in C++ - I think it would be fair to consider <code>std::thread</code> deprecated, and maybe reflect on how we got into this infortunate situation.
  <a class="footnote-return" href="#fnref:10"><sup>[return]</sup></a></li>
 <li id="fn:11"><em>Someone</em> should write a blog post about that
  <a class="footnote-return" href="#fnref:11"><sup>[return]</sup></a></li>
