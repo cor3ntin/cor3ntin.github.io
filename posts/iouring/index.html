@@ -575,23 +575,22 @@ success, failure, and cancellation.</p>
 <ul>
 <li><p>Semantic - Using exceptions to signal cancellation makes it look like cancellation is an error, which it is not. Such a zemblanity!</p></li>
 
-<li><p>Performance - The reliance on exceptions makes it even harder to use in embedded platforms as if the required heap allocations were not bad enough! Beside performance, sometimes the very support for exceptions is lacking.</p></li>
+<li><p>Performance - The reliance on exceptions makes it even harder to use in embedded platforms as if the required heap allocations were not bad enough! Besides performance, sometimes the very support for exceptions is lacking.</p></li>
 </ul>
 
 <p>But in truth, coroutines do not have to use exception to report different results.
-This is a simplified diagram of a coroutines.
+This is a simplified diagram of a coroutine.
 The coroutines is suspended and then resumed at a specific point represented by a continuation
 handle.</p>
 
 <p><img src="coro1.svg" alt="Stop Callback"/></p>
 
-<p>We could imagine a coroutine having several possible continuation to resume at
+<p>We could imagine a coroutine having several possible continuations to resume at
 depending on the result of the operation.</p>
 
 <p><img src="coro2.svg" alt="Stop Callback"/></p>
 
-<p>This would be a better modelisation of receivers and would not suffer the
-performance and implementabilities issues of exceptions (at the cost of the having more <code>coroutine_handle</code> to keep track of.)</p>
+<p>This would be a better modelization of receivers and would not suffer the performance and implementabilities issues of exceptions (at the cost of having more <code>coroutine_handle</code> to keep track of.)</p>
 
 <p>Anyway&hellip; this has turned into blog-post driven design&hellip;
 Let&rsquo;s talk about a Golang.</p>
