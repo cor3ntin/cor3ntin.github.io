@@ -252,7 +252,7 @@ the completion queue.</p>
 }
 </code></pre></div>
 <p>This slide code features the <a href="https://github.com/axboe/liburing">liburing</a> library
-which handles the very low-level user-space ruing management for us.</p>
+which handles the very low-level user-space ring management for us.</p>
 
 <p><code>run</code> can be executed on several threads, each with its own ring.
 However, each queue can only be accessed from a single thread at once.
