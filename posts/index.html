@@ -294,6 +294,7 @@ if (!doNotTrack) {
 <script>
 (function () {
     let compilers = {
+        "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
         "default" : {"compiler" : "g81", "options" : ""},
         "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
         "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},

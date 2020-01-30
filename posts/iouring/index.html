@@ -435,14 +435,14 @@ can cook up something for scratch.</p>
 To spice things up, asynchrony adds a third channel: Cancellation.
 Indeed, <a href="https://wg21.link/p1677r2">cancellation is not an error</a><sup class="footnote-ref" id="fnref:9"><a href="#fn:9">8</a></sup>.</p>
 
-<p>But before we can talk about handling cancellation let&rsquo;s stop about emmiting a cancellation
+<p>But before we can talk about handling cancellation let&rsquo;s stop about emitting a cancellation
 request.
 You would typically cancel an entire task, or an operation, which would then cancel the
-entire chain of subsequent operations.</p>
+the entire chain of subsequent operations.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">sequence(read(stdin, buffer), write(stdout, buffer))
 </code></pre></div>
 <p>For example, here if we cancel the read, the write should not be executed.
-As mentionned in [P1677] cancellation is the asynchronous version
+As mentioned in [P1677] cancellation is the asynchronous version
 of returning early from a function.</p>
 
 <p><code>std::stop_token</code> which is a C++20 feature that was accepted at the same
@@ -451,30 +451,143 @@ time as <code>std::jthread</code><sup class="footnote-ref" id="fnref:10"><a href
 <p>Like death and all good stories, asynchronous cancellation comes in threes:</p>
 
 <ul>
-<li><code>stop_token</code></li>
 <li><code>stop_source</code></li>
+<li><code>stop_token</code></li>
 <li><code>stop_callback</code></li>
 </ul>
 
-<p>cancellation</p>
+<p>This is based on the same idea as <a href="https://docs.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads">C#&rsquo;s CancellationToken</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController">Javascript&rsquo;s AbortController</a>.</p>
 
-<h2 id="asynchronous-algorithms">Asynchronous Algorithms</h2>
+<p><code>stop_source</code> can create tokens, <code>stop_token</code> has a <code>stop_requested</code> methods that returns
+true once <code>stop_source::request_stop()</code> is called.
+In addition, callbacks can be triggered automatically when <code>stop_source::request_stop()</code>
+is called.</p>
 
-<h3 id="on">on</h3>
+<p><img src="stop.svg" alt="Stop Callback"/></p>
 
-<h3 id="when-all">when_all</h3>
+<p>All tokens and callbacks attached to the same <code>stop_source</code> share the same
+thread-safe ref-counted shared state.
+(You are still responsible for making sure the functions used as <code>stop_callback</code> are themselves
+thread-safe if you have multiple threads.)</p>
 
-<h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">10</a></sup> are not Goroutines</h2>
+<p>It has already been implemented in GCC so you can play with it on compiler explorer</p>
+
+<div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-trunk">
+    
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;stop_token&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;cstdio&gt;</span><span style="color:#c00;font-weight:bold">
+</span><span style="color:#c00;font-weight:bold"></span>
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+    std::stop_source stop;
+    <span style="color:#080;font-weight:bold">auto</span> token = stop.get_token();
+    std::stop_callback cb(token, [] {
+        std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;I don&#39;t want to stop at all</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
+    });
+    std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;Don&#39;t stop me now, I&#39;m having such a good time</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
+    stop.request_stop();
+    <span style="color:#080;font-weight:bold">if</span>(token.stop_requested()) {
+        std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;Alright</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
+    }
+}
+</code></pre></div>
+
+
+</div>
+
+
+<p>Tokens can then be attached to a coroutine task of the appropriate type <sup class="footnote-ref" id="fnref:11"><a href="#fn:11">10</a></sup>
+or attached to any receiver.</p>
+
+<p>The customization point <code>execution::get_stop_token(execution::receiver auto)</code>
+can then be used by an execution context to query whether to cancel the operation.</p>
+
+<p>Operations should be canceled in the execution context on
+which they are intended to be executed.</p>
+
+<p>In the case of in-flight I/O operations, a request can be emitted to the kernel to
+cancel the request (<code>CancelIo</code> on windows, <code>IORING_OP_ASYNC_CANCEL</code>, <code>aio_cancel</code>, etc).
+Especially important to cancel timers, socket read or other operation that may never complete
+otherwise.</p>
+
+<h3 id="execution-contexts-lifetime">Execution contexts lifetime</h3>
+
+<p>At some point, I used a stop token to stop an execution context and cancel all the
+tasks in flight. Which was super convenient.</p>
+
+<p>That is, unfortunately, a recipe for disaster as canceling a task may cause it to be rescheduled
+or another task to be scheduled on an execution context that might have been destroyed.
+I have to admit, convincing me of that took a bit of effort (Thanks Lewis!).</p>
+
+<p>Instead, executions contexts should not be destroyed until all operations that may run or schedule
+other operations on that context are done.</p>
+
+<p>This can be achieved by the <code>std::async_wait</code> algorithm which I mentioned in my first
+blog posts about executors.</p>
+
+<h3 id="receivers-and-coroutines-asymmetries">Receivers and Coroutines asymmetries</h3>
+
+<p>It&rsquo;s all not roses though: There are a few mismatches between sender/receivers and awaitables/continuations.</p>
+
+<p>Receivers have 3 channels: set_value, set_error and set_done representing respectively
+success, failure, and cancellation.</p>
+
+<p>Coroutines have a return value (which is of a single type - whereas receivers support multiple value types <a href="https://wg21.link/p1341r0">P1341</a>) and can rethrow exceptions<sup class="footnote-ref" id="fnref:12"><a href="#fn:12">11</a></sup>.</p>
+
+<p>Mapping receiver can then be achieved in a couple of ways:</p>
+
+<ol>
+<li><p><strong>Returning some kind of <code>variant&lt;ValueType, ErrorType, cancelled_t&gt;</code></strong></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">example</span>() {
+    inspect(<span style="color:#080;font-weight:bold">auto</span> res = co_await sender) {
+        &lt;cancelled_t&gt;: {
+
+        }
+        res.success():{
+
+        }
+        res.failure(): {
+
+        }
+    };
+}
+</code></pre></div>
+<p>The above example showcases <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p1371r2.pdf">Pattern Matching</a>, although I am not sure that we can mix both types and expressions matchers.</p>
+
+<p>We cannot use types to discriminate success and failure as they may have the same type.</p></li>
+</ol>
+
+<p><p/></p>
+
+<ol>
+<li><strong>Use exceptions to propagate both errors and cancellation</strong></li>
+</ol>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">example</span>() {
+    <span style="color:#080;font-weight:bold">try</span> {
+        co_await sender;
+    }
+    <span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::error_status&amp;) {<span style="color:#888">/*...*/</span>}
+    <span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::cancelled_operation&amp;) {<span style="color:#888">/*...*/</span>}
+}
+</code></pre></div>
+<p>This suffers a couple of issues:</p>
+
+<ul>
+<li><p>Semantic - Using exceptions to signal cancellation makes it look like cancellation is an error, which it is not. Such a zemblanity!</p></li>
+
+<li><p>Performance - The reliance on exceptions makes it even harder to use in embedded platforms as if the required heap allocations were not bad enough! Beside performance, sometimes the very support for exceptions is lacking.</p></li>
+</ul>
+
+<h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">12</a></sup> are not Goroutines</h2>
 
 <p>Goroutines, a feature of the Go programming language, in addition of being stackful, are very
-different of C++ coroutines in that they are both a resumption mechanism and a scheduling mechanism.
+different from C++ coroutines in that they are both a resumption mechanism and a scheduling mechanism.
 Go provides you with a baked-in i/o and coroutines scheduler which will handle on behalf of the
-program interrupting a goroutiners when it performs an i/o, try tyo acquire a lock or any other blocking operation.</p>
+program interrupting a goroutiners when it performs an i/o, try to acquire a lock or any other blocking operation.</p>
 
 <p>C++ coroutines are not Goroutines. <strong>C++ Coroutines do not imply asynchrony, let alone scheduling</strong>.
 C++ is not the kind of language that will bake-in an i/o scheduler as it would go
-against the &ldquo;Don&rsquo;t pay for what you don&rsquo;t use&rdquo; mantra. In fact, it would make C++ unusable on many
-environments.</p>
+against the &ldquo;Don&rsquo;t pay for what you don&rsquo;t use&rdquo; mantra. In fact, it would make C++ unusable in many environments.</p>
 
 <p>fair to consider <code>std::thread</code> deprecated, and maybe reflect on how we got into this infortunate situation.</p>
 <div class="footnotes">
@@ -500,6 +613,10 @@ environments.</p>
  <a class="footnote-return" href="#fnref:9"><sup>[return]</sup></a></li>
 <li id="fn:10"><a href="https://en.cppreference.com/w/cpp/thread/jthread"><code>std::jthread</code></a> is now the recommended way to start a thread in C++ - I think it would be
  <a class="footnote-return" href="#fnref:10"><sup>[return]</sup></a></li>
+<li id="fn:11"><em>Someone</em> should write a blog post about that
+ <a class="footnote-return" href="#fnref:11"><sup>[return]</sup></a></li>
+<li id="fn:12">In fact, continuations in C++20 can never be <code>noexcept</code>, which is rather unfortunate.
+ <a class="footnote-return" href="#fnref:12"><sup>[return]</sup></a></li>
 <li id="fn:5">Coroutines are sometimes called Gorroutines (with 2 Rs) after the name of the man who worked on them for the best part of a decade: Gor Nishanov. Thanks Gor!
  <a class="footnote-return" href="#fnref:5"><sup>[return]</sup></a></li>
 </ol>
@@ -618,6 +735,7 @@ if (!doNotTrack) {
 <script>
 (function () {
     let compilers = {
+        "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
         "default" : {"compiler" : "g81", "options" : ""},
         "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
         "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
