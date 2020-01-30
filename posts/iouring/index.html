@@ -578,6 +578,24 @@ success, failure, and cancellation.</p>
 <li><p>Performance - The reliance on exceptions makes it even harder to use in embedded platforms as if the required heap allocations were not bad enough! Beside performance, sometimes the very support for exceptions is lacking.</p></li>
 </ul>
 
+<p>But in truth, coroutines do not have to use exception to report different results.
+This is a simplified diagram of a coroutines.
+The coroutines is suspended and then resumed at a specific point represented by a continuation
+handle.</p>
+
+<p><img src="coro1.svg" alt="Stop Callback"/></p>
+
+<p>We could imagine a coroutine having several possible continuation to resume at
+depending on the result of the operation.</p>
+
+<p><img src="coro2.svg" alt="Stop Callback"/></p>
+
+<p>This would be a better modelisation of receivers and would not suffer the
+performance and implementabilities issues of exceptions (at the cost of the having more <code>coroutine_handle</code> to keep track of.)</p>
+
+<p>Anyway&hellip; this has turned into blog-post driven design&hellip;
+Let&rsquo;s talk about a Golang.</p>
+
 <h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">12</a></sup> are not Goroutines</h2>
 
 <p>Goroutines, a feature of the Go programming language, in addition of being stackful, are very
