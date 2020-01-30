@@ -221,7 +221,7 @@ but has since then improved support for sockets and might morph into a general a
 
 <p><code>io_uring</code> is based on 2 queues (one for submission and one for completion) that are shared between the kernel.
 The kernel can read from the submission queue while the application thread can read from the
-completion queue even as the kernel reads to it.</p>
+completion queue even as the kernel writes to it.</p>
 
 <p><img src="uring.svg" alt="IO uring Proactor"/></p>
 
