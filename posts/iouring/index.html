@@ -104,10 +104,10 @@ But, what if you wanted to run code later? Maybe some piece for code needs to ru
 }
 <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
     scheduler <span style="color:#080;font-weight:bold">auto</span> s = <span style="color:#888">/*...*/</span>
-    execution::schedule(s, as_receiver(child));
+    execution::execute(s, as_receiver(child));
 }
 </code></pre></div>
-<p>This will work.
+<p>This will work<sup class="footnote-ref" id="fnref:14"><a href="#fn:14">3</a></sup>.
 But nothing else will ever run on that thread which is a rather poor usage of resources.
 Threads are less expensive than processes but they still take time to create: Avoid having one thread per task if you have thousands of tasks.</p>
 
@@ -209,14 +209,14 @@ In fact <code>AIO</code> on linux is implemented in user space - but a similar k
 <p>Maybe more of interest to C++, people believe it was not possible to design an efficient interface that would cohesively handle both files and sockets.
 Maybe this explains why we have both <strong>ASIO</strong> and <strong>AFIO</strong> as different projects with different interfaces, instead of some general asynchronous system like <a href="https://libuv.org"><code>libuv</code></a> or <a href="https://github.com/tokio-rs/tokio">Tokio</a>.</p>
 
-<p>Beyoncé said that if you like it, you should put a ring on it<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>.
+<p>Beyoncé said that if you like it, you should put a ring on it<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">4</a></sup>.
 Well, I quite like senders/receivers and the idea of a standard general-purpose yet efficient
 i/o scheduler, so maybe we should put a ring on it. More specifically, an <code>io_uring</code>.</p>
 
 <h3 id="io-uring">io_uring</h3>
 
 <p><code>io_uring</code> is an exciting new feature in the Linux kernel which can allow the design of highly efficient, asynchronous frameworks that works just as well for (buffered and unbuffered) file I/O and other devices such as sockets.
-<code>io_uring</code> was added to Linux 5.1<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup> as a replacement to <code>AIO</code> and <code>io_submit</code>,
+<code>io_uring</code> was added to Linux 5.1<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">5</a></sup> as a replacement to <code>AIO</code> and <code>io_submit</code>,
 but has since then improved support for sockets and might morph into a general asynchronous system call interface.</p>
 
 <p><code>io_uring</code> is based on 2 queues (one for submission and one for completion) that are shared between the kernel.
@@ -260,7 +260,7 @@ Moreover, <code>io_uring_wait_cqe</code> being, as the name suggests a blocking 
 how can we add work to the queue?</p>
 
 <p>First, we need a thread-safe way to push an operation to the
-submission queue buffer<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">5</a></sup> represented on the graphic above as a green rectangle.</p>
+submission queue buffer<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">6</a></sup> represented on the graphic above as a green rectangle.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">io_context</span> {
     std::mutex mutex;
     intrusive_queue&lt;operation*&gt; pending;
@@ -340,7 +340,7 @@ with a given scheduler</p>
 </span><span style="color:#888"></span>}
 </code></pre></div>
 <p>Now that we understand io contexts, aka execution contexts in which we can run
-io operations, we can add a <code>deadline</code> parameter to the <code>schedule</code> <sup class="footnote-ref" id="fnref:7"><a href="#fn:7">6</a></sup> algorithm.
+io operations, we can add a <code>deadline</code> parameter to the <code>schedule</code> <sup class="footnote-ref" id="fnref:7"><a href="#fn:7">7</a></sup> algorithm.
 I stole the idea of deadline from <a href="https://wg21.link/p1031">P1031 - Low level file i/o library</a>.
 It is a simple utility which can represent a time, either relative or absolute</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">annoying_child</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
@@ -428,9 +428,9 @@ can cook up something for scratch.</p>
 
 <h3 id="cancellation-and-stop-tokens">Cancellation and stop tokens</h3>
 
-<p>Error management in C++ is considered a simple and solved problem<sup class="footnote-ref" id="fnref:8"><a href="#fn:8">7</a></sup>.
+<p>Error management in C++ is considered a simple and solved problem<sup class="footnote-ref" id="fnref:8"><a href="#fn:8">8</a></sup>.
 To spice things up, asynchrony adds a third channel: Cancellation.
-Indeed, <a href="https://wg21.link/p1677r2">cancellation is not an error</a><sup class="footnote-ref" id="fnref:9"><a href="#fn:9">8</a></sup>.</p>
+Indeed, <a href="https://wg21.link/p1677r2">cancellation is not an error</a><sup class="footnote-ref" id="fnref:9"><a href="#fn:9">9</a></sup>.</p>
 
 <p>But before we can talk about handling cancellation let&rsquo;s stop about emitting a cancellation
 request.
@@ -443,7 +443,7 @@ As mentioned in [P1677] cancellation is the asynchronous version
 of returning early from a function.</p>
 
 <p><code>std::stop_token</code> which is a C++20 feature that was accepted at the same
-time as <code>std::jthread</code><sup class="footnote-ref" id="fnref:10"><a href="#fn:10">9</a></sup></p>
+time as <code>std::jthread</code><sup class="footnote-ref" id="fnref:10"><a href="#fn:10">10</a></sup></p>
 
 <p>Like death and all good stories, asynchronous cancellation comes in threes:</p>
 
@@ -493,7 +493,7 @@ thread-safe if you have multiple threads.)</p>
 </div>
 
 
-<p>Tokens can then be attached to a coroutine task of the appropriate type <sup class="footnote-ref" id="fnref:11"><a href="#fn:11">10</a></sup>
+<p>Tokens can then be attached to a coroutine task of the appropriate type <sup class="footnote-ref" id="fnref:11"><a href="#fn:11">11</a></sup>
 or attached to any receiver.</p>
 
 <p>The customization point <code>execution::get_stop_token(execution::receiver auto)</code>
@@ -529,7 +529,7 @@ blog posts about executors.</p>
 <p>Receivers have 3 channels: set_value, set_error and set_done representing respectively
 success, failure, and cancellation.</p>
 
-<p>Coroutines have a return value (which is of a single type - whereas receivers support multiple value types <a href="https://wg21.link/p1341r0">P1341</a>) and can rethrow exceptions<sup class="footnote-ref" id="fnref:12"><a href="#fn:12">11</a></sup>.</p>
+<p>Coroutines have a return value (which is of a single type - whereas receivers support multiple value types <a href="https://wg21.link/p1341r0">P1341</a>) and can rethrow exceptions<sup class="footnote-ref" id="fnref:12"><a href="#fn:12">12</a></sup>.</p>
 
 <p>Mapping receiver can then be achieved in a couple of ways:</p>
 
@@ -593,7 +593,7 @@ depending on the result of the operation.</p>
 
 <p><a href="https://www.destroyallsoftware.com/talks/wat">Let&rsquo;s talk about a language that doesn&rsquo;t suck</a>, let&rsquo;s talk about Go.</p>
 
-<h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">12</a></sup> are not Goroutines</h2>
+<h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">13</a></sup> are not Goroutines</h2>
 
 <p>Goroutines, a feature of the Go programming language, are very different from C++ coroutines in that they are not only stackfull, but also model both a resumption mechanism and a scheduling mechanism.
 Go provides you with a baked-in i/o and coroutines scheduler which will handle on behalf of the
@@ -683,7 +683,7 @@ This belief would lead to two inter-incompatible APIs in the standard, which wou
 a nightmare in term of usability (aka ASIO and AFIO).</p>
 
 <p>I don&rsquo;t care about performance as much as I care about the usability of interfaces.
-For better or worse, faced with a choice between performance and ergonomy, the committee tends to prioritize performance<sup class="footnote-ref" id="fnref:13"><a href="#fn:13">13</a></sup>.</p>
+For better or worse, faced with a choice between performance and ergonomy, the committee tends to prioritize performance<sup class="footnote-ref" id="fnref:13"><a href="#fn:13">14</a></sup>.</p>
 
 <p>Fortunately, it seems that there is finally a way to resolve these divides:</p>
 
@@ -733,6 +733,8 @@ For better or worse, faced with a choice between performance and ergonomy, the c
 <p><a href="https://wg21.link/p0443">P0443</a> -  A Unified Executors Proposal for C++ - Jared Hoberock, Michael Garland, Chris Kohlhoff, Chris Mysen, Carter Edwards, Gordon Brown, David Hollman, Lee Howes, Kirk Shoop, Eric Niebler</p>
 
 <p><a href="https://wg21.link/p2024">P2024</a> - Bloomberg Analysis of Unified Executors - David Sankel, Frank Birbacher, Marina Efimova, Dietmar Kuhl, Vern Riedlin</p>
+
+<p>because <a href="https://wg21.link/p1525r0">One-Way execute is a Poor Basis Operation</a></p>
 <div class="footnotes">
 
 <hr />
@@ -742,6 +744,8 @@ For better or worse, faced with a choice between performance and ergonomy, the c
  <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
 <li id="fn:2">A hill I&rsquo;d rather not die on!
  <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li id="fn:14">If <code>main</code> doesn&rsquo;t return too soon which we can&rsquo;t prevent with <code>execution::execute</code>
+ <a class="footnote-return" href="#fnref:14"><sup>[return]</sup></a></li>
 <li id="fn:3">Something you would learn in <a href="https://www.amazon.com/Software-Engineering-Google-Lessons-Programming/dp/1492082791/">Software Engineering at Google: Lessons Learned from Programming Over Time</a>, along with many great insights about software engineering.
  <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
 <li id="fn:4">Linux 5.6 will come with many improvements such as a redesigned worker threads.
