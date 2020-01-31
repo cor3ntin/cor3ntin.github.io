@@ -232,7 +232,7 @@ there is space in the completion queue.</p>
 <p>Similarly, the application must take care not to overflow the submission queue.
 The submission queue can only be accessed by a single thread at once<sup class="footnote-ref" id="fnref:15"><a href="#fn:15">6</a></sup>.</p>
 
-<p>Once work has been added to the ring, a single system <code>io_uring_enter</code> can be used
+<p>Once work has been added to the ring, a single system <code>io_uring_enter</code> call can be used
 to both submit all new work in the submission queue and wait for entries to be added to
 the completion queue.</p>
 
