@@ -110,7 +110,7 @@ But, what if you wanted to run code later? Maybe some piece for code needs to ru
 </code></pre></div>
 <p>This will work<sup class="footnote-ref" id="fnref:14"><a href="#fn:14">3</a></sup>.
 But nothing else will ever run on that thread which is a rather poor usage of resources.
-Threads are less expensive than processes but they still take time to create: Avoid having one thread per task if you have thousands of tasks.</p>
+Threads are less expensive than processes but they <a href="https://lemire.me/blog/2020/01/30/cost-of-a-thread-in-c-under-linux/">still take time to create</a>: Avoid having one thread per task if you have thousands of tasks.</p>
 
 <p>What we would want is for the <em>task</em> rather than the <em>thread</em> to be interrupted for 5 minutes.</p>
 
