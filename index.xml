@@ -6,13 +6,11 @@
     <description>Recent content on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 28 Jan 2020 14:43:18 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 06 Jan 2020 11:48:33 +0000</lastBuildDate>
     
     <atom:link href="https://cor3ntin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
-    
-        
     
     <item>
     <title>Waiting for std::embed: Very Large Arrays in Clang</title>
@@ -364,6 +362,18 @@ I like that quote. it explains both JavaScript and Haskell. And by that measure 
             <description>A friend had a phone interview for a job in a company that I won’t name - It’s Microsoft. One of the questions was about describing how he would write a stack, only using standard queues.
 I was confounded, because long before an algorithm could form in my mind, I already decided that there was no solution that would actually be useful in any real life scenario.
 template &amp;lt;typename T, typename Container = std::queue&amp;lt;T&amp;gt;&amp;gt; classstack { public: void push(const T &amp;amp;); void pop(); T&amp;amp; top(); std::size_t size() const; bool empty() const; private: void transfer(); Container a, b; }; template &amp;lt;typename T, typename Container&amp;gt; void stack&amp;lt;T, Container&amp;gt;::push(const T&amp;amp; t) { a.</description>
+        </item>
+        
+        
+    
+    <item>
+    <title>A Universal I/O Abstraction for C&#43;&#43;</title>
+        <link>https://cor3ntin.github.io/posts/iouring/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+            
+            <guid>https://cor3ntin.github.io/posts/iouring/</guid>
+            <description>This article is the sequel to A Universal Async Abstraction for C++, in which I talk about the Executor proposal targeting C++23. Quite a bit happened since then.
+SG-11, the study group charged of all things concurrency and parallelism made forward progress and sent the proposal to LEWG - with the hope of landing a future revision in the C++23 draft. This is rather big news given that this work has been brewing for about a decade.</description>
         </item>
         
         

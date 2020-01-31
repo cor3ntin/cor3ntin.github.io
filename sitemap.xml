@@ -3,11 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://cor3ntin.github.io/posts/iouring/</loc>
-    <lastmod>2020-01-28T14:43:18+01:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://cor3ntin.github.io/posts/arrays/</loc>
     <lastmod>2020-01-06T11:48:33+00:00</lastmod>
   </url>
@@ -163,8 +158,12 @@
   </url>
   
   <url>
+    <loc>https://cor3ntin.github.io/posts/iouring/</loc>
+  </url>
+  
+  <url>
     <loc>https://cor3ntin.github.io/posts/</loc>
-    <lastmod>2020-01-28T14:43:18+01:00</lastmod>
+    <lastmod>2020-01-06T11:48:33+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -175,7 +174,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/</loc>
-    <lastmod>2020-01-28T14:43:18+01:00</lastmod>
+    <lastmod>2020-01-06T11:48:33+00:00</lastmod>
     <priority>0</priority>
   </url>
   
