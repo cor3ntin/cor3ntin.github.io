@@ -18,7 +18,7 @@
       
       <guid>https://cor3ntin.github.io/posts/iouring/</guid>
       <description>This article is the sequel to A Universal Async Abstraction for C++, in which I talk about the Executor proposal targeting C++23. Quite a bit happened since then.
-SG-11, the study group charged of all things concurrency and parallelism made forward progress and send the proposal to LEWG with the hope of landing a future revision in the C++23 draft. This is rather big news given that this work has been brewing for about a decade.</description>
+SG-11, the study group charged of all things concurrency and parallelism made forward progress and sent the proposal to LEWG - with the hope of landing a future revision in the C++23 draft. This is rather big news given that this work has been brewing for about a decade.</description>
     </item>
     
     <item>

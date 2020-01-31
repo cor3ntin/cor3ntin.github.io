@@ -71,7 +71,7 @@ in which I talk about the <a href="https://wg21.link/P0443">Executor proposal</a
 Quite a bit happened since then.</p>
 
 <p>SG-1<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>, the study group charged of all things concurrency and parallelism made forward progress
-and send the proposal to LEWG with the hope of landing a future revision in the C++23 draft.
+and sent the proposal to LEWG - with the hope of landing a future revision in the C++23 draft.
 This is rather big news given that this work has been brewing for about a decade.</p>
 
 <p>The split of <code>submit</code> into <code>connect</code> and <code>start</code> is now <a href="https://wg21.link/p2006">the object of a paper</a>. This is a very important piece of the puzzle and I look forward to seeing it discussed in Prague next month.</p>
@@ -82,10 +82,11 @@ This is rather big news given that this work has been brewing for about a decade
 This is not an exact implementation of <a href="https://wg21.link/P0443">P0443</a> and it has a lot more features and algorithms, but it implements the same basic design and architecture.
 Unfortunately, it doesn&rsquo;t use concepts yet so I foolishly keep to trying to implement my C++20
 library. And luckily Coroutines were merged into GCC and Concepts were merged into clang so there
-are now many compilers that can implement the executors proposal.
-Exciting times.</p>
+are now many compilers that can implement the executors proposal.</p>
 
-<p>Last time we discussed two base concepts:</p>
+<p>Exciting times.</p>
+
+<p>Last time we discussed two basic concepts:</p>
 
 <ul>
 <li>The <code>scheduler</code> concept which let you schedule an operation on a given context (such as a thread pool)</li>
@@ -138,7 +139,6 @@ than the context switch itself.</p>
 
 <ul>
 <li>Request the kernel to notify us when data is available on a file descriptor or handle</li>
-<li>Do something else</li>
 <li>Either
 
 <ul>
@@ -167,7 +167,7 @@ which are not worth covering here as <a href="https://jvns.ca/blog/2017/06/03/as
 <li>Repeat until all callbacks have been executed</li>
 </ul>
 
-<p>This can happen either on a single thread (some tasks would be enqueud before the program starts waiting for file descriptors event) or happen across multiple threads, in which case we need to syncronize file registration. More on that later.</p>
+<p>This can happen either on a single thread (some tasks would be enqueued before the program starts waiting for file descriptors event) or happen across multiple threads, in which case we need to synchronize file registration. More on that later.</p>
 
 <p>This general workflow is the <strong>reactor</strong> pattern.</p>
 
@@ -179,7 +179,7 @@ which are not worth covering here as <a href="https://jvns.ca/blog/2017/06/03/as
 <li>Register the file (1 syscall)</li>
 <li>Poll until <em>some</em> data is available (1 syscall)</li>
 <li>Repeat until enough data is available</li>
-<li>Read the data (in a non plocking fashion) (1 syscall)</li>
+<li>Read the data (in a non-blocking fashion) (1 syscall)</li>
 </ul>
 
 <p>System calls are <em>relatively</em> expensive, so is resuming tasks before they have enough data.
@@ -188,26 +188,26 @@ To palliate to that problem, more modern asynchronous I/O APIs such as <code>AIO
 <p>This allows a more straightforward workflow:</p>
 
 <ul>
-<li>Register the file descriptor along with a set of buffers fo fill</li>
+<li>Register the file descriptor along with a set of buffers to fill</li>
 <li>Run some other task</li>
 <li>Suspend or periodically check that one or more I/O requests have completed</li>
 <li>Call the continuation (callback) associated with the completed request</li>
 <li>Repeat until all callbacks have been executed</li>
 </ul>
 
-<p>This reduces the number of syscalls and lets us only resume tasks when the desired I/O have been fulfilled.
+<p>This reduces the number of syscalls and lets us resume tasks only when the desired I/O have been fulfilled.
 Internally the kernel may spawn its own pool of working threads to perform the I/O operations,
-nothing being ever truly free.
+nothing is ever truly free.
 However, this is a lot more efficient than performing more system calls.
 This workflow is the <strong>proactor</strong> pattern.</p>
 
 <p>But (There is always a but, isn&rsquo;t there ?).
-While people have been doing Asynchronous I/O on Windows for ages (maybe because file operation on Windows are <a href="https://github.com/microsoft/WSL/issues/873#issuecomment-425272829">Painfully Slow</a>),
+While people have been doing Asynchronous I/O on Windows for ages (maybe because file operation on Windows are <a href="https://github.com/microsoft/WSL/issues/873#issuecomment-425272829">painfully slow</a>),
 <code>AIO</code> on Linux is either deemed unnecessary (synchronous I/O is fast enough) - or inadequate (too much latency).
-In fact <code>AIO</code> on linux is implemented in user space - but a similar kernel APIs <code>io_submit</code> can be used instead. In any case, this APIs is designed to handle file i/o and it is either not possible or not recommended to use it for sockets as <code>epoll</code> would perform better in all cases.</p>
+In fact <code>AIO</code> on Linux is implemented in user-space - but a similar kernel APIs <code>io_submit</code> can be used instead. In any case, these APIs is designed to handle file i/o and it is either not possible or not recommended to use it for sockets as <code>epoll</code> would perform better in all cases.</p>
 
 <p>Maybe more of interest to C++, people believe it was not possible to design an efficient interface that would cohesively handle both files and sockets.
-Maybe this explains why we have both <strong>ASIO</strong> and <strong>AFIO</strong> as different projects with different interfaces, instead of some general asynchronous system like <a href="https://libuv.org"><code>libuv</code></a> or <a href="https://github.com/tokio-rs/tokio">Tokio</a>.</p>
+Maybe this explains why we have both <strong>ASIO</strong> and <strong>AFIO</strong> as different projects with different interfaces, instead of some general asynchronous system, such as <a href="https://libuv.org"><code>libuv</code></a> or <a href="https://github.com/tokio-rs/tokio">Tokio</a>.</p>
 
 <p>Beyoncé said that if you like it, you should put a ring on it<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">4</a></sup>.
 Well, I quite like senders/receivers and the idea of a standard general-purpose yet efficient
@@ -217,7 +217,7 @@ i/o scheduler, so maybe we should put a ring on it. More specifically, an <code>
 
 <p><code>io_uring</code> is an exciting new feature in the Linux kernel which can allow the design of highly efficient, asynchronous frameworks that works just as well for (buffered and unbuffered) file I/O and other devices such as sockets.
 <code>io_uring</code> was added to Linux 5.1<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">5</a></sup> as a replacement to <code>AIO</code> and <code>io_submit</code>,
-but has since then improved support for sockets and might morph into a general asynchronous system call interface.</p>
+but has since then improved support for sockets. It is so good it might morph into a general asynchronous system call interface.</p>
 
 <p><code>io_uring</code> is based on 2 queues (one for submission and one for completion) that are shared between the kernel.
 The kernel can read from the submission queue while the application thread can read from the
@@ -230,7 +230,7 @@ Since Linux 5.5 the kernel will maintain an overflow list to hold completion unt
 there is space in the completion queue.</p>
 
 <p>Similarly, the application must take care not to overflow the submission queue.
-Moreover, the submission queue can only be accessed by a single thread concurrently.</p>
+The submission queue can only be accessed by a single thread at once<sup class="footnote-ref" id="fnref:15"><a href="#fn:15">6</a></sup>.</p>
 
 <p>Once work has been added to the ring, a single system <code>io_uring_enter</code> can be used
 to both submit all new work in the submission queue and wait for entries to be added to
@@ -260,7 +260,7 @@ Moreover, <code>io_uring_wait_cqe</code> being, as the name suggests a blocking 
 how can we add work to the queue?</p>
 
 <p>First, we need a thread-safe way to push an operation to the
-submission queue buffer<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">6</a></sup> represented on the graphic above as a green rectangle.</p>
+submission queue buffer<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">7</a></sup> represented on the graphic above as a green rectangle.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">io_context</span> {
     std::mutex mutex;
     intrusive_queue&lt;operation*&gt; pending;
@@ -340,7 +340,7 @@ with a given scheduler</p>
 </span><span style="color:#888"></span>}
 </code></pre></div>
 <p>Now that we understand io contexts, aka execution contexts in which we can run
-io operations, we can add a <code>deadline</code> parameter to the <code>schedule</code> <sup class="footnote-ref" id="fnref:7"><a href="#fn:7">7</a></sup> algorithm.
+io operations, we can add a <code>deadline</code> parameter to the <code>schedule</code> <sup class="footnote-ref" id="fnref:7"><a href="#fn:7">8</a></sup> algorithm.
 I stole the idea of deadline from <a href="https://wg21.link/p1031">P1031 - Low level file i/o library</a>.
 It is a simple utility which can represent a time, either relative or absolute</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">annoying_child</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
@@ -369,11 +369,11 @@ The only difference is that the <code>start</code> method will lead to a timeout
 <li>Connecting to a remote socket and accepting connections</li>
 </ul>
 
-<p>While it is possible to imagine low level apis such as</p>
+<p>While it is possible to imagine low-level APIs such as</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">read_file</span>(scheduler, native_handle, buffers) -&gt; read_sender;
 <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">close_file</span>(scheduler, native_handle) -&gt; close_sender;
 </code></pre></div>
-<p>It is more likely than instead we get few io objects such as files and sockets</p>
+<p>It is more likely that instead, we get few io objects such as <code>file</code>s and <code>socket</code>s</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;execution::scheduler scheduler = std::default_scheduler&gt;
 <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">file</span>;
 
@@ -399,7 +399,7 @@ active threads as there are active threads.</p>
 I/O libraries might create their own even loops, as does pretty much every graphics framework.</p>
 
 <p>The standard library use threads internally for parallel algorithms and <code>std::async</code>.
-Under some implementations, there is a thread started for every <code>std::async</code> call (one of the many reason why <code>std::async</code> is terrible).</p>
+Under some implementations, there is a thread started for every <code>std::async</code> call (one of the many reasons why <code>std::async</code> is terrible).</p>
 
 <p>And while we can transform 1000 elements of a vector one time,
 it is harder to transform 1000 elements of 1000 vectors 1000 times at the same time. <a href="https://en.wikipedia.org/wiki/La_Cité_de_la_peur">Or something</a>.</p>
@@ -419,20 +419,19 @@ by Microsoft&rsquo;s STL implementation.</li>
 <li>Apple platforms have <a href="https://en.wikipedia.org/wiki/Grand_Central_Dispatch">Grand Central Dispatch</a>, which works similarily but has a far cooler name.</li>
 </ul>
 
-<p>There is no equivalent, de-facto solution on other posix platforms.
-And while a one-thread context is simple enough, user space scheduling is scheduling still, and
+<p>There is no equivalent, de-facto solution on other POSIX platforms.
+And while a one-thread context is simple enough, user-space scheduling is scheduling still, and
 <a href="https://tokio.rs/blog/2019-10-scheduler/">scheduling is hard</a>.</p>
 
-<p>There have some libraries that can be used on linux such as libdispatch or libuv, or implementers
-can cook up something for scratch.</p>
+<p>There have some libraries that can be used on Linux such as <code>libdispatch</code> or <code>libuv</code>, or implementers can cook up something for scratch.</p>
 
 <h3 id="cancellation-and-stop-tokens">Cancellation and stop tokens</h3>
 
-<p>Error management in C++ is considered a simple and solved problem<sup class="footnote-ref" id="fnref:8"><a href="#fn:8">8</a></sup>.
+<p>Error management in C++ is considered a simple and solved problem<sup class="footnote-ref" id="fnref:8"><a href="#fn:8">9</a></sup>.
 To spice things up, asynchrony adds a third channel: Cancellation.
-Indeed, <a href="https://wg21.link/p1677r2">cancellation is not an error</a><sup class="footnote-ref" id="fnref:9"><a href="#fn:9">9</a></sup>.</p>
+Indeed, <a href="https://wg21.link/p1677r2">cancellation is not an error</a><sup class="footnote-ref" id="fnref:9"><a href="#fn:9">10</a></sup>.</p>
 
-<p>But before we can talk about handling cancellation let&rsquo;s stop about emitting a cancellation
+<p>But before we can talk about handling cancellation let&rsquo;s talk about emitting a cancellation
 request.
 You would typically cancel an entire task, or an operation, which would then cancel the
 the entire chain of subsequent operations.</p>
@@ -443,7 +442,7 @@ As mentioned in [P1677] cancellation is the asynchronous version
 of returning early from a function.</p>
 
 <p><code>std::stop_token</code> which is a C++20 feature that was accepted at the same
-time as <code>std::jthread</code><sup class="footnote-ref" id="fnref:10"><a href="#fn:10">10</a></sup></p>
+time as <code>std::jthread</code><sup class="footnote-ref" id="fnref:10"><a href="#fn:10">11</a></sup></p>
 
 <p>Like death and all good stories, asynchronous cancellation comes in threes:</p>
 
@@ -493,7 +492,7 @@ thread-safe if you have multiple threads.)</p>
 </div>
 
 
-<p>Tokens can then be attached to a coroutine task of the appropriate type <sup class="footnote-ref" id="fnref:11"><a href="#fn:11">11</a></sup>
+<p>Tokens can then be attached to a coroutine task of the appropriate type <sup class="footnote-ref" id="fnref:11"><a href="#fn:11">12</a></sup>
 or attached to any receiver.</p>
 
 <p>The customization point <code>execution::get_stop_token(execution::receiver auto)</code>
@@ -529,7 +528,7 @@ blog posts about executors.</p>
 <p>Receivers have 3 channels: set_value, set_error and set_done representing respectively
 success, failure, and cancellation.</p>
 
-<p>Coroutines have a return value (which is of a single type - whereas receivers support multiple value types <a href="https://wg21.link/p1341r0">P1341</a>) and can rethrow exceptions<sup class="footnote-ref" id="fnref:12"><a href="#fn:12">12</a></sup>.</p>
+<p>Coroutines have a return value (which is of a single type - whereas receivers support multiple value types <a href="https://wg21.link/p1341r0">P1341</a>) and can rethrow exceptions<sup class="footnote-ref" id="fnref:12"><a href="#fn:12">13</a></sup>.</p>
 
 <p>Mapping receiver can then be achieved in a couple of ways:</p>
 
@@ -593,7 +592,7 @@ depending on the result of the operation.</p>
 
 <p><a href="https://www.destroyallsoftware.com/talks/wat">Let&rsquo;s talk about a language that doesn&rsquo;t suck</a>, let&rsquo;s talk about Go.</p>
 
-<h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">13</a></sup> are not Goroutines</h2>
+<h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">14</a></sup> are not Goroutines</h2>
 
 <p>Goroutines, a feature of the Go programming language, are very different from C++ coroutines in that they are not only stackfull, but also model both a resumption mechanism and a scheduling mechanism.
 Go provides you with a baked-in i/o and coroutines scheduler which will handle on behalf of the
@@ -623,9 +622,9 @@ such that you can acquire a lock by resuming a coroutine:</p>
 </code></pre></div>
 <h3 id="channel-your-inner-gopher">Channel your inner Gopher</h3>
 
-<p>Along Goroutines, go offers channels, which are one of the best features of go.
-Channels are, conceptually relatively simple.
-A channel is a multi-producers, multi consummers queue.
+<p>Along Goroutines, go offers channels, which are one of the best features of Go.
+Channels are, conceptually, relatively simple.
+A channel is a multi-producers, multi-consummers queue.
 Reading from the queue suspend the goroutine until data is available.
 Writing can be either buffered (The written data is saved and the writer can continue on its
 merry way) - or Unbuffered (The writer is suspended until a reader is ready to take the data).
@@ -683,7 +682,7 @@ This belief would lead to two inter-incompatible APIs in the standard, which wou
 a nightmare in term of usability (aka ASIO and AFIO).</p>
 
 <p>I don&rsquo;t care about performance as much as I care about the usability of interfaces.
-For better or worse, faced with a choice between performance and ergonomy, the committee tends to prioritize performance<sup class="footnote-ref" id="fnref:13"><a href="#fn:13">14</a></sup>.</p>
+For better or worse, faced with a choice between performance and ergonomy, the committee tends to prioritize performance<sup class="footnote-ref" id="fnref:13"><a href="#fn:13">15</a></sup>.</p>
 
 <p>Fortunately, it seems that there is finally a way to resolve these divides:</p>
 
@@ -748,6 +747,8 @@ For better or worse, faced with a choice between performance and ergonomy, the c
  <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
 <li id="fn:4">Linux 5.6 will come with many improvements such as a redesigned worker threads.
  <a class="footnote-return" href="#fnref:4"><sup>[return]</sup></a></li>
+<li id="fn:15">A first draft of this sentence read <strong><em>&ldquo;The submission queue can only be accessed by a single thread concurrently&rdquo;</em></strong>. But <code>concurrent</code> is a too subtle word to be ever used properly by the mere mortal that I am.
+ <a class="footnote-return" href="#fnref:15"><sup>[return]</sup></a></li>
 <li id="fn:6">A name I did made up.
  <a class="footnote-return" href="#fnref:6"><sup>[return]</sup></a></li>
 <li id="fn:7">I made up that too. libunifex uses <code>schedule_after(duration)</code> and <code>schedule_at(time_point)</code>
