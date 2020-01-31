@@ -358,7 +358,7 @@ The only difference is that the <code>start</code> method will lead to a timeout
 
 <p><img src="schedule_deadline.svg" alt="IO uring Proactor"/></p>
 
-<p><code>io_uring</code> happens to have built-in timout support. Other scheduler may use <a href="http://man7.org/linux/man-pages/man2/timerfd_create.2.html"><code>timerfd</code></a> or <a href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpooltimer?"><code>CreateThreadpoolTimer</code></a> on windows.</p>
+<p><code>io_uring</code> happens to have built-in timeout support. Other scheduler may use <a href="http://man7.org/linux/man-pages/man2/timerfd_create.2.html"><code>timerfd</code></a> or <a href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpooltimer?"><code>CreateThreadpoolTimer</code></a> on windows.</p>
 
 <p>Beside timers, most Asynchronous APIS support:</p>
 
