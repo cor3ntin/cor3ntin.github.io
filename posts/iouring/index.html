@@ -455,7 +455,7 @@ time as <code>std::jthread</code><sup class="footnote-ref" id="fnref:10"><a href
 
 <p>This is based on the same idea as <a href="https://docs.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads">C#&rsquo;s CancellationToken</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController">Javascript&rsquo;s AbortController</a>.</p>
 
-<p><code>stop_source</code> can create tokens, <code>stop_token</code> has a <code>stop_requested</code> methods that returns
+<p><code>stop_source</code> can create tokens, <code>stop_token</code> has a <code>stop_requested</code> method that returns
 true once <code>stop_source::request_stop()</code> is called.
 In addition, callbacks can be triggered automatically when <code>stop_source::request_stop()</code>
 is called.</p>
