@@ -589,23 +589,23 @@ depending on the result of the operation.</p>
 
 <p>This would be a better modelization of receivers and would not suffer the performance and implementabilities issues of exceptions (at the cost of having more <code>coroutine_handle</code> to keep track of.)</p>
 
-<p>Anyway&hellip; this has turned into blog-post driven design&hellip;
-Let&rsquo;s talk about a Golang.</p>
+<p>Anyway&hellip; this has turned into blog-post driven design&hellip;</p>
+
+<p><a href="https://www.destroyallsoftware.com/talks/wat">Let&rsquo;s talk about a language that doesn&rsquo;t suck</a>, let&rsquo;s talk about Go.</p>
 
 <h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">12</a></sup> are not Goroutines</h2>
 
-<p>Goroutines, a feature of the Go programming language, in addition of being stackful, are very
-different from C++ coroutines in that they are both a resumption mechanism and a scheduling mechanism.
+<p>Goroutines, a feature of the Go programming language, are very different from C++ coroutines in that they are not only stackfull, but also model both a resumption mechanism and a scheduling mechanism.
 Go provides you with a baked-in i/o and coroutines scheduler which will handle on behalf of the
 program interrupting a goroutine when it performs an i/o, try to acquire a lock or any other blocking operation.</p>
 
 <p>C++ coroutines are not Goroutines. <strong>C++ Coroutines do not imply asynchrony, let alone scheduling</strong>.
 C++ is not the kind of language that will bake-in an i/o scheduler as it would go
-against the &ldquo;Don&rsquo;t pay for what you don&rsquo;t use&rdquo; mantra. In fact, it would make C++ unusable in many environments.</p>
+against the &ldquo;Don&rsquo;t pay for what you don&rsquo;t use&rdquo; mantra and would make C++ unusable in many environments.</p>
 
 <p>That being said&hellip;</p>
 
-<p>The combination of coroutines, sender receivers, and i/o schedulers, can emulate goroutine (well, stacklessness non-whistanding).
+<p>The combination of coroutines, sender receivers, and i/o schedulers, can emulate goroutine (well, stacklessness non-withstanding).
 C++ coroutines can also be used as simple synchronous generators. It is a much more general
 and extensible system.</p>
 
@@ -623,7 +623,7 @@ such that you can acquire a lock by resuming a coroutine:</p>
 </code></pre></div>
 <h3 id="channel-your-inner-gopher">Channel your inner Gopher</h3>
 
-<p>Along Goroutines, go offers channels, which are one of the best feature of go.
+<p>Along Goroutines, go offers channels, which are one of the best features of go.
 Channels are, conceptually relatively simple.
 A channel is a multi-producers, multi consummers queue.
 Reading from the queue suspend the goroutine until data is available.
@@ -669,7 +669,70 @@ oneway_task go_read(scheduler sch, <span style="color:#080;font-weight:bold">aut
 <p>My implementation of channels is not quite ready yet, and this article is already long enough.
 I might come back to the implementation of channels, and the few utilities required to implement them, including <code>async_mutex</code>, the <code>on</code> algorithm and the <code>get_scheduler</code> customisation point!</p>
 
-<p>Until then, take care! Thanks for reading.</p>
+<h2 id="a-great-opportunity-awaits">A great opportunity awaits</h2>
+
+<p>The year is 2020 and even consummer CPUs feature double digits number of cores,
+storage offers 10GB/s read speeds and networks have to accommodate ever-growing traffic.</p>
+
+<p>Faced with these challenges, some have contemplated user-space networking
+or contend with costly to maintain spaghetti codebases.</p>
+
+<p>For a long time, the C++ committee seemed to think that either async file I/O
+didn&rsquo;t make sense or was fundamentally irreconcilable with networking.
+This belief would lead to two inter-incompatible APIs in the standard, which would be
+a nightmare in term of usability (aka ASIO and AFIO).</p>
+
+<p>I don&rsquo;t care about performance as much as I care about the usability of interfaces.
+For better or worse, faced with a choice between performance and ergonomy, the committee tends to prioritize performance<sup class="footnote-ref" id="fnref:13"><a href="#fn:13">13</a></sup>.</p>
+
+<p>Fortunately, it seems that there is finally a way to resolve these divides:</p>
+
+<ul>
+<li><code>iouring</code> offer very high performance I/O which doesn&rsquo;t discriminate on device type.</li>
+<li>Sender Receiver provides the composable, low-cost, non-allocating abstraction while offering a simple mental model for asynchronous operations lifetime.</li>
+<li>Coroutines make asynchronous i/o dead simple for the 99% use case.</li>
+</ul>
+
+<p>Asynchronous Networking is nice.</p>
+
+<p>Asynchronous I/O is better.</p>
+
+<p><strong>AWAIT ALL THE THINGS!</strong></p>
+
+<p>I&rsquo;ll leave you with a quote from <a href="https://wg21.link/p2052">P2052 - Making modern C++ i/o a consistent API experience from bottom to top</a>.</p>
+
+<p><strong><em>Sender-Receiver is genius in my opinion. It’s so damn simple people can’t see just how game changing it is: it makes possible fully deterministic, ultra high performance, extensible, composable, asynchronous standard i/o. That’s huge. No other contemporary systems programming language would have that: not Rust, not Go, not even Erlang.</em></strong> ― Niall Douglas</p>
+
+<p>Until next time, take care! Thanks for reading.</p>
+
+<h2 id="resources-and-references">Resources and References</h2>
+
+<p><strong>Kernel Recipes 2019: Jens Axboe - &ldquo;Faster IO through io_uring”</strong>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="//www.youtube.com/embed/-5T4Cjw46ys" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+</p>
+
+<h3 id="papers">Papers</h3>
+
+<p><a href="https://kernel.dk/io_uring.pdf">Efficient IO with io_uring</a>, Jens Axboe</p>
+
+<p><a href="https://wg21.link/p1897">P1897</a> - Towards C++23 executors: An initial set of algorithms - Lee Howes</p>
+
+<p><a href="https://wg21.link/p1341">P1341</a> - Unifying Asynchronous APIs in the Standard Library - Lewis Baker</p>
+
+<p><a href="https://wg21.link/P2006">P2006</a> - Eliminating heap-allocations in sender/receiver with connect()/start() as basis operations - Lewis Baker, Eric Niebler, Kirk Shoop, Lee Howes</p>
+
+<p><a href="https://wg21.link/P1678">P1678</a> - Callbacks and Composition - Kirk Shoop</p>
+
+<p><a href="https://wg21.link/P1677">P1677</a> - Cancellation is not an Error - by Kirk Shoop, Lisa Lippincott, Lewis Baker</p>
+
+<p><a href="https://wg21.link/p2052">P2052</a> -  Making modern C++ i/o a consistent API experience from bottom to top - Niall Douglas</p>
+
+<p><a href="https://wg21.link/p0443">P0443</a> -  A Unified Executors Proposal for C++ - Jared Hoberock, Michael Garland, Chris Kohlhoff, Chris Mysen, Carter Edwards, Gordon Brown, David Hollman, Lee Howes, Kirk Shoop, Eric Niebler</p>
+
+<p><a href="https://wg21.link/p2024">P2024</a> - Bloomberg Analysis of Unified Executors - David Sankel, Frank Birbacher, Marina Efimova, Dietmar Kuhl, Vern Riedlin</p>
 <div class="footnotes">
 
 <hr />
@@ -693,12 +756,14 @@ I might come back to the implementation of channels, and the few utilities requi
  <a class="footnote-return" href="#fnref:9"><sup>[return]</sup></a></li>
 <li id="fn:10"><a href="https://en.cppreference.com/w/cpp/thread/jthread"><code>std::jthread</code></a> is now the recommended way to start a thread in C++ - I think it would be fair to consider <code>std::thread</code> deprecated, and maybe reflect on how we got into this infortunate situation.
  <a class="footnote-return" href="#fnref:10"><sup>[return]</sup></a></li>
-<li id="fn:11"><em>Someone</em> should write a blog post about that
+<li id="fn:11"><em>Someone</em> should write a blog post about that&hellip;
  <a class="footnote-return" href="#fnref:11"><sup>[return]</sup></a></li>
 <li id="fn:12">In fact, continuations in C++20 can never be <code>noexcept</code>, which is rather unfortunate.
  <a class="footnote-return" href="#fnref:12"><sup>[return]</sup></a></li>
 <li id="fn:5">Coroutines are sometimes called Gorroutines (with 2 Rs) after the name of the man who worked on them for the best part of a decade: Gor Nishanov. Thanks Gor!
  <a class="footnote-return" href="#fnref:5"><sup>[return]</sup></a></li>
+<li id="fn:13">Try not to think about standard associative containers when reading that. Too late!
+ <a class="footnote-return" href="#fnref:13"><sup>[return]</sup></a></li>
 </ol>
 </div>
 
