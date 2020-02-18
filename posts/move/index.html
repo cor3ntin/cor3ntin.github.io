@@ -64,21 +64,23 @@
     <div class="content">
       
 
-<p><code>std:: move</code> doesn&rsquo;t move.</p>
+<p><code>std::move</code> doesn&rsquo;t move.</p>
 
 <p>It casts to an rvalue-reference, which is a type of reference that can
-be passed to a move constructor or assignement operator, if one exists.
+be passed to a move constructor or assignment operator, if one exists.
 Some other expressions can automatically be converted to rvalue-references when the compiler is certain that the
 value is expiring (will not be reused).</p>
 
 <p>This is the case for temporaries or non-reference objects returned from functions.</p>
+
+<p>In many cases, you still need to use <code>std::move</code> explicitly: C++ compilers will for example not check whether an object might be reused later in the function.</p>
 
 <h2 id="so-if-std-move-doesn-t-move-is-it-a-bad-name">So, if std::move doesn&rsquo;t move, is it a bad name?</h2>
 
 <p>No, because it shows the intent of <code>move</code>. The important point is that in the general case, by the end of the expression
 or statement in which <code>std::move</code> appears, the object might have been moved-from.</p>
 
-<p>Herb Sutter is right: move constructors, move assignment operators and
+<p><a href="https://herbsutter.com/2020/02/17/move-simply/">Herb Sutter is right</a>: move constructors, move assignment operators and
 rvalue-reference qualified functions are just regular non-const functions.</p>
 
 <p>But, because in the 99% cases the moved-from object will be swiftly destroyed after being moved from, a class may decide to not restore all of the invariants in these functions, for performance reasons.</p>
