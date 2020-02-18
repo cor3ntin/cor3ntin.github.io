@@ -20,9 +20,8 @@
             <guid>https://cor3ntin.github.io/posts/move/</guid>
             <description>std::move doesn&amp;rsquo;t move.
 It casts to an rvalue-reference, which is a type of reference that can be passed to a move constructor or assignment operator, if one exists.
-Some expressions will be converted to rvalue-references automatically, when the compiler is certain that the value is expiring (will not be reused).
-This is the case for temporaries or non-reference objects returned from functions.
-In many cases, you still need to use std::move explicitly: C++ compilers will for example never check whether an object might be reused later in the function.</description>
+template &amp;lt;typename T&amp;gt; auto move(T&amp;amp;&amp;amp; a) { return static_cast&amp;lt;T&amp;amp;&amp;amp;&amp;gt;(a); }  Some expressions will be converted to rvalue-references automatically, when the compiler is certain that the value is expiring (will not be reused).
+This is the case for temporaries or non-reference objects returned from functions.</description>
         </item>
         
         
