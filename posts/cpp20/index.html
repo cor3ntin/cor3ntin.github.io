@@ -94,6 +94,55 @@ make async code more maintainable and safer.</p>
 
 <p>In all, C++ is gaining new tools to better express its core principles.</p>
 
+<p>That doesn&rsquo;t mean C++20 is perfect or that no mistake was made.
+But what one can consider a mistake is often the result of difficult to
+balance trade-offs and well-understood compromises.
+I might go into some of the things I don&rsquo;t like in a separate article,
+if there is an interest for that.</p>
+
+<p>Regardless, I think the entiere committee tried to make
+C++20 as best as we could and I think we were successful in that.
+Objectively, C++20 is simpler and more expressive than previous C++ versions.</p>
+
+
+<figure>
+    
+        <img src="river.webp" />
+    
+    
+</figure>
+
+
+<p>The release of C++20 means that features under the <code>-std=c++20</code> (or <code>-std=c++2a</code>)
+flags of your compiler are now stable as far as the standard is concerned
+and I would encourage you to use them as they become available in your compilers.
+It will make you and your team more productive.
+Of course, C++ is a tool: use what you need when you need it!</p>
+
+<p>Modules do require build system support, I suspect this will remain
+a mess for the foreseeable future.</p>
+
+<p>Coroutines have no library components in C++20, you can use <a href="https://github.com/lewissbaker/cppcoro">cppcoro</a> in the meantime.</p>
+
+<p>Everything else can be used very simply as it becomes available in
+compilers. We should also see an increasing number of talks, tutorials
+and educative material on all these features.
+You don&rsquo;t need to understand everything at once. It is a large release catering to
+many domains, expert library writers and everybody else at the same time.</p>
+
+<p>I have found that the small features are often the most immediately useful
+and appreciated.
+Things like <a href="https://en.cppreference.com/w/cpp/container/map/contains"><code>.contains</code></a>,
+<a href="https://en.cppreference.com/w/cpp/string/basic_string/ends_with"><code>ends_with</code>, <code>starts_with</code></a>,
+more optional <code>typename</code>, initializers for <code>if</code> and <code>range-for</code>, generated <code>=!</code>, spaceship,
+etc</p>
+
+<p>As is tradition, the room-by-room details of what happens in the committee
+can be found on <a href="https://www.reddit.com/r/cpp/comments/f47x4o/202002_prague_iso_c_committee_trip_report_c20_is/">Reddit</a>.</p>
+
+<p>As such, instead of trying to give an incomplete overview of the week,
+I&rsquo;d figure I should talk about what I have been working on these past few years.</p>
+
 <h2 id="a-busy-couple-of-years">A busy couple of years</h2>
 
 <p>A little under two years ago, I went to my first meeting, in Rapperswil, Switzerland.
@@ -240,7 +289,30 @@ more incompatibilities between projects and overall, ever more brittle build sys
 </figure>
 
 
-<p>Prague turned out to be a wonderful city with lots of fun museums an great food!</p>
+<p>Prague turned out to be a wonderful city with lots of fun museums and great food!</p>
+
+<h2 id="it-takes-an-army">It takes an army</h2>
+
+<p>WG21 has now routinely well over 200 attendees and about 20 study groups.
+It a lot of work by many, many very talented people over multiple years to build something
+like C++20.
+My own proposals were only possible thanks to the help of many people!</p>
+
+<p>We have now turned our attention to C++23.</p>
+
+<p>Independently of the so-called plan, I&rsquo;m looking forward to reflection, sender-receivers, i/o,
+rellocation, freestanding, more Unicode support, pattern matching, <code>std::embed</code> and many small quality of life improvements (including <del>ranges2</del> <code>ranges::to</code>, promise!).</p>
+
+<p>See you in Varna!</p>
+
+
+<figure>
+    
+        <img src="wg21.png" />
+    
+    
+</figure>
+
 
       
     <div id="socialshareDiv">
