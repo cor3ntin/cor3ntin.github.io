@@ -12,6 +12,18 @@
     
     
     
+    <item>
+    <title>Shipping C&#43;&#43;20 in Prague</title>
+        <link>https://cor3ntin.github.io/posts/cpp20/</link>
+            <pubDate>Wed, 19 Feb 2020 09:21:00 +0100</pubDate>
+            
+            <guid>https://cor3ntin.github.io/posts/cpp20/</guid>
+            <description>C++20 has shipped!
+C++ is better and more alive than it has ever been.
+You might have read on the Internet (rarely a good idea), that C++ grows too fast, too complicated, too big. I do not think this is true.
+Bjarne Stroustrup reminded us that concepts are mentioned in Design and Evolution of C++, a book written in 1994, before even the first C++ standard. Coroutines and Modules are also old ideas that represent more than a decade of work.</description>
+        </item>
+        
         
     
     <item>
