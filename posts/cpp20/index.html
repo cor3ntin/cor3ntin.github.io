@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Shipping C&#43;&#43;20 in Prague | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">February 19, 2020</h2>
+    <h1 class="title">Shipping C&#43;&#43;20 in Prague</h1>
+    
+    <div class="content">
+      
+
+
+<figure>
+    
+        <img src="prague.webp" />
+    
+    
+</figure>
+
+
+<p>C++20 has shipped!</p>
+
+<p>C++ is better and more alive than it has ever been.</p>
+
+<p>You might have read on the Internet (rarely a good idea), that C++ grows too fast,
+too complicated, too big.
+I do not think this is true.</p>
+
+<p>Bjarne Stroustrup reminded us that concepts are mentioned in <a href="https://www.amazon.com/Design-Evolution-C-Bjarne-Stroustrup/dp/0201543303">Design and Evolution of C++</a>, a book written in 1994, before even the first C++ standard. Coroutines and Modules are also old ideas that represent more than a decade of work. Ranges is probably the most refined large proposal and represent a huge body of work, notably from Eric Niebler and Casey Carter, with small tweaks from many, many people.
+<code>std::fmt</code> also took many years of effort, while drawing from usage in other languages, notably Python.</p>
+
+<p>This is not a coincidence:</p>
+
+<p>I think most committee members are driven by the desire to make the language simpler.</p>
+
+<p>Concepts may be hard to define, but they are easy to use. Same for ranges and views.
+<code>std::format</code> is really easy to use, coroutines are challenging to write but easy to use and
+make async code more maintainable and safer.</p>
+
+<p>In all, C++ is gaining new tools to better express its core principles.</p>
+
+<h2 id="a-busy-couple-of-years">A busy couple of years</h2>
+
+<p>A little under two years ago, I went to my first meeting, in Rapperswil, Switzerland.
+I don&rsquo;t remember exactly <em>why</em>, I guess I wanted to see how the sausage was made.</p>
+
+
+<figure>
+    
+        <img src="sausage.webp" />
+    
+    
+    <figcaption>
+        <h4>Sausage making</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>I have been to all meetings ever since, and have contributed the best I could to the sausage
+making process, notably:</p>
+
+<h3 id="move-only-iterators">Move-only iterators</h3>
+
+<p><a href="https://wg21.link/P1207">P1207</a>
+<a href="https://wg21.link/P1826">P1826</a></p>
+
+<p>Not all objects are regular. For example, file handles, sockets and coroutines handle are not
+regular, which mean they cannot or should not be copied.</p>
+
+<p>Iterators over these objects pretended to be regular because move-only objects were not a thing
+when the STL was first standardized. This led to unsafe, less efficient code.</p>
+
+<p><code>std::ranges</code> allowed us to tweak the <code>iterator</code> concept to allow for move-only iterators.
+This was a very small change to a core concept but it required a lot of work.
+Would I have done it if I knew how much work it would require?
+I don&rsquo;t know but I am sure glad I did.</p>
+
+<h3 id="pulling-source-location-out-of-the-library-ts">Pulling source_location out of the library TS</h3>
+
+<p><a href="https://wg21.link/p1208">P1208</a></p>
+
+<p><code>source_location</code> is by large the work of Robert Douglas. It replaces the
+<strong>FILE</strong> and <strong>LINE</strong> macros.
+Unfortunately, it was slowly dying in the Library Fundamentals TS, as proposals in Library
+Fundamentals do.
+I convinced the committee to fish it out and merge it in C++20.
+In the end, I got busy with too many things so I had to ask Robert to push <code>source_location</code>
+through the finish line. It turns out he had to pull multiple all-nighters to redraft the wording several times&hellip; People pull heroics during meetings.</p>
+
+<p>Fun fact, <code>source_location</code> is the first reflection facility merged into the standard and
+the first (and so far only) <code>consteval</code> function in C++. Expect a lot more in 23!</p>
+
+<h3 id="deprecating-comma-operator-in-subscript-expressions">Deprecating comma operator in subscript expressions</h3>
+
+<p><a href="https://wg21.link/p1161">P1161</a></p>
+
+<p>I think a lot of people are excited about this one. It&rsquo;s the first step towards
+a nice multi-dimensional indexing syntax, notably for <code>mdspan</code>.
+I hope to have a proposal for that in Belfast, pending implementation.</p>
+
+<p>Thanks to Isabella Muerte who had a <a href="https://wg21.link/p1277r0">similar proposal</a>!</p>
+
+<h3 id="better-constructors-for-span-and-string-view">Better constructors for span and string_view</h3>
+
+<p><a href="https://wg21.link/P1394">P1394</a>
+<a href="https://wg21.link/P1391">P1391</a>
+<a href="https://wg21.link/P1989">P1989</a></p>
+
+<p><code>span</code> and <code>string_view</code> can now be constructed from a pair of contiguous
+iterators.
+<code>span</code> can additionally be constructed from any <code>contiguous_range</code>.
+I was hoping to do the same treatment to <code>string_view</code> but because of the mess that is the <code>string</code> and <code>string_view</code> construction and conversion overloads, we decided to postpone that to 23.
+I am hoping that this will get accepted in Varna, we will see.</p>
+
+<h3 id="views-keys-views-values-views-elements">views::keys views::values views::elements</h3>
+
+<p><a href="https://wg21.link/p1035r7">P1035</a></p>
+
+<p>Christopher Di Bella did 99% of the work on these (and added a whole range of useful views).
+At the names implies, <code>views::keys</code> and <code>views::values</code> let you iterate over the keys and values of an associative container.
+<code>views::elements</code> is a generalisation of that: it let you iterate over the Nth elements of a sequence of tuples</p>
+
+<h2 id="some-personal-failures-and-rejected-proposals">Some personal failures and rejected proposals</h2>
+
+
+<figure>
+    
+        <img src="glass.webp" />
+    
+    
+</figure>
+
+
+<h3 id="ranges-to">ranges::to</h3>
+
+<p><a href="https://wg21.link/P1206">P1206</a></p>
+
+<p><code>ranges::to</code> missed the train - We are hoping it will land early in C++23.
+Many people have voiced their disappointment.
+I&rsquo;ll try to provide a standalone header to do that, at some point.
+One of the reasons it didn&rsquo;t land in 20 is that LWG was extremely busy and quite a few important
+papers, including <code>stacktrace</code> are still in their queue.
+The other is that I was unable to provide wording.
+<code>static_extent</code> also missed the boat, I have no idea if we will be able to retroactively apply it to span.</p>
+
+<h3 id="make-deprecated-thing-deprecated">Make deprecated thing [[deprecated]].</h3>
+
+<p><a href="https://wg21.link/p1702r0">P1702</a></p>
+
+<p>LEWG decided they wouldn&rsquo;t want to force implementers to warn on depreciation,
+which I think is unfortunate.
+But it led to an interesting discussion about depreciation in the standard library,
+so that paper was still very useful I think.</p>
+
+<h3 id="inline-in-module">inline in module</h3>
+
+<p><a href="https://wg21.link/p1604r1">P1604</a></p>
+
+<p>I failed to convinced the committee that <code>inline</code> in modules made no sense at all.
+Fortunately, some of the damages were fixed by <a href="https://wg21.link/p1779r3">ABI isolation for member functions - Davis Herring</a>.
+Unfortunately, <code>inline</code> still has too many meanings, especially in modules where it just shouldn&rsquo;t be a thing at all.</p>
+
+<h3 id="module-naming">module naming</h3>
+
+<p><a href="https://wg21.link/p1634r0">P1634</a></p>
+
+<p>Tooling rejected offering any kind of naming of structure guideline for modules.</p>
+
+<p><a href="https://cor3ntin.github.io/posts/modules_naming/">I believe</a> this will have a long-lasting, negative effect on the ecosystem.
+As a result of that, we can expect more build scripts, more extensions,
+more incompatibilities between projects and overall, ever more brittle build systems.</p>
+
+<h2 id="a-great-meeting">A great meeting</h2>
+
+<p>Our hosts Avast and Hana Dusíková were fantastic! They arranged for a barista to serve proper tasty coffee which was miles better than the usual conference &ldquo;coffee&rdquo;. It&rsquo;s particularly appreciated in these meetings where many people have very little sleep.</p>
+
+
+<figure>
+    
+        <img src="street.webp" />
+    
+    
+</figure>
+
+
+<p>Prague turned out to be a wonderful city with lots of fun museums an great food!</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fcpp20%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fcpp20%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fcpp20%2f&t=Shipping%20C%2b%2b20%20in%20Prague" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+        "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"},
+        "meta"         : {"lang": "cppx", "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1,
+                lang: settings["lang"] || "c++"
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true, libraryCode: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+
