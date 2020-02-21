@@ -331,7 +331,7 @@ Adding duplicated types do not make C++ simpler.</p>
 <h3 id="oh-but-we-could-have-accepted-this-proposal">Oh but we could have accepted this proposal</h3>
 
 <p>Some implementers are claiming that some proposals that were rejected
-for being ABI breaking were in fact not, or they could hack around a non-abi breaking solution.
+for being ABI breaking were in fact not, or they could hack around a non-ABI breaking solution.
 A bit hard to swallow for my cynical self.
 The fact is, they never proposed such solutions before and the cases in which this could be applied
 are limited.
@@ -340,8 +340,8 @@ recommend using a different name.</p>
 
 <h3 id="partial-abi-breaks">Partial ABI breaks</h3>
 
-<p>The idea would be to break abi for specific type or function rather than to change ABI for all programs at once.
-The issue is that instead of a nice like-time diagnostic, this solution tends to not manifest itself
+<p>The idea would be to break ABI for specific type or function rather than to change ABI for all programs at once.
+The issue is that instead of a nice link-time diagnostic, this solution tends to not manifest itself
 until load time and is otherwise very surprising.
 The committee tried that in C++11 by changing the layout of <code>std::string</code>, and it was bad.
 So bad it is used as an argument against ever breaking ABI ever again.</p>
@@ -354,8 +354,8 @@ This corresponds roughly to the <a href="https://en.wikipedia.org/wiki/Private_c
 which is used extensively in Qt for ABI reasons.
 That would allow adding data members but would not relax the constraints around virtual members.</p>
 
-<p>More critically, we are talking about adding a pointer indirection and a heap allocation to everything that might be at an abi boundary.
-in the case of the STL about everything is designed to be at an abi boundary as it is a collection of shared vocabulary type.</p>
+<p>More critically, we are talking about adding a pointer indirection and a heap allocation to everything that might be at an ABI boundary.
+in the case of the STL about everything is designed to be at an ABI boundary as it is a collection of shared vocabulary type.</p>
 
 <p>The cost of that would be huge.</p>
 
@@ -363,7 +363,7 @@ in the case of the STL about everything is designed to be at an abi boundary as 
 Notably, a few proposals are looking into making it a language feature.
 Supposedly, you could either choose between performance or stability,</p>
 
-<p>Ironically, making standard typer into PIMPL types would be&hellip;an abi break.</p>
+<p>Ironically, making standard typer into PIMPL types would be&hellip;an ABI break.</p>
 
 <h3 id="rebuilding-our-code-once-every-three-years">Rebuilding our code once every three years</h3>
 
