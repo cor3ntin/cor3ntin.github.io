@@ -158,7 +158,7 @@ as a quality of implementation matter but that might require breaking ABI.</li>
 
 <h2 id="abi-discussions-in-prague">ABI discussions in Prague</h2>
 
-<p>In Prague the ABI discussions lead a series of poll, that, unfortunately, are as revealing as tea leaves, and so depending if you are a glass half full or glass half empty kind of person, you might interpret these results differently.</p>
+<p>In Prague the ABI discussions lead a series of polls, that, unfortunately, are as revealing as tea leaves, and so depending if you are a glass half full or glass half empty kind of person, you might interpret these results differently.</p>
 
 <p>The basic direction is:</p>
 
@@ -186,7 +186,7 @@ break ABI once they are retired or otherwise do not have to deal with their curr
 No way to know. The exact poll mentioned &ldquo;C++SOMETHING&rdquo;. How helpful.</p>
 
 <p>There is no reason to believe that if the ABI can&rsquo;t be broken now, it can be broken later.
-People who need stability lags year behind the standard by quite a bit.
+People who need stability lag years behind the standard by quite a bit.
 So, if we don&rsquo;t break ABI now, people would have been relying on a never-promised ABI for over a decade, maybe two.
 The simple fact that we had this conversation and voted not to break ABI tends to show that the ecosystem
 is ossifying and ossifying fast.
@@ -205,7 +205,7 @@ Let&rsquo;s ban diesel vehicles in 2070.</p>
 <p>This can mean a few things:</p>
 
 <ul>
-<li>We can waste more time in one of the busiest rooms of the committee leaving less time for proposals that are a better chances of moving forward, but ultimately rejecting the proposal anyway</li>
+<li>We can waste more time in one of the busiest rooms of the committee leaving less time for proposals that have a better chance of moving forward, but ultimately rejecting the proposal anyway</li>
 <li>Finding non-breaking alternatives (more on that later)</li>
 <li>Operating partial ABI breaks (more on that later)</li>
 </ul>
@@ -232,7 +232,7 @@ too. Which is not possible.</p>
 <p><strong>What is C++ and what is the standard library?</strong></p>
 
 <p>The words touted around are &ldquo;performance&rdquo; &ldquo;zero-cost abstractions&rdquo; and &ldquo;don&rsquo;t pay for what you don&rsquo;t use&rdquo;.
-<strong>ABI goes directly against all of that.</strong></p>
+<strong>ABI stability goes directly against all of that.</strong></p>
 
 <h2 id="far-reaching-consequences">Far-reaching consequences</h2>
 
@@ -277,14 +277,14 @@ This number will grow over time.
 To put that in perspective</p>
 
 <ul>
-<li>If you are a big GAFA company, you can buy a new data center or pay a team to maintain a library</li>
+<li>If you are a <a href="https://en.wikipedia.org/wiki/Big_Tech">Big Tech</a> company, you can buy a new data center or pay a team to maintain a library</li>
 <li>If you are an embedded developer, 5% might be the difference of your software running, or having to buy a more expensive chip, which might cost millions</li>
 <li>If you are a game company, it might be the difference between your game being great or your user vomiting in their VR headset</li>
 <li>If you are in trading, it might be the difference between a successful transaction or not.</li>
 </ul>
 
 <p>I think in any case it&rsquo;s the difference between &ldquo;I should use C++!&rdquo; and &ldquo;I should use the standard library&rdquo; and
-&ldquo;Maybe I should not use the standard library&rdquo;, up to &ldquo;Maybe I should not use C++? Maybe I should use .net, julia, rust?&rdquo;. Of course, there are many other factors in that decision, but we have been seen that happening for a while.</p>
+&ldquo;Maybe I should not use the standard library&rdquo;, up to &ldquo;Maybe I should not use C++? Maybe I should use .net, julia, rust?&rdquo;. Of course, there are many other factors in that decision, but we have seen that happening for a while.</p>
 
 <p>Many game developers are notoriously septical of the standard library, they developed alternatives, for example, EASTL.
 Facebook has folly, Google has Abseil, etc.</p>
