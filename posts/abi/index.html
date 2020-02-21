@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>The Day The Standard Library Died | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">February 21, 2020</h2>
+    <h1 class="title">The Day The Standard Library Died</h1>
+    
+    <div class="content">
+      
+
+<p>In Prague, WG21 took a series of poll on whether to break ABI, and decided not to.</p>
+
+<p>There was no applause.
+But I&rsquo;m not sure we fully understand what we did and the consequences it could have.</p>
+
+<p>I do believe none of the consequences will be good.</p>
+
+<h2 id="what-is-abi">What is ABI</h2>
+
+<p>ABI is the shared understanding libraries have about how your program is serialized,
+both in term of layout, calling convention and mangling.
+It is exactly a binary protocol, despite not being versioned.</p>
+
+<p>Maybe this is a bit complicated, so I think it is better to list what ABI implies:
+You won&rsquo;t be able to use a symbol in a new version of a compiled library if you do any of the following:</p>
+
+<ul>
+<li>Add data member to an existing class</li>
+<li>Change template arguments, transform a template function to a non-template or vice versa, or make a template variadic</li>
+<li>Make something inline that previously wasn&rsquo;t</li>
+<li>Adding default arguments to functions</li>
+<li>Add virtual functions</li>
+</ul>
+
+<p>And many more thing, but these are usually the one encountered by the committee and the ones that tend to kill proposals on the spot.
+I also omitted ABI breakings operations that are also source breaks (removing or modifying functions).
+But sometimes, removing functions is actually a useful non-breaking change.
+For example, <code>std::string</code> has a <code>string_view</code> conversion operator that I want to kill with fire,
+and that might be an ABI break which is not a source break - or an almost silent one-.</p>
+
+<h2 id="why-do-we-want-to-break-abi">Why do we want to break ABI</h2>
+
+<p>There are a few Quality of Implementation changes that could be enabled by an ABI break</p>
+
+<ul>
+<li>Making associative container (much) faster</li>
+<li>Making <code>std::regex</code> faster (it is currently faster to launch php to execute a regex than it is to use <code>std::regex</code></li>
+<li>Small tweaks to <code>string</code>, <code>vector</code>, etc</li>
+<li>Better conformance: some implementations are intentionally not conforming for the sake of stability</li>
+</ul>
+
+<p>More importantly, there are design changes that would break ABI.
+In the last few of years, The following features encountered ABI concerns.
+It is not an exhaustive list.</p>
+
+<ul>
+<li><code>scoped_lock</code> was added to not break ABI by modifying <code>lock_guard</code></li>
+<li><code>int128_t</code> has never been standardized because modifying <code>intmax_t</code> is an abi break. Although if you ask me, <code>intmax_t</code> should just be deprecated.</li>
+<li><code>unique_ptr</code> could fit in register  with language modifications, which would be needed to make it zero-overhead, compared to a pointer</li>
+<li>Many changes to <code>error_code</code> were rejected because they would break ABI</li>
+<li><code>status_code</code> raised ABI concerns</li>
+<li>A proposal to add a filter to <code>recursive_directory_iterator</code> was rejected because it was an ABI break</li>
+<li>A proposal to make most of <cstring> <code>constexpr</code> (including strlen) will probably die because it would be an ABI break.</li>
+<li>Adding utf-8 support to <code>regex</code> is an ABI break</li>
+<li>Adding support for <code>realloc</code> or returning the allocated size is an ABI break for polymorphic allocators</li>
+<li>Making destructors implicitely virtual in polymorphic classes</li>
+<li>Return type of push_back could be improved with an abi break</li>
+<li>In fact, did we really need both <code>push_back</code> and <code>emplace_back</code> ?</li>
+<li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p1116r0.pdf">Improving shared_ptr</a> would be an abi break</li>
+<li><code>[[no_unique_address]]</code> could be infered by the compiler should we not care at all about abi</li>
+</ul>
+
+<p>The list goes one.
+I think WG21 needs to do a better job of maintaining a list of these things.
+I should take not each times says &ldquo;ABI break&rdquo; in the room I am in.</p>
+
+<h3 id="what-else-might-we-want-to-change">What else might we want to change?</h3>
+
+<p>I don&rsquo;t know. And I don&rsquo;t know what I don&rsquo;t know.
+If I had to guess?</p>
+
+<ul>
+<li>In the 23 time frame, modularization of the standard library will face ABI concerns,
+in that all non exported symbols will have to remain in the global module fragment not to break ABI, which kinda defeats the point of modules.</li>
+<li>There seems to be a lot of people who believe that cost of exceptions could be greatly reduced
+as a quality of implementation matter but that might requiere breaking ABI.</li>
+<li>Further improvenents of coroutines may raise ABI concerns, and coroutines can be greatly improved.</li>
+<li>Rellocation needs explicit opt-in, in part over ABI concerns.</li>
+<li><a href="https://www.youtube.com/watch?v=MWBfmmg8-Yo">Tombstone</a> proposals would surely raise abi concerns.</li>
+</ul>
+
+<h2 id="abi-discussions-in-prague">ABI discussions in Prague</h2>
+
+<p>In prague the ABI discussions lead a series of poll, that, unfortunately are as revealing as tea leaves, and so depending if you are a glass half full or glass half empty kind of person, you might interpret these results differently.</p>
+
+<p>The basic direction is:</p>
+
+<ul>
+<li>WG21 is not in favor in an ABI break in 23</li>
+<li>WG21 is in favor of an ABI break in a future version of C++</li>
+<li>WG21 will take time to consider proposals requiring an ABI break</li>
+<li>WG21 will not promise stability forever</li>
+<li>WG21 wants to keep prioritizing performance over stability.</li>
+</ul>
+
+<p>In all these polls, there is a clear majority but no consensus.
+The committee is, somewhat unsuprisingly, divided.</p>
+
+<h3 id="reading-the-tea-leaves">Reading the tea leaves</h3>
+
+<h4 id="c-something-something">C++ something something</h4>
+
+<p>The obvious flaw in these polls is that we haven&rsquo;t clarified <em>when</em> we would want to break ABI.</p>
+
+<p>23? Nope, this is a definitive no.</p>
+
+<p>26? Some people definitively intended to vote for that, other probably voted to break ABI in C++42 or voted to
+break ABI once they are retired or otherwise do not have to deal with their current project.
+No way to know. The exact poll mentionned &ldquo;C++SOMETHING&rdquo;. How helpful.</p>
+
+<p>There is no reason to believe that if the ABI can&rsquo;t be broken now, it can be broken later.
+People who need stability lags year behind the standard by quite a bit.
+So, if we don&rsquo;t break ABI now, people would have been relying on a break for over a decade, maybe two.
+The simple fact that we had this conversation and voted not to break ABI tends to show that the ecosystem
+is ossifiying and ossifiying fast.
+Each passing day makes the problem a bit worse and more expensive.
+I</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fabi%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fabi%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fabi%2f&t=The%20Day%20The%20Standard%20Library%20Died" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'cor3ntin';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+        "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"},
+        "meta"         : {"lang": "cppx", "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1,
+                lang: settings["lang"] || "c++"
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true, libraryCode: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+
