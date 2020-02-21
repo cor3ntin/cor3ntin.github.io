@@ -64,7 +64,16 @@
     <div class="content">
       
 
-<p>In Prague, WG21 took a series of polls on whether to break ABI, and decided not to.</p>
+
+<figure>
+    
+        <img src="dagger.webp" />
+    
+    
+</figure>
+
+
+<p>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.</p>
 
 <p>There was no applause.
 But I&rsquo;m not sure we fully understood what we did and the consequences it could have.</p>
@@ -227,6 +236,15 @@ too. Which is not possible.</p>
 
 <h2 id="far-reaching-consequences">Far-reaching consequences</h2>
 
+
+<figure>
+    
+        <img src="birds.webp" />
+    
+    
+</figure>
+
+
 <p>I believe, quite strongly, that not breaking ABI in 23 is the worse mistake the committee ever made.
 And I&rsquo;m sure some people are convinced of the exact opposite.</p>
 
@@ -285,6 +303,15 @@ Performance is what keeps the standard library alive. Without performance, a lot
 
 <h3 id="adding-new-names">Adding new names</h3>
 
+
+<figure>
+    
+        <img src="monster.webp" />
+    
+    
+</figure>
+
+
 <p>This is the obvious solution
 If we cannot fix <code>unordered_map</code>, maybe we can add <code>std::fast_map</code>?
 There are a few reasons not to do that.
@@ -292,27 +319,53 @@ Adding types in the standard is expensive in terms of education and cognitive ov
 the inevitable thousands of article trying to tell you which container to use.
 Which of <code>std::scoped_lock</code> or <code>std::lock_guard</code> should I use? I have no idea. I have to look everytime.
 There is also the issue that good names are finite.
-Ironically, there is a lot of overlap between people who advocate for this solutions and people who think C++
-s too complicated.
+It adds runtime cost as containers have to be constantly converted from one type to the next,
+it makes overload sets unmanageable, etc.</p>
+
+<p>Ironically, there is a lot of overlap between people who advocate for this solutions and people who think C++
+is too complicated.
 Adding duplicated types do not make C++ simpler.</p>
 
 <h3 id="oh-but-we-could-have-accepted-this-proposal">Oh but we could have accepted this proposal</h3>
 
 <p>Some implementers are claiming that some proposals that were rejected
-for being abi breaking were in fact not, or they could hack around a non-abi breaking solution.
+for being ABI breaking were in fact not, or they could hack around a non-abi breaking solution.
 A bit hard to swallow for my cynical self.
 The fact is, they never proposed such solutions before and the cases in which this could be applied
 are limited.
 Supposedly the ABI Review Group (ARG) is supposed to help in this regard, but again they will probably
-recommend to use a different name.</p>
+recommend using a different name.</p>
 
 <h3 id="partial-abi-breaks">Partial ABI breaks</h3>
 
 <p>The idea would be to break abi for specific type or function rather than to change ABI for all programs at once.
-The issue is that instead of a nice like-time diagnostic, this solution has a tendency to not manifest itself
-until load time and is otherwise very suprising.</p>
+The issue is that instead of a nice like-time diagnostic, this solution tends to not manifest itself
+until load time and is otherwise very surprising.
+The committee tried that in C++11 by changing the layout of <code>std::string</code>, and it was bad.
+So bad it is used as an argument against ever breaking ABI ever again.</p>
 
-<p>###</p>
+<h3 id="one-more-level-of-indirection">One more level of indirection</h3>
+
+<p>One solution to some ABI issues could be to access the data of a type trough a pointer
+such that the layout of a type would only be that pointer.
+This corresponds roughly to the <a href="https://en.wikipedia.org/wiki/Private_class_data_pattern">PIMPL idiom</a>
+which is used extensively in Qt for ABI reasons.
+That would allow adding data members but would not relax the constraints around virtual members.</p>
+
+<p>More critically, we are talking about adding a pointer indirection and a heap allocation to everything that might be at an abi boundary.
+in the case of the STL about everything is designed to be at an abi boundary as it is a collection of shared vocabulary type.</p>
+
+<p>The cost of that would be huge.</p>
+
+<p>There might be several proposals in that design space.
+Notably, a few proposals are looking into making it a language feature.
+Supposedly, you could either choose between performance or stability,</p>
+
+<p>Ironically, making standard typer into PIMPL types would be&hellip;an abi break.</p>
+
+<h4 id="rebuilding-our-code-once-every-three-years">Rebuilding our code once every three years</h4>
+
+<p>Just a thought.</p>
 
 <h2 id="furthermore-i-think-your-proposal-must-be-destroyed">Furthermore, I think your proposal must be destroyed.</h2>
 
