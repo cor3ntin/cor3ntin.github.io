@@ -281,6 +281,39 @@ Performance is what keeps the standard library alive. Without performance, a lot
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
+<h2 id="how-could-the-committee-address-abi-breaking-proposals">How could the committee address ABI-breaking proposals?</h2>
+
+<h3 id="adding-new-names">Adding new names</h3>
+
+<p>This is the obvious solution
+If we cannot fix <code>unordered_map</code>, maybe we can add <code>std::fast_map</code>?
+There are a few reasons not to do that.
+Adding types in the standard is expensive in terms of education and cognitive overhead and
+the inevitable thousands of article trying to tell you which container to use.
+Which of <code>std::scoped_lock</code> or <code>std::lock_guard</code> should I use? I have no idea. I have to look everytime.
+There is also the issue that good names are finite.
+Ironically, there is a lot of overlap between people who advocate for this solutions and people who think C++
+s too complicated.
+Adding duplicated types do not make C++ simpler.</p>
+
+<h3 id="oh-but-we-could-have-accepted-this-proposal">Oh but we could have accepted this proposal</h3>
+
+<p>Some implementers are claiming that some proposals that were rejected
+for being abi breaking were in fact not, or they could hack around a non-abi breaking solution.
+A bit hard to swallow for my cynical self.
+The fact is, they never proposed such solutions before and the cases in which this could be applied
+are limited.
+Supposedly the ABI Review Group (ARG) is supposed to help in this regard, but again they will probably
+recommend to use a different name.</p>
+
+<h3 id="partial-abi-breaks">Partial ABI breaks</h3>
+
+<p>The idea would be to break abi for specific type or function rather than to change ABI for all programs at once.
+The issue is that instead of a nice like-time diagnostic, this solution has a tendency to not manifest itself
+until load time and is otherwise very suprising.</p>
+
+<p>###</p>
+
 <h2 id="furthermore-i-think-your-proposal-must-be-destroyed">Furthermore, I think your proposal must be destroyed.</h2>
 
 <p>Paradoxically, C++ has never been more alive. In Prague, 250 people worked on many things,
