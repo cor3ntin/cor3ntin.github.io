@@ -301,6 +301,8 @@ Performance is what keeps the standard library alive. Without performance, a lot
 
 <h2 id="how-could-the-committee-address-abi-breaking-proposals">How could the committee address ABI-breaking proposals?</h2>
 
+<p>A few things are being proposed to ease the pain of not being able to break ABI:</p>
+
 <h3 id="adding-new-names">Adding new names</h3>
 
 
@@ -317,7 +319,7 @@ If we cannot fix <code>unordered_map</code>, maybe we can add <code>std::fast_ma
 There are a few reasons not to do that.
 Adding types in the standard is expensive in terms of education and cognitive overhead and
 the inevitable thousands of article trying to tell you which container to use.
-Which of <code>std::scoped_lock</code> or <code>std::lock_guard</code> should I use? I have no idea. I have to look everytime.
+Which of <code>std::scoped_lock</code> or <code>std::lock_guard</code> should I use? I have no idea. I have to look every time.
 There is also the issue that good names are finite.
 It adds runtime cost as containers have to be constantly converted from one type to the next,
 it makes overload sets unmanageable, etc.</p>
@@ -363,7 +365,7 @@ Supposedly, you could either choose between performance or stability,</p>
 
 <p>Ironically, making standard typer into PIMPL types would be&hellip;an abi break.</p>
 
-<h4 id="rebuilding-our-code-once-every-three-years">Rebuilding our code once every three years</h4>
+<h3 id="rebuilding-our-code-once-every-three-years">Rebuilding our code once every three years</h3>
 
 <p>Just a thought.</p>
 
