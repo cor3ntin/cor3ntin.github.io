@@ -355,7 +355,7 @@ which is used extensively in Qt for ABI reasons.
 That would allow adding data members but would not relax the constraints around virtual members.</p>
 
 <p>More critically, we are talking about adding a pointer indirection and a heap allocation to everything that might be at an ABI boundary.
-in the case of the STL about everything is designed to be at an ABI boundary as it is a collection of shared vocabulary type.</p>
+In the case of the STL just about everything is designed to be at an ABI boundary as it is a collection of shared vocabulary type.</p>
 
 <p>The cost of that would be huge.</p>
 
@@ -363,7 +363,7 @@ in the case of the STL about everything is designed to be at an ABI boundary as 
 Notably, a few proposals are looking into making it a language feature.
 Supposedly, you could either choose between performance or stability,</p>
 
-<p>Ironically, making standard typer into PIMPL types would be&hellip;an ABI break.</p>
+<p>Ironically, making standard types into PIMPL types would be&hellip;an ABI break.</p>
 
 <h3 id="rebuilding-our-code-once-every-three-years">Rebuilding our code once every three years</h3>
 
@@ -398,7 +398,7 @@ I don&rsquo;t want them to be killed. But they need to be.
 They probably won&rsquo;t be.</p>
 
 <p>The very best outcome is that we don&rsquo;t make mistakes and that we standardize the state-of-the-art in a given C++ version and then let things decay slowly, unable to fix them.
-(In the case of the networking TS, we seem unwilling to change anything, so we are looking at standardized
+(In the case of the networking TS, we seem unwilling to change anything, so we are looking at standardizing what was
 the state-of-the-art a decade ago, which we know can be improved upon dramatically. A story for another time.)</p>
 
 <p>But of course, we will make many, many mistakes.</p>
@@ -420,8 +420,7 @@ that API changes simply cannot be.
 But many mistakes could be fixed, would we be willing to break ABI.</p>
 
 <p>C++ will still be around in 40 years.
-If we fail to acknowledge that things will need to change in unpredicting ways at unpredicting times,
-the only winning move is not to play.</p>
+If we fail to acknowledge that things will need to change in unpredictable ways at unpredictable times, the only winning move is to not play.</p>
 
 <p>It is clear that the standard&rsquo;s associative container failed to be relevant for more than a decade,
 why think that bigger proposals would have any more success?</p>
@@ -434,7 +433,7 @@ why think that bigger proposals would have any more success?</p>
 implementers would simply ignore the committee.
 That entire thing was a bit of arm-wrestling and the committee didn&rsquo;t play.</p>
 
-<p>The thing is though, implementers have users and so users are ultimately the ones who have to realize what trade-offs are forced on them.</p>
+<p>The thing is though, implementers have users and users are ultimately the ones who have to realize what trade-offs are forced on them.</p>
 
 <p>Many people rely on ABI by accident rather than by choice.
 Many people rely on stability, because frankly, who wouldn&rsquo;t like to be able to?
