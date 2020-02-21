@@ -77,7 +77,7 @@ But I&rsquo;m not sure we fully understood what we did and the consequences it c
 both in term of layout, calling convention and mangling.
 It is exactly a binary protocol, despite not being versioned.</p>
 
-<p>Maybe this is a bit complicated, so I think it is better to list what ABI implies:</p>
+<p>Maybe this is a bit complicated, so I think it is better to list what ABI stability entails:</p>
 
 <p>You won&rsquo;t be able to use a symbol in a new version of a compiled library if you do any of the following:</p>
 
@@ -91,18 +91,19 @@ It is exactly a binary protocol, despite not being versioned.</p>
 
 <p>And many more thing, but these are usually the one encountered by the committee and the ones that tend to kill proposals on the spot.
 I also omitted ABI breakings operations that are also source breaks (removing or modifying functions).
-But sometimes, removing functions is actually a useful non-breaking change.
-For example, <code>std::string</code> has a <code>string_view</code> conversion operator that I want to kill with fire,
+But sometimes, removing functions is actually a useful non-breaking change.</p>
+
+<p>For example, <code>std::string</code> has a <code>string_view</code> conversion operator that I want to kill with fire,
 and that might be an ABI break which is not a source break - or an almost silent one-.</p>
 
 <h2 id="why-do-we-want-to-break-abi">Why do we want to break ABI</h2>
 
-<p>There are a few Quality of Implementation changes that could be enabled by an ABI break</p>
+<p>There are a few Quality-of-Implementation changes that could be enabled by an ABI break</p>
 
 <ul>
 <li>Making associative container (much) faster</li>
-<li>Making <code>std::regex</code> faster (it is currently faster to launch php to execute a regex than it is to use <code>std::regex</code></li>
-<li>Small tweaks to <code>string</code>, <code>vector</code>, etc</li>
+<li>Making <code>std::regex</code> faster (it is currently faster to launch PHP to execute a regex than it is to use <code>std::regex</code></li>
+<li>Small tweaks to <code>string</code>, <code>vector</code>, and other container layouts</li>
 <li>Better conformance: some implementations are intentionally not conforming for the sake of stability</li>
 </ul>
 
@@ -112,24 +113,24 @@ It is not an exhaustive list.</p>
 
 <ul>
 <li><code>scoped_lock</code> was added to not break ABI by modifying <code>lock_guard</code></li>
-<li><code>int128_t</code> has never been standardized because modifying <code>intmax_t</code> is an abi break. Although if you ask me, <code>intmax_t</code> should just be deprecated.</li>
+<li><code>int128_t</code> has never been standardized because modifying <code>intmax_t</code> is an ABI break. Although if you ask me, <code>intmax_t</code> should just be deprecated.</li>
 <li><code>unique_ptr</code> could fit in register  with language modifications, which would be needed to make it zero-overhead, compared to a pointer</li>
 <li>Many changes to <code>error_code</code> were rejected because they would break ABI</li>
 <li><code>status_code</code> raised ABI concerns</li>
 <li>A proposal to add a filter to <code>recursive_directory_iterator</code> was rejected because it was an ABI break</li>
-<li>A proposal to make most of <cstring> <code>constexpr</code> (including strlen) will probably die because it would be an ABI break.</li>
-<li>Adding utf-8 support to <code>regex</code> is an ABI break</li>
+<li>A proposal to make most of <cstring> <code>constexpr</code> (including <code>strlen</code>) will probably die because it would be an ABI break.</li>
+<li>Adding UTF-8 support to <code>regex</code> is an ABI break</li>
 <li>Adding support for <code>realloc</code> or returning the allocated size is an ABI break for polymorphic allocators</li>
-<li>Making destructors implicitely virtual in polymorphic classes</li>
-<li>Return type of push_back could be improved with an abi break</li>
+<li>Making destructors implicitly virtual in polymorphic classes</li>
+<li>Return type of push_back could be improved with an ABI break</li>
 <li>In fact, did we really need both <code>push_back</code> and <code>emplace_back</code> ?</li>
-<li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p1116r0.pdf">Improving shared_ptr</a> would be an abi break</li>
-<li><code>[[no_unique_address]]</code> could be infered by the compiler should we not care at all about abi</li>
+<li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p1116r0.pdf">Improving shared_ptr</a> would be an ABI break</li>
+<li><code>[[no_unique_address]]</code> could be inferred by the compiler should we not care at all about ABI</li>
 </ul>
 
 <p>The list goes one.
 I think WG21 needs to do a better job of maintaining a list of these things.
-I should take not each times says &ldquo;ABI break&rdquo; in the room I am in.</p>
+I should take note each time someone says &ldquo;ABI break&rdquo; in the room I am in.</p>
 
 <h3 id="what-else-might-we-want-to-change">What else might we want to change?</h3>
 
@@ -137,18 +138,18 @@ I should take not each times says &ldquo;ABI break&rdquo; in the room I am in.</
 If I had to guess?</p>
 
 <ul>
-<li>In the 23 time frame, modularization of the standard library will face ABI concerns,
-in that all non exported symbols will have to remain in the global module fragment not to break ABI, which kinda defeats the point of modules.</li>
+<li>In the C++23 timeframe, modularization of the standard library will face ABI concerns,
+in that all non-exported symbols will have to remain in the global module fragment not to break ABI, which kinda defeats the point of modules.</li>
 <li>There seems to be a lot of people who believe that cost of exceptions could be greatly reduced
-as a quality of implementation matter but that might requiere breaking ABI.</li>
-<li>Further improvenents of coroutines may raise ABI concerns, and coroutines can be greatly improved.</li>
-<li>Rellocation needs explicit opt-in, in part over ABI concerns.</li>
-<li><a href="https://www.youtube.com/watch?v=MWBfmmg8-Yo">Tombstone</a> proposals would surely raise abi concerns.</li>
+as a quality of implementation matter but that might require breaking ABI.</li>
+<li>Further improvements of coroutines may raise ABI concerns, and coroutines can be greatly improved.</li>
+<li>Relocation needs explicit opt-in, in part over ABI concerns.</li>
+<li><a href="https://www.youtube.com/watch?v=MWBfmmg8-Yo">Tombstone</a> proposals would surely raise ABI concerns.</li>
 </ul>
 
 <h2 id="abi-discussions-in-prague">ABI discussions in Prague</h2>
 
-<p>In prague the ABI discussions lead a series of poll, that, unfortunately are as revealing as tea leaves, and so depending if you are a glass half full or glass half empty kind of person, you might interpret these results differently.</p>
+<p>In Prague the ABI discussions lead a series of poll, that, unfortunately, are as revealing as tea leaves, and so depending if you are a glass half full or glass half empty kind of person, you might interpret these results differently.</p>
 
 <p>The basic direction is:</p>
 
@@ -161,7 +162,7 @@ as a quality of implementation matter but that might requiere breaking ABI.</li>
 </ul>
 
 <p>In all these polls, there is a clear majority but no consensus.
-The committee is, somewhat unsuprisingly, divided.</p>
+The committee is, somewhat unsurprisingly, divided.</p>
 
 <h3 id="reading-the-tea-leaves">Reading the tea leaves</h3>
 
@@ -171,38 +172,38 @@ The committee is, somewhat unsuprisingly, divided.</p>
 
 <p>23? Nope, this is a definitive no.</p>
 
-<p>26? Some people definitively intended to vote for that, other probably voted to break ABI in C++42 or voted to
+<p>26? Some people definitively intended to vote for that, others probably voted to break ABI in C++42 or voted to
 break ABI once they are retired or otherwise do not have to deal with their current project.
-No way to know. The exact poll mentionned &ldquo;C++SOMETHING&rdquo;. How helpful.</p>
+No way to know. The exact poll mentioned &ldquo;C++SOMETHING&rdquo;. How helpful.</p>
 
 <p>There is no reason to believe that if the ABI can&rsquo;t be broken now, it can be broken later.
 People who need stability lags year behind the standard by quite a bit.
 So, if we don&rsquo;t break ABI now, people would have been relying on a never-promised ABI for over a decade, maybe two.
 The simple fact that we had this conversation and voted not to break ABI tends to show that the ecosystem
-is ossifiying and ossifiying fast.
+is ossifying and ossifying fast.
 Each passing day makes the problem a bit worse and more expensive.</p>
 
 <p>I have no confidence that the poll, if taken again in 3 years would be any different.
-It&rsquo;s like climate change, everybody agrees we should invest into that problem <em>someday</em>.
+It&rsquo;s like climate change, everybody agrees we should invest in that problem <em>someday</em>.
 Let&rsquo;s ban diesel vehicles in 2070.</p>
 
-<p>Anything that is not planned to happen in the next 5 years has exactly no teath at all.</p>
+<p>Anything that is not planned to happen in the next 5 years has exactly no teeth at all.</p>
 
 <h4 id="considering-proposals-breaking-abi">considering proposals breaking ABI</h4>
 
 <p>WG21 voted to spend more time on ABI breaking proposals.</p>
 
-<p>This can mean a few things things:</p>
+<p>This can mean a few things:</p>
 
 <ul>
-<li>We can waste more time in one of busiest room of the committee leaving less time for proposals that are a better chances of moving forward, but ultimately rejecting the proposal anyway</li>
+<li>We can waste more time in one of the busiest rooms of the committee leaving less time for proposals that are a better chances of moving forward, but ultimately rejecting the proposal anyway</li>
 <li>Finding non-breaking alternatives (more on that later)</li>
-<li>Operating partial abi breaks (more on that later)</li>
+<li>Operating partial ABI breaks (more on that later)</li>
 </ul>
 
 <h4 id="prioritizing-performance-over-abi">Prioritizing performance over ABI</h4>
 
-<p>This one was like asking a 5 year old whether they&rsquo;d want a candy.
+<p>This one was like asking a 5 year-old whether they&rsquo;d want a candy.
 So we voted to care about performance.
 Although, alarmingly, many people voted against.</p>
 
@@ -215,7 +216,7 @@ too. Which is not possible.</p>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
-<p>Stability and ABI ultimately, given a large enough period of time, run afool of one another.</p>
+<p>Stability and ABI ultimately, given a large enough period, run afoul of one another.</p>
 
 <p>This poll was important though: It touches a fundamental question:</p>
 
@@ -224,7 +225,7 @@ too. Which is not possible.</p>
 <p>The words touted around are &ldquo;performance&rdquo; &ldquo;zero-cost abstractions&rdquo; and &ldquo;don&rsquo;t pay for what you don&rsquo;t use&rdquo;.
 <strong>ABI goes directly against all of that.</strong></p>
 
-<h2 id="far-reaching-consequences">Far reaching consequences</h2>
+<h2 id="far-reaching-consequences">Far-reaching consequences</h2>
 
 <p>I believe, quite strongly, that not breaking ABI in 23 is the worse mistake the committee ever made.
 And I&rsquo;m sure some people are convinced of the exact opposite.</p>
@@ -236,38 +237,38 @@ And I&rsquo;m sure some people are convinced of the exact opposite.</p>
 <p>Let&rsquo;s be very clear. Programs that rely on ABI probably violates ODR somewhere, are probably
 using incompatible flags that happen to work.</p>
 
-<p>New programs shoulds be built from source, we should have build tools designed around compiling
-sources files rather than collection of library fetched from random places and hastly stitched.</p>
+<p>New programs should be built from source, we should have build tools designed around compiling
+sources files rather than collections of libraries fetched from random places and hastily stitched.</p>
 
-<p>Yes, building from source is something that it hard to achieve to achieve.
+<p>Yes, building from source is something that is hard to achieve.
 We should encourage a mature ecosystem and seamless compiler updates.
 We should find ways for people to benefit from new compiler features in months rather than in decades.
 We should encourage correct, reliable, scalable reproducible builds.
 We should encourage easy to import source libraries and a thriving ecosystem of dependencies.</p>
 
 <p>By not breaking ABI, the committee is clearly stating that they will support your ill-formed program forever.
-No you shouldn&rsquo;t link against apt-installed c++ crap, but people will, the committee might has well have given its blessing.</p>
+No you shouldn&rsquo;t link against apt-installed c++ crap, but people will, the committee might as well have given its blessing.</p>
 
 <p>It&rsquo;s a huge step backward.
-How are we supposed to teach good practices and build system hygiene if there is no insentive to?</p>
+How are we supposed to teach good practices and build system hygiene if there is no incentive to?</p>
 
 <h2 id="loss-of-interest-in-the-standard-library">Loss of interest in the standard library</h2>
 
-<p>The estimated performance loss due to our unwilliness to break ABI is estimated to be <strong>5-10%</strong>
+<p>The estimated performance loss due to our unwillingness to break ABI is estimated to be <strong>5-10%</strong>
 This number will grow over time.
 To put that in perspective</p>
 
 <ul>
 <li>If you are a big GAFA company, you can buy a new data center or pay a team to maintain a library</li>
-<li>If you are an embeded developer, 5% might be the difference of your software running, or having to buy a more expensive chip, which might cost millions</li>
-<li>If you are a game company, it might be the difference between your game being great or your user vomitting in their VR headset</li>
-<li>If you are in trading, it might be the difference between a sucessful transaction or not.</li>
+<li>If you are an embedded developer, 5% might be the difference of your software running, or having to buy a more expensive chip, which might cost millions</li>
+<li>If you are a game company, it might be the difference between your game being great or your user vomiting in their VR headset</li>
+<li>If you are in trading, it might be the difference between a successful transaction or not.</li>
 </ul>
 
 <p>I think in any case it&rsquo;s the difference between &ldquo;I should use C++!&rdquo; and &ldquo;I should use the standard library&rdquo; and
-&ldquo;Maybe I should not use the standard library&rdquo;, up to &ldquo;Maybe I should not use C++? Maybe I should use .net, julia, rust?&rdquo;. Of course there are many other factors in that decision, but we have been seen that happening for a while.</p>
+&ldquo;Maybe I should not use the standard library&rdquo;, up to &ldquo;Maybe I should not use C++? Maybe I should use .net, julia, rust?&rdquo;. Of course, there are many other factors in that decision, but we have been seen that happening for a while.</p>
 
-<p>Many game developers are notoriously septical of the standard library, they developed alternatives, for example EASTL.
+<p>Many game developers are notoriously septical of the standard library, they developed alternatives, for example, EASTL.
 Facebook has folly, Google has Abseil, etc.</p>
 
 <p>This can snowball.
@@ -280,9 +281,9 @@ Performance is what keeps the standard library alive. Without performance, a lot
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
-<h2 id="futhermore-i-think-your-proposal-must-be-destroyed">Futhermore, I think your proposal must be destroyed.</h2>
+<h2 id="furthermore-i-think-your-proposal-must-be-destroyed">Furthermore, I think your proposal must be destroyed.</h2>
 
-<p>Paradoxically, C++ has never been more alive. In Prague 250 people worked on many things,
+<p>Paradoxically, C++ has never been more alive. In Prague, 250 people worked on many things,
 including:</p>
 
 <ul>
@@ -295,7 +296,7 @@ including:</p>
 <li>&hellip;</li>
 </ul>
 
-<p>All of these proposals have in common that they are necessarily more opiniated than most of what
+<p>All of these proposals have in common that they are necessarily more opinionated than most of what
 we have in the standard today, they are trying to standardize things that are areas of active research
 or in constant evolution.</p>
 
@@ -308,8 +309,7 @@ It is hugely irresponsible to put something in the standard that has security im
 I don&rsquo;t want them to be killed. But they need to be.
 They probably won&rsquo;t be.</p>
 
-<p>The very best outcome is that we don&rsquo;t make mistake and that we standardize the state-of-the-art in a given C++ version
-and then let things decay slowly, unable to fix them.
+<p>The very best outcome is that we don&rsquo;t make mistakes and that we standardize the state-of-the-art in a given C++ version and then let things decay slowly, unable to fix them.
 (In the case of the networking TS, we seem unwilling to change anything, so we are looking at standardized
 the state-of-the-art a decade ago, which we know can be improved upon dramatically. A story for another time.)</p>
 
@@ -321,13 +321,13 @@ the state-of-the-art a decade ago, which we know can be improved upon dramatical
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
-<p>Some misakes are made consciensously as being the right trade-offs at the time
-while other will remain hidden for years.</p>
+<p>Some mistakes are made conscientiously as being the right trade-offs at the time
+while others will remain hidden for years.</p>
 
-<p>Time goes on but the standard library stand stills.
+<p>Time goes on but the standard library stands still.
 Trades-off become regrets, and regrets turn into bottlenecks.</p>
 
-<p>Many misttakes are unfixable because they are burned into the API and there is a collective understanding
+<p>Many mistakes are unfixable because they are burned into the API and there is a collective understanding
 that API changes simply cannot be.
 But many mistakes could be fixed, would we be willing to break ABI.</p>
 
@@ -346,12 +346,11 @@ why think that bigger proposals would have any more success?</p>
 implementers would simply ignore the committee.
 That entire thing was a bit of arm-wrestling and the committee didn&rsquo;t play.</p>
 
-<p>The thing is though, implementers have users and so users are ultimately
-the one who have to realize what trade-offs are forced on them.</p>
+<p>The thing is though, implementers have users and so users are ultimately the ones who have to realize what trade-offs are forced on them.</p>
 
 <p>Many people rely on ABI by accident rather than by choice.
 Many people rely on stability, because frankly, who wouldn&rsquo;t like to be able to?
-But as everything, stability has a cost, and the entire C++ ecosystem is paying for it.</p>
+But like everything, stability has a cost, and the entire C++ ecosystem is paying it.</p>
 
       
     <div id="socialshareDiv">
