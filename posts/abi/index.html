@@ -64,10 +64,10 @@
     <div class="content">
       
 
-<p>In Prague, WG21 took a series of poll on whether to break ABI, and decided not to.</p>
+<p>In Prague, WG21 took a series of polls on whether to break ABI, and decided not to.</p>
 
 <p>There was no applause.
-But I&rsquo;m not sure we fully understand what we did and the consequences it could have.</p>
+But I&rsquo;m not sure we fully understood what we did and the consequences it could have.</p>
 
 <p>I do believe none of the consequences will be good.</p>
 
@@ -77,8 +77,9 @@ But I&rsquo;m not sure we fully understand what we did and the consequences it c
 both in term of layout, calling convention and mangling.
 It is exactly a binary protocol, despite not being versioned.</p>
 
-<p>Maybe this is a bit complicated, so I think it is better to list what ABI implies:
-You won&rsquo;t be able to use a symbol in a new version of a compiled library if you do any of the following:</p>
+<p>Maybe this is a bit complicated, so I think it is better to list what ABI implies:</p>
+
+<p>You won&rsquo;t be able to use a symbol in a new version of a compiled library if you do any of the following:</p>
 
 <ul>
 <li>Add data member to an existing class</li>
@@ -176,11 +177,170 @@ No way to know. The exact poll mentionned &ldquo;C++SOMETHING&rdquo;. How helpfu
 
 <p>There is no reason to believe that if the ABI can&rsquo;t be broken now, it can be broken later.
 People who need stability lags year behind the standard by quite a bit.
-So, if we don&rsquo;t break ABI now, people would have been relying on a break for over a decade, maybe two.
+So, if we don&rsquo;t break ABI now, people would have been relying on a never-promised ABI for over a decade, maybe two.
 The simple fact that we had this conversation and voted not to break ABI tends to show that the ecosystem
 is ossifiying and ossifiying fast.
-Each passing day makes the problem a bit worse and more expensive.
-I</p>
+Each passing day makes the problem a bit worse and more expensive.</p>
+
+<p>I have no confidence that the poll, if taken again in 3 years would be any different.
+It&rsquo;s like climate change, everybody agrees we should invest into that problem <em>someday</em>.
+Let&rsquo;s ban diesel vehicles in 2070.</p>
+
+<p>Anything that is not planned to happen in the next 5 years has exactly no teath at all.</p>
+
+<h4 id="considering-proposals-breaking-abi">considering proposals breaking ABI</h4>
+
+<p>WG21 voted to spend more time on ABI breaking proposals.</p>
+
+<p>This can mean a few things things:</p>
+
+<ul>
+<li>We can waste more time in one of busiest room of the committee leaving less time for proposals that are a better chances of moving forward, but ultimately rejecting the proposal anyway</li>
+<li>Finding non-breaking alternatives (more on that later)</li>
+<li>Operating partial abi breaks (more on that later)</li>
+</ul>
+
+<h4 id="prioritizing-performance-over-abi">Prioritizing performance over ABI</h4>
+
+<p>This one was like asking a 5 year old whether they&rsquo;d want a candy.
+So we voted to care about performance.
+Although, alarmingly, many people voted against.</p>
+
+<p>My interpretation is that the committee wants its cake and eat it
+too. Which is not possible.</p>
+
+<!-- https://twitter.com/blelbach/status/1228962495865507840 -->
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Performance<br>ABI Stability<br>Ability to Change<br><br>You can pick two, choose wisely.<a href="https://twitter.com/hashtag/cppprg?src=hash&amp;ref_src=twsrc%5Etfw">#cppprg</a></p>&mdash; Bryce Adelstein Lelbach (@blelbach) <a href="https://twitter.com/blelbach/status/1228962495865507840?ref_src=twsrc%5Etfw">February 16, 2020</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>Stability and ABI ultimatelym given a large enough period of time run afool of one another.</p>
+
+<p>This poll was important though: It touches a fundamental question:</p>
+
+<p><strong>What is C++ and what is the standard library?</strong></p>
+
+<p>The words touted around are &ldquo;performance&rdquo; &ldquo;zero-cost abstractions&rdquo; and &ldquo;don&rsquo;t pay for what you don&rsquo;t use&rdquo;.
+<strong>ABI goes directly against all of that.</strong></p>
+
+<h2 id="could-the-committee-even-break-abi">Could the committee even break ABI?</h2>
+
+<h2 id="far-reaching-consequences">Far reaching consequences</h2>
+
+<p>I believe, quite strongly, that not breaking ABI in 23 is the worse mistake the committee ever made.
+And I&rsquo;m sure some people are convinced of the exact opposite.</p>
+
+<p>Regardless, here is what is going to happen as a result of that decision:</p>
+
+<h3 id="education-nightmare">Education nightmare</h3>
+
+<p>Let&rsquo;s be very clear. Programs that rely on ABI probably violates ODR somewhere, are probably
+using incompatible flags that happen to work.</p>
+
+<p>New programs shoulds be built from source, we should have build tools designed around compiling
+sources files rather than collection of library fetched from random places and hastly stitched.</p>
+
+<p>Yes, building from source is something that it hard to achieve to achieve.
+We should encourage a mature ecosystem and seamless compiler updates.
+We should find ways for people to benefit from new compiler features in months rather than in decades.
+We should encourage correct, reliable, scalable reproducible builds.
+We should encourage easy to import source libraries and a thriving ecosystem of dependencies.</p>
+
+<p>By not breaking ABI, the committee is clearly stating that they will support your ill-formed program forever.
+No you shouldn&rsquo;t link against apt-installed c++ crap, but people will, the committee might has well have given its blessing.</p>
+
+<p>It&rsquo;s a huge step backward.
+How are we supposed to teach good practices and build system hygiene if there is no insentive to?</p>
+
+<h2 id="loss-of-interest-in-the-standard-library">Loss of interest in the standard library</h2>
+
+<p>The estimated performance loss due to our unwilliness to break ABI is estimated to be <strong>5-10%</strong>
+This number will grow over time.
+To put that in perspective</p>
+
+<ul>
+<li>If you are a big GAFA company, you can buy a new data center or pay a team to maintain a library</li>
+<li>If you are an embeded developer, 5% might be the difference of your software running, or having to buy a more expensive chip, which might cost millions</li>
+<li>If you are a game company, it might be the difference between your game being great or your user vomitting in their VR headset</li>
+<li>If you are in trading, it might be the difference between a sucessful transaction or not.</li>
+</ul>
+
+<p>I think in any case it&rsquo;s the difference between &ldquo;I should use C++!&rdquo; and &ldquo;I should use the standard library&rdquo; and
+&ldquo;Maybe I should not use the standard library&rdquo;, up to &ldquo;Maybe I should not use C++? Maybe I should use .net, julia, rust?&rdquo;. Of course there are many other factors in that decision, but we have been seen that happening for a while.</p>
+
+<p>Many game developers are notoriously septical of the standard library, they developed alternatives, for example EASTL.
+Facebook has folly, Google has Abseil, etc.</p>
+
+<p>This can snowball.
+If people don&rsquo;t use the standard library, they have no interest in improving it.
+Performance is what keeps the standard library alive. Without performance, a lot less energy is going to be poored into it.</p>
+
+<!-- https://twitter.com/TitusWinters/status/1224377740306132998 -->
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">They&#39;re common and readily available? (Which does have some value.)<br><br>Committing to ABI is like admitting that the standard library is aiming to be McDonald&#39;s - It&#39;s everywhere, it&#39;s consistent, and it technically solves the problem.</p>&mdash; Titus Winters (@TitusWinters) <a href="https://twitter.com/TitusWinters/status/1224377740306132998?ref_src=twsrc%5Etfw">February 3, 2020</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<h2 id="futhermore-i-think-your-proposal-must-be-destroyed">Futhermore, I think your proposal must be destroyed.</h2>
+
+<p>Paradoxically, C++ has never been more alive. In Prague 250 people worked on many things,
+including:</p>
+
+<ul>
+<li>Numerics</li>
+<li>Linear Algebra</li>
+<li>Audio</li>
+<li>Unicode</li>
+<li>Async I/O</li>
+<li>Graphics</li>
+<li>&hellip;</li>
+</ul>
+
+<p>All of these proposals have in common that they are necessarily more opiniated than most of what
+we have in the standard today, they are trying to standardize things that are areas of active research
+or in constant evolution.</p>
+
+<p>In particular, many Unicode algorithms are not stable over time.</p>
+
+<p>Then there is the huge ugly can of worm that is networking.
+It is hugely irresponsible to put something in the standard that has security implications without having the ability to fix it.</p>
+
+<p>As C++ decides to be stable, all these proposals need to be killed. With fire.
+I don&rsquo;t want them to be killed. But they need to be.
+They probably won&rsquo;t be.</p>
+
+<p>The very best outcome is that we don&rsquo;t make mistake and that we standardize the state-of-the-art in a given C++ version
+and then let things decay slowly, unable to fix them.
+(In the case of the networking TS, we seem unwilling to change anything, so we are looking at standardized
+the state-of-the-art a decade ago, which we know can be improved upon dramatically. A story for another time.)</p>
+
+<p>But of course, we will make many, many mistakes.</p>
+
+<!-- https://twitter.com/hyrumwright/status/1228833676240146434 -->
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">You will eventually want to change every single decision you make.  Build the ability to change into your ecosystem, both tooling and process. <a href="https://t.co/uo5Ir1MzCY">https://t.co/uo5Ir1MzCY</a></p>&mdash; Hyrum Wright (@hyrumwright) <a href="https://twitter.com/hyrumwright/status/1228833676240146434?ref_src=twsrc%5Etfw">February 16, 2020</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>Some misakes are made consciensously as being the right trade-offs at the time
+while other will remain hidden for years.</p>
+
+<p>Time goes on but the standard library stand stills.
+Trades-off become regrets, and regrets turn into bottlenecks.</p>
+
+<p>Many misttakes are unfixable because they are burned into the API and there is a collective understanding
+that API changes simply cannot be.
+But many mistakes could be fixed, would we be willing to break ABI.</p>
+
+<p>C++ will still be around in 40 years.
+If we fail to acknowledge that things will need to change in unpredicting ways at unpredicting times,
+the only winning move is not to play.</p>
+
+<p>It is clear that the standard&rsquo;s associative container failed to be relevant for more than a decade,
+why think that bigger proposals would have any more success?</p>
+
+<p>Your proposal must be destroyed, my proposals must be destroyed.</p>
 
       
     <div id="socialshareDiv">
