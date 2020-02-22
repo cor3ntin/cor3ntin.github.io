@@ -18,7 +18,8 @@
       
       <guid>https://cor3ntin.github.io/posts/abi/</guid>
       <description>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.
-There was no applause. But I&amp;rsquo;m not sure we fully understood what we did and the consequences it could have.
+There was no applause.
+But I&amp;rsquo;m not sure we fully understood what we did and the consequences it could have.
 I do believe none of the consequences will be good.
 What is ABI ABI is the shared understanding libraries have about how your program is serialized, both in term of layout, calling convention and mangling.</description>
     </item>

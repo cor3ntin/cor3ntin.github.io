@@ -73,9 +73,8 @@
 </figure>
 
 
-<p>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.</p>
-
-<p>There was no applause.
+<p>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.<br>
+There was no applause.<br>
 But I&rsquo;m not sure we fully understood what we did and the consequences it could have.</p>
 
 <p>I do believe none of the consequences will be good.</p>
@@ -84,9 +83,8 @@ But I&rsquo;m not sure we fully understood what we did and the consequences it c
 
 <p>ABI is the shared understanding libraries have about how your program is serialized,
 both in term of layout, calling convention and mangling.
-It is exactly a binary protocol, despite not being versioned.</p>
-
-<p>Maybe this is a bit complicated, so I think it is better to list what ABI stability entails:</p>
+It is exactly a binary protocol, despite not being versioned.
+<br>Maybe this is a bit complicated, so I think it is better to list what ABI stability entails:</p>
 
 <p>You won&rsquo;t be able to use a symbol in a new version of a compiled library if you do any of the following:</p>
 
@@ -100,9 +98,8 @@ It is exactly a binary protocol, despite not being versioned.</p>
 
 <p>And many more thing, but these are usually the one encountered by the committee and the ones that tend to kill proposals on the spot.
 I also omitted ABI breakings operations that are also source breaks (removing or modifying functions).
-But sometimes, removing functions is actually a useful non-breaking change.</p>
-
-<p>For example, <code>std::string</code> has a <code>string_view</code> conversion operator that I want to kill with fire,
+But sometimes, removing functions is actually a useful non-breaking change.
+<br>For example, <code>std::string</code> has a <code>string_view</code> conversion operator that I want to kill with fire,
 and that might be an ABI break which is not a source break - or an almost silent one-.</p>
 
 <h2 id="why-do-we-want-to-break-abi">Why do we want to break ABI</h2>
@@ -137,7 +134,7 @@ It is not an exhaustive list.</p>
 <li><code>[[no_unique_address]]</code> could be inferred by the compiler should we not care at all about ABI</li>
 </ul>
 
-<p>The list goes one.
+<p>The list goes on.
 I think WG21 needs to do a better job of maintaining a list of these things.
 I should take note each time someone says &ldquo;ABI break&rdquo; in the room I am in.</p>
 
@@ -177,11 +174,10 @@ The committee is, somewhat unsurprisingly, divided.</p>
 
 <h4 id="c-something-something">C++ something something</h4>
 
-<p>The obvious flaw in these polls is that we haven&rsquo;t clarified <em>when</em> we would want to break ABI.</p>
-
-<p>23? Nope, this is a definitive no.</p>
-
-<p>26? Some people definitively intended to vote for that, others probably voted to break ABI in C++42 or voted to
+<p>The obvious flaw in these polls is that we haven&rsquo;t clarified <em>when</em> we would want to break ABI.<br>
+C++23? Nope, this is a definitive no.
+<br>
+C++26? Some people definitively intended to vote for that, others probably voted to break ABI in C++41 or voted to
 break ABI once they are retired or otherwise do not have to deal with their current project.
 No way to know. The exact poll mentioned &ldquo;C++SOMETHING&rdquo;. How helpful.</p>
 
@@ -225,9 +221,9 @@ too. Which is not possible.</p>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
-<p>Stability and ABI ultimately, given a large enough period, run afoul of one another.</p>
-
-<p>This poll was important though: It touches a fundamental question:</p>
+<p>Stability and ABI ultimately, given a large enough period, run afoul of one another.
+<br>
+This poll was important though: It touches a fundamental question:</p>
 
 <p><strong>What is C++ and what is the standard library?</strong></p>
 
@@ -245,10 +241,9 @@ too. Which is not possible.</p>
 </figure>
 
 
-<p>I believe, quite strongly, that not breaking ABI in 23 is the worse mistake the committee ever made.
-And I&rsquo;m sure some people are convinced of the exact opposite.</p>
-
-<p>Regardless, here is what is going to happen as a result of that decision:</p>
+<p>I believe, quite strongly, that not breaking ABI in 23 is the worst mistake the committee ever made.
+And I&rsquo;m sure some people are convinced of the exact opposite.
+<br>Regardless, here is what is going to happen as a result of that decision:</p>
 
 <h3 id="education-nightmare">Education nightmare</h3>
 
@@ -265,7 +260,7 @@ We should encourage correct, reliable, scalable reproducible builds.
 We should encourage easy to import source libraries and a thriving ecosystem of dependencies.</p>
 
 <p>By not breaking ABI, the committee is clearly stating that they will support your ill-formed program forever.
-No you shouldn&rsquo;t link against apt-installed c++ crap, but people will, the committee might as well have given its blessing.</p>
+No you shouldn&rsquo;t link against apt-installed c++ system libraries (which are intended for the system), but people will, the committee might as well have given its blessing.</p>
 
 <p>It&rsquo;s a huge step backward.
 How are we supposed to teach good practices and build system hygiene if there is no incentive to?</p>
@@ -291,7 +286,7 @@ Facebook has folly, Google has Abseil, etc.</p>
 
 <p>This can snowball.
 If people don&rsquo;t use the standard library, they have no interest in improving it.
-Performance is what keeps the standard library alive. Without performance, a lot less energy is going to be poored into it.</p>
+Performance is what keeps the standard library alive. Without performance, a lot less energy is going to be pored into it.</p>
 
 <!-- https://twitter.com/TitusWinters/status/1224377740306132998 -->
 
