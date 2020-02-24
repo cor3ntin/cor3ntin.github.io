@@ -3,11 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://cor3ntin.github.io/posts/abi/</loc>
-    <lastmod>2020-02-21T08:51:11+01:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://cor3ntin.github.io/posts/cpp20/</loc>
     <lastmod>2020-02-19T09:21:00+01:00</lastmod>
   </url>
@@ -179,7 +174,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/posts/</loc>
-    <lastmod>2020-02-21T08:51:11+01:00</lastmod>
+    <lastmod>2020-02-19T09:21:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -190,7 +185,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/</loc>
-    <lastmod>2020-02-21T08:51:11+01:00</lastmod>
+    <lastmod>2020-02-19T09:21:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
