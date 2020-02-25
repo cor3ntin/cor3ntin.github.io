@@ -115,7 +115,7 @@ Instead of endless, unsolvable debates of what a given operation should do, a be
 <p>And this is in line with Herb Sutter arguments that references are mostly useful as
 return values and parameters.</p>
 
-<h2 id="what-about-not-null-object-ptr-observer-ptr-etc">What about <code>not_null</code>, <code>object_ptr</code>, <code>observer_ptr</code> etc?</h2>
+<h2 id="what-about-not-null-object-ptr-observer-ptr-etc">What about not_null, object_ptr, observer_ptr etc?</h2>
 
 <p><code>optional&lt;Foo&amp;&gt; opt{foo};</code> is valid by construction. As long as you never use pointers,
 the only way to misuse <code>optional</code> is to deference it while it is not engaged.</p>
