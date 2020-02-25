@@ -108,7 +108,7 @@ I don&rsquo;t know why but many people seem compelled to provide operators for e
 requires (std::regular&lt;T&gt; &amp;&amp; std::regular&lt;U&gt;)
 <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>==(<span style="color:#080;font-weight:bold">const</span> optional&lt;T&gt;&amp;, <span style="color:#080;font-weight:bold">const</span> optional&lt;U&gt;&amp;);
 </code></pre></div>
-<p>This would be nothing new: we do that for view. Wrapper objects should never try to expose more regularity than the wrapped type.
+<p>This would be nothing new: we do that for views. Wrapper objects should never try to expose more regularity than the wrapped type.
 we removed <code>span::operator==</code> and, unsurprisingly exactly nobody is missing it.
 Instead of endless, unsolvable debates of what a given operation should do, a better question is: is that operation useful? the answer here is no, look at usage.</p>
 
