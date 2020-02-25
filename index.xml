@@ -12,6 +12,16 @@
     
     
     
+    <item>
+    <title>How I use references</title>
+        <link>https://cor3ntin.github.io/posts/reference/</link>
+            <pubDate>Tue, 25 Feb 2020 12:40:00 +0100</pubDate>
+            
+            <guid>https://cor3ntin.github.io/posts/reference/</guid>
+            <description>Following a blog post by Herb Sutter, let me tell you how and when I use references.
+ If I do not need to mutate an input parameter, I will use a const reference, unless I know that copying is cheaper (When in doubt use a reference). If I do need a copy of the parameter, I accept it by value and move it If I do need to mutate an input parameter, I will accept an input reference.</description>
+        </item>
+        
         
     
     <item>
