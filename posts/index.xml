@@ -6,10 +6,31 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 25 Feb 2020 12:40:00 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 05 Mar 2020 09:46:48 +0100</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>A few experimental features for C&#43;&#43;</title>
+      <link>https://cor3ntin.github.io/posts/qol23/</link>
+      <pubDate>Thu, 05 Mar 2020 09:46:48 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/qol23/</guid>
+      <description>In this article, I present a few language features that I am hoping to see in C++23 and which I have deployed to Compiler Explorer.
+Please note that these features are not part of a working draft and they have not been presented to the C++ committee yet, so it is impossible to comment on whether any of them might land in 23 or not!
+Auto Non-Static Data Members Initializers A while back I presented auto non-static data members initialzers.</description>
+    </item>
+    
+    <item>
+      <title>Build C&#43;&#43; from source</title>
+      <link>https://cor3ntin.github.io/posts/buildfromsource/</link>
+      <pubDate>Wed, 04 Mar 2020 09:55:24 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/buildfromsource/</guid>
+      <description>This is both a follow-up to my CppCon talk and the ongoing ABI saga, which I do not expect to end any time soon.
+A quick reminder, ABI akin to a binary protocol and design how your types are laid out in memory, how functions are mangled and are called. As such, many changes in the source of your program that are not visible at compile time manifest themselves at link time or runtime.</description>
+    </item>
     
     <item>
       <title>How I use references</title>

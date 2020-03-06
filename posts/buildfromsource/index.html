@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>A Json Parser Part 1 : Reading a file | cor3ntin</title>
+<title>Build C&#43;&#43; from source | cor3ntin</title>
 
 
 <link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
@@ -58,64 +58,165 @@
     <div class="subtitle is-6 is-pulled-right">
       
     </div>
-    <h2 class="subtitle is-6">May 23, 2018</h2>
-    <h1 class="title">A Json Parser Part 1 : Reading a file</h1>
+    <h2 class="subtitle is-6">March 4, 2020</h2>
+    <h1 class="title">Build C&#43;&#43; from source</h1>
     
     <div class="content">
       
 
-<p>The year is 2021. A rainy Sunday afternoon.
-It&rsquo;s getting increasingly more difficult to ignore the looming shadow of <em>The Great Rewrite</em>.</p>
+<p>This is both a follow-up to my <a href="https://www.youtube.com/watch?v=k3Q-fPBe9Z0">CppCon talk</a> and the ongoing ABI saga,
+which I do not expect to end any time soon.</p>
 
-<p>But you ran out of cacao and there is nothing on HBO.
-So you guzzle a fourth cup of coffee and decide to start a new project. In C++ of course.
-You sacrificed too much to reevaluate your life choices now.</p>
+<p>A quick reminder, ABI akin to a binary protocol and design how your types are laid out in memory,
+how functions are mangled and are called.
+As such, many changes in the source of your program that are not visible at compile time manifest themselves at link time
+or runtime.
+Abi stability is only relevant in the case when you try to link or load libraries that were not built in a consistent environment
+We will come back to what a consistent environment is.</p>
 
-<p>But you need to do something new. Something to impress, Something to shine, like a diamond.</p>
+<p>Following the WG21 Prague meeting, many people are trying to solve the ABI problem. Ultimately, all the solutions being proposed boil down to</p>
 
-<p>Something bold. Pionerring:</p>
+<ul>
+<li>Partial silent ABI breaks (like was done in C++11 for <code>std::string</code>)</li>
+<li>Duplication of types, whether through a new name or a new namespace, or some other mechanism that ultimately boils done to that.</li>
+<li>Adding a level of indirection, whether COM-like, PIMPL-like, or some <a href="https://github.com/apple/swift/blob/master/docs/ABIStabilityManifesto.md#value-witness-table">semantically equivalent fancy solution</a>.</li>
+</ul>
 
-<p><strong>A command line parser !</strong>  <small>Unfortunately, someone already did that, apparently.</small></p>
+<p>I personally do not think any of these solutions work in the context of the C++ standard library.
+I might try to explain why at some point.</p>
 
-<p><strong>A console logger !</strong> <small>That too was already done.</small></p>
+<p>But, with the assumption that ABI stability has costs that go against the essence of C++, whatever solution remains, however difficult, must be the past forward.
+Let&rsquo;s talk about building from source.</p>
 
-<p><strong>A console emulator</strong>  <small>&hellip;. too complicated&hellip;.</small></p>
+<p>First, it is important to understand why people do not build from source or think it is not realistic to ever do so.
+I believe the reasons are:</p>
 
-<p>That&rsquo;s it! Let&rsquo;s build a <strong>JSON parser</strong>. Truly novel, and simple.</p>
+<ul>
+<li>Compiling from source takes time</li>
+<li>Shipping big binaries take disk space</li>
+<li>Compiling from source is hard because of build system complexity.</li>
+<li>Use of commercial software without access to the sources for legal reasons</li>
+<li>Use of libraries whose sources have been lost to time</li>
+<li>Use of compiled system provided libraries</li>
+<li>Use of some kind of plugin system</li>
+</ul>
 
-<p>First, you setup some cmake scripts.</p>
+<p>(Please let me know if I forget something that does not fit in one of these categories)</p>
 
-<p>The year is 2022.</p>
+<h2 id="make-c-faster-to-build">Make C++ faster to build</h2>
 
-<h1 id="reading-a-file">Reading a file</h1>
+<p>C++ is arguably a bit slow to compile. Slow enough that people rather download pre-built binaries
+not to pay the cost of that compilation.</p>
 
-<p>You figure that to make any kind of parser, you will probably need to read a file, so you can lex it.
-Let&rsquo;s open a file:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;fstream&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span></code></pre></div>
-<p>You reevaluate your life choices.</p>
+<p>There are a few solutions to make C++ faster to build.</p>
 
-<p><code>&lt;fstream&gt;</code> and all of <code>&lt;iostream&gt;</code> is <em>terrible</em>.
-It hard to say exactly why.
-In some case, <a href="https://cristianadam.eu/20160410/c-plus-plus-i-slash-o-benchmark/">a benchmark reveals</a> it may have worse performance than manipuling a file handle directly,
-but results aren&rsquo;t exactly clear cut.</p>
+<h3 id="use-better-hardware">Use better hardware</h3>
+
+<p><strong>This part is mostly targeted at employers. Especially, if you are a hobbyist, a student etc, do not think you need unaffordable hardware. Your hardware is fine</strong>.</p>
+
+<p>Compiling C++ is slow. By design. The idea is to do more at compile time and less at runtime. Someone has to pay the cost of the abstractions and C++ choses to make developers pay that cost, rather than users. Which is more than sensible as programms are usually run on many more machines than they are compiled on.</p>
+
+<p>That doesn&rsquo;t mean that compilers aren&rsquo;t well optimised, they really are.
+But there are limitations to how fast a C++ compiler can be.</p>
+
+<p>Fortunatelly, while compilers seem to not use more than one thread, it is easy to compile many C++ source files at once. C++ compilation will scale pretty much linearly with the number of parallel jobs, if your hardware allow it.
+The good news is that CPUs with many core are getting cheaper to buy and to own.
+With 12, 16 cores, you get to compile 24, 32 translations units at the same time. Manking it easy to compile ther entire LLVM toolchain in less than 10 minutes.
+Of course, these CPUs are not cheap, but they are definitively a lot cheaper than a few years ago and it is likely the trend will continue.</p>
+
+<p>I don&rsquo;t want to tell anyone that they need an expensive CPUs, or that an expensive CPUs is necessary to work with C++, but I think it&rsquo;s a business
+decision to consider. Investing into hardware definitively made me more productive.
+People in the VFX or CAD industries understand that they need expensive
+hardware to be productive in their job (which doesn&rsquo;t preclude the nest of modest hardware for non-professional uses)</p>
+
+<h4 id="hardware-you-say">Hardware you say?</h4>
+
+<p>Here is a few things to consider:</p>
+
+<ul>
+<li>AMD cpus are currently cheaper than intel&rsquo;ss but might not with tools like <code>rr</code> and <code>vtune</code>. I went with a ryzen 3xxx and it works great for me.</li>
+<li>You probably want to have 1-2GB per logical core. If you go for a 16 core CPU, you might want 48-64GB of RAM</li>
+<li>A fast drive makes some operation faster, notably profiling and debugging but does not seem to impact compilation a lot</li>
+<li>Working with C++ uses resources independently of compilation: Debugging, profiling and code indexing (aka using an ide) are taxing on CPU memory and drive alike.</li>
+</ul>
+
+<h4 id="what-about-cis">What about CIs?</h4>
+
+<p>If you administrate your own Contiguous Integration platform, the same hardware recommandations apply, depending on the rate of commits and merges.</p>
+
+<p>Unfortunately, most cloud services offer modest hardware, usually a couple of cores, which makes compiling large frameworks very slow, if not impossible.
+It is very hard to complain given the tremendous benefits these cloud CIs offer to open-source communities for free.
+But these offer are a poor fit for many open source C++ projects.
+We need more cores!
+I wonder if offering faster builds while limiting the number of builds over
+a given period of time could make sense for both users and CIs providers.</p>
+
+<h3 id="caching">Caching</h3>
+
+<p>Obviously, being able to recompile LLVM, Qt or boost in a few minutes,
+doesn&rsquo;t mean we can afford or want to do that each time we start a build.
+Which is why we talk of building <strong>as-if</strong> from source.</p>
+
+<p>Many things can be cached:</p>
+
+<h4 id="tracking-change">Tracking change</h4>
+
+<p>The job of a build system is to keep track of the minimal and sufficient
+amount of work needed to perform a build whenever files, compilers options and other dependency are changed.</p>
+
+<h4 id="caching-translation-units">Caching translation units</h4>
+
+<p>Tools like ccache and sccache allow you not to rebuild a object file when
+unecessary. A good build system should alleviate the need for such a tool
+in many cases, but in practice, they prove very useful.</p>
+
+<h4 id="modules">Modules</h4>
+
+<p>I do not think we can meaningfully improve the state of the ecosystem without modules.
+As far as compilation speed is concerned, modules can act somewhat as precompiled headers (modules have other benefits beyond compilation speed), in that module interface need to be parsed only once.
+And templates <strong>used</strong> in that module can also be instanciated there.
+This can speed up compilation a lot, but it might be a while before we
+can observe the real life impact of modules in open-source projects.</p>
+
+<h4 id="caching-template-instantiations">Caching template instantiations</h4>
+
+<p>One of the most expensive things C++ compilers do is template
+instantiations.
+A now mostly dead project <a href="https://github.com/yrnkrn/zapcc">zapcc</a> aimed
+at caching template instantiations accros translation units, which
+was benchmarked to have a 2-5x compile time speed increase.
+Unfortunately, zappcc is based on an old fork of clang and I do not think any work to integrate this technology to mainstream compiler is planned.</p>
+
+<h3 id="other-tricks-to-make-your-compilation-faster">Other tricks to make your compilation faster</h3>
+
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="//www.youtube.com/embed/X4pyOtawqjg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+
+<p>This video offers many insights into improving compilation speed.
+Two easy recommandations is to use <code>lld</code> instead of ld and <code>ninja</code>
+instead of <code>make</code>.
+If you are on windows, make sure your antivirus will not inspect
+every file you read and write each time you invoke <code>cl.exe</code>.</p>
 
       
     <div id="socialshareDiv">
         <h1>Share on </h1>
-        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fread_a_file%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fbuildfromsource%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
     <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
     
   </svg>
 </i></a></span>
-        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fread_a_file%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fbuildfromsource%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
     <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
     
   </svg>
 </i></a></span>
-        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fread_a_file%2f&t=A%20Json%20Parser%20Part%201%20%3a%20Reading%20a%20file" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fbuildfromsource%2f&t=Build%20C%2b%2b%20from%20source" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
     <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
     

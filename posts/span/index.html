@@ -239,14 +239,14 @@ We can verify that this is indeed the case:</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-concepts">
     
-<xmp style="display:none;">#include <stl2/detail/range/concepts.hpp>
+<xmp style="display:none; margin:0;">#include <stl2/detail/range/concepts.hpp>
 #include <vector>
 #include <gsl/span></xmp>
 
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::Range&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
 <span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::Range&lt;gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
-</code></pre></div>
+</code></pre></div></div>
 
 
 </div>
@@ -259,14 +259,14 @@ We can verify that this is indeed the case:</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-concepts">
     
-<xmp style="display:none;">#include <stl2/detail/range/concepts.hpp>
+<xmp style="display:none; margin:0;">#include <stl2/detail/range/concepts.hpp>
 #include <gsl/span></xmp>
 
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::ext::ContiguousRange&lt;gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
 
 
-</code></pre></div>
+</code></pre></div></div>
 
 
 </div>
@@ -340,16 +340,16 @@ it is not possible to construct a <code>span</code>.</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight" >
     
-<xmp style="display:none;">#include <vector>
+<xmp style="display:none; margin:0;">#include <vector>
 #include <gsl/span></xmp>
 
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
     <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> uniform_unitialization_workaround = -<span style="color:#00d;font-weight:bold">1</span>;
     std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; a = {<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">1</span>, uniform_unitialization_workaround};
     gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt; span (std::begin(a), std::end(a));
 }
-</code></pre></div>
+</code></pre></div></div>
 
 
 </div>
@@ -366,14 +366,14 @@ string view paper.</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight" >
     
-<xmp style="display:none;">#include <vector>
+<xmp style="display:none; margin:0;">#include <vector>
 #include <gsl/span>
 
 int main() {
     std::vector<std::string> names {
         "Alexender", "Alphonse", "Batman", "Eric", "Linus", "Maria", "Zoe"
     };</xmp>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
     <span style="color:#080;font-weight:bold">auto</span> begin = std::begin(names);
     <span style="color:#080;font-weight:bold">auto</span> end = std::find_if(begin, std::end(names), [](<span style="color:#080;font-weight:bold">const</span> std::string &amp;n) {
                     <span style="color:#080;font-weight:bold">return</span> std::toupper(n[<span style="color:#00d;font-weight:bold">0</span>]) &gt; <span style="color:#d20;background-color:#fff0f0">&#39;A&#39;</span>;
@@ -383,7 +383,7 @@ int main() {
         std::distance(begin, end)
     };
 }
-</code></pre></div>
+</code></pre></div></div>
 
 
 </div>
@@ -412,10 +412,10 @@ int main() {
 
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-concepts">
     
-<xmp style="display:none;">#include <gsl/span>
+<xmp style="display:none; margin:0;">#include <gsl/span>
 #include <stl2/detail/range/concepts.hpp>
 #include <vector></xmp>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
 <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">span</span> : <span style="color:#080;font-weight:bold">private</span> std::pair&lt;T*, T*&gt; {
 <span style="color:#080;font-weight:bold">public</span>:
@@ -442,8 +442,8 @@ int main() {
 <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
           std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
 <span style="color:#080;font-weight:bold">explicit</span> span(B &amp;&amp; b, E &amp;&amp; e)-&gt;span&lt;<span style="color:#080;font-weight:bold">typename</span> B::value_type&gt;;
-</code></pre></div>
-<xmp style="display:none;">int main() {
+</code></pre></div></div>
+<xmp style="display:none; margin:0;">int main() {
     std::vector<int> v;
     span s(v);
     span s2(std::begin(v), std::end(v));
@@ -812,7 +812,7 @@ if (!doNotTrack) {
         "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
         "default" : {"compiler" : "g81", "options" : ""},
         "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
-        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a -Wall"},
         "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"},
         "meta"         : {"lang": "cppx", "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
     }
@@ -845,7 +845,7 @@ if (!doNotTrack) {
                 options : settings["options"],
                 compiler: settings["compiler"],
                 fontScale: 0.8,
-                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+                libs: [{"name":"boost", "ver" :"171"}, {"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
 
 
             }

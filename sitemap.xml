@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://cor3ntin.github.io/posts/qol23/</loc>
+    <lastmod>2020-03-05T09:46:48+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/buildfromsource/</loc>
+    <lastmod>2020-03-04T09:55:24+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://cor3ntin.github.io/posts/reference/</loc>
     <lastmod>2020-02-25T12:40:00+01:00</lastmod>
   </url>
@@ -184,7 +194,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/posts/</loc>
-    <lastmod>2020-02-25T12:40:00+01:00</lastmod>
+    <lastmod>2020-03-05T09:46:48+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -195,7 +205,7 @@
   
   <url>
     <loc>https://cor3ntin.github.io/</loc>
-    <lastmod>2020-02-25T12:40:00+01:00</lastmod>
+    <lastmod>2020-03-05T09:46:48+01:00</lastmod>
     <priority>0</priority>
   </url>
   

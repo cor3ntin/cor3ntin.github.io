@@ -470,7 +470,7 @@ thread-safe if you have multiple threads.)</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-trunk">
     
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;stop_token&gt;</span><span style="color:#c00;font-weight:bold">
 </span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;cstdio&gt;</span><span style="color:#c00;font-weight:bold">
 </span><span style="color:#c00;font-weight:bold"></span>
@@ -486,7 +486,7 @@ thread-safe if you have multiple threads.)</p>
         std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;Alright</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
     }
 }
-</code></pre></div>
+</code></pre></div></div>
 
 
 </div>
@@ -886,7 +886,7 @@ if (!doNotTrack) {
         "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
         "default" : {"compiler" : "g81", "options" : ""},
         "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
-        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a -Wall"},
         "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"},
         "meta"         : {"lang": "cppx", "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
     }
@@ -919,7 +919,7 @@ if (!doNotTrack) {
                 options : settings["options"],
                 compiler: settings["compiler"],
                 fontScale: 0.8,
-                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+                libs: [{"name":"boost", "ver" :"171"}, {"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
 
 
             }

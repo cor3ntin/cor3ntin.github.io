@@ -479,7 +479,7 @@ mv sdk_10.bak/* sdk_10</code></pre></div>
 
 <p>It’s all I have for you today, I hope you’ve learned something!</p>
 
-<h2 id="one-more-thing-see-you-in-part-3-hahahugoshortcode-0xc421262000-16-hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
+<h2 id="one-more-thing-see-you-in-part-3-hahahugoshortcode-0xc421128000-16-hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
 
       
     <div id="socialshareDiv">
@@ -597,7 +597,7 @@ if (!doNotTrack) {
         "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
         "default" : {"compiler" : "g81", "options" : ""},
         "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
-        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a -Wall"},
         "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"},
         "meta"         : {"lang": "cppx", "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
     }
@@ -630,7 +630,7 @@ if (!doNotTrack) {
                 options : settings["options"],
                 compiler: settings["compiler"],
                 fontScale: 0.8,
-                libs: [{"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+                libs: [{"name":"boost", "ver" :"171"}, {"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
 
 
             }
