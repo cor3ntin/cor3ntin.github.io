@@ -6,21 +6,10 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 05 Mar 2020 09:46:48 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 04 Mar 2020 09:55:24 +0100</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>A few experimental features for C&#43;&#43;</title>
-      <link>https://cor3ntin.github.io/posts/qol23/</link>
-      <pubDate>Thu, 05 Mar 2020 09:46:48 +0100</pubDate>
-      
-      <guid>https://cor3ntin.github.io/posts/qol23/</guid>
-      <description>In this article, I present a few language features that I am hoping to see in C++23 and which I have deployed to Compiler Explorer.
-Please note that these features are not part of a working draft and they have not been presented to the C++ committee yet, so it is impossible to comment on whether any of them might land in 23 or not!
-Auto Non-Static Data Members Initializers A while back I presented auto non-static data members initializers.</description>
-    </item>
     
     <item>
       <title>Build C&#43;&#43; from source</title>
