@@ -58,7 +58,7 @@
     <div class="subtitle is-6 is-pulled-right">
       
     </div>
-    <h2 class="subtitle is-6">March 5, 2020</h2>
+    <h2 class="subtitle is-6">March 6, 2020</h2>
     <h1 class="title">A few experimental features for C&#43;&#43;</h1>
     
     <div class="content">
@@ -197,10 +197,10 @@ There are a few cases where variables names do not matter in C++, for example:</
 unique identifiers with <code>__LINE__</code> and <code>__COUNTER__</code> at global scope.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">CONCAT</span>(__register_foobar_, __LINE__, __COUNTER__) = register_type&lt;Foo&gt;(<span style="color:#d20;background-color:#fff0f0">&#34;Foo&#34;</span>);
 </code></pre></div>
-<p>Many languages use the <code>_</code> as a magic identifier meaning &ldquo;I don&rsquo;t care about the name&rdquo;,
+<p>Many languages use the <code>_</code> identifier as a magic identifier meaning &ldquo;I don&rsquo;t care about the name&rdquo;,
 including Go, Rust, Scala, Haskell. Python similarly uses <code>_</code> the same way by convention.</p>
 
-<p>Unfortunately, <code>_</code> is not currently reserved in C++ (except in the global namespace) and used by a few frameworks such as google tests, also to mean &ldquo;I don&rsquo;t care&rdquo;.</p>
+<p>Unfortunately, <code>_</code> is not currently reserved in C++ (except in the global namespace) and it is used by a few frameworks such as GoogleTest, also to mean &ldquo;I don&rsquo;t care&rdquo;.</p>
 
 <p><a href="https://wg21.link/p1110">P1110</a> considers a few alternative syntaxes such as <code>__</code>, <code>?</code> and <code>??</code>.
 But I think <code>_</code> is the most elegant identifier for that purpose. We should strive to use it, both for readability and consistency across languages, which I think matters when possible.</p>
@@ -217,7 +217,7 @@ much existing widespread use, we expect people to use <code>_</code> anyway, and
 <p>Fortunately, there is a way to be able to use <code>_</code> as a placeholder identifier, while not breaking the few libraries
 using it as a namespace-scope variable identifier:</p>
 
-<p>We can make <code>_</code> magic only if a <code>_</code> already exists in scope.
+<p>We can make <code>_</code> magic only if a <code>_</code> already exists in scope. Aka, it would become maginc only on second use.
 This solution works very well for nameless captures, structured bindings and RAII guards alike,
 while carefully avoiding breaking any existing code.</p>
 
@@ -234,7 +234,7 @@ while carefully avoiding breaking any existing code.</p>
 </div>
 
 
-<p>Of course, one other use case for <code>_</code> is to silent unused variables, as if thy were marked <code>[[maybe_unused]]</code></p>
+<p>Of course, one other use case for <code>_</code> is to silent unused variables, as if they were marked <code>[[maybe_unused]]</code>:</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
@@ -254,12 +254,10 @@ while carefully avoiding breaking any existing code.</p>
 </div>
 
 
-<p>We can deprecate a few usages of <code>_</code> as an identifier, notably for types, concept, modules, aliases, etc,
-but I expect <code>_</code> is still useful as a namespace-scope variable. It is notably used by the popular
-Google test framework.</p>
+<p>We can deprecate a few usages of <code>_</code> as an identifier, notably for types, concepts, modules, aliases, etc.</p>
 
-<p>It might in some cases be a little bit confusing to know whether a variable introduced by <code>_</code>
-is anonymous or not. But these cases can be diagnosed quite well.</p>
+<p>The downside of this approach is that in some cases it might be a little bit confusing
+to know whether a variable introduced by <code>_</code> is anonymous or not. But these cases can be diagnosed quite well.</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
@@ -278,7 +276,7 @@ is anonymous or not. But these cases can be diagnosed quite well.</p>
 
 
 <p>Because of linkage and ODR concerns, <code>_</code> as a magic blank identifier cannot be used at namespace scope.
-We could, however, allow it in modules units if they are not exported, which would be very useful,
+We could, however, allow it in modules units if they are not exported, which would be very useful
 to declare variables that are only used for the side effects of their initialization.</p>
 
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
@@ -303,8 +301,9 @@ I will see if I can collaborate with a few papers for Varna.</p>
 <h2 id="that-s-all-folks">That&rsquo;s all folks</h2>
 
 <p>These are small features, but they can help make the language a bit
-more intuitive.
-Let me know what you think!</p>
+more intuitive.</p>
+
+<p>Let me know what you think!</p>
 
 <p>A huge thanks to Matt Godbolt and the rest of the Compiler Explorer team.</p>
 
