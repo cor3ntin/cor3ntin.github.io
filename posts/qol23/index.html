@@ -74,8 +74,8 @@ to the C++ committee yet, so it is impossible to comment on whether any of them 
 
 <p>A while back I presented <a href="/posts/auto_nsdmi">auto non-static data members initialzers</a>.
 At the time, it was based on a clang 7 fork.
-Because that is still a feature I would like to see in a future C++ version, I rebased in on top
-of Clang 11, which was a bit complicated because of LLVM switch to a mono repo (but I am very glad they did that switch!).</p>
+Because this is still a feature I would like to see in a future C++ version, I rebased it on top
+of Clang 11, which was a bit complicated because of LLVM&rsquo;s migration to a monorepo (but I am very glad they did that migration!).</p>
 
 <p>You can play with it on compiler explorer here:</p>
 
@@ -105,7 +105,7 @@ pixel x = my_image[<span style="color:#00d;font-weight:bold">42</span>, <span st
 </code></pre></div>
 <p>In C++20, <a href="http://eel.is/c++draft/depr.comma.subscript">we deprecated</a> <code>,</code> in subscript expressions:
 A warning is already implemented in GCC and Clang.
-MSVC warns of surprising syntax but doesn&rsquo;t mention deprecation yet.</p>
+MSVC warns about surprising syntax but doesn&rsquo;t mention deprecation yet.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
     <span style="color:#888;font-weight:bold">int</span> array[<span style="color:#00d;font-weight:bold">2</span>] = {<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">4</span>};
     <span style="color:#888">//warning: top-level comma expression in array subscript is deprecated
@@ -203,8 +203,7 @@ including Go, Rust, Scala, Haskell. Python similarly uses <code>_</code> the sam
 <p>Unfortunately, <code>_</code> is not currently reserved in C++ (except in the global namespace) and used by a few frameworks such as google tests, also to mean &ldquo;I don&rsquo;t care&rdquo;.</p>
 
 <p><a href="https://wg21.link/p1110">P1110</a> considers a few alternative syntaxes such as <code>__</code>, <code>?</code> and <code>??</code>.
-But I think <code>_</code> is the most elegant and we should strive for that, both for readability and consistency across languages,
-which I think matters when possible.</p>
+But I think <code>_</code> is the most elegant identifier for that purpose. We should strive to use it, both for readability and consistency across languages, which I think matters when possible.</p>
 
 <p>As <a href="https://wg21.link/p1469">P1469 - Disallow _ Usage in C++20 for Pattern Matching in C++23</a> notes,</p>
 
@@ -235,7 +234,7 @@ while carefully avoiding breaking any existing code.</p>
 </div>
 
 
-<p>Of course, on other use cases for <code>_</code> is to silent unused variables instead of <code>[[maybe_unused]]</code></p>
+<p>Of course, one other use case for <code>_</code> is to silent unused variables, as if thy were marked <code>[[maybe_unused]]</code></p>
 
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
@@ -256,7 +255,7 @@ while carefully avoiding breaking any existing code.</p>
 
 
 <p>We can deprecate a few usages of <code>_</code> as an identifier, notably for types, concept, modules, aliases, etc,
-but I expect <code>_</code> is still useful as a namespace-scope variable, it is notably used by the popular
+but I expect <code>_</code> is still useful as a namespace-scope variable. It is notably used by the popular
 Google test framework.</p>
 
 <p>It might in some cases be a little bit confusing to know whether a variable introduced by <code>_</code>
@@ -303,7 +302,7 @@ I will see if I can collaborate with a few papers for Varna.</p>
 
 <h2 id="that-s-all-folks">That&rsquo;s all folks</h2>
 
-<p>These are small features, but I think they help make the language a bit
+<p>These are small features, but they can help make the language a bit
 more intuitive.
 Let me know what you think!</p>
 
