@@ -66,17 +66,10 @@
 
 <p>This is Part two of a series wherein we build a “Hello World” application. If you are late to the party, I encourage you to check <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part 1</a> first.</p>
 
-
 <figure>
-    
-        <img src="dragon.png" />
-    
-    
-    <figcaption>
-        <h4>Hic Sunt Arcūs</h4>
-        
-    </figcaption>
-    
+    <img src="dragon.png"/> <figcaption>
+            <h4>Hic Sunt Arcūs</h4>
+        </figcaption>
 </figure>
 
 
@@ -120,47 +113,26 @@ QtGuiApplication {
 
 <p>The Linux version is still building fine. Duh.</p>
 
-
 <figure>
-    
-        <img src="term1.png" />
-    
-    
-    <figcaption>
-        <h4>The author likes to pretend all Linux machines are born with Qt And QBS installed. Just play along.</h4>
-        
-    </figcaption>
-    
+    <img src="term1.png"/> <figcaption>
+            <h4>The author likes to pretend all Linux machines are born with Qt And QBS installed. Just play along.</h4>
+        </figcaption>
 </figure>
 
 
-
 <figure>
-    
-        <img src="stupiddialog.png" />
-    
-    
-    <figcaption>
-        <h4>In case of nuclear disaster, click “no”</h4>
-        
-    </figcaption>
-    
+    <img src="stupiddialog.png"/> <figcaption>
+            <h4>In case of nuclear disaster, click “no”</h4>
+        </figcaption>
 </figure>
 
 
 <p>Let’s enthusiastically build the Windows version:</p>
 
-
 <figure>
-    
-        <img src="term2.png" />
-    
-    
-    <figcaption>
-        <h4>Not so Qt.</h4>
-        
-    </figcaption>
-    
+    <img src="term2.png"/> <figcaption>
+            <h4>Not so Qt.</h4>
+        </figcaption>
 </figure>
 
 
@@ -202,17 +174,10 @@ nmake install</code></pre></div>
 
 <p>I had issues with the includes referencing src. So you can run perl bin\syncqt.pl -copy -windows -version 5.10.0 -outdir cpy from the Qt directory on windows and use the include folder generated in cpy . Even then I had to copy a few files manually ( qconfig.h, q{core,gui,widgets,network,xml}-config.h) from the src folder to their respective include folder. Definitively a bit fiddly but eventually you will get there.</p>
 
-
 <figure>
-    
-        <img src="term3.png" />
-    
-    
-    <figcaption>
-        <h4>My Linux is slowly morphing into a Windows Box. I expect Clippy to appear at any moment now</h4>
-        
-    </figcaption>
-    
+    <img src="term3.png"/> <figcaption>
+            <h4>My Linux is slowly morphing into a Windows Box. I expect Clippy to appear at any moment now</h4>
+        </figcaption>
 </figure>
 
 
@@ -249,21 +214,14 @@ The second form creates one profile <span style="color:#080;font-weight:bold">fo
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">find -name <span style="color:#d20;background-color:#fff0f0">&#34;*.qbs&#34;</span> -exec sed -i -e <span style="color:#04d;background-color:#fff0f0">\
 </span><span style="color:#04d;background-color:#fff0f0"></span>    <span style="color:#d20;background-color:#fff0f0">&#39;s\#/usr/local/Qt-5.10.0\#/home/cor3ntin/dev/cross-compilers/windows/qt-5.10-msvc-x64\#g&#39;</span> {} <span style="color:#04d;background-color:#fff0f0">\;</span></code></pre></div>
 <p>We then need to modify our qbs.conf to use those qt modules. Edit the QBS file created in part one to reference them:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qt-project<span style="color:#04d;background-color:#fff0f0">\q</span>bs<span style="color:#04d;background-color:#fff0f0">\p</span>rofiles<span style="color:#04d;background-color:#fff0f0">\m</span>svc14-x86_64<span style="color:#04d;background-color:#fff0f0">\p</span>references<span style="color:#04d;background-color:#fff0f0">\q</span><span style="color:#369">bsSearchPaths</span>=<span style="color:#04d;background-color:#fff0f0">\
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qt-project<span style="color:#04d;background-color:#fff0f0">\q</span>bs<span style="color:#04d;background-color:#fff0f0">\p</span>rofiles<span style="color:#04d;background-color:#fff0f0">\m</span>svc14-x86_64<span style="color:#04d;background-color:#fff0f0">\p</span>references<span style="color:#04d;background-color:#fff0f0">\q</span>bsSearchPaths=<span style="color:#04d;background-color:#fff0f0">\
 </span><span style="color:#04d;background-color:#fff0f0"></span>    /home/cor3ntin/dev/Qt/qbs-wine-toolchain,/home/cor3ntin/dev/cross-compilers/windows/qt5_10base-x64/qbs/1.10.0/profiles/msvc14-x64-qt</code></pre></div>
 <p>I realize it’s all a bit tricky. Eventually though, we can run qbs and it compiles our Qt-based hello world for Windows.</p>
 
-
 <figure>
-    
-        <img src="term4.png" />
-    
-    
-    <figcaption>
-        <h4>$?==0</h4>
-        
-    </figcaption>
-    
+    <img src="term4.png"/> <figcaption>
+            <h4>$?==0</h4>
+        </figcaption>
 </figure>
 
 
@@ -273,17 +231,10 @@ The second form creates one profile <span style="color:#080;font-weight:bold">fo
 
 <p>If you know a way to script that away, please let me know.</p>
 
-
 <figure>
-    
-        <img src="regedit.png" />
-    
-    
-    <figcaption>
-        <h4>Using regedit on Linux. What would I not do for my readers ?</h4>
-        
-    </figcaption>
-    
+    <img src="regedit.png"/> <figcaption>
+            <h4>Using regedit on Linux. What would I not do for my readers ?</h4>
+        </figcaption>
 </figure>
 
 
@@ -293,17 +244,10 @@ The second form creates one profile <span style="color:#080;font-weight:bold">fo
 <span style="color:#369">Plugins</span> = <span style="color:#d20;background-color:#fff0f0">plugins</span></code></pre></div>
 <p>And that’s it ! It wasn’t too hard, was it ?</p>
 
-
 <figure>
-    
-        <img src="hello1.png" />
-    
-    
-    <figcaption>
-        <h4>I made a clicky thing !</h4>
-        
-    </figcaption>
-    
+    <img src="hello1.png"/> <figcaption>
+            <h4>I made a clicky thing !</h4>
+        </figcaption>
 </figure>
 
 
@@ -315,17 +259,10 @@ The second form creates one profile <span style="color:#080;font-weight:bold">fo
 
 <p>Iterating over some container will require us to use range-v3. There is <em>literally</em> no other way.</p>
 
-
 <figure>
-    
-        <img src="rainbow1.png" />
-    
-    
-    <figcaption>
-        <h4>Making WordArt Great Again.</h4>
-        
-    </figcaption>
-    
+    <img src="rainbow1.png"/> <figcaption>
+            <h4>Making WordArt Great Again.</h4>
+        </figcaption>
 </figure>
 
 
@@ -373,17 +310,10 @@ The second form creates one profile <span style="color:#080;font-weight:bold">fo
 
 <p>We are not quite done yet.</p>
 
-
 <figure>
-    
-        <img src="monkey.jpeg" />
-    
-    
-    <figcaption>
-        <h4>Case consistency at Microsoft is a serious matter</h4>
-        
-    </figcaption>
-    
+    <img src="monkey.jpeg"/> <figcaption>
+            <h4>Case consistency at Microsoft is a serious matter</h4>
+        </figcaption>
 </figure>
 
 
@@ -415,33 +345,19 @@ mv sdk_10.bak/* sdk_10</code></pre></div>
 
 <p>And now, compiling with clang-cl works. However, running the program exposes a bug.</p>
 
-
 <figure>
-    
-        <img src="term6.png" />
-    
-    
-    <figcaption>
-        <h4>Our program compiles with clang and runs but it exhibits a nasty bug.</h4>
-        
-    </figcaption>
-    
+    <img src="term6.png"/> <figcaption>
+            <h4>Our program compiles with clang and runs but it exhibits a nasty bug.</h4>
+        </figcaption>
 </figure>
 
 
 <p>And yet, the same executable copied to a virtual machine runs fine.</p>
 
-
 <figure>
-    
-        <img src="rainbow21.png" />
-    
-    
-    <figcaption>
-        <h4>Such greetings</h4>
-        
-    </figcaption>
-    
+    <img src="rainbow21.png"/> <figcaption>
+            <h4>Such greetings</h4>
+        </figcaption>
 </figure>
 
 
@@ -451,12 +367,8 @@ mv sdk_10.bak/* sdk_10</code></pre></div>
 
 <p>Oh, and if you want to check what clang is actually doing, you can use Microsoft’s <code>dumpbin.exe</code> found in <code>msvc2017/bin/Hostx64/x64/</code> . This tool is equivalent of ldd and nm for unix.</p>
 
-
 <figure>
-    
-        <img src="term7.png" />
-    
-    
+    <img src="term7.png"/> 
 </figure>
 
 
@@ -464,12 +376,8 @@ mv sdk_10.bak/* sdk_10</code></pre></div>
 
 <p>Here is the MSVC built binary.</p>
 
-
 <figure>
-    
-        <img src="term8.png" />
-    
-    
+    <img src="term8.png"/> 
 </figure>
 
 
@@ -479,7 +387,7 @@ mv sdk_10.bak/* sdk_10</code></pre></div>
 
 <p>It’s all I have for you today, I hope you’ve learned something!</p>
 
-<h2 id="one-more-thing-see-you-in-part-3-hahahugoshortcode-0xc421474580-16-hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
+<h2 id="one-more-thing-see-you-in-part-3-hahahugoshortcode-s15-hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
 
       
     <div id="socialshareDiv">

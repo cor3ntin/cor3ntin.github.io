@@ -84,7 +84,7 @@
 <span style="color:#c00;font-weight:bold">#else
 </span><span style="color:#c00;font-weight:bold"></span>  foo(<span style="color:#00d;font-weight:bold">42</span>);
 <span style="color:#c00;font-weight:bold">#endif
-</span><span style="color:#c00;font-weight:bold"></span></code></pre></div>
+</span></code></pre></div>
 <p>Fundamentally, neither the compiler nor your tools ( a tool being by necessity a full fledged compiler front end ) have a full view of your code. The disabled parts are not compiled, parsed, lexed or otherwise analyzed.</p>
 
 <p>First, the disabled paths have no obligation to be valid C++. This is valid:</p>
@@ -98,7 +98,7 @@
     std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Hello ?</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
 }
 <span style="color:#c00;font-weight:bold">#endif
-</span><span style="color:#c00;font-weight:bold"></span></code></pre></div>
+</span></code></pre></div>
 <p>So if the compiler were to take into account the disabled paths of the preprocessor it may not be able to for a valid AST. Worse, preprocessing, as the name suggests, happen as a separate state and a preprocessing directive may be inserted between any two C++ token including in the middle of any expression or statement.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
 </span><span style="color:#888">  void
@@ -211,7 +211,7 @@
 </span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
 </span><span style="color:#c00;font-weight:bold"></span>    foo(<span style="color:#00d;font-weight:bold">42</span>, <span style="color:#00d;font-weight:bold">42.0</span>);
 <span style="color:#c00;font-weight:bold">#endif
-</span><span style="color:#c00;font-weight:bold"></span></code></pre></div>
+</span></code></pre></div>
 <p>You may find some cases where that’s hard to do, but that’s probably a sign that you need to split your code into more functions or better abstract the thing you are conditionally compiling.</p>
 
 <h3 id="9-prefer-static-assert-over-error">9. Prefer static_assert over #error</h3>
@@ -282,7 +282,7 @@
 </span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">needs_foo_or_bar</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
 </span><span style="color:#bbb">  </span><span style="color:#888">// ...
 </span><span style="color:#888"></span>}<span style="color:#bbb">
-</span><span style="color:#bbb"></span></code></pre></div>
+</span></code></pre></div>
 <p>Using an attribute system to conditionally include a symbol in the compilation unit is a very interesting idea indeed.</p>
 
 <p>First, it’s really readable and self documenting. Second, even if a symbol is not to be included in the build, we can still attempt to parse it, and more importantly, the sole declaration gives the compiler sufficient information about the entity to enable powerful tooling, static analysis and refactoring.</p>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
     <title>cor3ntin</title>
@@ -23,8 +22,6 @@ Please note that these features are not part of a working draft and they have no
 Auto Non-Static Data Members Initializers A while back I presented auto non-static data members initializers.</description>
         </item>
         
-        
-    
         
     
     <item>

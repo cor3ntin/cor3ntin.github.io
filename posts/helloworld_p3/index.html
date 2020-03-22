@@ -66,17 +66,10 @@
 
 <p>This is Part 3 on my series about cross-compilation. You can check out <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part 1</a> 1 and <a href="https://cor3ntin.github.io/posts/helloworld_p2/">part 2</a> 2 first !</p>
 
-
 <figure>
-    
-        <img src="linux.png" />
-    
-    
-    <figcaption>
-        <h4>linuxnewbieguide.org</h4>
-        
-    </figcaption>
-    
+    <img src="linux.png"/> <figcaption>
+            <h4>linuxnewbieguide.org</h4>
+        </figcaption>
 </figure>
 
 
@@ -107,17 +100,10 @@
 
 <p>You need an Apple ID, and so you need to create an account on apple.com. I don’t recall having a more terrible account creation experience in a while. The biggest offense is certainly their antiquated security policies.</p>
 
-
 <figure>
-    
-        <img src="form.png" />
-    
-    
-    <figcaption>
-        <h4>How not to do account creation and security, courtesy of Apple</h4>
-        
-    </figcaption>
-    
+    <img src="form.png"/> <figcaption>
+            <h4>How not to do account creation and security, courtesy of Apple</h4>
+        </figcaption>
 </figure>
 
 
@@ -200,16 +186,12 @@ bundle.isBundle: false
 
 <p>At that point, we are able to build the simple console Hello World seen in <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part one</a>.</p>
 
-
 <figure>
-    
-        <img src="term1.png" />
-    
-    
+    <img src="term1.png"/> 
 </figure>
 
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#888"># file helloworld
-</span><span style="color:#888"></span>Mach-O <span style="color:#00d;font-weight:bold">64</span>-bit x86_64 executable, flags:&lt;NOUNDEFS|DYLDLINK|TWOLEVEL|WEAK_DEFINES|BINDS_TO_WEAK|PIE&gt;</code></pre></div>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#888"># file helloworld</span>
+Mach-O <span style="color:#00d;font-weight:bold">64</span>-bit x86_64 executable, flags:&lt;NOUNDEFS|DYLDLINK|TWOLEVEL|WEAK_DEFINES|BINDS_TO_WEAK|PIE&gt;</code></pre></div>
 <p>But can it run ?</p>
 
 <h3 id="oh-darling">Oh, darling !</h3>
@@ -221,17 +203,10 @@ bundle.isBundle: false
 
 <p>But, the build complete with no error, and amazingly, it works, and seems very reactive. Being more modern that wine, it is containerized !</p>
 
-
 <figure>
-    
-        <img src="term2.png" />
-    
-    
-    <figcaption>
-        <h4>Oh, Hi Mac</h4>
-        
-    </figcaption>
-    
+    <img src="term2.png"/> <figcaption>
+            <h4>Oh, Hi Mac</h4>
+        </figcaption>
 </figure>
 
 
@@ -258,17 +233,10 @@ bundle.isBundle: false
 
 <p>Which mean we can do this</p>
 
-
 <figure>
-    
-        <img src="term3.png" />
-    
-    
-    <figcaption>
-        <h4>Any sufficiently advanced technology is indistinguishable from magic</h4>
-        
-    </figcaption>
-    
+    <img src="term3.png"/> <figcaption>
+            <h4>Any sufficiently advanced technology is indistinguishable from magic</h4>
+        </figcaption>
 </figure>
 
 
@@ -381,33 +349,19 @@ the previous build.</code></pre></div>
 
 <p>But in the end most of Qt did build.</p>
 
-
 <figure>
-    
-        <img src="term4.png" />
-    
-    
-    <figcaption>
-        <h4>It took me a few hours but I got Qt compiling!</h4>
-        
-    </figcaption>
-    
+    <img src="term4.png"/> <figcaption>
+            <h4>It took me a few hours but I got Qt compiling!</h4>
+        </figcaption>
 </figure>
 
 
 <p>And what we have then, is something quite interesting. The binaries are natives Linux ELF, while the frameworks and libraries are Macho-O. That will be handy in a minute.</p>
 
-
 <figure>
-    
-        <img src="term5.png" />
-    
-    
-    <figcaption>
-        <h4>Hello, I’m a Mac — And I’m a PC. And I am a Mac too. — What ?</h4>
-        
-    </figcaption>
-    
+    <img src="term5.png"/> <figcaption>
+            <h4>Hello, I’m a Mac — And I’m a PC. And I am a Mac too. — What ?</h4>
+        </figcaption>
 </figure>
 
 
@@ -424,17 +378,10 @@ the previous build.</code></pre></div>
 
 <p>And then we can compile or magnificent <em>Hello World</em> app !</p>
 
-
 <figure>
-    
-        <img src="term6.png" />
-    
-    
-    <figcaption>
-        <h4>Compiling an OSX application based on Qt on Linux, using qbs : check</h4>
-        
-    </figcaption>
-    
+    <img src="term6.png"/> <figcaption>
+            <h4>Compiling an OSX application based on Qt on Linux, using qbs : check</h4>
+        </figcaption>
 </figure>
 
 
@@ -442,17 +389,10 @@ the previous build.</code></pre></div>
 
 <p>Well, we have a complete toolchain, maybe we can check some things ?</p>
 
-<p>
-<figure>
-    
-        <img src="term7.png" />
-    
-    
-    <figcaption>
-        <h4>Using otool -L , the osx equivalent of ldd we can assert that we indeed link to some libraries</h4>
-        
-    </figcaption>
-    
+<p><figure>
+    <img src="term7.png"/> <figcaption>
+            <h4>Using otool -L , the osx equivalent of ldd we can assert that we indeed link to some libraries</h4>
+        </figcaption>
 </figure>
 
 We can use other tools. such as nm or strings or the dreaded <code>install_name_tool</code>.</p>
@@ -463,17 +403,10 @@ We can use other tools. such as nm or strings or the dreaded <code>install_name_
 
 <p>Let’s talk about the mac. <em>The Mac</em>. You probably know the one. Most companies have it.</p>
 
-
 <figure>
-    
-        <img src="mini.png" />
-    
-    
-    <figcaption>
-        <h4>This is a true story. True.</h4>
-        
-    </figcaption>
-    
+    <img src="mini.png"/> <figcaption>
+            <h4>This is a true story. True.</h4>
+        </figcaption>
 </figure>
 
 
@@ -501,17 +434,10 @@ We can use other tools. such as nm or strings or the dreaded <code>install_name_
 
 <p>This article is starting to be a bit long. So here is a quick visual summary of the work achieved so far:</p>
 
-
 <figure>
-    
-        <img src="jobs.png" />
-    
-    
-    <figcaption>
-        <h4>Definitively improving our productivity</h4>
-        
-    </figcaption>
-    
+    <img src="jobs.png"/> <figcaption>
+            <h4>Definitively improving our productivity</h4>
+        </figcaption>
 </figure>
 
 
@@ -526,24 +452,18 @@ We can use other tools. such as nm or strings or the dreaded <code>install_name_
 
 <p>export <code>DYLD_FALLBACK_FRAMEWORK_PATH</code>=/Users/cor3ntin/dev/cross-compilation/qt5_10/lib</p></li>
 
-<li><p>Like on windows, we need to provide a qt.conf file next to our helloworld-gui, to tell Qt where to load its plugins from ( the application will simply not run otherwise ). Mine looks like that</p></li>
-</ul>
+<li><p>Like on windows, we need to provide a qt.conf file next to our helloworld-gui, to tell Qt where to load its plugins from ( the application will simply not run otherwise ). Mine looks like that</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#080;font-weight:bold">[Paths]</span>
 <span style="color:#369">Prefix</span>=<span style="color:#d20;background-color:#fff0f0">/Users/cor3ntin/dev/cross-compilation/qt5_10/</span>
-<span style="color:#369">Plugins</span>=<span style="color:#d20;background-color:#fff0f0">plugins</span></code></pre></div>
+<span style="color:#369">Plugins</span>=<span style="color:#d20;background-color:#fff0f0">plugins</span></code></pre></div></li>
+</ul>
+
 <p>Now, connected to the mac through ssh, you can execute your application and it will appear on the mac screen and on the remote display / VNC session.</p>
 
-
 <figure>
-    
-        <img src="mountain.png" />
-    
-    
-    <figcaption>
-        <h4>It feels like we climbed a mountain !</h4>
-        
-    </figcaption>
-    
+    <img src="mountain.png"/> <figcaption>
+            <h4>It feels like we climbed a mountain !</h4>
+        </figcaption>
 </figure>
 
 

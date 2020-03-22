@@ -23,16 +23,6 @@ Auto Non-Static Data Members Initializers A while back I presented auto non-stat
     </item>
     
     <item>
-      <title>Build C&#43;&#43; from source</title>
-      <link>https://cor3ntin.github.io/posts/buildfromsource/</link>
-      <pubDate>Wed, 04 Mar 2020 09:55:24 +0100</pubDate>
-      
-      <guid>https://cor3ntin.github.io/posts/buildfromsource/</guid>
-      <description>This is both a follow-up to my CppCon talk and the ongoing ABI saga, which I do not expect to end any time soon.
-A quick reminder, ABI akin to a binary protocol and design how your types are laid out in memory, how functions are mangled and are called. As such, many changes in the source of your program that are not visible at compile time manifest themselves at link time or runtime.</description>
-    </item>
-    
-    <item>
       <title>How I use references</title>
       <link>https://cor3ntin.github.io/posts/reference/</link>
       <pubDate>Tue, 25 Feb 2020 12:40:00 +0100</pubDate>

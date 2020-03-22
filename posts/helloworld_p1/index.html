@@ -92,12 +92,8 @@ Hello, World!
 
 <p>But then, enters my boss. They are in the business of selling software to people who use Windows. I try to show them that I can make a cow speak and that I can resize my terminal so we should obviously move all our business to Linux at once, they say something incomprehensible about market shares and apparently, they can resize their command prompt too.</p>
 
-
 <figure>
-    
-        <img src="mrrobot.png" />
-    
-    
+    <img src="mrrobot.png"/> 
 </figure>
 
 
@@ -151,17 +147,10 @@ The entry point method could not be loaded
 
 <p>Let’s fire up a VM. If you want to follow along, I recommend that you use a new or cloned Windows 10 VM. We are gonna install a lot of weird things and it will be next to impossible to clean up after ourselves. Afterwards you may <a href="https://www.youtube.com/watch?v=z0wK6s-6cbo">get rid of the VM</a>.</p>
 
-
 <figure>
-    
-        <img src="vs1.png" />
-    
-    
-    <figcaption>
-        <h4>Isn’t he cute ? Maybe I should send my resume to Oracle</h4>
-        
-    </figcaption>
-    
+    <img src="vs1.png"/> <figcaption>
+            <h4>Isn’t he cute ? Maybe I should send my resume to Oracle</h4>
+        </figcaption>
 </figure>
 
 
@@ -171,17 +160,10 @@ The entry point method could not be loaded
 
 <p>I had a few issues launching the installer. I think they try to contact a server that managed to get itself in a list of ad servers so my DNS blocked it. Don’t ask.</p>
 
-
 <figure>
-    
-        <img src="vs2.png" />
-    
-    
-    <figcaption>
-        <h4>That took way more than a minute</h4>
-        
-    </figcaption>
-    
+    <img src="vs2.png"/> <figcaption>
+            <h4>That took way more than a minute</h4>
+        </figcaption>
 </figure>
 
 
@@ -204,33 +186,19 @@ The entry point method could not be loaded
 
 <p>Finally, we will probably need to use some windows features so we should get the Windows SDK. Apparently that depends on some C# components. And some JS libraries, *obviously. *To be clear, you can’t do anything remotely useful without the Windows SDK, better get it now.</p>
 
-
 <figure>
-    
-        <img src="vs4.png" />
-    
-    
-    <figcaption>
-        <h4>WIN32_LEAN_AND_MEAN</h4>
-        
-    </figcaption>
-    
+    <img src="vs4.png"/> <figcaption>
+            <h4>WIN32_LEAN_AND_MEAN</h4>
+        </figcaption>
 </figure>
 
 
 <p>Time to have a coffee pot while Visual Studio gets into every recess of your hard drive. At some point though, it’s done so you can go do some bicycle with the butterflies. Nice.</p>
 
-
 <figure>
-    
-        <img src="vs5.png" />
-    
-    
-    <figcaption>
-        <h4>Improving my editorial line with pretty pictures, courtesy of Microsoft</h4>
-        
-    </figcaption>
-    
+    <img src="vs5.png"/> <figcaption>
+            <h4>Improving my editorial line with pretty pictures, courtesy of Microsoft</h4>
+        </figcaption>
 </figure>
 
 
@@ -250,17 +218,10 @@ The entry point method could not be loaded
 
 <p>In my installation I have URT files all over the places, So I guess that if you install the Windows 10 SDK you actually get the CRT so you don’t need to activate it separately when you select the components to install. Compared to only a few years ago the situation is much better. Microsoft has been busy.</p>
 
-
 <figure>
-    
-        <img src="vs6.png" />
-    
-    
-    <figcaption>
-        <h4>Copy all the things !</h4>
-        
-    </figcaption>
-    
+    <img src="vs6.png"/> <figcaption>
+            <h4>Copy all the things !</h4>
+        </figcaption>
 </figure>
 
 
@@ -282,17 +243,10 @@ The entry point method could not be loaded
 
 <p>The whole thing is about <strong>2.9GB</strong>. About half what we had to install on the windows VM.</p>
 
-
 <figure>
-    
-        <img src="term1.png" />
-    
-    
-    <figcaption>
-        <h4>The road so far</h4>
-        
-    </figcaption>
-    
+    <img src="term1.png"/> <figcaption>
+            <h4>The road so far</h4>
+        </figcaption>
 </figure>
 
 
@@ -336,17 +290,10 @@ shc -f cl-wine.sh -o link.exe
 for x in $(ls ../x64/ms*.dll); do ln -s $x .; done
 </code></pre>
 
-
 <figure>
-    
-        <img src="term2.png" />
-    
-    
-    <figcaption>
-        <h4>We are going places !</h4>
-        
-    </figcaption>
-    
+    <img src="term2.png"/> <figcaption>
+            <h4>We are going places !</h4>
+        </figcaption>
 </figure>
 
 
@@ -365,17 +312,10 @@ for x in $(ls ../x64/ms*.dll); do ln -s $x .; done
 </span><span style="color:#04d;background-color:#fff0f0"></span>  /out:helloworld.exe</code></pre></div>
 <p>We are building an executable that depends on the compiler headers ( including the STL ), the C runtime, and some windows libs such as kernel32.lib.</p>
 
-
 <figure>
-    
-        <img src="term3.png" />
-    
-    
-    <figcaption>
-        <h4>🎉 😎 🍻!</h4>
-        
-    </figcaption>
-    
+    <img src="term3.png"/> <figcaption>
+            <h4>🎉 😎 🍻!</h4>
+        </figcaption>
 </figure>
 
 
@@ -426,17 +366,10 @@ CppApplication {
 </code></pre></div>
 <p>Which we can then run and <em>Voilà !</em></p>
 
-
 <figure>
-    
-        <img src="term4.png" />
-    
-    
-    <figcaption>
-        <h4>Bonsoir Eliot.</h4>
-        
-    </figcaption>
-    
+    <img src="term4.png"/> <figcaption>
+            <h4>Bonsoir Eliot.</h4>
+        </figcaption>
 </figure>
 
 

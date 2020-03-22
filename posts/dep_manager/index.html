@@ -282,10 +282,11 @@
 
 <li><p>The metadata of the downloaded library describes a list of modules, with which we can construct a mapping module name -&gt; dependency name.</p></li>
 
-<li><p>With that, we can imagine the following CMakeLists.txt</p></li>
-</ul>
+<li><p>With that, we can imagine the following CMakeLists.txt</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">set</span>(<span style="color:#d20;background-color:#fff0f0">SCAN_MODULES</span> <span style="color:#d20;background-color:#fff0f0">ON</span>)<span style="color:#a61717;background-color:#e3d2d2">
-</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">foo.cpp</span>)</code></pre></div>
+</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">foo.cpp</span>)</code></pre></div></li>
+</ul>
+
 <p>And the following foo.cpp</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">import fmt.fmt
 <span style="color:#888;font-weight:bold">int</span> main () {
@@ -293,16 +294,16 @@
 }
 </code></pre></div>
 <p>The build process would look like:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#888"># cmake .
-</span><span style="color:#888"></span>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#888"># cmake .</span>
+
 -- Scanning foo.cpp
 -- idm search-module fmt
 -- idm get fmtlib/fmmt <span style="color:#00d;font-weight:bold">4</span>.10.05
 Download http://deps.isocpp.orgs/dist/fmtlib/fmt-4.10.05.tar
 Done.
 
-<span style="color:#888"># make
-</span><span style="color:#888"></span>
+<span style="color:#888"># make</span>
+
 clang++ --precompile <span style="color:#04d;background-color:#fff0f0">\
 </span><span style="color:#04d;background-color:#fff0f0"></span>    <span style="color:#369">$IDM_DIR</span>/fmtlib/fmt/4.10.05/fmt.cppm -o .deps/modules/fmt.pcm
 clang++ -o foo foo.cpp -fmodule-file=.deps/modules/fmt.pcm</code></pre></div>
@@ -310,7 +311,7 @@ clang++ -o foo foo.cpp -fmodule-file=.deps/modules/fmt.pcm</code></pre></div>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">import boost.spirit        <span style="color:#888">//package boost/boost-spirit
 </span><span style="color:#888"></span>import <span style="color:#080;font-weight:bold">catch</span>.catch2.main   <span style="color:#888">//package catch/catch2
 </span><span style="color:#888"></span>import nlohmann.json       <span style="color:#888">//package nlohmann/json
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 <p>This can’t possibly work right ? But look at it this way, all these libraries are headers only, it does not work much differently from Python. You could even think that module files are to pyc what py files are to headers.</p>
 
 <p>After the initial scanning, you would get a file describing the dependencies, letting you change the version used.</p>
@@ -343,17 +344,10 @@ clang++ -o foo foo.cpp -fmodule-file=.deps/modules/fmt.pcm</code></pre></div>
 
 <h2 id="that-brings-us-to-our-second-problem">That brings us to our second problem</h2>
 
-
 <figure>
-    
-        <img src="harry-potter.jpeg" />
-    
-    
-    <figcaption>
-        <h4>Magic does not exist</h4>
-        
-    </figcaption>
-    
+    <img src="harry-potter.jpeg"/> <figcaption>
+            <h4>Magic does not exist</h4>
+        </figcaption>
 </figure>
 
 

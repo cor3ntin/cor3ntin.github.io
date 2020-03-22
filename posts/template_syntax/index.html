@@ -77,12 +77,8 @@ that pleases a large number of people (and that is, after all, the name of the g
 
 <p>This will please most of my readers.</p>
 
-
 <figure>
-    
-        <img src="graph1.png" />
-    
-    
+    <img src="graph1.png"/> 
 </figure>
 
 
@@ -99,12 +95,8 @@ Sortable <span style="color:#080;font-weight:bold">auto</span> <span style="colo
 </code></pre></div>
 <p>This paper also proposes constrained variables, a feature that seems quite popular.</p>
 
-
 <figure>
-    
-        <img src="graph2.png" />
-    
-    
+    <img src="graph2.png"/> 
 </figure>
 
 
@@ -115,7 +107,7 @@ Sortable <span style="color:#080;font-weight:bold">auto</span> <span style="colo
 
 <p>For variables:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Container c = buildClientList(); <span style="color:#888">//Notice the lack of auto
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 <p>For return parameter type:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Regular <span style="color:#06b;font-weight:bold">get_object</span>();
 <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">get_object</span>() -&gt; Regular;
@@ -126,7 +118,7 @@ The constrained type, is a single entity to which cv-qualifiers are then applied
 <p>Finally, it allows unconstrained deduced function parameters, such that lambda and function is once again identical</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">[](<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> &amp; foo) {} <span style="color:#888">//    Generic lambda
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> f(<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> &amp; foo); <span style="color:#888">//  Function template with a single unconstrained parameter
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 <h2 id="a-few-issues">A few issues</h2>
 
 <p>I think there are a few sacrifices made, so let us go over some issues and propose some fixes.
@@ -139,7 +131,7 @@ Importantly, all changes I&rsquo;m proposing here are additives. Nothing needs t
 <p><a href="https://wg21.link/P1141">P1141 - Yet another approach for constrained declarations</a>] proposes 2 new syntaxes for template parameters</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">&lt;Sortable Foo&gt;       <span style="color:#888">//A type Foo which satisfies Sortable
 </span><span style="color:#888"></span>&lt;Sortable <span style="color:#080;font-weight:bold">auto</span> foo&gt;  <span style="color:#888">//A value foo whose type satisfies Sortable
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 <p>Along with existing (plain C++17) syntaxes, this gives us</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">&lt;<span style="color:#080;font-weight:bold">typename</span> Foo&gt;  <span style="color:#888">// Any type
 </span><span style="color:#888"></span>&lt;<span style="color:#080;font-weight:bold">auto</span> Foo&gt; <span style="color:#888">// Any value
@@ -147,7 +139,7 @@ Importantly, all changes I&rsquo;m proposing here are additives. Nothing needs t
 </span><span style="color:#888"></span>&lt;<span style="color:#080;font-weight:bold">template</span>&lt;...&gt; <span style="color:#080;font-weight:bold">typename</span> C Foo&gt; <span style="color:#888">// A template
 </span><span style="color:#888"></span>&lt;Concept Foo&gt; <span style="color:#888">// a constrained type
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">auto</span> Foo&gt; <span style="color:#888">// a constrained value
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 <p>P1141 specifies that in <code>&lt;Concept auto Foo&gt;</code> concept is specifically a type constraint.
 It is for example possible to write <code>&lt;Unsigned auto N&gt;</code> but not <code>&lt;PowerOf2 auto N&gt;</code>.
 This seems like a very artificial limitation as it makes sense for a value to be
@@ -183,12 +175,12 @@ It&rsquo;s not a syntax that I expect seasoned developers would use, but it woul
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">auto</span> Foo&gt; <span style="color:#888">// a constrained value
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">template</span>&lt;...&gt; <span style="color:#080;font-weight:bold">typename</span> Foo&gt; <span style="color:#888">// a constrained template
 </span><span style="color:#888"></span>&lt;Concept Foo&gt; <span style="color:#888">// a constrained type
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 <p>In particular, notice the symetry in these three expression.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">&lt;Concept <span style="color:#080;font-weight:bold">typename</span> Foo&gt; <span style="color:#888">// a constrained type
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">auto</span> Foo&gt; <span style="color:#888">// a constrained value
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">template</span>&lt;...&gt; <span style="color:#080;font-weight:bold">typename</span> Foo&gt; <span style="color:#888">// a constrained template
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 <p>That symmetry that is a core concept of the adjective syntaxes makes the teaching of concepts that much easier because we can actually say
 that a concept constrains a parameter declaration without having to alter that declaration. &ldquo;Simply put a concept name on the left&rdquo;.
 Of course, there would be restrictions, but those restrictions are logical
@@ -215,12 +207,8 @@ may not be convenient that often.
 That&rsquo;s why both the Concept Lite and the &ldquo;in place&rdquo; syntax proposals had this type introducer syntax to actually give a name
 to deduced types, so they can be referred later.</p>
 
-
 <figure>
-    
-        <img src="graph3.png" />
-    
-    
+    <img src="graph3.png"/> 
 </figure>
 
 
@@ -307,7 +295,7 @@ Using the final template syntax the declaration of <code>index()</code> becomes:
 the return value of a function to be placed after the arguments. For example</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">index&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>&gt;(vector&lt;T&gt;&amp; v, <span style="color:#888;font-weight:bold">int</span> i) <span style="color:#080;font-weight:bold">return</span> T&amp; { <span style="color:#888">/* ... */</span> }
 index&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>&gt;(vector&lt;T&gt;&amp; v, <span style="color:#888;font-weight:bold">int</span> i) : T&amp; {<span style="color:#888">/*...* / }
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 <p>This would solve the parsing problem, but most people like having a keyword to help
 recognize templates, so that line of reasoning became redundant.
 The <code>&lt;. . . &gt;</code> brackets were chosen in preference to parentheses because users
@@ -647,7 +635,7 @@ The closest valid syntax to that I can think of is <code>struct S* s;</code></p>
 <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> X&gt; <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">D</span>{};
 <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">D</span>&lt;<span style="color:#888;font-weight:bold">int</span>&gt;{};
 <span style="color:#888">//error: an explicit specialization must be preceded by &#39;template &lt;&gt;&#39;
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 </div>
 
 

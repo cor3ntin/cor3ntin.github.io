@@ -81,7 +81,7 @@ unless I know that copying is cheaper (When in doubt use a reference).</li>
 </span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(Foo);         <span style="color:#888">// input parameter, modified or sinked
 </span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(Foo &amp;);       <span style="color:#888">// input-output
 </span><span style="color:#888"></span>Foo <span style="color:#06b;font-weight:bold">f</span>();             <span style="color:#888">// output
-</span><span style="color:#888"></span></code></pre></div>
+</span></code></pre></div>
 <p>I try to never use pointers, at least in interfaces.
 Pointers should be non-owning, but in practice, there is too much C and legacy code for this to be the case.
 When I see a pointer, I am wary of ownership and lifetime. I always will be, because we cannot magically get rid of owning pointers.</p>
