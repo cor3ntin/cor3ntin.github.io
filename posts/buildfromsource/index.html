@@ -58,23 +58,23 @@
     <div class="subtitle is-6 is-pulled-right">
       
     </div>
-    <h2 class="subtitle is-6">March 4, 2020</h2>
+    <h2 class="subtitle is-6">March 23, 2020</h2>
     <h1 class="title">Build C&#43;&#43; from source</h1>
     
     <div class="content">
       
 
-<p>This is both a follow-up to my <a href="https://www.youtube.com/watch?v=k3Q-fPBe9Z0">CppCon talk</a> and the ongoing ABI saga,
-which I do not expect to end any time soon.</p>
+<p>This is both a follow-up to my <a href="https://www.youtube.com/watch?v=k3Q-fPBe9Z0">CppCon talk</a> and the ongoing ABI saga, which I do not expect to end any time soon.</p>
 
-<p>A quick reminder, ABI akin to a binary protocol and design how your types are laid out in memory,
-how functions are mangled and are called.
+<p>I hope this article to be the first in a series I hope to write over the next few months.</p>
+
+<p>A quick reminder, ABI is akin to a binary protocol and decides how your types are laid out in memory, how functions are mangled and are called.
 As such, many changes in the source of your program that are not visible at compile time manifest themselves at link time
 or runtime.
-Abi stability is only relevant in the case when you try to link or load libraries that were not built in a consistent environment
+ABI stability is only relevant in the case when you try to link or load libraries that were not built in a consistent environment.
 We will come back to what a consistent environment is.</p>
 
-<p>Following the WG21 Prague meeting, many people are trying to solve the ABI problem. Ultimately, all the solutions being proposed boil down to</p>
+<p>Following the WG21 Prague meeting, many people are trying to solve the ABI problem. Ultimately, all the solutions being proposed boil down to:</p>
 
 <ul>
 <li>Partial silent ABI breaks (like was done in C++11 for <code>std::string</code>)</li>
@@ -82,18 +82,18 @@ We will come back to what a consistent environment is.</p>
 <li>Adding a level of indirection, whether COM-like, PIMPL-like, or some <a href="https://github.com/apple/swift/blob/master/docs/ABIStabilityManifesto.md#value-witness-table">semantically equivalent fancy solution</a>.</li>
 </ul>
 
-<p>I personally do not think any of these solutions work in the context of the C++ standard library.
+<p>I do not think any of these solutions work in the context of the C++ standard library.
 I might try to explain why at some point.</p>
 
-<p>But, with the assumption that ABI stability has costs that go against the essence of C++, whatever solution remains, however difficult, must be the past forward.
+<p>But, with the assumption that ABI stability has costs that go against the essence of C++, whatever solution remains, however difficult, must be the path forward.
 Let&rsquo;s talk about building from source.</p>
 
-<p>First, it is important to understand why people do not build from source or think it is not realistic to ever do so.
+<p>It is important to understand why people do not build from source or think it is not realistic to ever do so.
 I believe the reasons are:</p>
 
 <ul>
 <li>Compiling from source takes time</li>
-<li>Shipping big binaries take disk space</li>
+<li>Big binaries take disk and memory space</li>
 <li>Compiling from source is hard because of build system complexity.</li>
 <li>Use of commercial software without access to the sources for legal reasons</li>
 <li>Use of libraries whose sources have been lost to time</li>
@@ -102,6 +102,9 @@ I believe the reasons are:</p>
 </ul>
 
 <p>(Please let me know if I forget something that does not fit in one of these categories)</p>
+
+<p>I am hoping to release a series of articles on each of these problems in the coming weeks.
+<strong>Today, I will focus on presenting various solutions that can improve c++ build times</strong>.</p>
 
 <h2 id="make-c-faster-to-build">Make C++ faster to build</h2>
 
@@ -114,78 +117,98 @@ not to pay the cost of that compilation.</p>
 
 <p><strong>This part is mostly targeted at employers. Especially, if you are a hobbyist, a student etc, do not think you need unaffordable hardware. Your hardware is fine</strong>.</p>
 
-<p>Compiling C++ is slow. By design. The idea is to do more at compile time and less at runtime. Someone has to pay the cost of the abstractions and C++ choses to make developers pay that cost, rather than users. Which is more than sensible as programms are usually run on many more machines than they are compiled on.</p>
+<p>Compiling C++ is slow. By design. The idea is to do more at compile-time and less at runtime. Someone has to pay the cost of the abstractions and C++ chooses to make developers pay that cost, rather than users. Which is more than sensible as programs are usually run on many more machines than they are compiled on.</p>
 
-<p>That doesn&rsquo;t mean that compilers aren&rsquo;t well optimised, they really are.
+<p>That doesn&rsquo;t mean that compilers aren&rsquo;t well optimized, they are.
 But there are limitations to how fast a C++ compiler can be.</p>
 
-<p>Fortunatelly, while compilers seem to not use more than one thread, it is easy to compile many C++ source files at once. C++ compilation will scale pretty much linearly with the number of parallel jobs, if your hardware allow it.
-The good news is that CPUs with many core are getting cheaper to buy and to own.
-With 12, 16 cores, you get to compile 24, 32 translations units at the same time. Manking it easy to compile ther entire LLVM toolchain in less than 10 minutes.
+<p>Fortunately, while compilers seem to not use more than one thread, it is easy to compile many C++ source files at once. C++ compilation will scale pretty much linearly with the number of parallel jobs if your hardware allows it.
+The good news is that CPUs with many cores are getting cheaper to buy and to own.
+With 12, 16 cores, you get to compile 24, 32 translations units at the same time. Making it easy to compile the entire LLVM toolchain in less than 10 minutes.
 Of course, these CPUs are not cheap, but they are definitively a lot cheaper than a few years ago and it is likely the trend will continue.</p>
 
 <p>I don&rsquo;t want to tell anyone that they need an expensive CPUs, or that an expensive CPUs is necessary to work with C++, but I think it&rsquo;s a business
-decision to consider. Investing into hardware definitively made me more productive.
+decision to consider. Investing in hardware definitively made me more productive.
 People in the VFX or CAD industries understand that they need expensive
-hardware to be productive in their job (which doesn&rsquo;t preclude the nest of modest hardware for non-professional uses)</p>
+hardware to be productive in their job (which doesn&rsquo;t preclude the nest of modest hardware for non-professional uses).</p>
 
 <h4 id="hardware-you-say">Hardware you say?</h4>
 
-<p>Here is a few things to consider:</p>
+<p>Here are a few things to consider:</p>
 
 <ul>
-<li>AMD cpus are currently cheaper than intel&rsquo;ss but might not with tools like <code>rr</code> and <code>vtune</code>. I went with a ryzen 3xxx and it works great for me.</li>
-<li>You probably want to have 1-2GB per logical core. If you go for a 16 core CPU, you might want 48-64GB of RAM</li>
+<li>AMD CPUs are currently cheaper than intel&rsquo;ss but might not with tools like <code>rr</code> and <code>vtune</code>. I went with a Ryzen 3xxx and it works great for me.</li>
+<li>You probably want to have 1-2GB per logical core. If you go for a 16 cores CPU, you might want 48-64GB of RAM</li>
 <li>A fast drive makes some operation faster, notably profiling and debugging but does not seem to impact compilation a lot</li>
-<li>Working with C++ uses resources independently of compilation: Debugging, profiling and code indexing (aka using an ide) are taxing on CPU memory and drive alike.</li>
+<li>Working with C++ uses resources independently of compilation: Debugging, profiling and code indexing (aka using an ide) are taxing on CPU, memory and drives alike.</li>
 </ul>
 
 <h4 id="what-about-cis">What about CIs?</h4>
 
-<p>If you administrate your own Contiguous Integration platform, the same hardware recommandations apply, depending on the rate of commits and merges.</p>
+<p>If you administrate your Contiguous Integration platform, the same hardware recommendations apply, depending on the rate of commits and merges.</p>
 
 <p>Unfortunately, most cloud services offer modest hardware, usually a couple of cores, which makes compiling large frameworks very slow, if not impossible.
 It is very hard to complain given the tremendous benefits these cloud CIs offer to open-source communities for free.
-But these offer are a poor fit for many open source C++ projects.
+But these offers are a poor fit for many open-source C++ projects.
 We need more cores!
 I wonder if offering faster builds while limiting the number of builds over
-a given period of time could make sense for both users and CIs providers.</p>
+a given period could make sense for both users and CIs providers.</p>
 
 <h3 id="caching">Caching</h3>
 
-<p>Obviously, being able to recompile LLVM, Qt or boost in a few minutes,
+<p>Being able to recompile LLVM, Qt or boost in a few minutes,
 doesn&rsquo;t mean we can afford or want to do that each time we start a build.
 Which is why we talk of building <strong>as-if</strong> from source.</p>
+
+<p>This has a very specific meaning: The existence of any caching mechanism must not be observable by the final program.
+Compilation of C++ programs can be impacted by compilers, compiler flags and which headers are included, and which library are linked. In many cases, headers are installed system-wide. Hopefully only system libraries headers, We will come to that in future articles.</p>
+
+<p>As such, the use of precompiled libraries (static or dynamic) or the use of precompiled modules do not constitute caching and are a good reason why your programs are ill-formed no diagnostic required.
+<strong>Do not redistribute your modules</strong>.</p>
 
 <p>Many things can be cached:</p>
 
 <h4 id="tracking-change">Tracking change</h4>
 
 <p>The job of a build system is to keep track of the minimal and sufficient
-amount of work needed to perform a build whenever files, compilers options and other dependency are changed.</p>
+amount of work needed to perform a build whenever files, compilers options, and other dependency are changed.</p>
 
 <h4 id="caching-translation-units">Caching translation units</h4>
 
-<p>Tools like ccache and sccache allow you not to rebuild a object file when
-unecessary. A good build system should alleviate the need for such a tool
+<p>Tools like <code>ccache</code> and <code>sccache</code> allow you not to rebuild an object file when
+unnecessary. A good build system should alleviate the need for such a tool
 in many cases, but in practice, they prove very useful.</p>
 
 <h4 id="modules">Modules</h4>
 
 <p>I do not think we can meaningfully improve the state of the ecosystem without modules.
 As far as compilation speed is concerned, modules can act somewhat as precompiled headers (modules have other benefits beyond compilation speed), in that module interface need to be parsed only once.
-And templates <strong>used</strong> in that module can also be instanciated there.
+And templates <strong>used</strong> in that module can also be instantiated there.
 This can speed up compilation a lot, but it might be a while before we
-can observe the real life impact of modules in open-source projects.</p>
+can observe the real-life impact of modules in open-source projects.</p>
+
+<h4 id="precompiled-headers">Precompiled headers</h4>
+
+<p>Waiting for modules, you can probably benefit from precompiled headers.
+CMake 3.16 has support for them, and it can be quite beneficial for third party libraries, or even for your own code to speed up to full builds.</p>
 
 <h4 id="caching-template-instantiations">Caching template instantiations</h4>
 
-<p>One of the most expensive things C++ compilers do is template
-instantiations.
-A now mostly dead project <a href="https://github.com/yrnkrn/zapcc">zapcc</a> aimed
-at caching template instantiations accros translation units, which
-was benchmarked to have a 2-5x compile time speed increase.
-Unfortunately, zappcc is based on an old fork of clang and I do not think any work to integrate this technology to mainstream compiler is planned.</p>
+<p>One of the most expensive things C++ compilers do is template instantiations.</p>
+
+<p>A now mostly dead project <a href="https://github.com/yrnkrn/zapcc">zapcc</a> aimed
+at caching template instantiations across translation units, which
+was benchmarked to have a 2-5x compile-time speed increase.
+Unfortunately, <code>zappcc</code> is based on an old fork of clang and I do not think any work to integrate this technology to mainstream compilers is planned.</p>
+
+<h3 id="measure">Measure</h3>
+
+<p>Both <a href="https://devblogs.microsoft.com/cppblog/introducing-c-build-insights/">MSVC</a>
+and <a href="https://github.com/aras-p/ClangBuildAnalyzer">Clang</a> have tools to profile
+the most costly parts of your build.
+I highly recommend using these tools if you want to optimize your build times, because
+like as all performance tuning work, you will most certainly discover your intuitions
+about what causes bottleneck will probably prove wrong.</p>
 
 <h3 id="other-tricks-to-make-your-compilation-faster">Other tricks to make your compilation faster</h3>
 
@@ -196,10 +219,34 @@ Unfortunately, zappcc is based on an old fork of clang and I do not think any wo
 
 
 <p>This video offers many insights into improving compilation speed.
-Two easy recommandations is to use <code>lld</code> instead of ld and <code>ninja</code>
+Two easy recommendations are to use <code>lld</code> instead of ld and <code>ninja</code>
 instead of <code>make</code>.
 If you are on windows, make sure your antivirus will not inspect
 every file you read and write each time you invoke <code>cl.exe</code>.</p>
+
+<h2 id="compilation-at-scale">Compilation at scale</h2>
+
+<p>For large organizations other tools are available to improve compile times:</p>
+
+<ul>
+<li>Distributed builds such as <code>distcc</code> and <code>icecream</code> can be set up to share the workloads over many machines.</li>
+<li>Some companies have their employees compile on powerful remote hardware through ssh. This has the benefits of giving users access to very powerful hardware while ensuring optimal resource utilization.</li>
+<li>Both solutions can be combined.</li>
+</ul>
+
+<h2 id="do-not-design-for-compile-time">Do not design for compile time</h2>
+
+<p>At the interface level, compile-time should be at the very bottom of your priorities and goals.
+There is no secret here. Improving compile time is easy: Remove abstraction, remove genericity.
+Is it what you want?
+Probably not.
+In this article I presented many solutions to improve compile times, you should exhaust all of them before considering compromising your interface in any way (safety, usability, performance)
+for the sake of compilation times.
+Some improvements can be gained by not including the headers you do not need, unfortunately, these are hard to tracks.
+Victor Zverovich wrote a nice article about the <a href="https://www.zverovich.net/2017/12/09/improving-compile-times.html">compile time performance of {fmt}</a> a few years ago.</p>
+
+<p>Until next time,
+Stay safe!</p>
 
       
     <div id="socialshareDiv">
