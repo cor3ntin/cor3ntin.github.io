@@ -5,11 +5,24 @@
     <description>Recent content on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 06 Mar 2020 16:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 23 Mar 2020 16:00:00 +0100</lastBuildDate>
     
     <atom:link href="https://cor3ntin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
+    
+    <item>
+    <title>Build C&#43;&#43; from source</title>
+        <link>https://cor3ntin.github.io/posts/buildfromsource/</link>
+            <pubDate>Mon, 23 Mar 2020 16:00:00 +0100</pubDate>
+            
+            <guid>https://cor3ntin.github.io/posts/buildfromsource/</guid>
+            <description>This is both a follow-up to my CppCon talk and the ongoing ABI saga, which I do not expect to end any time soon.
+I hope this article to be the first in a series I hope to write over the next few months.
+A quick reminder, ABI is akin to a binary protocol and decides how your types are laid out in memory, how functions are mangled and are called.</description>
+        </item>
+        
+        
     
     <item>
     <title>A few experimental features for C&#43;&#43;</title>
