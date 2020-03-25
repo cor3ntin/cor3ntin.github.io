@@ -13,19 +13,6 @@
     
     <item>
     <title>Build C&#43;&#43; from source: Part 1/N - Improving compile times</title>
-        <link>https://cor3ntin.github.io/posts/buildfromsource/</link>
-            <pubDate>Mon, 23 Mar 2020 16:00:00 +0100</pubDate>
-            
-            <guid>https://cor3ntin.github.io/posts/buildfromsource/</guid>
-            <description>This is both a follow-up to my CppCon talk and the ongoing ABI saga, which I do not expect to end any time soon.
-I hope this article to be the first in a series I hope to write over the next few months.
-A quick reminder, ABI is akin to a binary protocol and decides how your types are laid out in memory, how functions are mangled and are called.</description>
-        </item>
-        
-        
-    
-    <item>
-    <title>Build C&#43;&#43; from source: Part 1/N - Improving compile times</title>
         <link>https://cor3ntin.github.io/posts/compiletime/</link>
             <pubDate>Mon, 23 Mar 2020 16:00:00 +0100</pubDate>
             
