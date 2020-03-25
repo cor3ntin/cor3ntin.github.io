@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://cor3ntin.github.io/posts/buildfromsource/</loc>
+    <lastmod>2020-03-23T16:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://cor3ntin.github.io/posts/compiletime/</loc>
     <lastmod>2020-03-23T16:00:00+01:00</lastmod>
   </url>
