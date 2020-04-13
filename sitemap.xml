@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://cor3ntin.github.io/posts/compiletime/</loc>
-    <lastmod>2020-03-23T16:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://cor3ntin.github.io/</loc>
-    <lastmod>2020-03-23T16:00:00+01:00</lastmod>
+    <lastmod>2020-04-12T16:54:58+02:00</lastmod>
   </url>
   
   <url>
     <loc>https://cor3ntin.github.io/posts/</loc>
+    <lastmod>2020-04-12T16:54:58+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/humble_wishlist/</loc>
+    <lastmod>2020-04-12T16:54:58+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://cor3ntin.github.io/posts/compiletime/</loc>
     <lastmod>2020-03-23T16:00:00+01:00</lastmod>
   </url>
   
