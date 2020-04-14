@@ -174,13 +174,15 @@ in all likelihood the people maintaining ASIO know networking better than standa
 <h4 id="no-tls">No TLS</h4>
 
 <p>The networking TS has no SSL/TLS support.
-That should be a deal-breaker.
-It would be quite irresponsible for any popular programming language to encourage developers to put their
+That should be a deal-breaker. <a href="https://wg21.link/p1860">C++ Networking Must Be Secure By Default</a>.
+I think it would be quite irresponsible for any popular programming language to encourage developers to put their
 users at risk.</p>
 
 <h4 id="limited-use-cases-out-of-the-box">Limited use cases out of the box</h4>
 
-<p>The network TS further has no support for higher-level protocols such as HTTP, QUIC, Websockets, and as such the use of third-party libraries will still be necessary.</p>
+<p>The network TS further has no support for higher-level protocols such as HTTP, QUIC, Websockets, and as such the use of third-party libraries will still be necessary.
+This is by no mean a criticism of the network ts which has a well-defined scope, but I think it&rsquo;s important
+to understand that &ldquo;networking&rdquo; may not include your favorite unicorn.</p>
 
 <h5 id="the-networking-ts-is-not-a-networking-ts">The networking TS is not a networking TS</h5>
 
@@ -188,7 +190,7 @@ users at risk.</p>
 They are files (ish).
 What is interesting is that the operations in 99.9% of cases need to happen asynchronously and deal with many
 files concurrently.
-So a large chunk of the networking TS is an asynchronous model and includes</p>
+So a large chunk of the networking TS is spent defining foundational pieces of an asynchronous model and includes</p>
 
 <ul>
 <li>Executors</li>
