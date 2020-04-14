@@ -106,7 +106,7 @@ Most implementers are further committed to support multiple versions of C++ with
 which makes modularizing the standard library even more complicated.</p>
 
 <p>The thing is standard library headers can already be imported (you can write <code>import &lt;vector&gt;;</code>)
-and implementers can translate <code>#include &lt;vector&gt;;</code> into <code>import &lt;vector&gt;;</code> - even if some won&rsquo;t as they are very keen about not breaking odr-violations ridden code.</p>
+and implementers can translate <code>#include &lt;vector&gt;</code> into <code>import &lt;vector&gt;;</code> - even if some won&rsquo;t as they are very keen about not breaking odr-violations ridden code.</p>
 
 <p>With this set of constraints, the standard library can be modularized, in that we can make <code>import std.core;</code> do something,
 but that would have a very limited benefit (nicer syntax) and some drawbacks (you have to remember
@@ -123,11 +123,14 @@ is a very important piece of infrastructure that needs to be in the standard as 
 <p>I wish it was called <code>Sender Receivers</code>. Executors (objects that can execute a function),
 could be replaced by an <code>execute</code> customization point, which would simplify the design greatly.</p>
 
-<p><code>Sender Receivers</code> would be virtually unusable without a few other proposals, notably
-* <a href="https://wg21.link/p2006">Eliminating heap-allocations in sender/receiver with connect()/start() as basis operations</a>
-* <a href="https://wg21.link/p1897r2">Towards C++23 executors: A proposal for an initial set of algorithms</a>
-* A customisation point mechanism such as <a href="https://wg21.link/p1895r0"><code>tag_invoke</code></a>
-* An operator <code>co_await</code> for senders</p>
+<p><code>Sender Receivers</code> would be virtually unusable without a few other proposals, notably</p>
+
+<ul>
+<li><a href="https://wg21.link/p2006">Eliminating heap-allocations in sender/receiver with connect()/start() as basis operations</a></li>
+<li><a href="https://wg21.link/p1897r2">Towards C++23 executors: A proposal for an initial set of algorithms</a></li>
+<li>A customisation point mechanism such as <a href="https://wg21.link/p1895r0"><code>tag_invoke</code></a></li>
+<li>An operator <code>co_await</code> for senders</li>
+</ul>
 
 <p>And probably a few other pieces. Notably, having a rich set of algorithms is very important.
 Quite a lot of work!</p>
