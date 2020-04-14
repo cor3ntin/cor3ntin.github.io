@@ -203,7 +203,7 @@ So a large chunk of the networking TS is an asynchronous model and includes</p>
 <li>I/O functions</li>
 </ul>
 
-<p>But all of that leaves in <code>std::net</code> namespace and is not generalized at all.
+<p>But all of that lives in <code>std::net</code> namespace and is not generalized at all.
 These design choices come from the historical impossibility to perform file/io
 and network/io in the same context efficiently on some platforms,
 or the belief that async i/o had no benefit.</p>
