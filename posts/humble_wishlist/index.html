@@ -130,6 +130,7 @@ could be replaced by an <code>execute</code> customization point, which would si
 <li><a href="https://wg21.link/p1897r2">Towards C++23 executors: A proposal for an initial set of algorithms</a></li>
 <li>A customisation point mechanism such as <a href="https://wg21.link/p1895r0"><code>tag_invoke</code></a></li>
 <li>An operator <code>co_await</code> for senders</li>
+<li>More work on cancellation</li>
 </ul>
 
 <p>And probably a few other pieces. Notably, having a rich set of algorithms is very important.
@@ -157,7 +158,7 @@ open-source header-only library with a permissive license that you can use today
 <p>Unlike ASIO, the TS does not offer:</p>
 
 <ul>
-<li>SSL</li>
+<li>SSL (or rather, TLS)</li>
 <li>Serial ports</li>
 <li>Signal handling</li>
 </ul>
@@ -170,9 +171,9 @@ The standard is not meant to fix broken policies and legal departments.</p>
 <p>It is hard to think that standardization would increase the portability or quality of implementation as
 in all likelihood the people maintaining ASIO know networking better than standard implementers.</p>
 
-<h4 id="no-ssl">No SSL</h4>
+<h4 id="no-tls">No TLS</h4>
 
-<p>The networking TS has no SSL support.
+<p>The networking TS has no SSL/TLS support.
 That should be a deal-breaker.
 It would be quite irresponsible for any popular programming language to encourage developers to put their
 users at risk.</p>
