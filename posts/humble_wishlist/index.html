@@ -220,7 +220,7 @@ which makes memory management, ownership and error managements harder to deal wi
 
 <h4 id="cancellation-and-error-management">Cancellation and error management</h4>
 
-<p>Like <code>std::filesystem</code>, <code>std::net</code> has 2 overloads for everything, one that throws, one that does not.
+<p>Like <code>std::filesystem</code>, <code>std::net</code> has 2 overloads for everything, one that throws, one that does not (except when it does).
 I dislike that type of interface.
 Errors and results are passed through the same callbacks which are less efficient and necessitate the result to be default constructible.
 The networking TS does also not support stop tokens, so cancellation is harder to deal with properly.</p>
