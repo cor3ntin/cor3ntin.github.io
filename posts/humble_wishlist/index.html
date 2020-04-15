@@ -182,7 +182,7 @@ users at risk.</p>
 
 <p>The network TS further has no support for higher-level protocols such as HTTP, QUIC, Websockets, and as such the use of third-party libraries will still be necessary.
 This is by no mean a criticism of the network ts which has a well-defined scope, but I think it&rsquo;s important
-to understand that &ldquo;networking&rdquo; may not include your favorite unicorn.</p>
+to understand that &ldquo;networking&rdquo; may not include your favourite unicorn.</p>
 
 <h5 id="the-networking-ts-is-not-a-networking-ts">The networking TS is not a networking TS</h5>
 
@@ -249,7 +249,7 @@ guess when it might ship.</p>
 <h2 id="a-personal-wishlist-for-c-23">A personal wishlist for C++23</h2>
 
 <p>It&rsquo;s very hard to try to think about what should be standardized as opposed to what <em>I</em> need or desire for myself.
-any such list is bound to be accidentally self-centered. I&rsquo;ll give it a shot anyway.
+any such list is bound to be accidentally self-centred. I&rsquo;ll give it a shot anyway.
 I am avoiding mentioning my own papers as even if I think they are useful, it doesn&rsquo;t seem fair to try to judge their priority.</p>
 
 <h3 id="reconsider-abi-stability">Reconsider ABI stability.</h3>
@@ -283,8 +283,8 @@ Probably the best bang-for-the-buck performance improvements the committee can w
 <h3 id="sender-receiver-based-asynchronous-general-purpose-i-o-library">Sender-Receiver based asynchronous general-purpose I/O library</h3>
 
 <p>As I said, <code>Sender-Receiver</code> is a priority.
-On top of that, we could start thinking about general purposes I/O facilities with support for timers,
-files, processes and sockets in a concept-driven approach so that other device types can be easily plugged-in.
+On top of that, we could start thinking about general purpose async I/O facilities with support for timers, files, processes and sockets in a concept-driven approach so that other device types can be easily plugged-in.
+This would ensure the standard does <a href="/posts/executors/">not accumulate several io contexts over time</a>.
 Many bits of the networking TS, including the buffer APIs, could be reused.
 It is unlikely such an effort could bear fruits before 23.</p>
 
