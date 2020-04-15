@@ -17,7 +17,7 @@
             <pubDate>Sun, 12 Apr 2020 16:54:58 +0200</pubDate>
             
             <guid>https://cor3ntin.github.io/posts/humble_wishlist/</guid>
-            <description>In Prague, the committee adopted https://wg21.link/p0592r4, a paper that lays a list of priorities WG21 should focus on for C++23.
+            <description>In Prague, the committee adopted To boldly suggest an overall plan for C++23, a paper that lays a list of priorities WG21 should focus on for C++23.
 The vote was almost unanimous. I voted against it. I figured it would be interesting to explain why.
 The problem with plans Plans have a nasty tendency to turn into deadlines and expectations.
 There was an uproar when contracts did not ship (even though that was the right decision), while coroutines have shipped with known issues and modules have shipped with little experience with the feature as it is in the standard.</description>
