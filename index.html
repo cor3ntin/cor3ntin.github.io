@@ -59,6 +59,8 @@
   <div class="container">
     
     
+    
+    
         <article id="article">
         <div class="subtitle is-6 is-pulled-right">
             
@@ -187,30 +189,6 @@ You might have read on the Internet (rarely a good idea), that C++ grows too fas
 Bjarne Stroustrup reminded us that concepts are mentioned in Design and Evolution of C++, a book written in 1994, before even the first C++ standard. Coroutines and Modules are also old ideas that represent more than a decade of work.
             
             <a class="button is-link" href="https://cor3ntin.github.io/posts/cpp20/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">February 18, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/move/">move, even more simply</a></h1>
-        <div class="content">
-            std::move doesn&rsquo;t move.
-It casts to an rvalue-reference, which is a type of reference that can be passed to a move constructor or assignment operator, if one exists.
-template &lt;typename T&gt; decltype(auto) move(T&amp;&amp; a) { return static_cast&lt;std::remove_reference_t&lt;T&gt;&amp;&amp;&gt;(a); } Some expressions will be converted to rvalue-references automatically, when the compiler is certain that the value is expiring (will not be reused).
-This is the case for temporaries or non-reference objects returned from functions.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/move/" style="height:28px">
             Read more
             <span class="icon is-small">
                 <i class="fa fa-angle-double-right"></i>
