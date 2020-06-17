@@ -82,7 +82,8 @@ the visitor argument first, and this is because it accepts a variadic number
 of variants:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">Visitor</span>, <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2">... </span><span style="color:#b06;font-weight:bold">Variants</span>&gt;
 <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> visit( Visitor&amp;&amp; vis, Variants&amp;&amp;... vars );
-</code></pre></div><p>The following would make a better interface but it is not valid C++:</p>
+</code></pre></div><p>The following would make a better interface but would not be viable because
+of the current deduction rules.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">visit</span>(Variants&amp;&amp;... vars, Visitor&amp;&amp; vis);
 </code></pre></div><h3 id="source_location">source_location</h3>
 <p>In C++20, we added <code>source_location</code>, such that <code>source_location::current()</code> returns the location
@@ -143,11 +144,11 @@ Most notably, the <code>last</code> parameter appears first on the lambda, on th
 </code></pre></div>
 </div>
 
-<p>And you can, click the compiler explorer icon to test this
+<p>And you can click the compiler explorer icon to test this
 experimental code!</p>
 <p>In fact this feature was already proposed in 2016 in <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0478r0.pdf">P0478R0</a> by Sy Brand, Bruno Manganelli and Michael Wong.
 Bruno Manganelli is notably responsible for the clang implementation.
-I merely did the not-so-fun work of porting it from clang 7 to clang 11.</p>
+I merely did the not-so-fun work of porting it from clang 7 to clang 11, so that we can all play with it.</p>
 <p>When it was first presented, WG21 felt the motivation wasn&rsquo;t strong enough.
 I think there is more motivation now, and with the help of the original authors,
 I am hoping we can present that paper again.
