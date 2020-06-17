@@ -82,7 +82,7 @@ the visitor argument first, and this is because it accepts a variadic number
 of variants:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">Visitor</span>, <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2">... </span><span style="color:#b06;font-weight:bold">Variants</span>&gt;
 <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> visit( Visitor&amp;&amp; vis, Variants&amp;&amp;... vars );
-</code></pre></div><p>The following would make a better interface but would not be viable because
+</code></pre></div><p>The following would make a better interface (easier to read, symmetric with <code>std::transform</code>, etc) but would not be viable because
 of the current deduction rules.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">visit</span>(Variants&amp;&amp;... vars, Visitor&amp;&amp; vis);
 </code></pre></div><h3 id="source_location">source_location</h3>
@@ -181,6 +181,9 @@ which is less error-prone and more consistent.</p>
 but this parameter pack would be allowed to appear anywhere in the function
 parameter list, and argument type and overload resolution would behave in
 a consistent and standard manner.</p>
+<p>There are a few other proposals to improve the usability of parameter packs
+<a href="https://wg21.link/p1858r2">Generalized pack declaration and usage </a>,
+<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2120r0.html">Simplified structured bindings protocol with pack aliases</a></p>
 <h2 id="thats-all-folks">That&rsquo;s all folks</h2>
 <p>Let me know what you think!
 Please play with this feature on <a href="https://compiler-explorer.com/z/CsNBJD">Compiler-Explorer</a> and let me know about
