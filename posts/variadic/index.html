@@ -63,10 +63,10 @@
     
     <div class="content">
       <p>A few months ago I <a href="/posts/qol23">presented a few features</a> that I hope will be considered for C++23.
-I have since then submitted papers for <a href="https://wg21.link/p2128r1">multi-dimensional subscripts expressions</a> and
+I have since then submitted papers for <a href="https://wg21.link/p2128r1">multi-dimensional subscript expressions</a> and
 <a href="https://wg21.link/p2169">'_` as a variable placeholder</a>.</p>
 <p>In this article I want to talk about another improvement I would like to see in the next C++ version:
-Non-trailing variadic templates parameters.</p>
+Non-trailing variadic template parameters.</p>
 <p>Indeed, while parameter packs can appear before the last function parameter, they do not get
 properly deduced when they do.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... A, <span style="color:#080;font-weight:bold">typename</span> B&gt;
@@ -91,14 +91,14 @@ of the current deduction rules.</p>
 <p>Typically, you would use it as default parameter of a log function:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(std::string view, std::source_location loc = std::source_location::current());
 </code></pre></div><p>But what if your log function accepts a variadic number of arguments?
-for example <a href="https://github.com/gabime/spdlog">spdlog</a> uses <a href="https://github.com/fmtlib/fmt">fmt</a>,
-such that its log function looks like</p>
+For example,  <a href="https://github.com/gabime/spdlog">spdlog</a> uses <a href="https://github.com/fmtlib/fmt">fmt</a>,
+such that its log function looks like this:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(std::string view, <span style="color:#080;font-weight:bold">auto</span>... args);
 log(<span style="color:#d20;background-color:#fff0f0">&#34;Hello {}&#34;</span>, <span style="color:#d20;background-color:#fff0f0">&#34;World&#34;</span>);
 </code></pre></div><p>We would probably want to write it as follow, but we can&rsquo;t</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(std::string_view, <span style="color:#080;font-weight:bold">auto</span>... args,
          std::source_location loc = std::source_location::current());
-</code></pre></div><p>A clever <a href="https://stackoverflow.com/a/57548488">stackoverflow</a> contributor suggest that it can be achieved
+</code></pre></div><p>A clever <a href="https://stackoverflow.com/a/57548488">stackoverflow</a> contributor suggested that it can be achieved
 through deduction guide as follow:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... T&gt;
 <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">log</span> {
@@ -177,6 +177,10 @@ f(<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;fo
 <span style="color:#888">// =&gt; f(auto a, auto b1, auto b2, auto b3, auto c, auto d = 1);
 </span></code></pre></div><p>But a better strategy would be to make this scenario ambiguous
 which is less error-prone and more consistent.</p>
+<p>With these rules, a function would still be limited to one parameter pack,
+but this parameter pack would be allowed to appear anywhere in the function
+parameter list, and argument type and overload resolution would behave in
+a consistent and standard manner.</p>
 <h2 id="thats-all-folks">That&rsquo;s all folks</h2>
 <p>Let me know what you think!
 Please play with this feature on <a href="https://compiler-explorer.com/z/CsNBJD">Compiler-Explorer</a> and let me know about
