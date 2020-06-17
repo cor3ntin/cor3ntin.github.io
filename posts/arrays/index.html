@@ -62,51 +62,33 @@
     <h1 class="title">Waiting for std::embed: Very Large Arrays in Clang</h1>
     
     <div class="content">
-      
-
-<h3 id="before-we-start">Before we start</h3>
-
+      <h3 id="before-we-start">Before we start</h3>
 <p>This blog post features iframes, interactive SVG files, and graphs
 which may not render properly on handheld devices.
 Sorry about that.
 The charts are however interactive, so you can zoom in an see the exact values.</p>
-
 <h1 id="if-i-were-a-compiler-i-would-simply-put-all-your-bytes-in-your-binary">If I were a compiler, I would simply put all your bytes in your binary</h1>
-
 <p>There have been a few <a href="https://thephd.github.io/embed-the-details">interesting</a> and passionate <a href="https://thephd.github.io/full-circle-embed">discussions</a> about <code>std::embed</code> lately.</p>
-
 <p><code>std::embed</code> would surely be a great tool to have in one&rsquo;s toolbox, and I&rsquo;m sure some version of it will be adopted in time, once a consensus in reach (I have yet to find someone not sold on the usefulness
 of that proposal).</p>
-
 <p>But standardization (of anything) is challenging,
 so in the meantime, I want to explore one of the motivations for <code>std::embed</code>:</p>
-
 <p>Compiling large arrays is very time and resource-intensive. For any compiler.</p>
-
 <p>How so? Well&hellip;</p>
-
-<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_time_1.html"></iframe>
-
+<!-- raw HTML omitted -->
 <p>Of course, as hinted by ThePhd, If this exercice is taxing for your CPU,
 it&rsquo;s nothing compared to what it does to your RAM:</p>
-
-<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_memory_1.html"></iframe>
-
+<!-- raw HTML omitted -->
 <p>50000000 ints, that&rsquo;s about 200MB and maybe that is a bit ludicrous.
 There are valid use cases for large arrays.</p>
-
 <p>For example, <a href="https://doc.qt.io/qt-5/resources.html">Qt&rsquo;s resource system</a> creates a file system for embedded resources.
 <a href="https://www.youtube.com/watch?v=4P_kbF0EbZM"><code>&lt;charconv&gt;</code></a>, <a href="https://en.wikipedia.org/wiki/Rijndael_S-box">crypto functions</a> and other rely on lookup tables.
 If you want these features to be <code>constexpr</code>, you can&rsquo;t use linker tricks (besides who wants to use linker tricks ?)</p>
-
 <p>You may have noticed I am working on <a href="https://cor3ntin.github.io/posts/name_to_cp/">unicode properties</a>, and even with careful bit packing,
 these tables have thousands of elements.</p>
-
 <p>Twitter had many other interesting use cases, to share, for example, people embed neural network
 weights on binaries targeting embedded platforms!</p>
-
-<p><blockquote class="twitter-tweet" data-lang="en" data-theme="light"><p lang="en" dir="ltr">Hey <a href="https://twitter.com/hashtag/cplusplus?src=hash&amp;ref_src=twsrc%5Etfw">#cplusplus</a> twitter, what&#39;s your use cases for very large embedded binary data / const int arrays in C++ ?</p>&mdash; Corentin (@Cor3ntin) <a href="https://twitter.com/Cor3ntin/status/1208389050698215427?ref_src=twsrc%5Etfw">December 21, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
-
+<!-- raw HTML omitted -->
 <p>There is a well know trick to make your programs significantly faster:
 Use string literals!</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> array[] = {<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#888">/*, ..., */</span> <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">1</span>}; <span style="color:#888">//slow
@@ -115,67 +97,51 @@ Use string literals!</p>
 </span><span style="color:#888"></span><span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#04d;background-color:#fff0f0">\x00\x00\x00\x01\x00\x00\x00\x01</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>
 <span style="color:#888">/*....*/</span>
 <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#04d;background-color:#fff0f0">\x00\x00\x00\x01\x00\x00\x00\x01</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
-</code></pre></div>
-<iframe frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_time_string.html"></iframe>
-
-<iframe frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_memory_string.html"></iframe>
-
+</code></pre></div><!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>Unfortunately, there is a catch: <code>MSVC</code> cannot have string literals bigger than <a href="https://docs.microsoft.com/en-us/cpp/cpp/string-and-character-literals-cpp?view=vs-2019">65535 bytes</a>.</p>
-
 <p>I believe lifting this limitation would be ABI breaking and, therefore unlikely to happen. <a href="https://www.youtube.com/watch?v=k3Q-fPBe9Z0">I hate ABI stability</a>.</p>
-
 <p>Anyway, It begs the question:
 Why are strings literals so much faster than arrays?
 There are a few tools to help us peek under the hood of the compiler.
 One such tool is the <code>-ast-dump</code> option of <code>clang</code> which&hellip; well dumps its
 internal representation.
 That tool is conveniently available on Compiler Explorer:</p>
-
-<iframe width="100%" height="600px" src="https://godbolt.org/e?readOnly=true&hideEditorToolbars=true#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZugHZEDKqAhgDbYgCMALOQCse5dq3qhUAUgBMAIRmzyAZ2ydURAg2rZ6mAMLp2AVwC29HgDZyOzABkC9bADlTAI2yke3cgAd0S4k16A2MzS19/QIZ7RxcTd09ubxU1DQYmIlZSIhDTc24rFOx1IIysohjnNw8vZUzs3LCCuvLKuISvAEpldCNSVC4AclQkLIBqVjHJAFZ5aYARKYBmRckABgBBGWkZvQAPNd2Do8Pp/e5t9a3pHbPju9P9x72Lm6vLh5Ovu9edzY%2Bnt9AT9Lv83p8IcDzqDrrcofd4b93uD4c9nkiwXCEdj0TCATigS88SiCZCiW8lrJBt12CBBtNBuRzIM1oz0HS9AoFGMlL1%2BtgptIltxGUQ6azOt0ANYgXjTAB0crWAE5ptxVdMlgB2ZU3aYiOm8RkmWUADnlwqWvF1awsVptVmZrPI7MGjKUIDW5DFLOp5DgsBQGBw%2BGIZEo1DojBYHC4fEEIGkIjEEi5cmUqmKaXMEBsjXMvC9Nja1USEQC2fzsq9fgrQRL8RqyUzJXS9Ryhjy1YzqVK7YbHWS7arhZa2QHTe6vL6AzpDiIExmc1WKymWtk3jGm%2B35C3u53e8PFy180klL9tPpjKdbI5adkPL5A0FS2kovF1O6SGwrBwnggNKGsaIBqvKFimhY0xrDqSyQdBypLEyH4unS7qet6H6SuQMrSFq8rKmsax8OBvDSKaWqmtwNwGoMSzXshrrvr63QBgg8AQEG6AmD4BCcBQVAQBg3G8TUqCiOIAD6RCkEY9BSuQNC8UQHgehArjIa4DhZAAnnSIrkEJJg6EQADy9DsLpvrkDgJgppwyGEKQWYEAAbtgHpWdgezFEYyl6Yy86qMh7AEK4pA6QYOD%2Bd6pAECagwit0UbMGw9nxkISbiamcgKCIoUepA3ToD42YeQAtEoRCYGe8xSDlcjSKw7ottm2i6FW3jFg4VSNmWtZRMEnZNOWA0TmWRStvQZQNEN%2BQ9s5batN17RNmOHahHNlVLbEpY8FOT5xoBV5IVZrp7BBZUWLwYxiSmYwQNJslSp092hiQpAvpuBjCXxL7SC9nL1VSGHMdKib6peRrkCa3DytwhGmq%2BhG8BYWrcNMFGITeKFuso6E%2BhK/qIBxICsJVEa5oQ70EJgwjJTGaX8Bl82TW1%2BizcIXU7b1wj9ZWHPeHz9bLbtza9otM0bcIE3ZtNFQizzQ7lB1a1jXtR0MidzpnRdV03Vl92PXJL0bJVYwAGoENgADuHivVTZCfbu308b9Mivp0TESkdUMmij8qamqaPw5BaPSNM%2BrY4xeNegTfqsSTQmux4FNJyJni3ZJRvyYp7DKaQqnqVZmn0Dp0WGcZZkWQ52C2eI9lWY5zluR5zpeT5fkJQFjBBVZIVhRFWBDPp0lxf5SUMClsY8EzwhZWg955a4BUAS6JVBB5zXizmeYC9Yuhq4LkT81LR91tECuDizsvDnvMt9ttPVX1tktdkr46X5OPQzlw/00ZrUc6TnQsJda6mdgCGxksbe2YYPruyTGMF26dPoA3vF7T85Bvy/hqKvSGwFYbwySLBLU4d0Y6mVI6BiqEY4g0JgnFAZMiAU2wA7WKtMkz01SnGWeYsFo73ahzaQnUD6f08PwIWDAqxCJGtmNW/B74S3Wl2LU18H4f25h0eRt8pYqJfvLDRNReBYUvAAqhgxgGgP1ndB6UDnpjFNguS2Ns7YQDeo7eBzsuLJzgUKbgntaEYLwdDECsNpAWDIhYIidppjKmVOqLWt5cYeljphMGJD5QqmVKaTUZCqLcFNKaGidEEk43QcYukb4SnRzjlhNyBcgiyiAA"></iframe>
-
+<!-- raw HTML omitted -->
 <p>And that is our culprit:
 Clang represents each number as its own AST NODE, whereas a string literal
 is always one node and each byte is represented by one byte.</p>
-
-<p><code>IntegerLiteral</code> have to keep track of:
-* The value
-* Type information for that value(including constness, signedness, exact type (<code>int</code>, <code>long</code>, etc)
-* The source location of that value.
-* And a few other things.</p>
-
+<p><code>IntegerLiteral</code> have to keep track of:</p>
+<ul>
+<li>The value</li>
+<li>Type information for that value(including constness, signedness, exact type (<code>int</code>, <code>long</code>, etc)</li>
+<li>The source location of that value.</li>
+<li>And a few other things.</li>
+</ul>
 <p>In the end, each node might store well about 100 bytes for 4 bytes value.</p>
-
 <p>More critically, Each subexpression of <code>InitListExpr</code> may have an entirely different type and may be full expressions, function calls, lambdas and even
 template instantiation.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> a {
- <span style="color:#080;font-weight:bold">operator</span> <span style="color:#888;font-weight:bold">int</span>() <span style="color:#080;font-weight:bold">const</span>;
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">a</span> {
+ <span style="color:#080;font-weight:bold">operator</span> <span style="color:#06b;font-weight:bold">int</span>() <span style="color:#080;font-weight:bold">const</span>;
 };
 <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">struct</span> V {
+<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">V</span> {
  <span style="color:#080;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> v = <span style="color:#00d;font-weight:bold">42</span>;
 };
-<span style="color:#888;font-weight:bold">int</span> array[] = {a(), V&lt;<span style="color:#888;font-weight:bold">int</span>&gt;::v, []&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;(T i) {<span style="color:#080;font-weight:bold">return</span> T(); }(<span style="color:#00d;font-weight:bold">0</span>)};
-</code></pre></div>
-<p>And at the same time, <a href="http://eel.is/c++draft/dcl.init">initializer-list</a>s, can be used to initialize anything:
+<span style="color:#888;font-weight:bold">int</span> array[] = {a(), V&lt;<span style="color:#888;font-weight:bold">int</span>&gt;::v, []&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;(T i) {<span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">T</span>(); }(<span style="color:#00d;font-weight:bold">0</span>)};
+</code></pre></div><p>And at the same time, <a href="http://eel.is/c++draft/dcl.init">initializer-list</a>s, can be used to initialize anything:
 class instances, arrays, aggregates, <code>std::initializer_list</code>, and template version of all of the above.</p>
-
 <p>Initialization in C++ is anything but trivial. In clang, the ten thousands lines of <a href="https://github.com/llvm/llvm-project/blob/master/clang/lib/Sema/SemaInit.cpp"><code>SemaInit.cpp</code></a>
 do most of that work, and will, for each element of what we naively hoped would be a simple array of integers, check that it is indeed convertible
 to the type of that array.</p>
-
 <p>This is a lot of work for our poor compiler.</p>
-
-<p><object data="flamgraph_master.svg " type="image/svg+xml" id="Profiling"></object></p>
-
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h2 id="improving-performance-for-integer-arrays">Improving performance for integer arrays</h2>
-
 <p>Given that arrays of integers or bytes are somewhat common can we improve the performance
 of that use case?
 Time to <a href="https://github.com/llvm/llvm-project">clone llvm</a>!</p>
-
 <p>Clang is a massive codebase. I already played with it a bit but didn&rsquo;t do anything particularly impressive with it.
 The sheer size and complexity aside, Clang is still a compiler. There are a few bits:</p>
-
 <ul>
 <li>A lexer, doing preprocessing and tokenization</li>
 <li>A parser</li>
@@ -183,20 +149,16 @@ The sheer size and complexity aside, Clang is still a compiler. There are a few 
 <li>LLVM IR generation</li>
 <li>Magic that transforms IR to object code</li>
 </ul>
-
 <p>Where do we start?
 My first idea was to introduce an attribute so that the developer could tell the compiler
 to parse arrays in a specific way:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">[[clang::literal_array]]
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#369">[[clang::literal_array]]</span>
 <span style="color:#888;font-weight:bold">int</span> array[] = {<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">4</span>};
-</code></pre></div>
-<p>But it quickly occurred to me that having to manually tell the compiler
+</code></pre></div><p>But it quickly occurred to me that having to manually tell the compiler
 to be efficient would be a bother and would have limited benefits.</p>
-
 <p>New plan: Detect and optimize the pattern automatically.
 There are many ways to find your way around a big codebase:
 Profilers, debuggers, reading code. Lots of reading.</p>
-
 <p>Soon enough, I found what I was looking for:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">/// ParseBraceInitializer - Called when parsing an initializer that has a
 </span><span style="color:#888">/// leading open brace.
@@ -211,12 +173,10 @@ Profilers, debuggers, reading code. Lots of reading.</p>
 </span><span style="color:#888">/// initializer-list &#39;,&#39; designation[opt] initializer ...[opt]
 </span><span style="color:#888">///
 </span><span style="color:#888"></span>ExprResult Parser::ParseBraceInitializer();
-</code></pre></div>
-<p>I was even blessed with some useful comments!
+</code></pre></div><p>I was even blessed with some useful comments!
 That function returns an <code>InitListExpr</code> which has one subexpression for each element of the
 list.
 We know that&rsquo;s an issue, so let&rsquo;s do something else!</p>
-
 <p>Let&rsquo;s Lex the entiere list (until the closing brace), and if all tokens are numeric constants
 return a new type of expression:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">// Try to parse the initializer as a list of numeral literal
@@ -228,16 +188,13 @@ return a new type of expression:</p>
  }
  <span style="color:#888">//otherwise carry on
 </span><span style="color:#888"></span>}
-</code></pre></div>
-<p>Implementing <code>ParseListOfLiteralsInitializer</code> was not hard.
+</code></pre></div><p>Implementing <code>ParseListOfLiteralsInitializer</code> was not hard.
 Clang has facilities to do tentative parsing and revert the state of the lexer when the assumptions do not pan out.</p>
-
 <p>But I now needed a new <code>Expr</code> type to return.
 A bit more work, <code>Expr</code> types need to be handled all over the place, hundreds of places to change.
 As of this writing, I barely did 10 percent of that work.</p>
-
 <p>I gave it a bad name</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">ListOfLiteralExpr</span> : <span style="color:#080;font-weight:bold">public</span> Expr {
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">ListOfLiteralExpr</span> : <span style="color:#080;font-weight:bold">public</span> Expr {
 <span style="color:#080;font-weight:bold">public</span>:
  ListOfLiteralExpr(ASTContext &amp;Context,
  SourceLocation LBraceLoc,
@@ -245,8 +202,7 @@ As of this writing, I barely did 10 percent of that work.</p>
  QualType Ty,
  SourceLocation RBraceLoc);
 };
-</code></pre></div>
-<p>First draft: The location of each brace for diagnostic purposes,
+</code></pre></div><p>First draft: The location of each brace for diagnostic purposes,
 A list of values, The type of each element (int, long, unsigned version, etc).
 And that&rsquo;s it.
 Note that <code>llvm::APInt</code> is already bigger and more complex than we need to.
@@ -254,44 +210,34 @@ More on that later.
 The main optimization there is to assume each element has the same type:
 if we encounter for example <code>{1, 1L};</code>, we would have to bail out and take the
 <code>InitListExpr</code> path.</p>
-
 <p>My approach is not specifically efficient.
 It is probably better to parse small list as <code>InitListExpr</code>
 In any case, I never parse lists of less than 2 elements as <code>ListOfLiteralExpr</code> for a reason that will become obvious in a minute.</p>
-
 <p>So far I have been successful in creating an expression type much faster to parse than <code>InitListExpr</code>. Still not as fast as <code>StringLiteral</code> though: A String is 1 token,
 while I have a couple of tokens to parse per integer.
 But the Lexer is rather fast, let&rsquo;s leave it be for I have greater issues.</p>
-
 <p>It didn&rsquo;t realize it when I started down that path, but I would soon face
 a ghastly realization: I introduced an expression which is an optimized version of
 <code>InitListExpr</code>. I will, therefore, have to contend with the overwhelming complexity of
 <code>SemaInit.cpp</code> A file requiring great knowledge of both initialization in C++ and Clang.</p>
-
 <p>I knew neither.</p>
-
 <p>Okay, that&rsquo;s not entirely true:</p>
-
 <p>You also need to understand C, OpenCL, and details of GCC and MSVC Extensions.
 I was doomed to fail!</p>
-
 <p>The main problem is that Clang operates on expression.
 My <code>ListOfLiteralExpr</code> type is an expression but its elements are not!</p>
-
 <p>Never the less, I made some progress by creating a new class</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">AbstractInitListExpr</span> : <span style="color:#080;font-weight:bold">public</span> Expr {};
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">ListOfLiteralExpr</span> : <span style="color:#080;font-weight:bold">public</span> AbstractInitListExpr {};
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">InitListExpr</span> : <span style="color:#080;font-weight:bold">public</span> AbstractInitListExpr {};
-</code></pre></div>
-<p>Which let me mechanically share some code between my <code>ListOfLiteralExpr</code> and the existing <code>InitListExpr</code>,
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">AbstractInitListExpr</span> : <span style="color:#080;font-weight:bold">public</span> Expr {};
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">ListOfLiteralExpr</span> : <span style="color:#080;font-weight:bold">public</span> AbstractInitListExpr {};
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">InitListExpr</span> : <span style="color:#080;font-weight:bold">public</span> AbstractInitListExpr {};
+</code></pre></div><p>Which let me mechanically share some code between my <code>ListOfLiteralExpr</code> and the existing <code>InitListExpr</code>,
 in places where both classes had the information clang needed like the number of elements or the
 <em>type</em> of an element (but not the element) itself.</p>
-
 <p>Understanding anything about <code>SemaInit</code> took a while.
 From what I could gather, clang operates multiple passes in the initialization list and construct
 a sequence of operations to perform before finally the initialization.
 Both C++ and C can be a bit crazy:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> A {
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">A</span> {
  <span style="color:#888;font-weight:bold">int</span> a;
  <span style="color:#080;font-weight:bold">struct</span> {
  <span style="color:#888;font-weight:bold">int</span> b;
@@ -302,9 +248,7 @@ Both C++ and C can be a bit crazy:</p>
 } a = {<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>, .e = <span style="color:#00d;font-weight:bold">4</span>};
 
 <span style="color:#888;font-weight:bold">int</span> x [<span style="color:#00d;font-weight:bold">10</span>] = { [<span style="color:#00d;font-weight:bold">1</span>] = <span style="color:#00d;font-weight:bold">10</span>};
-</code></pre></div>
-<p>Conversion, overloads, etc have to be resolved and let&rsquo;s be honest, I have no idea what I am doing.</p>
-
+</code></pre></div><p>Conversion, overloads, etc have to be resolved and let&rsquo;s be honest, I have no idea what I am doing.</p>
 <p>But I hacked something in</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> InitializationSequence::InitializeFrom(
  Sema &amp;S,
@@ -313,8 +257,7 @@ Both C++ and C can be a bit crazy:</p>
  MultiExprArg Args,
  <span style="color:#888;font-weight:bold">bool</span> TopLevelOfInitList,
  <span style="color:#888;font-weight:bold">bool</span> TreatUnavailableAsInvalid);
-</code></pre></div>
-<p>Finding where to put things in is half the work:
+</code></pre></div><p>Finding where to put things in is half the work:
 I bodged that code together: It is nasty and bug-ridden:
 It will not complain about long to short conversions for example
 And converting <code>ListOfLiteralExpr</code> to <code>InitListExpr</code> is not efficient.
@@ -333,25 +276,18 @@ I am penalizing the general case for the sake of large arrays.</p>
     <span style="color:#888">//Convert back ListOfLiteralExpr to InitListExpr
 </span><span style="color:#888"></span> }
 }
-</code></pre></div>
-<p>But it <em>works</em> in most cases - but not for templates, I have not handled that at all so <code>std::array a{1, 2, 3};</code> does not compile.</p>
-
+</code></pre></div><p>But it <em>works</em> in most cases - but not for templates, I have not handled that at all so <code>std::array a{1, 2, 3};</code> does not compile.</p>
 <p><code>TryListOfLiteralInitialization</code> is very simple - by virtue of omitting critical details:
 I only check that the type I am initializing is an array of the right size
 (or incomplete size, that works too!).</p>
-
 <p>Ultimately, About 12000 lines into <code>SemaDecl.cpp</code>, we reach a successful, yet anticlimactic conclusion to that whole affair:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">VDecl-&gt;setInit(Init);
-</code></pre></div>
-<p>We are done we parsing and semantic analysis (It is really just one big step, c++ parsing is highly context-dependent - I hope that will not keep you awake at night.)</p>
-
+</code></pre></div><p>We are done we parsing and semantic analysis (It is really just one big step, c++ parsing is highly context-dependent - I hope that will not keep you awake at night.)</p>
 <p>The only thing left to do is to generate some code.
 I understand that part the least, but, weaving <code>AbstractInitListExpr</code> in the part of the
 code that handle Code Generation (IR) : <code>GGExprAgg</code> (Aggregate Expression Emitter), proved easy enough:</p>
-
 <p>I could just defer to yet another part of the code: Constant Expression Evaluation, where
 all the constexpr goodness and constant folding happens:</p>
-
 <p>Adding a visitor in <code>ArrayExprEvaluator</code> was easy:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">bool</span> ArrayExprEvaluator::VisitListOfLiteralExpr(<span style="color:#080;font-weight:bold">const</span> ListOfLiteralExpr *E) {
  <span style="color:#080;font-weight:bold">const</span> ConstantArrayType *CAT = Info.Ctx.getAsConstantArrayType(E-&gt;getType());
@@ -365,71 +301,57 @@ all the constexpr goodness and constant folding happens:</p>
     Result.getArrayInitializedElt(I) = APSInt(E-&gt;getInit(I));
  <span style="color:#080;font-weight:bold">return</span> <span style="color:#038">true</span>;
 }
-</code></pre></div>
-<p>I did optimize that later.
+</code></pre></div><p>I did optimize that later.
 But we now have enough to do some benchmarks, courtesy of some bad python scripts</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-py" data-lang="py">f.write(<span style="color:#d20;background-color:#fff0f0">&#34;int a [] = {&#34;</span>)
 f.write(<span style="color:#d20;background-color:#fff0f0">&#34;,&#34;</span>.join([<span style="color:#d20;background-color:#fff0f0">&#34;1&#34;</span>] * elems))
-f.write(<span style="color:#d20;background-color:#fff0f0">&#34;}; int main (int argc, char**) { return a[argc]; }&#34;</span>)</code></pre></div>
-<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_time_2.html"></iframe>
-
+f.write(<span style="color:#d20;background-color:#fff0f0">&#34;}; int main (int argc, char**) { return a[argc]; }&#34;</span>)
+</code></pre></div><!-- raw HTML omitted -->
 <p>We made compile time 3 times better. Not bad!
 It takes under 10 seconds to generate a file with 200MB of data.</p>
-
 <p>Using <code>-ftime-trace</code>, we get a better sense of the gains:
 You can read more about <code>-ftime-trace</code>: <a href="https://aras-p.info/blog/2019/01/16/time-trace-timeline-flame-chart-profiler-for-Clang/">here</a>.
 Very handy tool, especially to measure and optimize the compile times of your own code!</p>
-
 <p>It turns out that chrome even support comparing multiple framgraph by hacking the rendered file.
 I couldn&rsquo;t find any vizualizer beside <code>chrome://tracing</code>, so a png will have to do:</p>
-
-<p><img src="time_trace.png" /></p>
-
+<p><!-- raw HTML omitted --></p>
 <p>Interestingly, memory usage does not seem to have improved much.</p>
-
-<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_memory_2.html"></iframe>
-
+<!-- raw HTML omitted -->
 <p>The compile times of small arrays are lost in the noise.
 So instead, for the graph below, I measure the compile time of 1000 arrays of the given
 size, the result is then divided by 1000 to give us an average time per array.</p>
-
-<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_time_1000.html"></iframe>
-
+<!-- raw HTML omitted -->
 <p>It would seem the improvement is visible for small arrays.
 Take that with a big pinch of salt:
 The modifications probably pessimize the non-array cases.
 But on the graph below, the compile-time decrease by over 70% on average for
 all array sizes.
 (For small values, the benchmarked source file contain 1000 arrays of the given size)</p>
-
 <h2 id="astsmtwriter-and-modules">AstSmtWriter And Modules</h2>
-
 <p>Precompiled headers, Module Headers Units, and Module Interfaces alike share some of the same binary format.
- <code>AstSmtWriter</code> and <code>AstSmtReader</code> are responsible for
+<code>AstSmtWriter</code> and <code>AstSmtReader</code> are responsible for
 binary serialization of Statements (and Expressions, Expressions are Statements in clang - It does
 make sense).</p>
-
 <p>As I wanted to see how modules help with big arrays, I did implement serialization
 for my newly minted <code>ListOfLiteralExpr</code>.</p>
-
 <p>At the same time, I decided to make my implementation a bit cleaner.
 Up to now, I stored my values in a <code>llvm::SmallVector&lt;Values&gt;</code>.
 But, clang has it&rsquo;s own allocator and expression needing some extra heap
 space can ask the allocators to lay out the extra data after the object.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">ListOfLiteralExpr</span> <span style="color:#080;font-weight:bold">final</span>: <span style="color:#080;font-weight:bold">public</span> AbstractInitListExpr,
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">ListOfLiteralExpr</span> <span style="color:#080;font-weight:bold">final</span>: <span style="color:#080;font-weight:bold">public</span> AbstractInitListExpr,
  <span style="color:#080;font-weight:bold">private</span> llvm::TrailingObjects&lt;ListOfLiteralExpr, <span style="color:#888;font-weight:bold">unsigned</span>, <span style="color:#888;font-weight:bold">char</span>&gt;
 {
- <span style="color:#888;font-weight:bold">unsigned</span> numTrailingObjects(OverloadToken&lt;<span style="color:#888;font-weight:bold">unsigned</span>&gt;) <span style="color:#080;font-weight:bold">const</span> {
+ <span style="color:#888;font-weight:bold">unsigned</span> <span style="color:#06b;font-weight:bold">numTrailingObjects</span>(OverloadToken&lt;<span style="color:#888;font-weight:bold">unsigned</span>&gt;) <span style="color:#080;font-weight:bold">const</span> {
     <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">1</span>;
  }
- <span style="color:#888;font-weight:bold">unsigned</span> numTrailingObjects(OverloadToken&lt;<span style="color:#888;font-weight:bold">char</span>&gt;) <span style="color:#080;font-weight:bold">const</span> {
+ <span style="color:#888;font-weight:bold">unsigned</span> <span style="color:#06b;font-weight:bold">numTrailingObjects</span>(OverloadToken&lt;<span style="color:#888;font-weight:bold">char</span>&gt;) <span style="color:#080;font-weight:bold">const</span> {
     <span style="color:#080;font-weight:bold">return</span> *getTrailingObjects&lt;<span style="color:#888;font-weight:bold">unsigned</span>&gt;();
  }
 
  ListOfLiteralExpr*
  ListOfLiteralExpr::Create(ASTContext &amp;Context,
         SourceLocation LBraceLoc,
-        ArrayRef&lt;uint64_t&gt; Values,
+        ArrayRef&lt;<span style="color:#888;font-weight:bold">uint64_t</span>&gt; Values,
         QualType Ty,
         SourceLocation RBraceLoc) {
 
@@ -440,31 +362,25 @@ space can ask the allocators to lay out the extra data after the object.</p>
     *E-&gt;getTrailingObjects&lt;<span style="color:#888;font-weight:bold">unsigned</span>&gt;() = Bytes;
     <span style="color:#080;font-weight:bold">return</span> E;
 }
-</code></pre></div>
-<p>Lots of complex machinery in there!
+</code></pre></div><p>Lots of complex machinery in there!
 This would lay in memory:</p>
-
 <p><code>ListOfLiteralExpr instance| unsigned: number of bytes | char[Bytes]: the values</code></p>
-
 <p><code>char[]</code>?</p>
-
 <p>Yes,
 <code>ListOfLiteralExpr</code> is meant to store any kind of integer literal and these can be of different sizes.
 And so storing an array of <code>uint64_t</code> would be inefficient.
 So instead we can store an array of char and <code>reinterpret_cast</code> it to type corresponding to the size of our integer values.
 This fails utterly if the target platform doesn&rsquo;t have 8 bits bytes.
 I utterly didn&rsquo;t care.</p>
-
 <p>That trick can be elegantly implemented:</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="meta">
     
 <div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;tuple&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span>uint64_t <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">char</span>* bytes, <span style="color:#888;font-weight:bold">unsigned</span> byte_size, <span style="color:#888;font-weight:bold">unsigned</span> index) {
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">uint64_t</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">char</span>* bytes, <span style="color:#888;font-weight:bold">unsigned</span> byte_size, <span style="color:#888;font-weight:bold">unsigned</span> index) {
 
  <span style="color:#080;font-weight:bold">template</span> <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> <span style="color:#369;font-style:italic">dummy</span> :
- std::tuple&lt;uint8_t, uint16_t, uint32_t, uint64_t&gt;()) {
+ std::tuple&lt;<span style="color:#888;font-weight:bold">uint8_t</span>, <span style="color:#888;font-weight:bold">uint16_t</span>, <span style="color:#888;font-weight:bold">uint32_t</span>, <span style="color:#888;font-weight:bold">uint64_t</span>&gt;()) {
 
     <span style="color:#080;font-weight:bold">if</span>(byte_size == <span style="color:#080;font-weight:bold">sizeof</span>(dummy)) {
         <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">reinterpret_cast</span>&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">decltype</span>(dummy)*&gt;(bytes)[index];
@@ -477,12 +393,9 @@ I utterly didn&rsquo;t care.</p>
 
 </div>
 
-
 <p>Oh, wait. That will not compile until C++23. (But it will compile on compiler explorer).
 We have to manually write lots of if statements. Or define a Macr&hellip;</p>
-
 <p>Don&rsquo;t even go there. I dare you. I double dare you.</p>
-
 <p>Now that all our integers are nicely packed in memory,
 the serialization code is easy:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> ASTStmtWriter::VisitListOfLiteralExpr(ListOfLiteralExpr* E) {
@@ -497,22 +410,17 @@ the serialization code is easy:</p>
  Record.append(Elems, Elems + S);
  Code = serialization::EXPR_INIT_LITERALS_LIST;
 }
-</code></pre></div>
-<p>I might have cheated a bit.
+</code></pre></div><p>I might have cheated a bit.
 See, the serialization underlying type is a stream of <code>uint64_t</code>.
 So I made sure my bytes are a multiple of <code>sizeof(uint64_t)</code>.
 It might be a bit nasty. But I don&rsquo;t care because</p>
-
 <ol>
 <li>I can memcopy the entire thing efficiently</li>
 <li>I only use as many bytes as I need, whereas string literals in clang modules use a <code>uint64_t</code> for each and every character. Not that anyone should care terribly: disk is cheap</li>
 </ol>
-
 <p>Reading is the opposite.</p>
-
 <p>By the way, this is why distributing compiled modules is a terrible idea: The serialization
 can never be optimized once people start to do that. Don&rsquo;t.</p>
-
 <h3 id="we-can-now-do-some-benchmarks-with-modules">We can now do some benchmarks with modules</h3>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">// Baseline
 </span><span style="color:#888"></span><span style="color:#888;font-weight:bold">int</span> i[] = {<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#888">/*...*/</span>, <span style="color:#00d;font-weight:bold">1</span>};
@@ -525,25 +433,19 @@ can never be optimized once people start to do that. Don&rsquo;t.</p>
 <span style="color:#888">//importer
 </span><span style="color:#888"></span>import M;
 <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {}
-</code></pre></div>
-<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="600px" src="/arrays_benchmark/benchmark_modules2.html"></iframe>
-
+</code></pre></div><!-- raw HTML omitted -->
 <p>Modules do seem to provide some performance benefits, but these benefits
 are not obvious until the array is outlandishly big, over 100MB of binary data.</p>
-
 <h2 id="a-bittersweet-conclusion">A bittersweet conclusion</h2>
-
 <p>If I am being generous with myself, I may be 20% toward something usable in production
 and eventually mergeable in LLVM.
 Of the many todos:</p>
-
 <ul>
 <li>Support for floating points and characters literals:</li>
 <li>Better, saner integration in Sema Init</li>
 <li>Integration in tooling</li>
 <li>See if constexpr compilation of the array can be further improved</li>
 </ul>
-
 <p>There are a few more weeks worth of effort.
 And sure, objectively, I made clang noticeably faster. On some workloads.
 Unrealistic workloads maybe.
@@ -555,35 +457,25 @@ Truth is, it is quite clear to me that, a few <code>//FIXME</code> here and ther
 LLVM is a well-optimized machine, and I was only able to get
 some <a href="https://www.youtube.com/watch?v=rHIkrotSwcc">improvements by peeling off layers of abstractions</a>.
 Would clang maintainers welcome the increased complexity?</p>
-
 <p>There is another way to look at it though:
 People care about compile times to the point they will sacrifice maintainability
 of their code for a slight increase in compilation speed.</p>
-
 <p>A while I can lament that compile-time is the last thing people should be optimizing for,
 A few microseconds here and there in Clang benefits millions of people.</p>
-
 <p>Then again, it would probably be wiser to put that energy in <code>std::embed</code>, which
 does beat all the optimizations presented here by orders of magnitude!</p>
-
 <h1 id="references-and-tools">References And Tools</h1>
-
 <p>This blog post ended up representing about a week of work.
 Confronted with a large codebase, I can only recommend beefy hardware and tools:</p>
-
 <ul>
 <li><a href="https://valgrind.org">Valgrind</a>, <a href="https://software.intel.com/en-us/vtune">Vtune</a>, <a href="https://en.wikipedia.org/wiki/Perf_(Linux)">Perf</a> and <a href="https://github.com/KDAB/hotspot">Hotspot</a> for performance analysis</li>
 <li><a href="http://embed.cs.utah.edu/creduce/">C-Reduce</a> a very handy tool to find the smallest code that reproduces a compiler crash</li>
 <li><a href="https://godbolt.org">Compiler Explorer</a>, the only C++ compiler one should ever need</li>
 <li><a href="http://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html">FlameGraph</a> and <a href="https://plot.ly/python/">Plotly</a> to generate the charts for the present blog post, with the help of a few off-putting python scripts.</li>
 </ul>
-
 <p>The sources for LLVM are now in an awesome easy-to-clone <a href="https://github.com/llvm/llvm-project">Github repository</a>.</p>
-
 <p>You can find the patch for that article <a href="https://github.com/cor3ntin/llvm-project/commit/4e08c35d936c83b7593a147f8b97bf77ab6a43f1">here</a>.</p>
-
 <p>Do not expect anything from it: It is blog-post driven development!</p>
-
 <p>Thanks for reading, let me know what you think!</p>
 
       

@@ -62,48 +62,37 @@
     <h1 class="title">A few experimental features for C&#43;&#43;</h1>
     
     <div class="content">
-      
-
-<p>In this article, I present a few language features that I am hoping to see
+      <p>In this article, I present a few language features that I am hoping to see
 in C++23 and which I have deployed to Compiler Explorer.</p>
-
 <p><strong>Please note that these features are not part of a working draft and they have not been presented
 to the C++ committee yet, so it is impossible to comment on whether any of them might land in 23 or not!</strong></p>
-
 <h2 id="auto-non-static-data-members-initializers">Auto Non-Static Data Members Initializers</h2>
-
 <p>A while back I presented <a href="/posts/auto_nsdmi">auto non-static data members initializers</a>.
 At the time, it was based on a clang 7 fork.
 Because this is still a feature I would like to see in a future C++ version, I rebased it on top
 of Clang 11, which was a bit complicated because of LLVM&rsquo;s migration to a monorepo (but I am very glad they did that migration!).</p>
-
 <p>You can play with it on compiler explorer here:</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> s {
+</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
     <span style="color:#080;font-weight:bold">auto</span> v1 = std::vector{<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">5</span>};
     std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; v2 = std::vector{<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">5</span>};
 };
 </code></pre></div>
 </div>
 
-
 <p>There is no proposal for this feature yet.
 I am hoping to convince people to work on it!</p>
-
 <h2 id="multidimensional-subscript-operator">Multidimensional subscript operator</h2>
-
 <p>The idea is very simple: It&rsquo;s about allowing multiple arguments
 in subscript expressions:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> image {
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">image</span> {
     pixel <span style="color:#080;font-weight:bold">operator</span>[](size_t x, size_t y) <span style="color:#080;font-weight:bold">const</span>;
 };
 <span style="color:#888">/*...*/</span>
 pixel x = my_image[<span style="color:#00d;font-weight:bold">42</span>, <span style="color:#00d;font-weight:bold">42</span>];
-</code></pre></div>
-<p>In C++20, <a href="http://eel.is/c++draft/depr.comma.subscript">we deprecated</a> <code>,</code> in subscript expressions:
+</code></pre></div><p>In C++20, <a href="http://eel.is/c++draft/depr.comma.subscript">we deprecated</a> <code>,</code> in subscript expressions:
 A warning is already implemented in GCC and Clang.
 MSVC warns about surprising syntax but doesn&rsquo;t mention deprecation yet.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
@@ -112,13 +101,11 @@ MSVC warns about surprising syntax but doesn&rsquo;t mention deprecation yet.</p
 </span><span style="color:#888"></span>    <span style="color:#888">//(equivalent to array[(0, 1)], equivalent to array[1])
 </span><span style="color:#888"></span>    <span style="color:#080;font-weight:bold">return</span> array[<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">1</span>];
 }
-</code></pre></div>
-<p>In C++23, we are hoping to reuse the syntax so that subscript expressions can accept
+</code></pre></div><p>In C++23, we are hoping to reuse the syntax so that subscript expressions can accept
 any non-null numbers of arguments.
 This is important to make the interface of <a href="https://wg21.link/p0009">mdspan</a> and <a href="https://wg21.link/p1684r0">mdarray</a> more intuitive.
 These classes currently overload the call operator, which encourages wild operator overloading.
 Many domains could benefit from this feature, including linear algebra, image manipulation, audio, etc.</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi">
     
 <xmp style="display:none; margin:0;">#include <boost/multi_array.hpp>
@@ -126,7 +113,7 @@ Many domains could benefit from this feature, including linear algebra, image ma
 #include <vector></xmp>
 <div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, std::size_t N&gt;
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">mdarray</span> : <span style="color:#080;font-weight:bold">protected</span> boost::multi_array&lt;T, N&gt; {
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">mdarray</span> : <span style="color:#080;font-weight:bold">protected</span> boost::multi_array&lt;T, N&gt; {
 <span style="color:#080;font-weight:bold">public</span>: 
 </code></pre></div></div>
 <xmp style="display:none; margin:0;">    using base = boost::multi_array<T, N>;
@@ -142,7 +129,7 @@ Many domains could benefit from this feature, including linear algebra, image ma
     </xmp>
 <div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">    <span style="color:#888">// variadic operator []
 </span><span style="color:#888"></span>    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... Idx&gt;
-    requires (<span style="color:#080;font-weight:bold">sizeof</span>...(Idx) == N
+    <span style="color:#080;font-weight:bold">requires</span> (<span style="color:#080;font-weight:bold">sizeof</span>...(Idx) == N
       &amp;&amp;  (std::is_nothrow_convertible_v&lt;Idx, std::size_t&gt; &amp;&amp; ...))
     T &amp; <span style="color:#080;font-weight:bold">operator</span>[](Idx... idx) {
         boost::array&lt;<span style="color:#080;font-weight:bold">typename</span> base::index, N&gt; id({idx...});
@@ -160,66 +147,50 @@ Many domains could benefit from this feature, including linear algebra, image ma
 
 </div>
 
-
 <p><strong>This feature is described in <a href="https://isocpp.org/files/papers/P2128R0.pdf">P2128R0 - Multidimensional subscript operator</a>
 and will be presented to the C++ committee at a future meeting.</strong></p>
-
 <h2 id="a-placeholder-with-no-name">A placeholder with no name</h2>
-
 <p>Naming is hard. It&rsquo;s even harder to name variables you do not care about.
 There are a few cases where variables names do not matter in C++, for example:</p>
-
 <ul>
-<li><p>Any kind of RAII guard such as a mutex lock that is never unlocked manually</p>
+<li>Any kind of RAII guard such as a mutex lock that is never unlocked manually</li>
+</ul>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std::unique_lock my_lock(m);
-</code></pre></div></li>
-
-<li><p>Some values in structured bindings</p>
+</code></pre></div><ul>
+<li>Some values in structured bindings</li>
+</ul>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">auto</span> [result, i_dont_care] = my_map.insert(<span style="color:#00d;font-weight:bold">42</span>);
-</code></pre></div></li>
-
-<li><p>Variables stored in lambda captures to extend their lifetime</p>
+</code></pre></div><ul>
+<li>Variables stored in lambda captures to extend their lifetime</li>
+</ul>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std::unique_ptr&lt;T&gt; ptr = <span style="color:#888">/*...*/</span>;
 <span style="color:#080;font-weight:bold">auto</span>&amp; field1 = ptr-&gt;field1;
 <span style="color:#080;font-weight:bold">auto</span>&amp; field2 = ptr-&gt;field2
 [really_do_not_care=std::move(ptr), &amp;field1=field1, &amp;field2=field2](){...};
-</code></pre></div></li>
-</ul>
-
-<p>(Example stolen from <a href="https://wg21.link/p1110">P1110</a>)</p>
-
+</code></pre></div><p>(Example stolen from <a href="https://wg21.link/p1110">P1110</a>)</p>
 <ul>
 <li>Global variables used for self-registration and other side effects</li>
 </ul>
-
 <p>This last example is often wrapped in macros which try to create
-unique identifiers with <code>__LINE__</code> and <code>__COUNTER__</code> at global scope.</p>
+unique identifiers with <code>__LINE__ </code> and <code>__COUNTER__</code> at global scope.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">CONCAT</span>(__register_foobar_, __LINE__, __COUNTER__) = register_type&lt;Foo&gt;(<span style="color:#d20;background-color:#fff0f0">&#34;Foo&#34;</span>);
-</code></pre></div>
-<p>Many languages use the <code>_</code> identifier as a magic identifier meaning &ldquo;I don&rsquo;t care about the name&rdquo;,
+</code></pre></div><p>Many languages use the <code>_</code> identifier as a magic identifier meaning &ldquo;I don&rsquo;t care about the name&rdquo;,
 including Go, Rust, Scala, Haskell. Python similarly uses <code>_</code> the same way by convention.</p>
-
 <p>Unfortunately, <code>_</code> is not currently reserved in C++ (except in the global namespace) and it is used by a few frameworks such as GoogleTest, also to mean &ldquo;I don&rsquo;t care&rdquo;.</p>
-
 <p><a href="https://wg21.link/p1110">P1110</a> considers a few alternative syntaxes such as <code>__</code>, <code>?</code> and <code>??</code>.
 But I think <code>_</code> is the most elegant identifier for that purpose. We should strive to use it, both for readability and consistency across languages, which I think matters when possible.</p>
-
 <p>As <a href="https://wg21.link/p1469">P1469 - Disallow _ Usage in C++20 for Pattern Matching in C++23</a> notes,</p>
-
 <blockquote>
 <p>Why is <code>_</code> so important when <code>?</code> is available? Languages with pattern matching almost universally use <code>_</code> as a
 wildcard pattern and popular libraries in C++ (like Google Test) do the same. It would be awkward and
 somewhat embarrassing if C++ were to not use such a ubiquitous token. Furthermore, because <code>_</code> has so
 much existing widespread use, we expect people to use <code>_</code> anyway, and accidentally bind the <code>_</code> identifier.</p>
 </blockquote>
-
 <p>Fortunately, there is a way to be able to use <code>_</code> as a placeholder identifier, while not breaking the few libraries
 using it as a namespace-scope variable identifier:</p>
-
 <p>We can make <code>_</code> magic only if a <code>_</code> already exists in scope. Aka, it would become maginc only on second use.
 This solution works very well for nameless captures, structured bindings and RAII guards alike,
 while carefully avoiding breaking any existing code.</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;map&gt;</span><span style="color:#c00;font-weight:bold">
@@ -232,17 +203,15 @@ while carefully avoiding breaking any existing code.</p>
 </code></pre></div>
 </div>
 
-
 <p>Of course, one other use case for <code>_</code> is to silent unused variables, as if they were marked <code>[[maybe_unused]]</code>:</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-[[nodiscard]]
+<span style="color:#369">[[nodiscard]]</span>
 <span style="color:#888;font-weight:bold">int</span> f() {
     <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">42</span>;
 }
 
-<span style="color:#888;font-weight:bold">int</span> main() {
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
     <span style="color:#080;font-weight:bold">auto</span> _ = f();
     <span style="color:#888">// result discarded
 </span><span style="color:#888"></span>    f();
@@ -252,15 +221,12 @@ while carefully avoiding breaking any existing code.</p>
 </code></pre></div>
 </div>
 
-
 <p>We can deprecate a few usages of <code>_</code> as an identifier, notably for types, concepts, modules, aliases, etc.</p>
-
 <p>The downside of this approach is that in some cases it might be a little bit confusing
 to know whether a variable introduced by <code>_</code> is anonymous or not. But these cases can be diagnosed quite well.</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> raii {
+<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">raii</span> {
     raii();
 };
 
@@ -273,11 +239,9 @@ to know whether a variable introduced by <code>_</code> is anonymous or not. But
 </code></pre></div>
 </div>
 
-
 <p>Because of linkage and ODR concerns, <code>_</code> as a magic blank identifier cannot be used at namespace scope.
 We could, however, allow it in modules units if they are not exported, which would be very useful
 to declare variables that are only used for the side effects of their initialization.</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">export</span> module m;
@@ -288,22 +252,16 @@ to declare variables that are only used for the side effects of their initializa
 </code></pre></div>
 </div>
 
-
 <p>Please note that this is not fully implemented yet, as these variables would need
 special mangling.</p>
-
 <p>EWG-I seemed interested in the general idea of placeholder names such as described
 in <a href="https://wg21.link/p1110r0">P1110</a>.
 There is however no proposal for the specific behavior described here yet.
 I will see if I can collaborate with a few papers for Varna.</p>
-
-<h2 id="that-s-all-folks">That&rsquo;s all folks</h2>
-
+<h2 id="thats-all-folks">That&rsquo;s all folks</h2>
 <p>These are small features, but they can help make the language a bit
 more intuitive.</p>
-
 <p>Let me know what you think!</p>
-
 <p>A huge thanks to Matt Godbolt and the rest of the Compiler Explorer team.</p>
 
       

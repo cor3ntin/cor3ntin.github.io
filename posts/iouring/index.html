@@ -62,39 +62,28 @@
     <h1 class="title">A Universal I/O Abstraction for C&#43;&#43;</h1>
     
     <div class="content">
-      
-
-<p><img src="banner.jpg" alt="Thread Spools" /></p>
-
+      <p><img src="banner.jpg" alt="Thread Spools"></p>
 <p>This article is the sequel to <a href="https://cor3ntin.github.io/posts/executors/">A Universal Async Abstraction for C++</a>,
 in which I talk about the <a href="https://wg21.link/P0443">Executor proposal</a> targeting C++23.
 Quite a bit happened since then.</p>
-
-<p>SG-1<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>, the study group charged of all things concurrency and parallelism made forward progress
+<p>SG-1<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, the study group charged of all things concurrency and parallelism made forward progress
 and sent the proposal to LEWG - with the hope of landing a future revision in the C++23 draft.
 This is rather big news given that this work has been brewing for about a decade.</p>
-
 <p>The split of <code>submit</code> into <code>connect</code> and <code>start</code> is now <a href="https://wg21.link/p2006">the object of a paper</a>. This is a very important piece of the puzzle and I look forward to seeing it discussed in Prague next month.</p>
-
 <p>You can also read a short history of executors in <a href="https://wg21.link/p2033r0.pdf">this paper</a>.</p>
-
 <p>Lastly, but maybe more importantly, Facebook published an open-source implementation of sender/receivers and scheduler called <a href="https://github.com/facebookexperimental/libunifex">libunifex</a>.
 This is not an exact implementation of <a href="https://wg21.link/P0443">P0443</a> and it has a lot more features and algorithms, but it implements the same basic design and architecture.
 Unfortunately, it doesn&rsquo;t use concepts yet so I foolishly keep to trying to implement my C++20
 library. And luckily Coroutines were merged into GCC and Concepts were merged into clang so there
 are now many compilers that can implement the executors proposal.</p>
-
 <p>Exciting times.</p>
-
 <p>Last time we discussed two basic concepts:</p>
-
 <ul>
 <li>The <code>scheduler</code> concept which let you schedule an operation on a given context (such as a thread pool)</li>
 <li>The <code>executor</code> concept on which let you execute a function on a given context (such as a thread pool).
 We saw how <code>executor</code> were rather not worthy of a concept as <code>executor::execute(Func)</code>
-could simply be a <abbr title="Customization Point Object">CPO</abbr> for <code>submit(schedule(scheduler), std::as_receiver(Func))</code> <sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</li>
+could simply be a <!-- raw HTML omitted -->CPO<!-- raw HTML omitted --> for <code>submit(schedule(scheduler), std::as_receiver(Func))</code> <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</li>
 </ul>
-
 <p>Being able to run code on an execution context, such as a thread is great.
 But, what if you wanted to run code later? Maybe some piece for code needs to run every 5 minutes:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">child</span>() {
@@ -107,56 +96,41 @@ But, what if you wanted to run code later? Maybe some piece for code needs to ru
     scheduler <span style="color:#080;font-weight:bold">auto</span> s = <span style="color:#888">/*...*/</span>
     execution::execute(s, as_receiver(child));
 }
-</code></pre></div>
-<p>This will work<sup class="footnote-ref" id="fnref:14"><a href="#fn:14">3</a></sup>.
+</code></pre></div><p>This will work<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.
 But nothing else will ever run on that thread which is a rather poor usage of resources.
 Threads are less expensive than processes but they <a href="https://lemire.me/blog/2020/01/30/cost-of-a-thread-in-c-under-linux/">still take time to create</a>: Avoid having one thread per task if you have thousands of tasks.</p>
-
 <p>What we would want is for the <em>task</em> rather than the <em>thread</em> to be interrupted for 5 minutes.</p>
-
 <p>In fact, there are many instances when a task needs to wait, iddling a thread:</p>
-
 <ul>
 <li>Sleeping</li>
 <li>Waiting for data to be read from a socket or a file</li>
 <li>Waiting for a device to be flushed</li>
 <li>Waiting for a process to complete</li>
 </ul>
-
 <p>All these operations can be are referred to as &ldquo;I/O&rdquo; and, on platforms with a kernel, they are usually handled by the kernel.</p>
-
 <p>When calling the <code>::read</code> function, for example, the kernel will suspend the calling thread until
 some data is available for that device and schedule another thread.
 When data is available, the thread can be scheduled back.</p>
-
 <p>This dance has a cost. A rather small one, you would need to create hundreds or thousands
 of threads to notice.  Most of the cost probably comes from cache invalidation rather
 than the context switch itself.</p>
-
 <p>Instead of letting the kernel do the scheduling, there are system APIs that let us do the scheduling in user-space.</p>
-
 <p>The basic principle is rather simple:</p>
-
 <ul>
 <li>Request the kernel to notify us when data is available on a file descriptor or handle</li>
 <li>Either
-
 <ul>
 <li>On another thread, wait for at least one request to complete</li>
 <li>Check periodically that a request has completed.</li>
-</ul></li>
+</ul>
+</li>
 <li>Run a callback associated to a request</li>
 </ul>
-
-<h2 id="asynchronous-i-o-apis">Asynchronous I/O APIs</h2>
-
+<h2 id="asynchronous-io-apis">Asynchronous I/O APIs</h2>
 <h3 id="reactors-select-poll-epoll">Reactors: select, poll, epoll</h3>
-
 <p>These POSIX (<code>epoll</code> is Linux specific) APIs have different behavior
 which are not worth covering here as <a href="https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/">Julia Evans covered that topic</a> better than I could.</p>
-
 <p>Their principle is however identical:</p>
-
 <ul>
 <li>Register the file descriptor a task wishes to monitor</li>
 <li>Run some other task</li>
@@ -166,27 +140,19 @@ which are not worth covering here as <a href="https://jvns.ca/blog/2017/06/03/as
 <li>Perform the necessary non blocking reads if enough data is available</li>
 <li>Repeat until all callbacks have been executed</li>
 </ul>
-
 <p>This can happen either on a single thread (some tasks would be enqueued before the program starts waiting for file descriptors event) or happen across multiple threads, in which case we need to synchronize file registration. More on that later.</p>
-
 <p>This general workflow is the <strong>reactor</strong> pattern.</p>
-
 <h3 id="proactors-aio-and-iocp">Proactors: AIO and IOCP</h3>
-
 <p>One problem with reactors is that for each <code>read</code> operation of a file, for example, we have to:</p>
-
 <ul>
 <li>Register the file (1 syscall)</li>
 <li>Poll until <em>some</em> data is available (1 syscall)</li>
 <li>Repeat until enough data is available</li>
 <li>Read the data (in a non-blocking fashion) (1 syscall)</li>
 </ul>
-
 <p>System calls are <em>relatively</em> expensive, so is resuming tasks before they have enough data.
 To palliate to that problem, more modern asynchronous I/O APIs such as <code>AIO</code> (POSIX) or IOCP (Windows), will merge the polling and reading operations.</p>
-
 <p>This allows a more straightforward workflow:</p>
-
 <ul>
 <li>Register the file descriptor along with a set of buffers to fill</li>
 <li>Run some other task</li>
@@ -194,53 +160,41 @@ To palliate to that problem, more modern asynchronous I/O APIs such as <code>AIO
 <li>Call the continuation (callback) associated with the completed request</li>
 <li>Repeat until all callbacks have been executed</li>
 </ul>
-
 <p>This reduces the number of syscalls and lets us resume tasks only when the desired I/O have been fulfilled.
 Internally the kernel may spawn its own pool of working threads to perform the I/O operations,
 nothing is ever truly free.
 However, this is a lot more efficient than performing more system calls.
 This workflow is the <strong>proactor</strong> pattern.</p>
-
 <p>But (There is always a but, isn&rsquo;t there ?).
 While people have been doing Asynchronous I/O on Windows for ages (maybe because file operation on Windows are <a href="https://github.com/microsoft/WSL/issues/873#issuecomment-425272829">painfully slow</a>),
 <code>AIO</code> on Linux is either deemed unnecessary (synchronous I/O is fast enough) - or inadequate (too much latency).
 In fact <code>AIO</code> on Linux is implemented in user-space - but a similar kernel APIs <code>io_submit</code> can be used instead. In any case, these APIs is designed to handle file i/o and it is either not possible or not recommended to use it for sockets as <code>epoll</code> would perform better in all cases.</p>
-
 <p>Maybe more of interest to C++, people believe it was not possible to design an efficient interface that would cohesively handle both files and sockets.
 Maybe this explains why we have both <strong>ASIO</strong> and <strong>AFIO</strong> as different projects with different interfaces, instead of some general asynchronous system, such as <a href="https://libuv.org"><code>libuv</code></a> or <a href="https://github.com/tokio-rs/tokio">Tokio</a>.</p>
-
-<p>Beyoncé said that if you like it, you should put a ring on it<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">4</a></sup>.
+<p>Beyoncé said that if you like it, you should put a ring on it<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.
 Well, I quite like senders/receivers and the idea of a standard general-purpose yet efficient
 i/o scheduler, so maybe we should put a ring on it. More specifically, an <code>io_uring</code>.</p>
-
-<h3 id="io-uring">io_uring</h3>
-
+<h3 id="io_uring">io_uring</h3>
 <p><code>io_uring</code> is an exciting new feature in the Linux kernel which can allow the design of highly efficient, asynchronous frameworks that works just as well for (buffered and unbuffered) file I/O and other devices such as sockets.
-<code>io_uring</code> was added to Linux 5.1<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">5</a></sup> as a replacement to <code>AIO</code> and <code>io_submit</code>,
+<code>io_uring</code> was added to Linux 5.1<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> as a replacement to <code>AIO</code> and <code>io_submit</code>,
 but has since then improved support for sockets. It is so good it might morph into a general asynchronous system call interface.</p>
-
 <p><code>io_uring</code> is based on 2 queues (one for submission and one for completion) that are shared between the kernel.
 The kernel can read from the submission queue while the application thread can read from the
 completion queue even as the kernel writes to it.</p>
-
-<p><img src="uring.svg" alt="IO uring Proactor"/></p>
-
+<!-- raw HTML omitted -->
 <p>The queues are lock-free single consumer, single producer rings (hence the name).
 Since Linux 5.5 the kernel will maintain an overflow list to hold completion until
 there is space in the completion queue.</p>
-
 <p>Similarly, the application must take care not to overflow the submission queue.
-The submission queue can only be accessed by a single thread at once<sup class="footnote-ref" id="fnref:15"><a href="#fn:15">6</a></sup>.</p>
-
+The submission queue can only be accessed by a single thread at once<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>.</p>
 <p>Once work has been added to the ring, a single system <code>io_uring_enter</code> call can be used
 to both submit all new work in the submission queue and wait for entries to be added to
 the completion queue.</p>
-
 <p>Here is a pseudo implementation of an i/o thread:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> io_context::run() {
     io_uring ring;
     io_uring_queue_init(URING_ENTRIES, &amp;ring, <span style="color:#00d;font-weight:bold">0</span>);
-    <span style="color:#080;font-weight:bold">struct</span> io_uring_cqe* cqe;
+    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">io_uring_cqe</span>* cqe;
     <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
         add_pending_operations_to_io_uring();
         io_uring_wait_cqe(&amp;ring, &amp;cqe); <span style="color:#888">// single syscall to submit and wait
@@ -250,18 +204,15 @@ the completion queue.</p>
     }
     io_uring_queue_exit(&amp;m_ring);
 }
-</code></pre></div>
-<p>This slide code features the <a href="https://github.com/axboe/liburing">liburing</a> library
+</code></pre></div><p>This slide code features the <a href="https://github.com/axboe/liburing">liburing</a> library
 which handles the very low-level user-space ring management for us.</p>
-
 <p><code>run</code> can be executed on several threads, each with its own ring.
 However, each queue can only be accessed from a single thread at once.
 Moreover, <code>io_uring_wait_cqe</code> being, as the name suggests a blocking call,
 how can we add work to the queue?</p>
-
 <p>First, we need a thread-safe way to push an operation to the
-submission queue buffer<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">7</a></sup> represented on the graphic above as a green rectangle.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">io_context</span> {
+submission queue buffer<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup> represented on the graphic above as a green rectangle.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">io_context</span> {
     std::mutex mutex;
     intrusive_queue&lt;operation*&gt; pending;
     <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">start_operation</span>(operation* op) {
@@ -269,26 +220,21 @@ submission queue buffer<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">7<
         pending.push(op);
     }
 };
-</code></pre></div>
-<p>But, if the i/o thread is currently blocked in an <code>io_uring_wait_cqe</code>,
+</code></pre></div><p>But, if the i/o thread is currently blocked in an <code>io_uring_wait_cqe</code>,
 how can it see that we added elements to the queue?</p>
-
 <p>A naive solution is to use <code>io_uring_wait_cqe_timeout</code> but this has
 a few issues:</p>
-
 <ul>
 <li>Entering and leaving the <code>io_uring</code> processing incurs a syscall and a context switch and more generally wastes CPU cycles.</li>
 <li>Depending on the value of the timeout, it would increase latency and causes a delay between
 when the operation is started and when the kernel starts to execute the i/o request.</li>
 </ul>
-
 <p>Instead, we can schedule a read operation on a dummy file handle in the io/thread,
 and, in the sender thread, write to that file descriptor, which will cause the <code>io_uring_wait_cqe</code>
 to return.</p>
-
 <p>On Linux, we can use <code>eventfd</code>, which, as far as I can tell is the most efficient way to do that
 little dance.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">io_context</span> {
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">io_context</span> {
     std::mutex mutex;
     std::queue&lt;operation*&gt; pending;
     <span style="color:#888;font-weight:bold">int</span> fd = ::eventfd(<span style="color:#00d;font-weight:bold">0</span>, O_NONBLOCK);
@@ -315,159 +261,118 @@ little dance.</p>
         eventfd_write(fd, <span style="color:#00d;font-weight:bold">0</span>); <span style="color:#888">// causes io_uring_wait_cqe to return
 </span><span style="color:#888"></span>    }
 };
-</code></pre></div>
-<p>This mechanism to enqueue work is not specific to <code>io_uring</code> and would also be used
+</code></pre></div><p>This mechanism to enqueue work is not specific to <code>io_uring</code> and would also be used
 with <code>epoll</code>, <code>select</code>, <code>io_submit</code>, etc.</p>
-
 <h4 id="polling">Polling</h4>
-
 <p>This way of notifying the queue and waiting for completion events incur some overhead
 which starts to be visible after a few hundred thousands of IOPS.
 While this may not appear to be a problem, with newer standards such as PCI4/PCI5, and corresponding drives and network hardware, i/o starts to be CPU bound with the kernel being a bottleneck.</p>
-
 <p>To this effect, <code>io_uring</code> provides a polling mode, which allows very high throughput in some use
 cases. <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2052r0.pdf">P2052</a> advocate for
 supporting such mode in the standard.</p>
-
-<h2 id="the-simplest-i-o-operation-schedule-at">The simplest I/O Operation: schedule_at</h2>
-
+<h2 id="the-simplest-io-operation-schedule_at">The simplest I/O Operation: schedule_at</h2>
 <p>In <a href="https://cor3ntin.github.io/posts/executors/">A Universal Async Abstraction for C++</a>, we discussed
 the <code>schedule</code> algorithm which runs an operation on the execution context associated
 with a given scheduler</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">oneway_task <span style="color:#06b;font-weight:bold">do_something</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
-    co_await execution::schedule(s);
+    <span style="color:#080;font-weight:bold">co_await</span> execution::schedule(s);
     fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>); <span style="color:#888">//runs in the context associated to the scheduler s
 </span><span style="color:#888"></span>}
-</code></pre></div>
-<p>Now that we understand io contexts, aka execution contexts in which we can run
-io operations, we can add a <code>deadline</code> parameter to the <code>schedule</code> <sup class="footnote-ref" id="fnref:7"><a href="#fn:7">8</a></sup> algorithm.
+</code></pre></div><p>Now that we understand io contexts, aka execution contexts in which we can run
+io operations, we can add a <code>deadline</code> parameter to the <code>schedule</code> <sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup> algorithm.
 I stole the idea of deadline from <a href="https://wg21.link/p1031">P1031 - Low level file i/o library</a>.
 It is a simple utility which can represent a time, either relative or absolute</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">annoying_child</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
     <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
         <span style="color:#888">//Suspend the task for 5 minutes,
 </span><span style="color:#888"></span>        <span style="color:#888">//The thread is free to do something else in the meantime
-</span><span style="color:#888"></span>        co_await execution::schedule(s, <span style="color:#00d;font-weight:bold">5</span>min);
+</span><span style="color:#888"></span>        <span style="color:#080;font-weight:bold">co_await</span> execution::schedule(s, <span style="color:#00d;font-weight:bold">5</span>min);
         fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Are we there yet?&#34;</span>);
     }
 }
-</code></pre></div>
-<p>Here, <code>execution::schedule(s, 5min);</code> returns a sender, like we saw last time for the <code>schedule</code>
+</code></pre></div><p>Here, <code>execution::schedule(s, 5min);</code> returns a sender, like we saw last time for the <code>schedule</code>
 algorithm.
 The only difference is that the <code>start</code> method will lead to a timeout &ldquo;i/o&rdquo; operation being scheduled by the kernel.</p>
-
-<p><img src="schedule_deadline.svg" alt="IO uring Proactor"/></p>
-
+<!-- raw HTML omitted -->
 <p><code>io_uring</code> happens to have built-in timeout support. Other scheduler may use <a href="http://man7.org/linux/man-pages/man2/timerfd_create.2.html"><code>timerfd</code></a> or <a href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpooltimer?"><code>CreateThreadpoolTimer</code></a> on windows.</p>
-
 <p>Beside timers, most Asynchronous APIS support:</p>
-
 <ul>
 <li>Reading, Writing to/from file descriptors (files, sockets, pipes, other &ldquo;file-like&rdquo; objects) in various modes</li>
 <li>Polling from file descriptors (waiting for data without actually reading it)</li>
 <li>Opening, syncing and closing file descriptors</li>
 <li>Connecting to a remote socket and accepting connections</li>
 </ul>
-
 <p>While it is possible to imagine low-level APIs such as</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">read_file</span>(scheduler, native_handle, buffers) -&gt; read_sender;
 <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">close_file</span>(scheduler, native_handle) -&gt; close_sender;
-</code></pre></div>
-<p>It is more likely that instead, we get few io objects such as <code>file</code>s and <code>socket</code>s</p>
+</code></pre></div><p>It is more likely that instead, we get few io objects such as <code>file</code>s and <code>socket</code>s</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;execution::scheduler scheduler = std::default_scheduler&gt;
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">file</span>;
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">file</span>;
 
 task <span style="color:#06b;font-weight:bold">read_data</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s, buffers &amp; buffs) {
     file f(s);
-    co_await f.open(<span style="color:#d20;background-color:#fff0f0">&#34;myfile.txt&#34;</span>);
-    co_await f.read(buffs);
-    co_await f.close();
+    <span style="color:#080;font-weight:bold">co_await</span> f.open(<span style="color:#d20;background-color:#fff0f0">&#34;myfile.txt&#34;</span>);
+    <span style="color:#080;font-weight:bold">co_await</span> f.read(buffs);
+    <span style="color:#080;font-weight:bold">co_await</span> f.close();
 }
-</code></pre></div>
-<p>If you wonder why <code>f.close()</code> is not simply handled by RAII, read <a href="https://wg21.link/p1662r0">P1662</a>
+</code></pre></div><p>If you wonder why <code>f.close()</code> is not simply handled by RAII, read <a href="https://wg21.link/p1662r0">P1662</a>
 and weep.</p>
-
 <h2 id="threads-are-shared-resources">Threads are shared resources</h2>
-
 <p>There are a limited, fixed number of hardware threads, and unlike RAM,
 it is not possible to <a href="https://downloadmoreram.com">download more</a>.</p>
-
 <p>So ideally a program should use at most about the same number of frequently
 active threads as there are active threads.</p>
-
 <p>Unfortunately, independent libraries may use their own threads and thread pools.
 I/O libraries might create their own even loops, as does pretty much every graphics framework.</p>
-
 <p>The standard library use threads internally for parallel algorithms and <code>std::async</code>.
 Under some implementations, there is a thread started for every <code>std::async</code> call (one of the many reasons why <code>std::async</code> is terrible).</p>
-
 <p>And while we can transform 1000 elements of a vector one time,
-it is harder to transform 1000 elements of 1000 vectors 1000 times at the same time. <a href="https://en.wikipedia.org/wiki/La_Cité_de_la_peur">Or something</a>.</p>
-
+it is harder to transform 1000 elements of 1000 vectors 1000 times at the same time. <a href="https://en.wikipedia.org/wiki/La_Cit%C3%A9_de_la_peur">Or something</a>.</p>
 <p>This is why <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2079r0.pdf">P2079 - Shared execution engine for executors</a> makes the case for a globally accessible <em>execution</em> context.</p>
-
 <p>I do like that paper, but what we really need is a globally accessible <em>io context</em>. Or more specifically, a globally accessible <em>io scheduler</em>.</p>
-
 <p>I/O contexts being a strict superset of execution contexts.</p>
-
 <p>Before you make this face 😵 (which <a href="http://www.unicode.org/L2/L2019/19303-face-with-x-eyes.pdf">might not be the right face</a>), confusingly horrified at the idea of adding a singleton to the standard, it is worth noting that some platforms reached the same conclusion long ago and expose a
 global i/o context to all applications:</p>
-
 <ul>
 <li>Windows <a href="https://docs.microsoft.com/en-us/windows/win32/procthread/thread-pools">Threads Pools</a> expose a default thread pool to which work - including io requests - can be submitted. This is used
 by Microsoft&rsquo;s STL implementation.</li>
 <li>Apple platforms have <a href="https://en.wikipedia.org/wiki/Grand_Central_Dispatch">Grand Central Dispatch</a>, which works similarily but has a far cooler name.</li>
 </ul>
-
 <p>There is no equivalent, de-facto solution on other POSIX platforms.
 And while a one-thread context is simple enough, user-space scheduling is scheduling still, and
 <a href="https://tokio.rs/blog/2019-10-scheduler/">scheduling is hard</a>.</p>
-
 <p>There have some libraries that can be used on Linux such as <code>libdispatch</code> or <code>libuv</code>, or implementers can cook up something for scratch.</p>
-
 <h3 id="cancellation-and-stop-tokens">Cancellation and stop tokens</h3>
-
-<p>Error management in C++ is considered a simple and solved problem<sup class="footnote-ref" id="fnref:8"><a href="#fn:8">9</a></sup>.
+<p>Error management in C++ is considered a simple and solved problem<sup id="fnref:9"><a href="#fn:9" class="footnote-ref" role="doc-noteref">9</a></sup>.
 To spice things up, asynchrony adds a third channel: Cancellation.
-Indeed, <a href="https://wg21.link/p1677r2">cancellation is not an error</a><sup class="footnote-ref" id="fnref:9"><a href="#fn:9">10</a></sup>.</p>
-
+Indeed, <a href="https://wg21.link/p1677r2">cancellation is not an error</a><sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup>.</p>
 <p>But before we can talk about handling cancellation let&rsquo;s talk about emitting a cancellation
 request.
 You would typically cancel an entire task, or an operation, which would then cancel the
 the entire chain of subsequent operations.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">sequence(read(stdin, buffer), write(stdout, buffer))
-</code></pre></div>
-<p>For example, here if we cancel the read, the write should not be executed.
+</code></pre></div><p>For example, here if we cancel the read, the write should not be executed.
 As mentioned in [P1677] cancellation is the asynchronous version
 of returning early from a function.</p>
-
 <p><code>std::stop_token</code> which is a C++20 feature that was accepted at the same
-time as <code>std::jthread</code><sup class="footnote-ref" id="fnref:10"><a href="#fn:10">11</a></sup></p>
-
+time as <code>std::jthread</code><sup id="fnref:11"><a href="#fn:11" class="footnote-ref" role="doc-noteref">11</a></sup></p>
 <p>Like death and all good stories, asynchronous cancellation comes in threes:</p>
-
 <ul>
 <li><code>stop_source</code></li>
 <li><code>stop_token</code></li>
 <li><code>stop_callback</code></li>
 </ul>
-
-<p>This is based on the same idea as <a href="https://docs.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads">C#&rsquo;s CancellationToken</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController">Javascript&rsquo;s AbortController</a>.</p>
-
+<p>This is based on the same idea as <a href="https://docs.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads">C#&lsquo;s CancellationToken</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController">Javascript&rsquo;s AbortController</a>.</p>
 <p><code>stop_source</code> can create tokens, <code>stop_token</code> has a <code>stop_requested</code> method that returns
 true once <code>stop_source::request_stop()</code> is called.
 In addition, callbacks can be triggered automatically when <code>stop_source::request_stop()</code>
 is called.</p>
-
-<p><img src="stop.svg" alt="Stop Callback"/></p>
-
+<!-- raw HTML omitted -->
 <p>All tokens and callbacks attached to the same <code>stop_source</code> share the same
 thread-safe ref-counted shared state.
 (You are still responsible for making sure the functions used as <code>stop_callback</code> are themselves
 thread-safe if you have multiple threads.)</p>
-
 <p>It has already been implemented in GCC so you can play with it on compiler explorer</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-trunk">
     
 <div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
@@ -491,51 +396,37 @@ thread-safe if you have multiple threads.)</p>
 
 </div>
 
-
-<p>Tokens can then be attached to a coroutine task of the appropriate type <sup class="footnote-ref" id="fnref:11"><a href="#fn:11">12</a></sup>
+<p>Tokens can then be attached to a coroutine task of the appropriate type <sup id="fnref:12"><a href="#fn:12" class="footnote-ref" role="doc-noteref">12</a></sup>
 or attached to any receiver.</p>
-
 <p>The customization point <code>execution::get_stop_token(execution::receiver auto)</code>
 can then be used by an execution context to query whether to cancel the operation.</p>
-
 <p>Operations should be canceled in the execution context on
 which they are intended to be executed.</p>
-
 <p>In the case of in-flight I/O operations, a request can be emitted to the kernel to
 cancel the request (<code>CancelIo</code> on windows, <code>IORING_OP_ASYNC_CANCEL</code>, <code>aio_cancel</code>, etc).
 Especially important to cancel timers, socket read or other operation that may never complete
 otherwise.</p>
-
 <h3 id="execution-contexts-lifetime">Execution contexts lifetime</h3>
-
 <p>At some point, I used a stop token to stop an execution context and cancel all the
 tasks in flight. Which was super convenient.</p>
-
 <p>That is, unfortunately, a recipe for disaster as canceling a task may cause it to be rescheduled
 or another task to be scheduled on an execution context that might have been destroyed.
 I have to admit, convincing me of that took a bit of effort (Thanks Lewis!).</p>
-
 <p>Instead, executions contexts should not be destroyed until all operations that may run or schedule
 other operations on that context are done.</p>
-
 <p>This can be achieved by the <code>std::async_wait</code> algorithm which I mentioned in my first
 blog posts about executors.</p>
-
 <h3 id="receivers-and-coroutines-asymmetries">Receivers and Coroutines asymmetries</h3>
-
 <p>It&rsquo;s all not roses though: There are a few mismatches between sender/receivers and awaitables/continuations.</p>
-
 <p>Receivers have 3 channels: set_value, set_error and set_done representing respectively
 success, failure, and cancellation.</p>
-
-<p>Coroutines have a return value (which is of a single type - whereas receivers support multiple value types <a href="https://wg21.link/p1341r0">P1341</a>) and can rethrow exceptions<sup class="footnote-ref" id="fnref:12"><a href="#fn:12">13</a></sup>.</p>
-
+<p>Coroutines have a return value (which is of a single type - whereas receivers support multiple value types <a href="https://wg21.link/p1341r0">P1341</a>) and can rethrow exceptions<sup id="fnref:13"><a href="#fn:13" class="footnote-ref" role="doc-noteref">13</a></sup>.</p>
 <p>Mapping receiver can then be achieved in a couple of ways:</p>
-
 <ol>
-<li><p><strong>Returning some kind of <code>variant&lt;ValueType, ErrorType, cancelled_t&gt;</code></strong></p>
+<li>
+<p><strong>Returning some kind of <code>variant&lt;ValueType, ErrorType, cancelled_t&gt;</code></strong></p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">example</span>() {
-    inspect(<span style="color:#080;font-weight:bold">auto</span> res = co_await sender) {
+    inspect(<span style="color:#080;font-weight:bold">auto</span> res = <span style="color:#080;font-weight:bold">co_await</span> sender) {
         &lt;cancelled_t&gt;: {
 
         }
@@ -547,82 +438,63 @@ success, failure, and cancellation.</p>
         }
     };
 }
-</code></pre></div>
-<p>The above example showcases <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p1371r2.pdf">Pattern Matching</a>, although I am not sure that we can mix both types and expressions matchers.</p>
-
-<p>We cannot use types to discriminate success and failure as they may have the same type.</p></li>
+</code></pre></div><p>The above example showcases <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p1371r2.pdf">Pattern Matching</a>, although I am not sure that we can mix both types and expressions matchers.</p>
+<p>We cannot use types to discriminate success and failure as they may have the same type.</p>
+</li>
 </ol>
-
-<p><p/></p>
-
-<ol>
-<li><p><strong>Use exceptions to propagate both errors and cancellation</strong></p>
+<!-- raw HTML omitted -->
+<ol start="2">
+<li><strong>Use exceptions to propagate both errors and cancellation</strong></li>
+</ol>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">example</span>() {
-<span style="color:#080;font-weight:bold">try</span> {
-    co_await sender;
+    <span style="color:#080;font-weight:bold">try</span> {
+        <span style="color:#080;font-weight:bold">co_await</span> sender;
+    }
+    <span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::error_status&amp;) {<span style="color:#888">/*...*/</span>}
+    <span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::cancelled_operation&amp;) {<span style="color:#888">/*...*/</span>}
 }
-<span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::error_status&amp;) {<span style="color:#888">/*...*/</span>}
-<span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::cancelled_operation&amp;) {<span style="color:#888">/*...*/</span>}
-}
-</code></pre></div></li>
-</ol>
-
-<p>This suffers a couple of issues:</p>
-
+</code></pre></div><p>This suffers a couple of issues:</p>
 <ul>
-<li><p>Semantic - Using exceptions to signal cancellation makes it look like cancellation is an error, which it is not. Such a zemblanity!</p></li>
-
-<li><p>Performance - The reliance on exceptions makes it even harder to use in embedded platforms as if the required heap allocations were not bad enough! Besides performance, sometimes the very support for exceptions is lacking.</p></li>
+<li>
+<p>Semantic - Using exceptions to signal cancellation makes it look like cancellation is an error, which it is not. Such a zemblanity!</p>
+</li>
+<li>
+<p>Performance - The reliance on exceptions makes it even harder to use in embedded platforms as if the required heap allocations were not bad enough! Besides performance, sometimes the very support for exceptions is lacking.</p>
+</li>
 </ul>
-
 <p>But in truth, coroutines do not have to use exception to report different results.
 This is a simplified diagram of a coroutine.
 The coroutines is suspended and then resumed at a specific point represented by a continuation
 handle.</p>
-
-<p><img src="coro1.svg" alt="Stop Callback"/></p>
-
+<!-- raw HTML omitted -->
 <p>We could imagine a coroutine having several possible continuations to resume at
 depending on the result of the operation.</p>
-
-<p><img src="coro2.svg" alt="Stop Callback"/></p>
-
+<!-- raw HTML omitted -->
 <p>This would be a better modelization of receivers and would not suffer the performance and implementabilities issues of exceptions (at the cost of having more <code>coroutine_handle</code> to keep track of.)</p>
-
 <p>Anyway&hellip; this has turned into blog-post driven design&hellip;</p>
-
 <p><a href="https://www.destroyallsoftware.com/talks/wat">Let&rsquo;s talk about a language that doesn&rsquo;t suck</a>, let&rsquo;s talk about Go.</p>
-
-<h2 id="gorroutines-5-are-not-goroutines">Gorroutines<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">14</a></sup> are not Goroutines</h2>
-
+<h2 id="gorroutines5-are-not-goroutines">Gorroutines<sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup> are not Goroutines</h2>
 <p>Goroutines, a feature of the Go programming language, are very different from C++ coroutines in that they are not only stackfull, but also model both a resumption mechanism and a scheduling mechanism.
 Go provides you with a baked-in i/o and coroutines scheduler which will handle on behalf of the
 program interrupting a goroutine when it performs an i/o, try to acquire a lock or any other blocking operation.</p>
-
 <p>C++ coroutines are not Goroutines. <strong>C++ Coroutines do not imply asynchrony, let alone scheduling</strong>.
 C++ is not the kind of language that will bake-in an i/o scheduler as it would go
 against the &ldquo;Don&rsquo;t pay for what you don&rsquo;t use&rdquo; mantra and would make C++ unusable in many environments.</p>
-
 <p>That being said&hellip;</p>
-
 <p>The combination of coroutines, sender receivers, and i/o schedulers, can emulate goroutine (well, stacklessness non-withstanding).
 C++ coroutines can also be used as simple synchronous generators. It is a much more general
 and extensible system.</p>
-
 <p>I think the end goal would be for every single potentially blocking call to be an
 asynchronous expression instead. Like in <code>go</code>.
 Not bake-in in the language mind you, but as library solutions.</p>
-
-<p>For example, <code>libunifex</code> implement <a href="https://github.com/facebookexperimental/libunifex/blob/master/include/unifex/async_mutex.hpp">async mutexes</a> (not unlike <code>asio</code>&rsquo;s strands),
+<p>For example, <code>libunifex</code> implement <a href="https://github.com/facebookexperimental/libunifex/blob/master/include/unifex/async_mutex.hpp">async mutexes</a> (not unlike <code>asio</code>'s strands),
 such that you can acquire a lock by resuming a coroutine:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task s::f() {
-    co_await m_mutex.lock();
+    <span style="color:#080;font-weight:bold">co_await</span> m_mutex.lock();
     <span style="color:#888">// Do stuff
 </span><span style="color:#888"></span>    m_mutex.unlock();
 }
-</code></pre></div>
-<h3 id="channel-your-inner-gopher">Channel your inner Gopher</h3>
-
+</code></pre></div><h3 id="channel-your-inner-gopher">Channel your inner Gopher</h3>
 <p>Along Goroutines, go offers channels, which are one of the best features of Go.
 Channels are, conceptually, relatively simple.
 A channel is a multi-producers, multi-consummers queue.
@@ -635,15 +507,15 @@ Well&hellip;</p>
 oneway_task go_write(scheduler sch, <span style="color:#080;font-weight:bold">auto</span> w) {
     <span style="color:#888;font-weight:bold">int</span> i = <span style="color:#00d;font-weight:bold">10</span>;
     <span style="color:#080;font-weight:bold">while</span>(i) {
-        co_await sch.schedule(std::chrono::milliseconds(<span style="color:#00d;font-weight:bold">100</span>));
-        co_await w.write(--i);
+        <span style="color:#080;font-weight:bold">co_await</span> sch.schedule(std::chrono::milliseconds(<span style="color:#00d;font-weight:bold">100</span>));
+        <span style="color:#080;font-weight:bold">co_await</span> w.write(--i);
     }
 }
 
 <span style="color:#080;font-weight:bold">template</span> &lt;execution::scheduler scheduler&gt;
 oneway_task go_read(scheduler sch, <span style="color:#080;font-weight:bold">auto</span> r, stop_source&amp; stop) {
     <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
-        <span style="color:#888;font-weight:bold">int</span> value = co_await r.read();
+        <span style="color:#888;font-weight:bold">int</span> value = <span style="color:#080;font-weight:bold">co_await</span> r.read();
         std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Got value &#34;</span> &lt;&lt; value &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
         <span style="color:#080;font-weight:bold">if</span>(value == <span style="color:#00d;font-weight:bold">0</span>) {
             stop.request_stop();
@@ -652,7 +524,7 @@ oneway_task go_read(scheduler sch, <span style="color:#080;font-weight:bold">aut
     }
 }
 
-<span style="color:#888;font-weight:bold">int</span> main() {
+<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
     stop_source stop;
     io_uring_context ctx;
     std::<span style="color:#080;font-weight:bold">thread</span> t([&amp;ctx, &amp;stop] { ctx.run(stop.get_token()); });
@@ -663,113 +535,99 @@ oneway_task go_read(scheduler sch, <span style="color:#080;font-weight:bold">aut
     go_read(ctx.scheduler(), c.read(), stop);
     t.join();
 }
-</code></pre></div>
-<p>Nothing C++ can&rsquo;t do!</p>
-
+</code></pre></div><p>Nothing C++ can&rsquo;t do!</p>
 <p>My implementation of channels is not quite ready yet, and this article is already long enough.
 I might come back to the implementation of channels, and the few utilities required to implement them, including <code>async_mutex</code>, the <code>on</code> algorithm and the <code>get_scheduler</code> customisation point!</p>
-
 <h2 id="a-great-opportunity-awaits">A great opportunity awaits</h2>
-
 <p>The year is 2020 and even consummer CPUs feature double digits number of cores,
 storage offers 10GB/s read speeds and networks have to accommodate ever-growing traffic.</p>
-
 <p>Faced with these challenges, some have contemplated user-space networking
 or contend with costly to maintain spaghetti codebases.</p>
-
 <p>For a long time, the C++ committee seemed to think that either async file I/O
 didn&rsquo;t make sense or was fundamentally irreconcilable with networking.
 This belief would lead to two inter-incompatible APIs in the standard, which would be
 a nightmare in term of usability (aka ASIO and AFIO).</p>
-
 <p>I don&rsquo;t care about performance as much as I care about the usability of interfaces.
-For better or worse, faced with a choice between performance and ergonomy, the committee tends to prioritize performance<sup class="footnote-ref" id="fnref:13"><a href="#fn:13">15</a></sup>.</p>
-
+For better or worse, faced with a choice between performance and ergonomy, the committee tends to prioritize performance<sup id="fnref:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup>.</p>
 <p>Fortunately, it seems that there is finally a way to resolve these divides:</p>
-
 <ul>
 <li><code>iouring</code> offer very high performance I/O which doesn&rsquo;t discriminate on device type.</li>
 <li>Sender Receiver provides the composable, low-cost, non-allocating abstraction while offering a simple mental model for asynchronous operations lifetime.</li>
 <li>Coroutines make asynchronous i/o dead simple for the 99% use case.</li>
 </ul>
-
 <p>Asynchronous Networking is nice.</p>
-
 <p>Asynchronous I/O is better.</p>
-
 <p><strong>AWAIT ALL THE THINGS!</strong></p>
-
 <p>I&rsquo;ll leave you with a quote from <a href="https://wg21.link/p2052">P2052 - Making modern C++ i/o a consistent API experience from bottom to top</a>.</p>
-
-<p><strong><em>Sender-Receiver is genius in my opinion. It’s so damn simple people can’t see just how game changing it is: it makes possible fully deterministic, ultra high performance, extensible, composable, asynchronous standard i/o. That’s huge. No other contemporary systems programming language would have that: not Rust, not Go, not even Erlang.</em></strong> ― Niall Douglas</p>
-
+<p><em><strong>Sender-Receiver is genius in my opinion. It’s so damn simple people can’t see just how game changing it is: it makes possible fully deterministic, ultra high performance, extensible, composable, asynchronous standard i/o. That’s huge. No other contemporary systems programming language would have that: not Rust, not Go, not even Erlang.</strong></em> ― Niall Douglas</p>
 <p>Until next time, take care! Thanks for reading.</p>
-
 <h2 id="resources-and-references">Resources and References</h2>
-
 <p><strong>Kernel Recipes 2019: Jens Axboe - &ldquo;Faster IO through io_uring”</strong>
 
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-  <iframe src="//www.youtube.com/embed/-5T4Cjw46ys" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+  <iframe src="https://www.youtube.com/embed/-5T4Cjw46ys" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
 </div>
 </p>
-
 <h3 id="papers">Papers</h3>
-
 <p><a href="https://kernel.dk/io_uring.pdf">Efficient IO with io_uring</a>, Jens Axboe</p>
-
 <p><a href="https://wg21.link/p1897">P1897</a> - Towards C++23 executors: An initial set of algorithms - Lee Howes</p>
-
 <p><a href="https://wg21.link/p1341">P1341</a> - Unifying Asynchronous APIs in the Standard Library - Lewis Baker</p>
-
 <p><a href="https://wg21.link/P2006">P2006</a> - Eliminating heap-allocations in sender/receiver with connect()/start() as basis operations - Lewis Baker, Eric Niebler, Kirk Shoop, Lee Howes</p>
-
 <p><a href="https://wg21.link/P1678">P1678</a> - Callbacks and Composition - Kirk Shoop</p>
-
 <p><a href="https://wg21.link/P1677">P1677</a> - Cancellation is not an Error - by Kirk Shoop, Lisa Lippincott, Lewis Baker</p>
-
 <p><a href="https://wg21.link/p2052">P2052</a> -  Making modern C++ i/o a consistent API experience from bottom to top - Niall Douglas</p>
-
 <p><a href="https://wg21.link/p0443">P0443</a> -  A Unified Executors Proposal for C++ - Jared Hoberock, Michael Garland, Chris Kohlhoff, Chris Mysen, Carter Edwards, Gordon Brown, David Hollman, Lee Howes, Kirk Shoop, Eric Niebler</p>
-
 <p><a href="https://wg21.link/p2024">P2024</a> - Bloomberg Analysis of Unified Executors - David Sankel, Frank Birbacher, Marina Efimova, Dietmar Kuhl, Vern Riedlin</p>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1">A group that is in fact not chaired by Jack O&rsquo;Neill. I never went there by fear of speaking out of order. Legend says they eat at round tables and fight for the forks.
- <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
-<li id="fn:2">A hill I&rsquo;d rather not die on!
- <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
-<li id="fn:14">If <code>main</code> doesn&rsquo;t return too soon which we can&rsquo;t prevent with <code>execution::execute</code> because <a href="https://wg21.link/p1525r0">One-Way execute is a Poor Basis Operation</a>
- <a class="footnote-return" href="#fnref:14"><sup>[return]</sup></a></li>
-<li id="fn:3">Something you would learn in <a href="https://www.amazon.com/Software-Engineering-Google-Lessons-Programming/dp/1492082791/">Software Engineering at Google: Lessons Learned from Programming Over Time</a>, along with many great insights about software engineering.
- <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
-<li id="fn:4">Linux 5.6 will come with many improvements such as a redesigned worker threads.
- <a class="footnote-return" href="#fnref:4"><sup>[return]</sup></a></li>
-<li id="fn:15">A first draft of this sentence read <strong><em>&ldquo;The submission queue can only be accessed by a single thread concurrently&rdquo;</em></strong>. But <code>concurrent</code> is a too subtle word to be ever used properly by the mere mortal that I am.
- <a class="footnote-return" href="#fnref:15"><sup>[return]</sup></a></li>
-<li id="fn:6">A name I did made up.
- <a class="footnote-return" href="#fnref:6"><sup>[return]</sup></a></li>
-<li id="fn:7">I made up that too. libunifex uses <code>schedule_after(duration)</code> and <code>schedule_at(time_point)</code>
- <a class="footnote-return" href="#fnref:7"><sup>[return]</sup></a></li>
-<li id="fn:8">It&rsquo;s not and never will be. [<a href="https://wg21.link/p0709">P0709</a>] [<a href="https://wg21.link/p1947">P1947</a>] [<a href="https://wg21.link/P1886">P1886</a>] [<a href="https://wg21.link/P1886">P1886</a>] [<a href="https://wg21.link/p0824">P0824</a>] [<a href="https://wg21.link/p1028">P1028</a>] [<a href="https://wg21.link/p0323">P0323</a>]
- <a class="footnote-return" href="#fnref:8"><sup>[return]</sup></a></li>
-<li id="fn:9"><a href="https://wg21.link/p1677r2">P1677 - Cancellation is not an error</a> is a paper worth reading if only because it contains 54 instances of the word <strong>serendipitous</strong>.
- <a class="footnote-return" href="#fnref:9"><sup>[return]</sup></a></li>
-<li id="fn:10"><a href="https://en.cppreference.com/w/cpp/thread/jthread"><code>std::jthread</code></a> is now the recommended way to start a thread in C++ - I think it would be fair to consider <code>std::thread</code> deprecated, and maybe reflect on how we got into this infortunate situation.
- <a class="footnote-return" href="#fnref:10"><sup>[return]</sup></a></li>
-<li id="fn:11"><a href="https://lewissbaker.github.io"><em>Someone</em></a> should write a blog post about that&hellip;
- <a class="footnote-return" href="#fnref:11"><sup>[return]</sup></a></li>
-<li id="fn:12">In fact, continuations in C++20 can never be <code>noexcept</code>, which is rather unfortunate.
- <a class="footnote-return" href="#fnref:12"><sup>[return]</sup></a></li>
-<li id="fn:5">Coroutines are sometimes called Gorroutines (with 2 Rs) after the name of the man who worked on them for the best part of a decade: Gor Nishanov. Thanks Gor!
- <a class="footnote-return" href="#fnref:5"><sup>[return]</sup></a></li>
-<li id="fn:13">Try not to think about standard associative containers when reading that. Too late!
- <a class="footnote-return" href="#fnref:13"><sup>[return]</sup></a></li>
+<li id="fn:1" role="doc-endnote">
+<p>A group that is in fact not chaired by Jack O&rsquo;Neill. I never went there by fear of speaking out of order. Legend says they eat at round tables and fight for the forks. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>A hill I&rsquo;d rather not die on! <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>If <code>main</code> doesn&rsquo;t return too soon which we can&rsquo;t prevent with <code>execution::execute</code> because <a href="https://wg21.link/p1525r0">One-Way execute is a Poor Basis Operation</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p>Something you would learn in <a href="https://www.amazon.com/Software-Engineering-Google-Lessons-Programming/dp/1492082791/">Software Engineering at Google: Lessons Learned from Programming Over Time</a>, along with many great insights about software engineering. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5" role="doc-endnote">
+<p>Linux 5.6 will come with many improvements such as a redesigned worker threads. <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6" role="doc-endnote">
+<p>A first draft of this sentence read <em><strong>&ldquo;The submission queue can only be accessed by a single thread concurrently&rdquo;</strong></em>. But <code>concurrent</code> is a too subtle word to be ever used properly by the mere mortal that I am. <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7" role="doc-endnote">
+<p>A name I did made up. <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:8" role="doc-endnote">
+<p>I made up that too. libunifex uses <code>schedule_after(duration)</code> and <code>schedule_at(time_point)</code> <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:9" role="doc-endnote">
+<p>It&rsquo;s not and never will be. [<a href="https://wg21.link/p0709">P0709</a>] [<a href="https://wg21.link/p1947">P1947</a>] [<a href="https://wg21.link/P1886">P1886</a>] [<a href="https://wg21.link/P1886">P1886</a>] [<a href="https://wg21.link/p0824">P0824</a>] [<a href="https://wg21.link/p1028">P1028</a>] [<a href="https://wg21.link/p0323">P0323</a>] <a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:10" role="doc-endnote">
+<p><a href="https://wg21.link/p1677r2">P1677 - Cancellation is not an error</a> is a paper worth reading if only because it contains 54 instances of the word <strong>serendipitous</strong>. <a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:11" role="doc-endnote">
+<p><a href="https://en.cppreference.com/w/cpp/thread/jthread"><code>std::jthread</code></a> is now the recommended way to start a thread in C++ - I think it would be fair to consider <code>std::thread</code> deprecated, and maybe reflect on how we got into this infortunate situation. <a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:12" role="doc-endnote">
+<p><a href="https://lewissbaker.github.io"><em>Someone</em></a> should write a blog post about that&hellip; <a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:13" role="doc-endnote">
+<p>In fact, continuations in C++20 can never be <code>noexcept</code>, which is rather unfortunate. <a href="#fnref:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:14" role="doc-endnote">
+<p>Coroutines are sometimes called Gorroutines (with 2 Rs) after the name of the man who worked on them for the best part of a decade: Gor Nishanov. Thanks Gor! <a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:15" role="doc-endnote">
+<p>Try not to think about standard associative containers when reading that. Too late! <a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
       
     <div id="socialshareDiv">

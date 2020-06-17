@@ -62,10 +62,7 @@
     <h1 class="title">How I use references</h1>
     
     <div class="content">
-      
-
-<p>Following a blog post by <a href="https://herbsutter.com/2020/02/23/references-simply/">Herb Sutter</a>, let me tell you how and when I use references.</p>
-
+      <p>Following a blog post by <a href="https://herbsutter.com/2020/02/23/references-simply/">Herb Sutter</a>, let me tell you how and when I use references.</p>
 <ul>
 <li>If I do not need to mutate an input parameter, I will use a const reference,
 unless I know that copying is cheaper (When in doubt use a reference).</li>
@@ -75,63 +72,48 @@ unless I know that copying is cheaper (When in doubt use a reference).</li>
 <li>I use references and const references to make local aliases.</li>
 <li>I avoid <a href="https://cor3ntin.github.io/posts/move/">rvalue references</a></li>
 </ul>
-
 <p>A bit of code is better than a blob of text:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> Foo &amp;); <span style="color:#888">// input parameter
 </span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(Foo);         <span style="color:#888">// input parameter, modified or sinked
 </span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(Foo &amp;);       <span style="color:#888">// input-output
 </span><span style="color:#888"></span>Foo <span style="color:#06b;font-weight:bold">f</span>();             <span style="color:#888">// output
-</span></code></pre></div>
-<p>I try to never use pointers, at least in interfaces.
+</span></code></pre></div><p>I try to never use pointers, at least in interfaces.
 Pointers should be non-owning, but in practice, there is too much C and legacy code for this to be the case.
 When I see a pointer, I am wary of ownership and lifetime. I always will be, because we cannot magically get rid of owning pointers.</p>
-
 <p>These are general advices, and I recommend to follow them in in interfaces.
 Be adventurous at your own risk else where and use good judgment!</p>
-
 <h2 id="what-if-i-need-an-optional-reference">What if I need an optional reference?</h2>
-
 <p>Use a default parameter if you can, a pointer if you must.</p>
-
 <p><code>std::optional&lt;T&amp;&gt;</code> would be an obvious answer, sadly it is something the committee
 refuses to standardize mainly because we cannot agree on what assignment and comparison should do.
 The answer is however quite simple: <a href="https://wg21.link/p1175r0"><strong>these operations should not be provided</strong></a>.
 I don&rsquo;t know why but many people seem compelled to provide operators for everything when it doesn&rsquo;t make sense or is otherwise confusing.
 <strong>When there is no good default, do not try to provide a default</strong></p>
-
 <p>Here is how to support reference in optional without having to specialize it.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>&gt;
-  <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">optional</span> {
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt;
+  <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">optional</span> {
   <span style="color:#080;font-weight:bold">public</span>:
-    [[deprecated]] <span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">U</span> = T&gt;
-    requires std::semiregular&lt;T&gt;
+    <span style="color:#369">[[deprecated]]</span> <span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">U</span> = T&gt;
+    <span style="color:#080;font-weight:bold">requires</span> std::semiregular&lt;T&gt;
     optional&amp; <span style="color:#080;font-weight:bold">operator</span>=(U&amp;&amp;);
   };
 
-<span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>, <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">U</span>&gt;
-requires (std::regular&lt;T&gt; &amp;&amp; std::regular&lt;U&gt;)
+<span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>, <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">U</span>&gt;
+<span style="color:#080;font-weight:bold">requires</span> (std::regular&lt;T&gt; &amp;&amp; std::regular&lt;U&gt;)
 <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>==(<span style="color:#080;font-weight:bold">const</span> optional&lt;T&gt;&amp;, <span style="color:#080;font-weight:bold">const</span> optional&lt;U&gt;&amp;);
-</code></pre></div>
-<p>This would be nothing new - we do that for views. Wrapper objects should never try to expose more regularity than the wrapped type.</p>
-
+</code></pre></div><p>This would be nothing new - we do that for views. Wrapper objects should never try to expose more regularity than the wrapped type.</p>
 <p>We removed <code>span::operator==</code> and, unsurprisingly, exactly nobody is missing it.
 Instead of endless, unsolvable debates of what a given operation should do, a better question is: is that operation useful? The answer here is no, look at usages.</p>
-
 <p>And this is in line with Herb Sutter&rsquo;s argument that references are mostly useful as
 return values and parameters.</p>
-
-<h2 id="what-about-not-null-object-ptr-observer-ptr-etc">What about not_null, object_ptr, observer_ptr etc?</h2>
-
+<h2 id="what-about-not_null-object_ptr-observer_ptr-etc">What about not_null, object_ptr, observer_ptr etc?</h2>
 <p><code>optional&lt;Foo&amp;&gt; opt{foo};</code> is valid by construction. As long as you never use pointers,
 the only way to misuse <code>optional</code> is to deference it while it is not engaged.</p>
-
 <p>Types constructed from a pointer give you twice as many opportunities to blow your foot off:
 while referencing and while constructing. It&rsquo;s shifting a compile-time error to a runtime one&hellip;not
 the right direction to move in!
 Additionally, <code>optional</code> provides useful functions like <code>value_or</code>, <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p0798r4.html#transform"><code>or_else</code>, <code>transform</code></a>&hellip;</p>
-
 <h2 id="are-reference-just-pointers">Are reference just pointers?</h2>
-
 <p>It&rsquo;s memory addresses all the way down but it doesn&rsquo;t matter how references are implemented. Because they are non-null and can&rsquo;t be rebound, they behave as aliases, tied to the lifetime of the aliased object.</p>
 
       

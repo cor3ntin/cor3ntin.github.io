@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on cor3ntin</title>
@@ -61,9 +61,7 @@ Auto Non-Static Data Members Initializers A while back I presented auto non-stat
       <pubDate>Mon, 24 Feb 2020 15:30:00 +0100</pubDate>
       
       <guid>https://cor3ntin.github.io/posts/abi/</guid>
-      <description>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.
-There was no applause.
-But I&amp;rsquo;m not sure we fully understood what we did and the consequences it could have.
+      <description>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.There was no applause.But I&amp;rsquo;m not sure we fully understood what we did and the consequences it could have.
 I do believe none of the consequences will be good.
 What is ABI ABI is the shared understanding libraries have about how your program is serialized, both in term of layout, calling convention and mangling.</description>
     </item>
@@ -88,7 +86,7 @@ Bjarne Stroustrup reminded us that concepts are mentioned in Design and Evolutio
       <guid>https://cor3ntin.github.io/posts/move/</guid>
       <description>std::move doesn&amp;rsquo;t move.
 It casts to an rvalue-reference, which is a type of reference that can be passed to a move constructor or assignment operator, if one exists.
-template &amp;lt;typename T&amp;gt; decltype(auto) move(T&amp;amp;&amp;amp; a) { return static_cast&amp;lt;std::remove_reference_t&amp;lt;T&amp;gt;&amp;amp;&amp;amp;&amp;gt;(a); }  Some expressions will be converted to rvalue-references automatically, when the compiler is certain that the value is expiring (will not be reused).
+template &amp;lt;typename T&amp;gt; decltype(auto) move(T&amp;amp;&amp;amp; a) { return static_cast&amp;lt;std::remove_reference_t&amp;lt;T&amp;gt;&amp;amp;&amp;amp;&amp;gt;(a); } Some expressions will be converted to rvalue-references automatically, when the compiler is certain that the value is expiring (will not be reused).
 This is the case for temporaries or non-reference objects returned from functions.</description>
     </item>
     
@@ -170,9 +168,9 @@ Code, in the presence of arbitrary identifiers and string literals as to be cons
       <pubDate>Tue, 26 Feb 2019 07:00:36 -1000</pubDate>
       
       <guid>https://cor3ntin.github.io/posts/parentheses/</guid>
-      <description>foo();  This is foo. But what is foo? An astute reader may assume foo is a function.
+      <description>foo(); This is foo. But what is foo? An astute reader may assume foo is a function.
 What kind of function? It is obviously not a virtual function. But it might be a function pointer. It might be a function object. It might even be a shiny post-modern lambda. Or the constructor of some class foo.
-It doesn&amp;rsquo;t matter. All these things amount to plain, old and boring functions.</description>
+It doesn&amp;rsquo;t matter. All these things amount to plain, old and boring functions. You can call them.</description>
     </item>
     
     <item>
@@ -250,7 +248,7 @@ struct square { int width; }
 You could of course do that:
 int area(square s) { return s.width * s.width; }
 But, your friend Tony told you to use more functions, so instead you do that
-int area(square s) { return width(s) * width(s); } int width(square s) { return s.width; }  area being the function you really care about it is defined first - after all, code reads from top to bottom.</description>
+int area(square s) { return width(s) * width(s); } int width(square s) { return s.width; } area being the function you really care about it is defined first - after all, code reads from top to bottom.</description>
     </item>
     
     <item>
@@ -288,7 +286,8 @@ And since then a new paper, P1141 - Yet another approach for constrained declara
       <pubDate>Wed, 13 Jun 2018 11:32:09 +0200</pubDate>
       
       <guid>https://cor3ntin.github.io/posts/concepts_syntax/</guid>
-      <description>Please take the quick survey on concept syntax at the end of this article.  Did you know that the Concept TS was merged into the Working Draft in July 2017, in Toronto? And we are a Planck length away from merging the Range TS in C++20 as well, including a few goodies such as projections, contiguous ranges/iterators and ranges adaptors? We also added a bunch of general-purpose concepts in the std namespace in Rapperswil.</description>
+      <description>Did you know that the Concept TS was merged into the Working Draft in July 2017, in Toronto? And we are a Planck length away from merging the Range TS in C++20 as well, including a few goodies such as projections, contiguous ranges/iterators and ranges adaptors? We also added a bunch of general-purpose concepts in the std namespace in Rapperswil.
+Concepts have been 3 decades in the making and the Ranges TS is a huge body of work.</description>
     </item>
     
     <item>
@@ -308,7 +307,7 @@ And since then a new paper, P1141 - Yet another approach for constrained declara
       <guid>https://cor3ntin.github.io/posts/read_a_file/</guid>
       <description>The year is 2021. A rainy Sunday afternoon. It&amp;rsquo;s getting increasingly more difficult to ignore the looming shadow of The Great Rewrite.
 But you ran out of cacao and there is nothing on HBO. So you guzzle a fourth cup of coffee and decide to start a new project. In C++ of course. You sacrificed too much to reevaluate your life choices now.
-But you need to do something new.</description>
+But you need to do something new. Something to impress, Something to shine, like a diamond.</description>
     </item>
     
     <item>
@@ -361,7 +360,7 @@ In its current state, the library proposal can draw some shapes on a pre-allocat
       <guid>https://cor3ntin.github.io/posts/cross_compilation/</guid>
       <description>I wrote a series of article where I compile simple Windows and OSX applications from Linux.
 I hope you enjoyed it. For me, it certainly was quite the journey. Or the beginning of one. There is lot of rooms for improvement and we left some area unexplored, including some other major Operating systems like Android and iOS. I also did not talk about debugging.
-The open source community is amazing.</description>
+The open source community is amazing. We should not take projects like llvm, wine, darling, or even osxcross for granted.</description>
     </item>
     
     <item>
@@ -391,7 +390,7 @@ The Operating System I’m talking about is of course developed and commercializ
       <pubDate>Mon, 22 Jan 2018 00:00:00 +0000</pubDate>
       
       <guid>https://cor3ntin.github.io/posts/helloworld_p1/</guid>
-      <description>#include &amp;lt;iostream&amp;gt; int main() { std::cout &amp;lt;&amp;lt; &amp;#34;Hello, World\n&amp;#34;; }  Nothing to remove, nothing to add.
+      <description>#include &amp;lt;iostream&amp;gt; int main() { std::cout &amp;lt;&amp;lt; &amp;#34;Hello, World\n&amp;#34;; } Nothing to remove, nothing to add.
 This is the proper “Hello World” in C++. All the others Hello World are wrong. But this is not where I rant about how using namespace std; crystallizes everything messed up with the teaching of C++. Another time perhaps.
 Today we are gonna be compiling that hello world so that it can be executed on a target system.</description>
     </item>
@@ -430,9 +429,9 @@ I like that quote. it explains both JavaScript and Haskell. And by that measure 
       <pubDate>Mon, 31 Oct 2016 00:00:00 +0000</pubDate>
       
       <guid>https://cor3ntin.github.io/posts/stack_queue/</guid>
-      <description>A friend had a phone interview for a job in a company that I won’t name - It’s Microsoft. One of the questions was about describing how he would write a stack, only using standard queues.
-I was confounded, because long before an algorithm could form in my mind, I already decided that there was no solution that would actually be useful in any real life scenario.
-template &amp;lt;typename T, typename Container = std::queue&amp;lt;T&amp;gt;&amp;gt; classstack { public: void push(const T &amp;amp;); void pop(); T&amp;amp; top(); std::size_t size() const; bool empty() const; private: void transfer(); Container a, b; }; template &amp;lt;typename T, typename Container&amp;gt; void stack&amp;lt;T, Container&amp;gt;::push(const T&amp;amp; t) { a.</description>
+      <description>A friend had a phone interview for a job in a company that I won’t name
+ It’s Microsoft. One of the questions was about describing how he would write a stack, only using standard queues.  I was confounded, because long before an algorithm could form in my mind, I already decided that there was no solution that would actually be useful in any real life scenario.
+template &amp;lt;typename T, typename Container = std::queue&amp;lt;T&amp;gt;&amp;gt; class stack { public: void push(const T &amp;amp;); void pop(); T&amp;amp; top(); std::size_t size() const; bool empty() const; private: void transfer(); Container a, b; }; template &amp;lt;typename T, typename Container&amp;gt; void stack&amp;lt;T, Container&amp;gt;::push(const T&amp;amp; t) { a.</description>
     </item>
     
   </channel>

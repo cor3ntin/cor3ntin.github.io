@@ -62,20 +62,13 @@
     <h1 class="title">A Universal Async Abstraction for C&#43;&#43;</h1>
     
     <div class="content">
-      
-
-<p>Executors - of which <a href="https://wg21.link/P0443R11">P0443R11</a> is one of the latest iterations - is poised to be the most fundamental library addition to C++23.</p>
-
+      <p>Executors - of which <a href="https://wg21.link/P0443R11">P0443R11</a> is one of the latest iterations - is poised to be the most fundamental library addition to C++23.</p>
 <p><em>But what is it about?</em></p>
-
 <p>It is first and foremost a quest to find the most basic building blocks on top of which one could build asynchronous, concurrent and parallel code, whether it be
 on a small chip or a supercomputer with thousands of CPUs and GPUs.</p>
-
 <p>This is not an easy task and has kept many experts
 and many companies busy for many years.</p>
-
 <p>This is important work as it would allow, among other things:</p>
-
 <ul>
 <li>Parallel algorithms</li>
 <li>Networking</li>
@@ -87,106 +80,74 @@ and many companies busy for many years.</p>
 <li>Heterogeneous computing</li>
 <li>&hellip;</li>
 </ul>
-
 <p>To compose nicely and share many algorithms.</p>
-
 <p>At least, that&rsquo;s the goal.
 If <code>iterator</code>s are the basis of operations of algorithms (of which ranges and views are abstractions), what is the basis of operations of async programming?</p>
-
 <p>At this point, I should point out that despite doing my best not to mischaracterize anyone, and to be as technically accurate as I can, executors have a <a href="https://www.youtube.com/watch?v=iYMfYdO0_OU">very long
 history in the committee</a> and I only took an interest in this whole thing recently - <strong>I am a bull in a china shop, not a domain expert</strong>.</p>
-
 <p>That being said, I will not exactly focus on <a href="https://wg21.link/P0443R11">P0443R11</a>, but on something I find a bit more refined, not yet in a paper.</p>
-
 <p>The result of that work will mostly be a few concepts,
 some customization points and a few algorithms to compose all of that.</p>
-
 <p>First thing first.</p>
-
 <h2 id="execution-context">Execution Context</h2>
-
 <p>An execution context represents the context in which you want to execute a piece of code (see? simple).
 That can, for example, be a thread pool, an event loop,
 Grand Central Dispatch, a GPU, a vectorization unit (although it&rsquo;s still unclear to me how that fits into the picture) or even the current thread - in which case we talk of <em>inline execution context</em>.</p>
-
 <p>[<em>Note: Because there are inline execution contexts,
 executing some work on an execution context does not
 systematically imply asynchrony.</em>]</p>
-
 <h2 id="receiver">Receiver</h2>
-
 <p>A receiver represents the code we want to run on an execution context.
 In simplest terms, a function.
 But, an important point of the design of the executors proposal is to systematically provide error handling and error management so there are 3 functions we need to provide.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> Error, <span style="color:#080;font-weight:bold">typename</span>... Value&gt;
-concept receiver = requires(R &amp;r Error... e, Value&amp;&amp;...v) {
+<span style="color:#080;font-weight:bold">concept</span> receiver = <span style="color:#080;font-weight:bold">requires</span>(R &amp;r Error... e, Value&amp;&amp;...v) {
     set_value(r, v...); <span style="color:#888">// happy path
 </span><span style="color:#888"></span>    set_error(r, e); <span style="color:#888">// error
 </span><span style="color:#888"></span>    set_done(r); <span style="color:#888">// cancelation
 </span><span style="color:#888"></span>};
-</code></pre></div>
-<p><strong>This is bad blog code - In reality <code>receiver</code> will be split in <code>receiver</code> and <code>receiver_of</code> to allow overloading <code>set_value</code>.</strong></p>
-
+</code></pre></div><p><strong>This is bad blog code - In reality <code>receiver</code> will be split in <code>receiver</code> and <code>receiver_of</code> to allow overloading <code>set_value</code>.</strong></p>
 <p>The standard will probably provide a receiver that wraps an <code>invocable</code>, throws on error and does nothing on cancellation.</p>
-
 <p>So maybe we could write something like this:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">fugazzi_async(execution_context, as_receiver([] {
     fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Hello from an executor&#34;</span>);
 }));
-</code></pre></div>
-<p>But now we have a problem.
+</code></pre></div><p>But now we have a problem.
 By the time <code>fugazzi_async</code> has returned, the lambda may have been enqueued, somewhere.
 Or even already executed.</p>
-
 <p>The traditional way to solve that is to use a future and a promise, sharing a ref counted shared state, heap
 allocated.</p>
-
 <p>But that is, to put it mildly, <a href="https://godbolt.org/z/PfVLT6">not optimal</a>.</p>
-
 <h2 id="sender-and-scheduler">Sender and Scheduler</h2>
-
 <p>So what we can do instead is to ask the execution context to reserve a slot. Eric Niebler calls that a lazy future, the name chosen for the concept is <code>sender</code>.
 <code>sender</code> because it sends its result to a receiver.</p>
-
 <p>Great, But how do we get a <code>sender</code>?</p>
-
 <p>We could, just do <code>thread_pool.give_me_a_sender()</code>,
 but for the sake of genericity and because we probably don&rsquo;t want to expose our thread pool to everyone,
 we add a level of indirection (that always works).
 Also, I suppose that in some cases the execution context may never be materialized in the type system.</p>
-
 <p><code>scheduler</code> represents a lightweight handle to an execution context. Its only purpose is to create <code>sender</code>s.</p>
-
 <p><em><code>execution context</code></em> -&gt; <code>scheduler</code> -&gt; <code>sender</code>.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">thread_pool <span style="color:#06b;font-weight:bold">tp</span>(std::<span style="color:#080;font-weight:bold">thread</span>::hardware_concurrency());
 <span style="color:#080;font-weight:bold">auto</span> scheduler = tp.scheduler();
 <span style="color:#080;font-weight:bold">auto</span> sender = scheduler.schedule();
-</code></pre></div>
-<p>There are other ways to create <code>sender</code>s, for example
+</code></pre></div><p>There are other ways to create <code>sender</code>s, for example
 <code>auto async_read(device, buffer) -&gt; sender</code> can be a function that creates a sender able to enqueue a read operation on a reactor queue.</p>
-
 <p>Timers would also be senders, etc</p>
-
 <p>Once we have a sender, we can start thinking about doing some work. If you have been paying attention, so far we have done very little work.</p>
-
 <p>With good reason.
 By preparing our operations lazily we can compose them with algorithms.
 Let&rsquo;s not get ahead of ourselves.</p>
-
 <p>For now, we just need a function that takes a <code>sender</code> and a <code>receiver</code> and
 submits the sender for execution.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">submit(my_sender, my_receiver);
-</code></pre></div>
-<p>If the <em>execution context</em> of <code>my_sender</code> is, for example, a thread pool
+</code></pre></div><p>If the <em>execution context</em> of <code>my_sender</code> is, for example, a thread pool
 the receiver will be enqueued and then executed on a thread of that thread pool (by calling <code>my_receiver.set_value()</code>).</p>
-
 <p>And some work will finally be done.
 And that&rsquo;s it? According to <a href="https://wg21.link/P0443R11">P0443R11</a>, yes, pretty much.</p>
-
 <p>But there is a catch.</p>
-
 <p>Let&rsquo;s write a thread pool to illustrate</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">my_first_thread_pool</span> {
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">my_first_thread_pool</span> {
     std::vector&lt;std::any_receiver&lt;<span style="color:#888;font-weight:bold">void</span>&gt;&gt; work;
 
     <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">enqueue</span>(receiver <span style="color:#080;font-weight:bold">auto</span> r) {
@@ -197,21 +158,15 @@ And that&rsquo;s it? According to <a href="https://wg21.link/P0443R11">P0443R11<
 
     <span style="color:#888">/* ... */</span>
 };
-</code></pre></div>
-<p>To implement our thread pool, <code>enqueue</code> function (which is called by <code>submit(sender, receiver)</code>, we do have to pay the cost of type-erasure (which <em>probably</em> implies an allocation),and another allocation (at least) to put our type-erased receiver on the heap so we can have a container of them).</p>
-
+</code></pre></div><p>To implement our thread pool, <code>enqueue</code> function (which is called by <code>submit(sender, receiver)</code>, we do have to pay the cost of type-erasure (which <em>probably</em> implies an allocation),and another allocation (at least) to put our type-erased receiver on the heap so we can have a container of them).</p>
 <p>While this is fine for many people, it is not ideal and a deal-breaker for some.</p>
-
 <p>Is there a better way?
 Yes.
 But at this point we diverge from <a href="https://wg21.link/P0443R11">P0443R11</a>.
 Note that I invented nothing of what follows - there will be a paper about these ideas in the future.</p>
-
 <p>Everything can be improved by one more level of indirection,
 so let&rsquo;s do that.</p>
-
 <h2 id="operation">Operation</h2>
-
 <p>Instead of a <code>submit(sender, receiver)</code> that submits the work immediately, we can have a function that takes a sender, a receiver, and returns an aggregate of both, but do nothing else. Let&rsquo;s call that function <code>connect</code> :</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">thread_pool <span style="color:#06b;font-weight:bold">tp</span>(std::<span style="color:#080;font-weight:bold">thread</span>::hardware_concurrency());
 <span style="color:#080;font-weight:bold">auto</span> scheduler = tp.scheduler();
@@ -220,120 +175,87 @@ so let&rsquo;s do that.</p>
 <span style="color:#080;font-weight:bold">auto</span> op = connect(std::move(sender), as_receiver([] {
     <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">42</span>;
 }));
-</code></pre></div>
-<p>The return object <code>op</code> satisfies the <code>operation</code>.
+</code></pre></div><p>The return object <code>op</code> satisfies the <code>operation</code>.
 Again, this does nothing but preparing some workload that can be enqueued in the execution context later.</p>
-
 <p>But the nice thing about that extra indirection is that, if we need to enqueue a single object and wait for it,
 you can allocate it on the stack.
 And while you would still need to type erase the receiver,
 now you only need a virtual call to do it.</p>
-
 <p>It might be better to explain with some code:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> schedule_operation_base {
-    <span style="color:#080;font-weight:bold">virtual</span> <span style="color:#888;font-weight:bold">void</span> set_value() = <span style="color:#00d;font-weight:bold">0</span>;
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">schedule_operation_base</span> {
+    <span style="color:#080;font-weight:bold">virtual</span> <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">set_value</span>() = <span style="color:#00d;font-weight:bold">0</span>;
 };
 
 <span style="color:#080;font-weight:bold">template</span> &lt;sender S, receiver R&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#369;font-style:italic">schedule_operation</span> : schedule_operation_base {
+<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">schedule_operation</span> : schedule_operation_base {
     <span style="color:#888">//...
-</span><span style="color:#888"></span>    <span style="color:#888;font-weight:bold">void</span> set_value() <span style="color:#080;font-weight:bold">override</span> {
+</span><span style="color:#888"></span>    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">set_value</span>() <span style="color:#080;font-weight:bold">override</span> {
         my_receiver.set_value();
     }
 <span style="color:#080;font-weight:bold">private</span>:
     R my_receiver;
 };
-</code></pre></div>
-<p>Each <code>sender</code> type has its own specific operation type.</p>
+</code></pre></div><p>Each <code>sender</code> type has its own specific operation type.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;receiver MyReceiverType&gt;
 <span style="color:#080;font-weight:bold">auto</span>(thread_pool::sender, MyReceiverType my_receiver)
     -&gt; thread_pool::schedule_operation&lt;thread_pool::sender, MyReceiverType&gt;;
-</code></pre></div>
-<p>This in turns allows us to store the execution context&rsquo;s associated state in each operation rather than in the execution context itself.
+</code></pre></div><p>This in turns allows us to store the execution context&rsquo;s associated state in each operation rather than in the execution context itself.
 So instead of having a container of work in the thread pool, we can make an intrusive linked list of all the queued operations.</p>
-
 <p>[Note: This implies that <code>operation</code> can neither be copied nor moved]</p>
-
 <p>Because this might be hard to visualize, here are some
 visualization of how a regular thread pool keeps track
 of its state (enqueued work):</p>
-
-<div style="text-align:center"><img height=300 src="thread_pool.png" alt="Classic Thread pool"/></div>
-
+<!-- raw HTML omitted -->
 <p>And what the <code>operation</code> machinery allows us to do:</p>
-
-<div style="text-align:center"><img src="operations.png" alt="With operation a pool does not own its state"/></div>
-
+<!-- raw HTML omitted -->
 <p>In the ideal case, there is no heap allocation and enqueuing/dequeuing work is setting a couple of pointers
 which means that the mutex that protects the work queue
 of our thread pool is held for a very short time.</p>
-
 <p>Of course, sometimes you will need to enqueue many operations at once or not want to wait for your operation
 to complete.</p>
-
 <p>In these cases, you will need an extra function to heap
 allocate (or allocate with a custom allocator).
 The heap allocating function is called <code>spawn</code>.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">spawn</span>(sender, receiver);
-</code></pre></div>
-<p><code>spawn</code> wraps the receiver in another receiver that will
+</code></pre></div><p><code>spawn</code> wraps the receiver in another receiver that will
 destroyed the <code>operation</code> whenever one method of the receiver is called.</p>
-
 <p>This makes the ownership model rather simple. A feat for asynchronous code.</p>
-
 <p><code>spawn</code> is also the only point in that whole system
 that has to deal with allocators (allocators themselves
 probably need to be transferred to senders for composed operations).</p>
-
 <p>To recap things a bit, here is a diagram of the entire thing:</p>
-
-<div style="text-align:center"><img src="state.png" alt="State machine"/></div>
-
+<!-- raw HTML omitted -->
 <h2 id="everything-is-a-sender">Everything is a sender</h2>
-
 <p>Thread pools usually have a <code>wait</code> method.</p>
-
 <p>But with the sender/receiver model, the thread pool can instead provide a method returning a sender and we can
 attach that sender to a receiver that will be invoked when the thread pool is empty, by the means of a generic wait algorithm.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">thread_pool p;
 <span style="color:#888">//...
 </span><span style="color:#888"></span>wait(p.depleted());
-</code></pre></div>
-<p>Many such algorithms can be provided, including:</p>
-
+</code></pre></div><p>Many such algorithms can be provided, including:</p>
 <ul>
 <li><code>when_all</code></li>
 <li><code>when_any</code></li>
 <li><code>then</code> / <code>sequence</code></li>
 <li>An asynchronous version of <code>transform</code></li>
 </ul>
-
 <p>These algorithms could be used to, for example, write a better future. But I haven&rsquo;t played with all of that yet.</p>
-
 <h1 id="a-coroutine-to-rule-them-all">A coroutine to rule them all.</h1>
-
 <p>One aspect that I find critical when yet-to-come asynchronous facilities are provided in the standard, is that they have first-class coroutines support.
 coroutines should be how 99% of people write asynchronous code.
 It&rsquo;s what they are made for and reduce significantly the
 change of blowing one&rsquo;s feet off.</p>
-
 <p>But at the same time for a few use cases, coroutines will not be suitable.</p>
-
 <p>So we need a way to be able to use coroutines that is trivial
 and not have to pay for it when we don&rsquo;t want to use them.</p>
-
 <p>Seems complicated?</p>
-
 <p>We actually need to define a single function:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;sender S&gt;
-<span style="color:#080;font-weight:bold">auto</span> <span style="color:#080;font-weight:bold">operator</span> co_await(S&amp;&amp; sender);
-</code></pre></div>
-<p>That will make <em>all</em> <code>sender</code> <code>awaitable</code> which means they can be used
+<span style="color:#080;font-weight:bold">auto</span> <span style="color:#080;font-weight:bold">operator</span> <span style="color:#080;font-weight:bold">co_await</span>(S&amp;&amp; sender);
+</code></pre></div><p>That will make <em>all</em> <code>sender</code> <code>awaitable</code> which means they can be used
 in a <code>co_await</code> expression.
 The complete prototype implementation is about 100 loc. Not bad.</p>
-
 <p>and now we can write this:</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="executors">
     
 <xmp style="display:none; margin:0;">#include <https://gist.githubusercontent.com/cor3ntin/14b9d30e07d48f5cdd13413c4fd96398/raw/f56dff4a94e053a41a16b66542e2322401f7fdbe/corio.hpp>
@@ -341,7 +263,7 @@ The complete prototype implementation is about 100 loc. Not bad.</p>
 using namespace cor3ntin::corio;</xmp>
 <div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 oneway_task <span style="color:#06b;font-weight:bold">task_with_coro</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
-    co_await s.schedule();
+    <span style="color:#080;font-weight:bold">co_await</span> s.schedule();
     printf(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>); <span style="color:#888">//runs in thread pool
 </span><span style="color:#888"></span>}
 
@@ -364,30 +286,20 @@ oneway_task <span style="color:#06b;font-weight:bold">task_with_coro</span>(exec
 
 </div>
 
-
-<p>Pretty magic!<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></p>
-
-<p>In fact, this is possible because there is <a href="https://wg21.link/p1745r0">almost</a> a <sup>1</sup>&frasl;<sub>1</sub> mapping between sender/receiver and promise/continuation of coroutines.</p>
-
-<div style="text-align:center;width:100%">
-
+<p>Pretty magic<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<p>In fact, this is possible because there is <a href="https://wg21.link/p1745r0">almost</a> a 1/1 mapping between sender/receiver and promise/continuation of coroutines.</p>
+<!-- raw HTML omitted -->
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">The factoring of `submit` into `connect`/`start` gives more flexible ownership semantics, and aligns the design conceptually with coroutines, making coroutines an efficient way of expressing sender/receiver.</p>&mdash; Eric Niebler (@ericniebler) <a href="https://twitter.com/ericniebler/status/1186760676938670080?ref_src=twsrc%5Etfw">October 22, 2019</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-
-</div>
-
-<p>&nbsp;
-&nbsp;</p>
-
+<!-- raw HTML omitted -->
+<p> 
+ </p>
 <p>15 years ago <a href="http://www.gotw.ca/publications/concurrency-ddj.htm">Herb Sutter declared the free lunch over</a>.
 But with the right set of primitives, we might just be able to have our cake and eat it too.</p>
-
 <h1 id="customization-points">Customization points</h1>
-
 <p>Almost all functions I mentioned are customization points,
 which means that they can be specialized for specific sender, or receivers, including:</p>
-
 <ul>
 <li><code>set_value(receiver)</code></li>
 <li><code>set_done(receiver)</code>,</li>
@@ -397,104 +309,69 @@ which means that they can be specialized for specific sender, or receivers, incl
 <li><code>spawn(sender, receiver)</code></li>
 <li><code>start(operation)</code></li>
 </ul>
-
 <p>The last CPO I have not yet mentioned is <code>bool is_blocking(sender)</code> that queries whether a sender will call its receiver in the current (inline) execution concept.</p>
-
 <p>Without this, it is very easy to write a program that
 does not make any <a href="https://www.youtube.com/watch?v=FJIn1YhPJJc">forward progress</a>.</p>
-
 <p>The customizations are based on <a href="https://wg21.link/p1895r0"><code>tag_invoke</code></a> a customization point object mechanism that allows type-erased objects to forward the CPO calls.</p>
-
 <p>While a very neat idea, I cannot help but think this tries to provide a library solution to a <a href="https://wg21.link/p1292r0">language problem</a>.</p>
-
 <h1 id="bulk-execution-and-properties">Bulk execution and properties</h1>
-
 <p><a href="https://wg21.link/P0443R11">P0443R11</a> also provides for bulk execution and a number of queryable properties to tune the behavior of executors&hellip;
 These are not areas I am very comfortable with for now and this article is getting long, stay tuned.</p>
-
 <p>I also want to explore in the future how we can leverage executors and <code>io_uring</code>, Grand Central Dispatch and Windows Thread Pools.</p>
-
 <p>Because I want to be able to write</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">co_await socket.write(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>);
-co_await socket.read(buffer);
-</code></pre></div>
-<p>But here is that word again, <code>executor</code>.</p>
-
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">co_await</span> socket.write(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>);
+<span style="color:#080;font-weight:bold">co_await</span> socket.read(buffer);
+</code></pre></div><p>But here is that word again, <code>executor</code>.</p>
 <h2 id="executors">Executors</h2>
-
 <p><a href="https://wg21.link/P0761">P0761</a> explains</p>
-
 <blockquote>
 <p>An executor is an object associated with a specific execution context. It provides one or more execution
 functions for creating execution agents from a callable function object. [&hellip;] Executors themselves are the primary concern of our design.</p>
 </blockquote>
-
 <p>But because receivers are a more fundamental building block than
 functions, we can implement an execute function trivially:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">execute</span>(execution_context ctx, invocable <span style="color:#080;font-weight:bold">auto</span>&amp;&amp; f) {
     <span style="color:#080;font-weight:bold">auto</span> sender = ctx.scheduler().schedule();
     spawn(std::move(sender), as_receiver(std::forward&lt;<span style="color:#080;font-weight:bold">decltype</span>(f)&gt;(f)));
 }
-</code></pre></div>
-<p>So it might be that executors are the least important part of the Executor proposal.</p>
-
+</code></pre></div><p>So it might be that executors are the least important part of the Executor proposal.</p>
 <p>And what that means then is that&hellip;</p>
-
 <p>&hellip; <code>operation</code> is the basis of operations.</p>
-
 <h2 id="acknowledgments">Acknowledgments</h2>
-
 <p>Many thanks to Lewis Baker, Eric Niebler, Kirk Shoop and David Hollman for patiently explaining their work.</p>
-
 <p>Saar Raz and Matt Godbolt for providing the tools that allow the examples in this article to compile.</p>
-
 <h2 id="resources-and-references">Resources and References</h2>
-
 <h4 id="cppcon-2019-eric-niebler-david-hollman-a-unifying-abstraction-for-async-in-c">CppCon 2019: Eric Niebler, David Hollman “A Unifying Abstraction for Async in C++”</h4>
 
-
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-  <iframe src="//www.youtube.com/embed/tF-Nz4aRWAM" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+  <iframe src="https://www.youtube.com/embed/tF-Nz4aRWAM" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
 </div>
 
-
-<h4 id="c-now-2019-david-hollman-the-ongoing-saga-of-iso-c-executors">C++Now 2019: David Hollman “The Ongoing Saga of ISO-C++ Executors”</h4>
-
+<h4 id="cnow-2019-david-hollman-the-ongoing-saga-of-iso-c-executors">C++Now 2019: David Hollman “The Ongoing Saga of ISO-C++ Executors”</h4>
 
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-  <iframe src="//www.youtube.com/embed/iYMfYdO0_OU" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+  <iframe src="https://www.youtube.com/embed/iYMfYdO0_OU" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
 </div>
-
 
 <h3 id="papers">Papers</h3>
-
 <p><a href="https://wg21.link/p1897">P1897</a> - Towards C++23 executors: An initial set of algorithms - Lee Howes</p>
-
 <p><a href="https://wg21.link/p1895">P1895</a> - tag_invoke: A general pattern for supporting customizable functions -Lewis Baker, Eric Niebler, Kirk Shoop</p>
-
 <p><a href="https://wg21.link/p1341">P1341</a> - Unifying Asynchronous APIs in the Standard Library - Lewis Baker</p>
-
 <p><a href="https://wg21.link/p1436">P1436</a> - Executor properties for affinity-based execution - Gordon Brown, Ruyman Reyes, Michael Wong, H. Carter Edwards, Thomas Rodgers, Mark Hoemmen</p>
-
 <p><a href="https://wg21.link/p1660">P1660</a> - A Compromise Executor Design Sketch (by Jared Hoberock, Michael Garland, Bryce Adelstein Lelbach, Michał Dominiak, Eric Niebler, Kirk Shoop, Lewis Baker, Lee Howes, David S. Hollman, Gordon Brown</p>
-
 <p><a href="https://wg21.link/p0443">P0443</a> -  A Unified Executors Proposal for C++ - Jared Hoberock, Michael Garland, Chris Kohlhoff, Chris Mysen, Carter Edwards, Gordon Brown, David Hollman, Lee Howes, Kirk Shoop, Eric Niebler</p>
-
 <h3 id="implementations">Implementations</h3>
-
 <p><a href="https://github.com/facebook/folly/tree/master/folly/experimental/pushmi">Pushmi</a> - Facebook/folly&rsquo;s implementation of a previous iteration of the Sender/Receiver model.</p>
-
 <p><a href="https://github.com/cor3ntin/corio">Corio</a> - The very incomplete and immature project I started recently - the best way to understand something is to implement it.
 There is barely enough in there to support this blog post</p>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1">Compiler Explorer does not support executing multi-thread code, but they are working on it. Thanks, Matt!
- <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:1" role="doc-endnote">
+<p>Compiler Explorer does not support executing multi-thread code, but they are working on it. Thanks, Matt! <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
       
     <div id="socialshareDiv">

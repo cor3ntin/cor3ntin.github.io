@@ -62,48 +62,31 @@
     <h1 class="title">move, even more simply</h1>
     
     <div class="content">
-      
-
-<p><code>std::move</code> doesn&rsquo;t move.</p>
-
+      <p><code>std::move</code> doesn&rsquo;t move.</p>
 <p>It casts to an rvalue-reference, which is a type of reference that can
 be passed to a move constructor or assignment operator, if one exists.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
 <span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#080;font-weight:bold">auto</span>) move(T&amp;&amp; a) {
     <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">static_cast</span>&lt;std::remove_reference_t&lt;T&gt;&amp;&amp;&gt;(a);
 }
-</code></pre></div>
-<p>Some expressions will be converted to rvalue-references automatically,
+</code></pre></div><p>Some expressions will be converted to rvalue-references automatically,
 when the compiler is certain that the value is expiring (will not be reused).</p>
-
 <p>This is the case for temporaries or non-reference objects returned from functions.</p>
-
 <p>In many cases, you still need to use <code>std::move</code> explicitly: C++ compilers will for example never check whether an object might be reused later in the function.</p>
-
-<h2 id="so-if-std-move-doesn-t-move-is-it-a-bad-name">So, if std::move doesn&rsquo;t move, is it a bad name?</h2>
-
+<h2 id="so-if-stdmove-doesnt-move-is-it-a-bad-name">So, if std::move doesn&rsquo;t move, is it a bad name?</h2>
 <p>No, because it shows the intent of <code>move</code>. The important point is that in the general case, by the end of the expression
 or statement in which <code>std::move</code> appears, the object might have been moved-from.</p>
-
 <p><a href="https://herbsutter.com/2020/02/17/move-simply/">Herb Sutter is right</a>: move constructors, move assignment operators and
 rvalue-reference qualified functions are just regular non-const functions.</p>
-
 <p>But, because in the 99% cases the moved-from object will be swiftly destroyed after being moved-from, a class may decide to not restore all of the invariants in these functions, for performance reasons.</p>
-
 <p>And so, in the absence of documentation that states and guarantees a known and well-behaved moved-from state,
 it is best to assume that the only valid operations on moved-from objects are assignment and destruction.</p>
-
 <p>It is also best to assume that an object that <strong>may</strong> have been moved-from has been moved-from.
 Don&rsquo;t play with fire.</p>
-
 <p>Should types offer stronger guarantees? Maybe, but that ship has sailed and in any case, it goes against the &ldquo;don&rsquo;t pay for what you don&rsquo;t use&rdquo; mantra as very few moved-from objects are ever reused.</p>
-
 <p>Does the standard library offer stronger guarantees? Sometimes, but not always and often under-documented.</p>
-
 <h2 id="this-is-still-too-complicated">This is still too complicated</h2>
-
 <p><strong>In the absence of other information, do not do anything to an object on which <code>std::move</code> has been called, except assignment operator and destructor.</strong></p>
-
 <p>C++ move is not destructive but it might as well be.</p>
 
       

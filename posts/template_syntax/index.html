@@ -62,110 +62,79 @@
     <h1 class="title">Concept and template syntax take 836</h1>
     
     <div class="content">
-      
-
-<h1 id="the-return-of-the-adjective-syntax">The return of the adjective syntax</h1>
-
+      <h1 id="the-return-of-the-adjective-syntax">The return of the adjective syntax</h1>
 <p>A couple of weeks ago, I made an article on concept terse syntax and I thank the people
 who took the time to take the poll, it was quite revealing.</p>
-
 <p>And since then a new paper, <a href="https://wg21.link/P1141">P1141 - Yet another approach for constrained declarations</a>
 came out. Despite the name, it&rsquo;s pretty much the Adjective syntax, repacked with an impressive authors list
 including Herb Sutter (author of the In-Place syntax proposal), Bjarne Stroustrup and Gabriel Dos Reis (authors of &ldquo;minimal solution&rdquo;
 proposals) and Thomas Köppe (author of one of the adjective syntax proposal), so it would seem that we are converging towards a solution
 that pleases a large number of people (and that is, after all, the name of the game).</p>
-
 <p>This will please most of my readers.</p>
-
 <figure>
     <img src="graph1.png"/> 
 </figure>
 
-
 <p>I don&rsquo;t want to sound like a broken record, but I think this syntax has a number of advantages including being easy to read,
 teach, and is unambiguous.
 It closes a bit of the difference gap between lambda and functions.</p>
-
 <p>This is what is being proposed by that paper</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(Sortable <span style="color:#080;font-weight:bold">auto</span> x); <span style="color:#888">/* constrained parameter */</span>
 <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">auto</span> x); <span style="color:#888">/* unconstrained parameter */</span>
 Sortable <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">f</span>(); <span style="color:#888">/* return type */</span>
 <span style="color:#080;font-weight:bold">template</span> &lt;Sortable Container&gt; <span style="color:#888">/*type*/</span>
 <span style="color:#080;font-weight:bold">template</span> &lt;Sortable <span style="color:#080;font-weight:bold">auto</span> c&gt; <span style="color:#888">/*value*/</span>
-</code></pre></div>
-<p>This paper also proposes constrained variables, a feature that seems quite popular.</p>
-
+</code></pre></div><p>This paper also proposes constrained variables, a feature that seems quite popular.</p>
 <figure>
     <img src="graph2.png"/> 
 </figure>
 
-
 <p>And so this paper will let you write</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Container <span style="color:#080;font-weight:bold">auto</span> c = buildClientList();
-</code></pre></div>
-<p>For convenience, it makes <code>auto</code> optional in a few places making the syntax terser.</p>
-
+</code></pre></div><p>For convenience, it makes <code>auto</code> optional in a few places making the syntax terser.</p>
 <p>For variables:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Container c = buildClientList(); <span style="color:#888">//Notice the lack of auto
-</span></code></pre></div>
-<p>For return parameter type:</p>
+</span></code></pre></div><p>For return parameter type:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Regular <span style="color:#06b;font-weight:bold">get_object</span>();
 <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">get_object</span>() -&gt; Regular;
-</code></pre></div>
-<p>The paper also addresses that <code>ConceptName auto</code> should not be separated by <code>cv-qualifiers</code> which I think is the only reasonable approach to that particular issue.
+</code></pre></div><p>The paper also addresses that <code>ConceptName auto</code> should not be separated by <code>cv-qualifiers</code> which I think is the only reasonable approach to that particular issue.
 The constrained type, is a single entity to which cv-qualifiers are then applied, whether on the west or on the east.</p>
-
 <p>Finally, it allows unconstrained deduced function parameters, such that lambda and function is once again identical</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">[](<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> &amp; foo) {} <span style="color:#888">//    Generic lambda
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> f(<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> &amp; foo); <span style="color:#888">//  Function template with a single unconstrained parameter
-</span></code></pre></div>
-<h2 id="a-few-issues">A few issues</h2>
-
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> &amp; foo); <span style="color:#888">//  Function template with a single unconstrained parameter
+</span></code></pre></div><h2 id="a-few-issues">A few issues</h2>
 <p>I think there are a few sacrifices made, so let us go over some issues and propose some fixes.
 Importantly, all changes I&rsquo;m proposing here are additives. Nothing needs to be removed or altered.</p>
-
 <p>Most of the issues have been discussed already, so I am sure they are the fruit of conscious choices to make the proposal lighter.</p>
-
 <h3 id="constrained-non-type-parameter">Constrained non type parameter.</h3>
-
 <p><a href="https://wg21.link/P1141">P1141 - Yet another approach for constrained declarations</a>] proposes 2 new syntaxes for template parameters</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">&lt;Sortable Foo&gt;       <span style="color:#888">//A type Foo which satisfies Sortable
 </span><span style="color:#888"></span>&lt;Sortable <span style="color:#080;font-weight:bold">auto</span> foo&gt;  <span style="color:#888">//A value foo whose type satisfies Sortable
-</span></code></pre></div>
-<p>Along with existing (plain C++17) syntaxes, this gives us</p>
+</span></code></pre></div><p>Along with existing (plain C++17) syntaxes, this gives us</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">&lt;<span style="color:#080;font-weight:bold">typename</span> Foo&gt;  <span style="color:#888">// Any type
 </span><span style="color:#888"></span>&lt;<span style="color:#080;font-weight:bold">auto</span> Foo&gt; <span style="color:#888">// Any value
 </span><span style="color:#888"></span>&lt;<span style="color:#888;font-weight:bold">int</span> Foo&gt;  <span style="color:#888">// A value of type int
 </span><span style="color:#888"></span>&lt;<span style="color:#080;font-weight:bold">template</span>&lt;...&gt; <span style="color:#080;font-weight:bold">typename</span> C Foo&gt; <span style="color:#888">// A template
 </span><span style="color:#888"></span>&lt;Concept Foo&gt; <span style="color:#888">// a constrained type
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">auto</span> Foo&gt; <span style="color:#888">// a constrained value
-</span></code></pre></div>
-<p>P1141 specifies that in <code>&lt;Concept auto Foo&gt;</code> concept is specifically a type constraint.
+</span></code></pre></div><p>P1141 specifies that in <code>&lt;Concept auto Foo&gt;</code> concept is specifically a type constraint.
 It is for example possible to write <code>&lt;Unsigned auto N&gt;</code> but not <code>&lt;PowerOf2 auto N&gt;</code>.
 This seems like a very artificial limitation as it makes sense for a value to be
 constrained by either its value or its type.</p>
-
 <p>Similarly, the paper removes the ability for a template template parameter to be constrained
 without resorting to a <code>require</code> clause, in order to simplify the very much non-obvious syntax of
 the working draft.</p>
-
 <p>Which is a shame because previous adjective syntaxes proposed a solution for that</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">TemplateConstraint <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>&gt; <span style="color:#080;font-weight:bold">typename</span> Foo
-</code></pre></div>
-<p>Granted, template template parameters are rare and complex enough that having to resort to a <code>require</code> clause when using them isn&rsquo;t terrible.
+</code></pre></div><p>Granted, template template parameters are rare and complex enough that having to resort to a <code>require</code> clause when using them isn&rsquo;t terrible.
 Still, it would have brought some symmetry and consistency to the syntax.
 Which bring us to the next point</p>
-
 <h3 id="typename">typename</h3>
-
 <p>I think one of the issues with the first adjective syntax papers is that people found <code>&lt;ConceptName typename T&gt;</code> overly verbose and a time where the committee was <a href="https://wg21.link/0634">down with typename</a>.
 And of course, omitting <code>typename</code> is a good default as Bjarne S notices type parameter probably constitute 99% of cases.</p>
-
 <p>So, it&rsquo;s very fortunate that we don&rsquo;t have to specify <code>typename</code> systematically.</p>
-
 <p>Yet, I wish we could optionally put <code>typename</code> (as in <code>&lt;ConceptName typename T&gt;</code>) for teaching and consistency purposes.
 It&rsquo;s not a syntax that I expect seasoned developers would use, but it would make teaching easier.</p>
-
 <p>we would have:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">&lt;<span style="color:#080;font-weight:bold">typename</span> Foo&gt;  <span style="color:#888">// Any type
 </span><span style="color:#888"></span>&lt;<span style="color:#080;font-weight:bold">auto</span> Foo&gt; <span style="color:#888">// Any value
@@ -175,109 +144,84 @@ It&rsquo;s not a syntax that I expect seasoned developers would use, but it woul
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">auto</span> Foo&gt; <span style="color:#888">// a constrained value
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">template</span>&lt;...&gt; <span style="color:#080;font-weight:bold">typename</span> Foo&gt; <span style="color:#888">// a constrained template
 </span><span style="color:#888"></span>&lt;Concept Foo&gt; <span style="color:#888">// a constrained type
-</span></code></pre></div>
-<p>In particular, notice the symetry in these three expression.</p>
+</span></code></pre></div><p>In particular, notice the symetry in these three expression.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">&lt;Concept <span style="color:#080;font-weight:bold">typename</span> Foo&gt; <span style="color:#888">// a constrained type
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">auto</span> Foo&gt; <span style="color:#888">// a constrained value
 </span><span style="color:#888"></span>&lt;Concept <span style="color:#080;font-weight:bold">template</span>&lt;...&gt; <span style="color:#080;font-weight:bold">typename</span> Foo&gt; <span style="color:#888">// a constrained template
-</span></code></pre></div>
-<p>That symmetry that is a core concept of the adjective syntaxes makes the teaching of concepts that much easier because we can actually say
+</span></code></pre></div><p>That symmetry that is a core concept of the adjective syntaxes makes the teaching of concepts that much easier because we can actually say
 that a concept constrains a parameter declaration without having to alter that declaration. &ldquo;Simply put a concept name on the left&rdquo;.
-Of course, there would be restrictions, but those restrictions are logical
- * Value concepts only apply to values
- * Template concepts only apply to concepts
- * Types concepts only apply to types&hellip; and values!</p>
-
+Of course, there would be restrictions, but those restrictions are logical</p>
+<ul>
+<li>Value concepts only apply to values</li>
+<li>Template concepts only apply to concepts</li>
+<li>Types concepts only apply to types&hellip; and values!</li>
+</ul>
 <p>Terseness and good defaults are properties to strive for, however, consistencies and uniform grammar make learning the language (or the use of a new feature, in this case, concepts)
 easier.</p>
-
 <p>To be perfectly clear, I believe <code>&lt;Concept Foo&gt;</code> to be a good default as a synonym of <code>Concept typename Foo</code>. And who knows, maybe someday we will be down with <code>auto</code> and <code>template</code> too.
 Notice that in the declaration of a function return type P1141 allows both <code>Concept auto</code> and <code>Concept</code>. So why not allow both <code>Concept</code> and <code>Concept typename</code> in template type parameters?</p>
-
 <p>These are minors issue in what I consider otherwise a very good solution.</p>
-
 <h1 id="down-with-template">Down with template!</h1>
-
 <p>The convenient syntaxes goal was never to make writing the STL or the Ranges library any easier to write.
 These libs very fined tuned, complex requirements where every parameter depends on the previous, or the next.
 And, as I like to say, if you have complex requirements, use a require clause.</p>
-
 <p>Yet, it turns out that we often need to gives a name to a template type parameter, and that convenient syntaxes
 may not be convenient that often.
 That&rsquo;s why both the Concept Lite and the &ldquo;in place&rdquo; syntax proposals had this type introducer syntax to actually give a name
 to deduced types, so they can be referred later.</p>
-
 <figure>
     <img src="graph3.png"/> 
 </figure>
 
-
 <p>I don&rsquo;t like these syntaxes: They are completely novel (in any language) and they introduce dependencies between parameter
 and new types can be introduced virtually anywhere in the signature or the body of methods, which I believe would be hard to maintain or read.
 And, it&rsquo;s important to remember when talking about syntax that code is meant to be read more than it is meant to be written.</p>
-
 <p>So we are left of the following choices</p>
-
 <ul>
 <li>Do the <code>template</code> dance : template &lt;typename T&gt; const T &amp; min(const T &amp; a, const T &amp; b);`</li>
 <li>Using decltype (and getting it wrong) : <code>auto min(const T &amp; a, decltype(a), b) -&gt; decltype(a);</code></li>
 <li>Using some kind of type introducer  <code>auto min(const auto{T} &amp; a, const T &amp;b) -&gt; const T&amp;</code></li>
 </ul>
-
 <p>Note that the last 2 syntaxes introduce dependencies between parameters declarations.</p>
-
 <p>But&hellip; is there another solution?
 I think there is.</p>
-
 <p>I had the following assumptions in mind as a starting point</p>
-
 <ul>
 <li>A lot of interest and work is being put in these convenient syntaxes.</li>
 <li>Most convenient syntaxes don&rsquo;t use a <code>template</code> keyword.</li>
 <li>The most straight-forward way to introduce a type name is to introduce a template parameter : <code>template &lt;typename T&gt; void f() { /* Do whatever with T*/ }</code></li>
 </ul>
-
 <p>I was also thinking about Lambdas. Lambdas have an interesting history. They started by not having any form of syntax support in C++11.
 Then in C++17, they gained support for auto parameters. So in C++17, you can have <code>[](auto foo){}</code> but not <code>void bar(auto foo){}</code>.</p>
-
 <p>People then realized that giving a name to the type of the deduced parameter might be useful, so in C++20,  The following syntax was introduced.
 <code>[]&lt;typename T&gt;(T foo) {}</code></p>
-
 <p>Now the type of <code>foo</code>  has a name (<code>T</code>). the syntax for what goes into these <code>&lt;&gt;</code> is exactly the same that what goes into the template parameter list of a function.
 Because it is a parameter list. But look at how unceremonious it is, while being immediately understandable by anyone familiar with C++.</p>
-
 <p>So, I&rsquo;ve started to wonder, can we just get rid of the <code>template</code> without introducing parsing ambiguities?</p>
-
 <p><code>template &lt;typename T&gt; void f()</code> would become <code>&lt;typename T&gt; void f()</code>.</p>
-
 <p>I found this to be asymetrical with use:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt; <span style="color:#888;font-weight:bold">void</span> f();
 f&lt;<span style="color:#888;font-weight:bold">int</span>&gt;();
-</code></pre></div>
-<p>and asymetric with lambda:</p>
+</code></pre></div><p>and asymetric with lambda:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">[]&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;(){}
 &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt; <span style="color:#888;font-weight:bold">void</span> f();
-</code></pre></div>
-<p>I then realized it would be more elegant to put the template parameter list after the function name:</p>
+</code></pre></div><p>I then realized it would be more elegant to put the template parameter list after the function name:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> f&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;();
-</code></pre></div>
-<p>This feels very natural to me and reasonably terse. I felt very proud and smart to have come to this novel solution that nobody thought of.
+</code></pre></div><p>This feels very natural to me and reasonably terse. I felt very proud and smart to have come to this novel solution that nobody thought of.
 But then I opened my copy of <em>Design and Evolution of C++</em> written by Bjarne Stroustrup in 1994:</p>
-
 <blockquote>
 <p>As ever, syntax was a problem. Initially, I had aimed for a syntax in which a template argument was placed immediately after the template name:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">vector</span>&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>&gt; {
+</blockquote>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">vector</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt; {
 <span style="color:#888">// . . .
 </span><span style="color:#888"></span>};
-</code></pre></div>
-<p>However, this didn&rsquo;t cleanly extend to function templates [Stroustrup, 1988b]:
-&lsquo; &lsquo;The function syntax at first glance also looks nicer without the extra keyword:
+</code></pre></div><p>However, this didn&rsquo;t cleanly extend to function templates [Stroustrup, 1988b]:
+' &lsquo;The function syntax at first glance also looks nicer without the extra keyword:
 <code>T&amp; index&lt;class T&gt;(vector&lt;T&gt;&amp; v, int i) {/*...* / }</code>
 There is typically no parallel (to class templates) in the usage, though, since function template arguments are not usually specified explicitly:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> i = index(vi,<span style="color:#00d;font-weight:bold">10</span>);
 <span style="color:#888;font-weight:bold">char</span>* p = index(vpc,<span style="color:#00d;font-weight:bold">29</span>);
-</code></pre></div>
-<p>However, there appear to be nagging problems with this &ldquo;simpler&rdquo; syntax. It is
+</code></pre></div><p>However, there appear to be nagging problems with this &ldquo;simpler&rdquo; syntax. It is
 too clever. It is relatively hard to spot a template declaration in a program because
 the template arguments are deeply embedded in the syntax of functions and
 classes and the parsing of some function templates is a minor nightmare. It is possible
@@ -289,31 +233,21 @@ not requiring a template argument to be declared before it is used would result 
 set of problems similar to those arising from the clever and convoluted C and C++
 declarator syntax.&rdquo;
 Using the final template syntax the declaration of <code>index()</code> becomes:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>&gt; T&amp; index(vector&lt;T&gt;&amp; v, <span style="color:#888;font-weight:bold">int</span> i) { <span style="color:#888">/* ... */</span> }
-</code></pre></div>
-<p>At the time, I seriously discussed the possibility of providing a syntax that allowed
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt; T&amp; index(vector&lt;T&gt;&amp; v, <span style="color:#888;font-weight:bold">int</span> i) { <span style="color:#888">/* ... */</span> }
+</code></pre></div><p>At the time, I seriously discussed the possibility of providing a syntax that allowed
 the return value of a function to be placed after the arguments. For example</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">index&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>&gt;(vector&lt;T&gt;&amp; v, <span style="color:#888;font-weight:bold">int</span> i) <span style="color:#080;font-weight:bold">return</span> T&amp; { <span style="color:#888">/* ... */</span> }
-index&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>&gt;(vector&lt;T&gt;&amp; v, <span style="color:#888;font-weight:bold">int</span> i) : T&amp; {<span style="color:#888">/*...* / }
-</span></code></pre></div>
-<p>This would solve the parsing problem, but most people like having a keyword to help
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">index&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt;(vector&lt;T&gt;&amp; v, <span style="color:#888;font-weight:bold">int</span> i) <span style="color:#080;font-weight:bold">return</span> T&amp; { <span style="color:#888">/* ... */</span> }
+index&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt;(vector&lt;T&gt;&amp; v, <span style="color:#888;font-weight:bold">int</span> i) : T&amp; {<span style="color:#888">/*...* / }
+</span></code></pre></div><p>This would solve the parsing problem, but most people like having a keyword to help
 recognize templates, so that line of reasoning became redundant.
 The <code>&lt;. . . &gt;</code> brackets were chosen in preference to parentheses because users
 found them easier to read and because parentheses are overused in the C and C++
 grammar. As it happens, Tom Pennnello proved that parentheses would have been
 easier to parse, but that doesn&rsquo;t change the key observation that (human) readers prefer
 <code>&lt;.. . &gt;</code>.</p>
-</blockquote>
-
-<div style="text-align: right; margin-bottom:1em;">
-<em>Bjarne Stroustrup, The Design and Evolution of C++, 1994</em><br/>
-<em>Bjarne Stroustrup, Parameterized Types for C++, 1988</em>
-</div>
-
+<!-- raw HTML omitted -->
 <p>And what I did then, was to reinvent a 30 years old idea&hellip;</p>
-
 <p>However, there are a lot of things to take away from this insightful quote.</p>
-
 <p>One of the issue with this syntax was that in
 <code>T foo&lt;typename T&gt;();</code>, <code>T</code> is used before it is declared. First, I don&rsquo;t believe this
 would add a lot (if any) complexity to a modern compiler, late parsing happening in quite a few places already.
@@ -321,58 +255,26 @@ But, most importantly, in C++11, we did introduce a trailing return syntax akin 
 <code>auto foo() -&gt; int ();</code>.
 The other concern regarding parsing ambiguities are resolved by always having a leading return type
 (which can be <code>auto</code>).</p>
-
 <p>At the time, templates were novels and people like having keywords for new features.
 In <a href="https://channel9.msdn.com/Events/Lang-NEXT/Lang-NEXT-2014/Keynote">What – if anything – have we learned from C++?</a>,
-Bjarne notices that:
-&gt; For new features, people insist on LOUD explicit syntax
-&gt; For established features, people want terse notation</p>
-
+Bjarne notices that:</p>
+<blockquote>
+<p>For new features, people insist on LOUD explicit syntax
+For established features, people want terse notation</p>
+</blockquote>
 <p>And indeed, it took quite a while for people to warm-up to the idea of a convenient, terse template declaration syntax.
 But, the time for a terser syntax has come, as shown by an increasing interest and an abundance of discussions in the past 5 years.
 Later attempt focuses and shoveling everything into parameter declaration, which I believe is the wrong approach, and instead
 getting rid of the <code>template</code> keyword would increase the terseness without resorting to novel confusing (In-Place)
 or ambiguous (minimal solution) syntaxes.</p>
-
 <p>And indeed, if the community and committee are willing to have functions template without any template parameter list at all, surely,
 having a shorter syntax for template parameters would be well received!</p>
-
-<div style='width: 70vw; position: relative; left: 50%; right: 50%;margin-left: -35vw; margin-right: -35vw;'>
-
-<div style="margin:auto;overflow-x:auto;">
-<table>
-<tr >
-    <th style="text-align: center"> C++20 </th>
-    <th style="text-align: center"> Proposed </th>
-</tr>
-<tr>
-<td>
-    <pre>auto sort = []&lt;typename RandomAccessIterator>
-        (RandomAccessIterator first, RandomAccessIterator second){}</pre>
-<p>
-    <pre>template&lt;class RandomAccessIterator> constexpr void sort
-        (RandomAccessIterator first, RandomAccessIterator last); </pre>
-</p>
-</td>
-<td> <pre>auto sort = []&lt;typename RandomAccessIterator>
-        (RandomAccessIterator first, RandomAccessIterator second){}</pre>
-<p>
-    <pre>constexpr void sort&lt;class RandomAccessIterator>
-        (RandomAccessIterator first, RandomAccessIterator last);</pre>
-</p>
-</td>
-</tr>
-</table>
-</div>
-</div>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <h2 id="motivation-rationale-and-design-goals">Motivation, Rationale and design goals.</h2>
-
 <p>I propose that the <em>template parameter list</em> can be put immediately after a type name in types and function declaration,
 instead of before the declaration. The <code>template</code> keyword is not used.</p>
-
 <h3 id="why">Why?</h3>
-
 <ul>
 <li>Because people have expressed a desire for a terser function template declaration syntax</li>
 <li>Because it adds a lot of consistency and uniformity to the language, notably by making lambdas and functions obey the same grammar rules.</li>
@@ -380,103 +282,59 @@ instead of before the declaration. The <code>template</code> keyword is not used
 <li>By forgoing the template keyword, template declaration feel less ceremonious, achieving a long-desired goal of some committee members to make generic programming
 more seamlessly integrated with non-generic programming.</li>
 </ul>
-
 <h3 id="why-not">Why not?</h3>
-
 <ul>
 <li>I merely proposes to get rid of the <code>template</code> keyword and shifting the <em>template-parameter-list</em> a few token to the left, which might be deemed not worth the trouble</li>
 <li>We would have 2 syntaxes to declare a template parameter list</li>
 <li>Some questions remain, notably regarding potential parsing ambiguities involving template specialization.</li>
 </ul>
-
 <h3 id="what-about-p1141">What about P1141?</h3>
-
 <p>I am strongly in favor of P1141, and this means to complement it.
 If you need to constrain a function parameter, the syntax for function parameters introduced by P1141 will serve you nicely.
 If you need to introduce a constrained named type or need to specify a relation between multiple parameters, the syntax proposed here
 will be better. Note that the syntax for constrained template parameters proposed by P1141 would apply to what I am proposing here.</p>
-
 <h3 id="is-the-world-ready-for-a-terser-syntax">Is the world ready for a terser syntax?</h3>
-
 <p>I don&rsquo;t know, it certainly looks that way.
 In any case, if we are ready for an abbreviated syntax such as P1141, we should be willing to get rid of <code>template</code> in more places.</p>
-
 <h3 id="what-about-type-introducers-such-as-proposed-by-the-concept-in-place-syntax-proposal">What about type introducers such as proposed by the &ldquo;Concept In-Place Syntax&rdquo; proposal?</h3>
-
 <p>My personal conviction is that it is a bad idea to be able to introduce types in a parameter declaration as it introducing dependencies
 between parameters and declarations, which hinder the ability to reason locally about the code.
 I see value in the &ldquo;If you need to introduce a type, use a template parameter list&rdquo;, which is how C++20&rsquo;s generic lambdas were designed.
 Here, I propose a shorter syntax to introduce types that do not require a new syntax (it&rsquo;s a familiar syntax made a bit terser).</p>
-
 <h3 id="can-it-be-made-terser-still">Can it be made terser still?</h3>
-
 <p>Yes, you can use <code>void f&lt;class T&gt;(){};</code> instead of <code>void f&lt;typename T&gt;(){};</code>
 as these two keywords have had the same meaning in this context for quite a while.</p>
-
 <h3 id="nothing-terser">Nothing terser?</h3>
-
 <p>I tend to think that terseness is a noble goal. Up to a point.
 Cramming too much information in too few keywords is done at the cost of teachability, consistency, and maintainability.
 These properties are tied together and at some point terseness becomes detrimental.</p>
-
 <h2 id="functions-and-lambda">Functions and lambda</h2>
-
 <p>The following table compares lambdas as in the C++ WD and P1141 and functions as per the following proposal.</p>
-
-<div style='width: 70vw; position: relative; left: 50%; right: 50%;margin-left: -35vw; margin-right: -35vw;'>
-
-<div style="margin:auto;overflow-x:auto;">
-<table>
-<tr >
-    <th style="text-align: center"> C++20 Lambdas </th>
-    <th style="text-align: center"> Function template </th>
-</tr>
-<tr>
-<td>
-    <pre>auto f = [](){}</pre>
-<p><pre>auto f = []() -> int {} </pre></p>
-<p><pre>auto f = [](const Containter auto &){} </pre></p>
-<p><pre>auto f = []&lt;typename T>(const T & a, const T & b){} </pre></p>
-<p><pre>auto f = []&lt;Regular T>(const T & a, const T & b){} </pre></p>
-<p><pre>auto merge = []<typename IN1, typename IN2, typename Out)
-    requires Mergeable<IN1,IN2,OUT>(IN1, IN1, IN2, IN2, OUT) -> Out;</pre></p>
-</td>
-<td> <pre>void f(){}</pre>
-<p>  <pre>auto f() -> int {} </pre></p>
-<p>  <pre>auto f(const Containter auto &){} </pre></p>
-<p>  <pre>auto f&lt;typename T>(const T & a, const T & b){} </pre></p>
-<p>  <pre>auto f&lt;Regular T>(const T & a, const T & b){} </pre></p>
-<p>  <pre>auto merge<typename IN1, typename IN2, typename Out)
-    requires Mergeable<IN1,IN2,OUT>(IN1, IN1, IN2, IN2, OUT) -> Out; </pre>
-</p>
-</td>
-</tr>
-</table>
-</div>
-</div>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <h1 id="unified-theory-of-everything">Unified Theory of Everything</h1>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">/*A lambda*/</span>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<span style="color:#888">/*A lambda*/</span>
 <span style="color:#080;font-weight:bold">auto</span> foo = [](<span style="color:#888;font-weight:bold">int</span>) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
 
 <span style="color:#888">/* A function */</span>
-<span style="color:#080;font-weight:bold">auto</span> foo(<span style="color:#888;font-weight:bold">int</span>) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
+<span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#888;font-weight:bold">int</span>) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
 
 <span style="color:#888">/* A function */</span>
-<span style="color:#888;font-weight:bold">void</span> foo(<span style="color:#888;font-weight:bold">int</span>);
+<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#888;font-weight:bold">int</span>);
 
 <span style="color:#888">/* A generic lambda */</span>
 <span style="color:#080;font-weight:bold">auto</span> foo = [](<span style="color:#080;font-weight:bold">auto</span>) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
 
 <span style="color:#888">/* A function template */</span>
-<span style="color:#888;font-weight:bold">void</span> foo(<span style="color:#080;font-weight:bold">auto</span>) {}
+<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">auto</span>) {}
 
 <span style="color:#888">/* A generic lambda with a constrained parameter as per P1141 */</span>
 <span style="color:#080;font-weight:bold">auto</span> foo = [](<span style="color:#080;font-weight:bold">const</span> Container <span style="color:#080;font-weight:bold">auto</span> &amp;) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
 
 <span style="color:#888">/* A function template with a constrained parameter as per P1141*/</span>
-<span style="color:#080;font-weight:bold">auto</span> foo(<span style="color:#080;font-weight:bold">const</span> Container <span style="color:#080;font-weight:bold">auto</span> &amp;) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
-<span style="color:#080;font-weight:bold">auto</span> foo(Container <span style="color:#080;font-weight:bold">auto</span> <span style="color:#080;font-weight:bold">const</span> &amp;) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
+<span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">const</span> Container <span style="color:#080;font-weight:bold">auto</span> &amp;) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
+<span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">foo</span>(Container <span style="color:#080;font-weight:bold">auto</span> <span style="color:#080;font-weight:bold">const</span> &amp;) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
 
 <span style="color:#888">/* A generic lambda with types introducers as per C++20*/</span>
 <span style="color:#080;font-weight:bold">auto</span> foo = []&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;(T t) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
@@ -499,10 +357,10 @@ foo&lt;<span style="color:#00d;font-weight:bold">42</span>&gt;();
 <span style="color:#888;font-weight:bold">void</span> foo&lt;Container T&gt; (T &amp; t){}
 
 <span style="color:#888">/* A generic lambda with a requires clause as per C++20*/</span>
-<span style="color:#080;font-weight:bold">auto</span> foo = []&lt;Container T&gt; requires EquallyComparable&lt;T&gt; (T &amp; t) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
+<span style="color:#080;font-weight:bold">auto</span> foo = []&lt;Container T&gt; <span style="color:#080;font-weight:bold">requires</span> EquallyComparable&lt;T&gt; (T &amp; t) -&gt; <span style="color:#888;font-weight:bold">void</span> {}
 
 <span style="color:#888">/* A function template with a requires clause : proposed*/</span>
-<span style="color:#888;font-weight:bold">void</span> foo&lt;Container T&gt; requires EquallyComparable&lt;T&gt; (T &amp; t){}
+<span style="color:#888;font-weight:bold">void</span> foo&lt;Container T&gt; <span style="color:#080;font-weight:bold">requires</span> EquallyComparable&lt;T&gt; (T &amp; t){}
 
 <span style="color:#888">/* A recursive lambda wg21.link/p0839 */</span>
 []foo&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;(T v = <span style="color:#00d;font-weight:bold">0</span>) {
@@ -527,18 +385,18 @@ Sortable <span style="color:#06b;font-weight:bold">foo</span>();
 
 <span style="color:#888">/* Merge function */</span>
 <span style="color:#080;font-weight:bold">auto</span> merge&lt;<span style="color:#080;font-weight:bold">typename</span> IN1, <span style="color:#080;font-weight:bold">typename</span> IN2, <span style="color:#080;font-weight:bold">typename</span> Out)
-    requires Mergeable&lt;IN1,IN2,OUT&gt;(IN1, IN1, IN2, IN2, OUT) -&gt; Out;
+    <span style="color:#080;font-weight:bold">requires</span> Mergeable&lt;IN1,IN2,OUT&gt;(IN1, IN1, IN2, IN2, OUT) -&gt; Out;
 
 <span style="color:#888">/* Merge lambda */</span>
 <span style="color:#080;font-weight:bold">auto</span> merge = []&lt;<span style="color:#080;font-weight:bold">typename</span> IN1, <span style="color:#080;font-weight:bold">typename</span> IN2, <span style="color:#080;font-weight:bold">typename</span> Out)
-    requires Mergeable&lt;IN1,IN2,OUT&gt;(IN1, IN1, IN2, IN2, OUT) -&gt; Out;
+    <span style="color:#080;font-weight:bold">requires</span> Mergeable&lt;IN1,IN2,OUT&gt;(IN1, IN1, IN2, IN2, OUT) -&gt; Out;
 
 <span style="color:#888">/* Same type */</span>
 <span style="color:#080;font-weight:bold">auto</span> min&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;(<span style="color:#080;font-weight:bold">const</span> T&amp;, <span style="color:#080;font-weight:bold">const</span> T&amp;) -&gt; <span style="color:#080;font-weight:bold">const</span> T&amp;;
 
 
 <span style="color:#888">/* Template class declaration */</span>
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">vector</span>&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt; {};
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">vector</span>&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt; {};
 <span style="color:#888">/* Symetric use */</span>
 <span style="color:#080;font-weight:bold">using</span> string_vector = vector&lt;string&gt;;
 
@@ -546,111 +404,89 @@ Sortable <span style="color:#06b;font-weight:bold">foo</span>();
 <span style="color:#080;font-weight:bold">using</span> my_vector&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt; = vector&lt;T&gt;;
 
 <span style="color:#888">/* Concept declaration */</span>
-concept Everything&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt; = <span style="color:#038">true</span>;
+<span style="color:#080;font-weight:bold">concept</span> Everything&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt; = <span style="color:#038">true</span>;
 <span style="color:#888">/* Symetrical use */</span>
 <span style="color:#080;font-weight:bold">static_assert</span>&lt;Everything&lt;<span style="color:#888;font-weight:bold">int</span>&gt;()&gt;;
 
 <span style="color:#888">/* Friend */</span>
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">A</span> {
-  <span style="color:#080;font-weight:bold">friend</span> <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">B</span>&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>&gt;;
-  <span style="color:#080;font-weight:bold">friend</span> <span style="color:#888;font-weight:bold">void</span> f&lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T</span>&gt;(T){ <span style="color:#888">/* ... */</span> }
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">A</span> {
+  <span style="color:#080;font-weight:bold">friend</span> <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">B</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt;;
+  <span style="color:#080;font-weight:bold">friend</span> <span style="color:#888;font-weight:bold">void</span> f&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt;(T){ <span style="color:#888">/* ... */</span> }
 };
-</code></pre></div>
-<h2 id="potential-issues-and-open-questions">Potential issues and open questions</h2>
 
+</code></pre></div><h2 id="potential-issues-and-open-questions">Potential issues and open questions</h2>
 <h3 id="can-we-have-2-template-parameters-list-in-the-same-declaration">Can we have 2 template parameters list in the same declaration?</h3>
-
 <p>Aka, should <code>template&lt;typename T&gt; void f&lt;typename U&gt;();</code> be valid ?</p>
-
 <p>For me, the answer is clearly no. While I obviously see the benefit of having a terser syntax,
 for the sake of maintainability and readability, I think a given declaration should either use a <em>template-head</em>
 (<code>template&lt;typename T&gt;</code> or a <em>template-parameter-list</em>, but never both.)</p>
-
-<h3 id="where-to-put-the-requires-clause-s">Where to put the requires clause(s)?</h3>
-
+<h3 id="where-to-put-the-requires-clauses">Where to put the requires clause(s)?</h3>
 <p>In the Working Draft, there are two places where one can put a require clause.
 After the template parameter list preceding the declaration, and before trailing return type.
 Quoting the standard:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f1</span>(<span style="color:#888;font-weight:bold">int</span> a) requires <span style="color:#038">true</span>;               <span style="color:#888">// OK
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">f2</span>(<span style="color:#888;font-weight:bold">int</span> a) -&gt; <span style="color:#888;font-weight:bold">bool</span> requires <span style="color:#038">true</span>;       <span style="color:#888">// OK
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f1</span>(<span style="color:#888;font-weight:bold">int</span> a) <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span>;               <span style="color:#888">// OK
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">f2</span>(<span style="color:#888;font-weight:bold">int</span> a) -&gt; <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span>;       <span style="color:#888">// OK
 </span><span style="color:#888">// error: requires-clause precedes trailing-return-type
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">f3</span>(<span style="color:#888;font-weight:bold">int</span> a) requires <span style="color:#038">true</span> -&gt; <span style="color:#888;font-weight:bold">bool</span>;
-</code></pre></div>
-<p>And, as I&rsquo;m proposing to have a second place to put a template parameter list, I wonder :
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">f3</span>(<span style="color:#888;font-weight:bold">int</span> a) <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span> -&gt; <span style="color:#888;font-weight:bold">bool</span>;
+</code></pre></div><p>And, as I&rsquo;m proposing to have a second place to put a template parameter list, I wonder :
 Is it reasonable or useful to have two places where to put requires clauses? At the same time?</p>
-
 <p>I am not, however, proposing to change that.
 There can be a trailing-requires-clause and a requires clauses after the template parameters list.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">// OK in the WD: truer syntad have never been worded.
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> b = <span style="color:#038">true</span>&gt; requires <span style="color:#038">true</span> <span style="color:#888;font-weight:bold">bool</span> f() -&gt; requires <span style="color:#038">true</span>
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> b = <span style="color:#038">true</span>&gt; <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span> <span style="color:#888;font-weight:bold">bool</span> f() -&gt; <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span>
 <span style="color:#888">// OK in the WD
-</span><span style="color:#888"></span>[]&lt;<span style="color:#888;font-weight:bold">bool</span> b = <span style="color:#038">true</span>&gt; requires <span style="color:#038">true</span> () -&gt; <span style="color:#888;font-weight:bold">bool</span> requires <span style="color:#038">true</span> {};
+</span><span style="color:#888"></span>[]&lt;<span style="color:#888;font-weight:bold">bool</span> b = <span style="color:#038">true</span>&gt; <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span> () -&gt; <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span> {};
 <span style="color:#888">// Ok, as proposed
-</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b = <span style="color:#038">true</span>&gt; requires <span style="color:#038">true</span> () -&gt; requires <span style="color:#038">true</span> {}
-</code></pre></div>
-<p>Because we do not allow 2 template parameter lists, the following are ill-formed:</p>
+</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b = <span style="color:#038">true</span>&gt; <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span> () -&gt; <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span> {}
+</code></pre></div><p>Because we do not allow 2 template parameter lists, the following are ill-formed:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">// Ill-formed (one template parameters list is enough)
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> a&gt; <span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b&gt;();
 <span style="color:#888">// Ill-formed !
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> a&gt; requires <span style="color:#038">true</span> <span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b&gt; requires <span style="color:#038">true</span>();
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> a&gt; <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span> <span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b&gt; <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span>();
 <span style="color:#888">// Stop it
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> a&gt; requires <span style="color:#038">true</span> <span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b&gt; requires <span style="color:#038">true</span>() requires <span style="color:#038">true</span>;
-</code></pre></div>
-<h3 id="should-a-leading-return-type-depending-on-a-template-parameter-be-valid">Should a leading return type depending on a template parameter be valid?</h3>
-
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">bool</span> a&gt; <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span> <span style="color:#888;font-weight:bold">bool</span> f&lt;<span style="color:#888;font-weight:bold">bool</span> b&gt; <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span>() <span style="color:#080;font-weight:bold">requires</span> <span style="color:#038">true</span>;
+</code></pre></div><h3 id="should-a-leading-return-type-depending-on-a-template-parameter-be-valid">Should a leading return type depending on a template parameter be valid?</h3>
 <p>The function <code>template &lt;typename T&gt; T make_t();</code> can be rewritten <code>auto make_t&lt;typename T&gt;() -&gt; T;</code>.
 But should we allow <code>T make_t&lt;typename T&gt;();</code> to be well-formed, ie to refer to a not-yet-declared type?</p>
-
 <p>This would require delaying the parsing of the return type of all
 functions (except those that are preceded by a <em>template-head</em> ), until after the parsing of
 the <em>template-parameter-list</em> that may be present after the function name.</p>
-
 <p>While I think this could be implemented, the complexity it would add may not be worth the trouble.
 Using type before they have been declared also sets a precedent I&rsquo;m not quite comfortable with.
 The closest valid syntax to that I can think of is <code>struct S* s;</code></p>
-
 <h3 id="specialization">Specialization</h3>
-
 <p>The proposed syntax has the potential to make template specialization easier, by putting the template parameter list closer to the related declaration.</p>
-
 <p>Given</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T1</span>&gt; <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">A</span> {
-    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T2</span>&gt; <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">B</span> {
-        <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">T3</span>&gt; <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">C</span> {};
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T1</span>&gt; <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">A</span> {
+    <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T2</span>&gt; <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">B</span> {
+        <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T3</span>&gt; <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">C</span> {};
     };
 };
-</code></pre></div>
-<p>This specialization</p>
+
+</code></pre></div><p>This specialization</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;&gt;
 <span style="color:#080;font-weight:bold">template</span> &lt;&gt;
 <span style="color:#080;font-weight:bold">template</span> &lt;&gt;
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">A</span>&lt;<span style="color:#888;font-weight:bold">int</span>&gt;::B&lt;<span style="color:#888;font-weight:bold">int</span>&gt;::C&lt;<span style="color:#888;font-weight:bold">int</span>&gt; {};
-</code></pre></div>
-<p>Can be rewritten as <code>class A&lt;int&gt;::B&lt;int&gt;::C&lt;int&gt; {};</code>, which is less verbose, while still being readable.</p>
-
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">A</span>&lt;<span style="color:#888;font-weight:bold">int</span>&gt;::B&lt;<span style="color:#888;font-weight:bold">int</span>&gt;::C&lt;<span style="color:#888;font-weight:bold">int</span>&gt; {};
+</code></pre></div><p>Can be rewritten as <code>class A&lt;int&gt;::B&lt;int&gt;::C&lt;int&gt; {};</code>, which is less verbose, while still being readable.</p>
 <p>In fact, a compiler can diagnostic a missing <code>template &lt;&gt;</code>.</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> X&gt; <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">D</span>{};
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">D</span>&lt;<span style="color:#888;font-weight:bold">int</span>&gt;{};
+<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> X&gt; <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">D</span>{};
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">D</span>&lt;<span style="color:#888;font-weight:bold">int</span>&gt;{};
 <span style="color:#888">//error: an explicit specialization must be preceded by &#39;template &lt;&gt;&#39;
 </span></code></pre></div>
 </div>
 
-
 <p>There may, however, be some issues.</p>
-
 <p>For one, given <code>class Foo&lt;int&gt;{};</code>, a human reader, without context, can&rsquo;t know whether <code>Foo</code> declares a template class with an <code>int</code> template
 parameter or specialize <code>Foo</code> for <code>ìnt</code>.
 Given the outcomes of numerous recent syntax-related discussions, I do expect that people will want a way to make that distinction.</p>
-
 <p>But the compiler would also have to do some look ahead to distinguish declarations from specialization with nested types.
 The following example was provided by Tony V.E. While unambiguous, it requires a bit more look ahead:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> T { ... };
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">T</span> { ... };
 Bar foo&lt;<span style="color:#080;font-weight:bold">typename</span> T::type&gt;(<span style="color:#888;font-weight:bold">int</span> t);
-</code></pre></div>
-<p>I think it might be reasonable not to allow specialization using this new syntax as a first approach,
+</code></pre></div><p>I think it might be reasonable not to allow specialization using this new syntax as a first approach,
 specialization can still be achieved using the current syntax.</p>
 
       

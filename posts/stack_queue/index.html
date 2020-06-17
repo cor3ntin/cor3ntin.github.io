@@ -62,18 +62,18 @@
     <h1 class="title">Stranded with a C&#43;&#43; compiler and a bunch of queues</h1>
     
     <div class="content">
-      <p>A friend had a phone interview for a job in a company that I won’t name
-- It’s Microsoft. One of the questions was about describing how he would
-write a stack, only using standard queues.</p>
-
+      <p>A friend had a phone interview for a job in a company that I won’t name</p>
+<ul>
+<li>It’s Microsoft. One of the questions was about describing how he would
+write a stack, only using standard queues.</li>
+</ul>
 <p>I was confounded, because long before an algorithm could form in my
 mind, I already decided that there was no solution that would actually
 be useful in any real life scenario.</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container = std::queue&lt;T&gt;&gt;
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">stack</span> {
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">stack</span> {
 <span style="color:#080;font-weight:bold">public</span>:
     <span style="color:#888;font-weight:bold">void</span> push(<span style="color:#080;font-weight:bold">const</span> T &amp;);
     <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">pop</span>();
@@ -108,30 +108,24 @@ be useful in any real life scenario.</p>
 </code></pre></div>
 </div>
 
-
 <p>That the only solution I could find; To be honest, I was too lazy to
 come up with the algorithm myself, but it’s really straight forward.</p>
-
 <p>It has $\mathcal{O}( n )$ complexity, and… let’s just say it does not really scale.</p>
-
 <p>But, it’s quite an interesting algorithm nonetheless. See, for a huge
 company to ask this question to every candidate, I can only assume one
 former employee found themselves stranded on an island, with a bunch of
 queues. Their survival depended on having a stack, they failed to come
 up with the proper solution and died.</p>
-
 <p>It’s the only explanation that make sense to me; The other explanation
 would be that large companies ask really stupid &amp; meaningless interview
 questions, and, well&hellip; that’s just silly.</p>
-
 <p>Then, my friend told me the next question was about creating a queue
 using stacks.</p>
-
 <p>Sure, why not ?
 <div class="compiler_explorer compiler_explorer_block highlight"  >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span> Container&gt;
-<span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2"> </span><span style="color:#b06;font-weight:bold">queue</span> {
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">queue</span> {
 <span style="color:#080;font-weight:bold">public</span>:
     <span style="color:#888;font-weight:bold">void</span> push(<span style="color:#080;font-weight:bold">const</span> T &amp;);
     <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">pop</span>();
@@ -167,83 +161,73 @@ using stacks.</p>
 </code></pre></div>
 </div>
 </p>
-
 <p>My friend and I debated about the complexity of this algorithm. I
 explained to him it was n². If our hero was stranded on an island, they
 could not have standard stacks shipped their way by amazon, and would
 have had to use what they had: a stack made of queues.</p>
-
 <p>Of course, our unfortunate hero had a stock of standard queues to begin
 with, but maybe hey could’t use them, for some reason. After all, he
 didn’t invent them himself so it was better to rewrite them anyway.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt; <span style="color:#080;font-weight:bold">using</span> MyQueue = queue&lt;T, stack&lt;T&gt;&gt;;
-</code></pre></div>
-<p>By that point, the poor cast away recognize a knife would have been more
+</code></pre></div><p>By that point, the poor cast away recognize a knife would have been more
 useful than a standard container and they realized their death was
 nothing but certain.</p>
-
 <p>And, as the hunger and their impending doom lead to dementia, they
 started to wonder… can we go deeper ?</p>
-
 <p>After all, it is good practice to have good, solid foundations, and a
 bit of judiciously placed redundancy never hurts.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
 <span style="color:#080;font-weight:bold">using</span> MyQueue = queue&lt;T, stack&lt;T, queue&lt;T, stack&lt;T, std::queue&lt;T&gt;&gt;&gt;&gt;&gt;
-</code></pre></div>
-<figure>
+</code></pre></div><figure>
     <img src="https://cdn-images-1.medium.com/max/800/1*-lkFAZJdBQPlFLtCfU86OQ.png"/> <figcaption>
             <h4>A tree representation of a stack based queue</h4>
         </figcaption>
 </figure>
 
-
 <p>The structure has the property of being self-tested and grows
-exponentially more robust at the rate of 2\^n which could prove very
+exponentially more robust at the rate of 2^n which could prove very
 useful for critical applications. We can however lament that 4 levels is
 a bit arbitrary and limited.</p>
-
 <p>Fortunately, I made the assumption that our hero, has with them a C++
 compiler. That may be a depressing consideration when you haven’t drink
 for 3 days, but, isn’t meta programming fantastic ?</p>
-
 <p>After a bit a tinkering, cursing and recursing, it is possible to create
 a queue of stacks - or a stack of queue - of arbitrary depth.</p>
-
 <div class="compiler_explorer compiler_explorer_block highlight"  >
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#080;font-weight:bold">namespace</span> details {
     <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>...Args&gt;
-    <span style="color:#080;font-weight:bold">struct</span> outer {
+    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">outer</span> {
         <span style="color:#080;font-weight:bold">using</span> type = queue&lt;T, Args...&gt;;
     };
 
 
     <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>...Args&gt;
-    <span style="color:#080;font-weight:bold">struct</span> outer&lt;T, stack&lt;Args...&gt;&gt; {
+    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">outer</span>&lt;T, stack&lt;Args...&gt;&gt; {
         <span style="color:#080;font-weight:bold">using</span> type = queue&lt;T, stack&lt;Args...&gt;&gt;;
     };
 
     <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>...Args&gt;
-    <span style="color:#080;font-weight:bold">struct</span> outer&lt;T, queue&lt;Args...&gt;&gt; {
+    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">outer</span>&lt;T, queue&lt;Args...&gt;&gt; {
         <span style="color:#080;font-weight:bold">using</span> type = stack&lt;T, queue&lt;Args...&gt;&gt;;
     };
 
     <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">unsigned</span> N, <span style="color:#080;font-weight:bold">typename</span> T&gt;
-    <span style="color:#080;font-weight:bold">struct</span> stack_generator {
+    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">stack_generator</span> {
         <span style="color:#080;font-weight:bold">using</span> type  = <span style="color:#080;font-weight:bold">typename</span> outer&lt;T, <span style="color:#080;font-weight:bold">typename</span> stack_generator&lt;N-<span style="color:#00d;font-weight:bold">1</span>, T&gt;::type&gt;::type;
     };
     <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">unsigned</span> N, <span style="color:#080;font-weight:bold">typename</span> T&gt;
-    <span style="color:#080;font-weight:bold">struct</span> queue_generator {
+    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">queue_generator</span> {
         <span style="color:#080;font-weight:bold">using</span> type  = <span style="color:#080;font-weight:bold">typename</span> outer&lt;T, <span style="color:#080;font-weight:bold">typename</span> queue_generator&lt;N-<span style="color:#00d;font-weight:bold">1</span>, T&gt;::type&gt;::type;
     };
 
     <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
-    <span style="color:#080;font-weight:bold">struct</span> stack_generator&lt;<span style="color:#00d;font-weight:bold">0</span>, T&gt; {
+    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">stack_generator</span>&lt;<span style="color:#00d;font-weight:bold">0</span>, T&gt; {
         <span style="color:#080;font-weight:bold">using</span> type = queue&lt;T&gt;;
     };
 
     <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
-    <span style="color:#080;font-weight:bold">struct</span> queue_generator&lt;<span style="color:#00d;font-weight:bold">0</span>, T&gt; {
+    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">queue_generator</span>&lt;<span style="color:#00d;font-weight:bold">0</span>, T&gt; {
         <span style="color:#080;font-weight:bold">using</span> type = stack&lt;T&gt;;
     };
 
@@ -261,39 +245,38 @@ a queue of stacks - or a stack of queue - of arbitrary depth.</p>
 </code></pre></div>
 </div>
 
-
 <p>They are pretty cool and easy to use:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">stack&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#00d;font-weight:bold">13</span>&gt; stack;
 queue&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#00d;font-weight:bold">13</span>&gt; stack;
-</code></pre></div>
-<p>On the system it was tested with, $N=13$ was sadly the maximum possible
+</code></pre></div><p>On the system it was tested with, $N=13$ was sadly the maximum possible
 value for which the program would not crash at runtime - The deepest
 level consists of 8192 queues. The compiler was unable to compile a
 program for $N &gt; 47$. At that point the generated executable weighted
 merely 240MB</p>
-
 <p>I expect these issues to be resolved as the present solution - for which
 a Microsoft employee probably gave their life - gains in popularity.
 However, for $N &gt; 200$, the author reckon than the invention of
 hardware able to withstand the heat death of the universe is necessary.</p>
-
 <p>You may be wondering if you should use those containers in your next
 application ? Definitively ! Here are some suggestions.</p>
-
 <ul>
-<li><p>An internet enabled toaster : A sufficiently big value of $N$ should
+<li>
+<p>An internet enabled toaster : A sufficiently big value of $N$ should
 let you use the CPU as the sole heating element leading to a to a
 slimmer and more streamlined design, as well as reducing
-manufacturing costs.</p></li>
-
-<li><p>In an authentication layer, as the system has a natural protection
+manufacturing costs.</p>
+</li>
+<li>
+<p>In an authentication layer, as the system has a natural protection
 against brute force attacks. N should be at least inversely
 proportional to the minimum entropy of your stupid password creation
 rules. The presented solution is however not sufficient to prevent
-Ddos</p></li>
-
-<li><p>Everywhere you wondered if you should use a vector but used a linked
-list instead.</p></li>
+Ddos</p>
+</li>
+<li>
+<p>Everywhere you wondered if you should use a vector but used a linked
+list instead.</p>
+</li>
 </ul>
 
       

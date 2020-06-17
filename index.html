@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.57.2" />
+	<meta name="generator" content="Hugo 0.68.3" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -158,9 +158,7 @@ Auto Non-Static Data Members Initializers A while back I presented auto non-stat
         <h2 class="subtitle is-6">February 24, 2020</h2>
         <h1 class="title"><a href="https://cor3ntin.github.io/posts/abi/">The Day The Standard Library Died</a></h1>
         <div class="content">
-            In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.
-There was no applause.
-But I&rsquo;m not sure we fully understood what we did and the consequences it could have.
+            In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.There was no applause.But I&rsquo;m not sure we fully understood what we did and the consequences it could have.
 I do believe none of the consequences will be good.
 What is ABI ABI is the shared understanding libraries have about how your program is serialized, both in term of layout, calling convention and mangling.
             
@@ -209,7 +207,7 @@ Bjarne Stroustrup reminded us that concepts are mentioned in Design and Evolutio
         <div class="content">
             std::move doesn&rsquo;t move.
 It casts to an rvalue-reference, which is a type of reference that can be passed to a move constructor or assignment operator, if one exists.
-template &lt;typename T&gt; decltype(auto) move(T&amp;&amp; a) { return static_cast&lt;std::remove_reference_t&lt;T&gt;&amp;&amp;&gt;(a); }  Some expressions will be converted to rvalue-references automatically, when the compiler is certain that the value is expiring (will not be reused).
+template &lt;typename T&gt; decltype(auto) move(T&amp;&amp; a) { return static_cast&lt;std::remove_reference_t&lt;T&gt;&amp;&amp;&gt;(a); } Some expressions will be converted to rvalue-references automatically, when the compiler is certain that the value is expiring (will not be reused).
 This is the case for temporaries or non-reference objects returned from functions.
             
             <a class="button is-link" href="https://cor3ntin.github.io/posts/move/" style="height:28px">

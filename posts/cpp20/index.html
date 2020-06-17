@@ -62,114 +62,82 @@
     <h1 class="title">Shipping C&#43;&#43;20 in Prague</h1>
     
     <div class="content">
-      
-
-<figure>
+      <figure>
     <img src="prague.webp"/> 
 </figure>
 
-
 <p>C++20 has shipped!</p>
-
 <p>C++ is better and more alive than it has ever been.</p>
-
 <p>You might have read on the Internet (rarely a good idea), that C++ grows too fast,
 too complicated, too big.
 I do not think this is true.</p>
-
 <p>Bjarne Stroustrup reminded us that concepts are mentioned in <a href="https://www.amazon.com/Design-Evolution-C-Bjarne-Stroustrup/dp/0201543303">Design and Evolution of C++</a>, a book written in 1994, before even the first C++ standard. Coroutines and Modules are also old ideas that represent more than a decade of work. Ranges is probably the most refined large proposal and represent a huge body of work, notably from Eric Niebler and Casey Carter, with small tweaks from many, many people.
 <code>std::fmt</code> also took many years of effort, while drawing from usage in other languages, notably Python.</p>
-
 <p>This is not a coincidence:</p>
-
 <p>I think most committee members are driven by the desire to make the language simpler.</p>
-
 <p>Concepts may be hard to define, but they are easy to use. Same for ranges and views.
 <code>std::format</code> is really easy to use, coroutines are challenging to write but easy to use and
 make async code more maintainable and safer.</p>
-
 <p>In all, C++ is gaining new tools to better express its core principles.</p>
-
 <p>That doesn&rsquo;t mean C++20 is perfect or that no mistake was made.
 But what one can consider a mistake is often the result of difficult to
 balance trade-offs and well-understood compromises.
 I might go into some of the things I don&rsquo;t like in a separate article,
 if there is an interest for that.</p>
-
 <p>Regardless, I think the entire committee tried to make
 C++20 as best as we could and I think we were successful in that.
 Objectively, C++20 is simpler and more expressive than previous C++ versions.</p>
-
 <figure>
     <img src="river.webp"/> 
 </figure>
-
 
 <p>The release of C++20 means that features under the <code>-std=c++20</code> (or <code>-std=c++2a</code>)
 flags of your compiler are now stable as far as the standard is concerned
 and I would encourage you to use them as they become available in your compilers.
 It will make you and your team more productive.
 Of course, C++ is a tool: use what you need when you need it!</p>
-
 <p>Modules do require build system support, I suspect this will remain
 a mess for the foreseeable future.</p>
-
 <p>Coroutines have no library components in C++20, you can use <a href="https://github.com/lewissbaker/cppcoro">cppcoro</a> in the meantime.</p>
-
 <p>Everything else can be used very simply as it becomes available in
 compilers. We should also see an increasing number of talks, tutorials
 and educative material on all these features.
 You don&rsquo;t need to understand everything at once. It is a large release catering to
 many domains, expert library writers and everybody else at the same time.</p>
-
 <p>I have found that the small features are often the most immediately useful
 and appreciated.
 Things like <a href="https://en.cppreference.com/w/cpp/container/map/contains"><code>.contains</code></a>,
 <a href="https://en.cppreference.com/w/cpp/string/basic_string/ends_with"><code>ends_with</code>, <code>starts_with</code></a>,
 more optional <code>typename</code>, initializers for <code>if</code> and <code>range-for</code>, generated <code>=!</code>, spaceship,
 etc</p>
-
 <p>As is tradition, the room-by-room details of what happens in the committee
 can be found on <a href="https://www.reddit.com/r/cpp/comments/f47x4o/202002_prague_iso_c_committee_trip_report_c20_is/">Reddit</a>.</p>
-
 <p>As such, instead of trying to give an incomplete overview of the week,
 I&rsquo;d figure I should talk about what I have been working on these past few years.</p>
-
 <h2 id="a-busy-couple-of-years">A busy couple of years</h2>
-
 <p>A little under two years ago, I went to my first meeting, in Rapperswil, Switzerland.
 I don&rsquo;t remember exactly <em>why</em>, I guess I wanted to see how the sausage was made.</p>
-
 <figure>
     <img src="sausage.webp"/> <figcaption>
             <h4>Sausage making</h4>
         </figcaption>
 </figure>
 
-
 <p>I have been to all meetings ever since, and have contributed the best I could to the sausage
 making process, notably:</p>
-
 <h3 id="move-only-iterators">Move-only iterators</h3>
-
 <p><a href="https://wg21.link/P1207">P1207</a>
 <a href="https://wg21.link/P1826">P1826</a></p>
-
 <p>Not all objects are regular. For example, file handles, sockets and coroutines handle are not
 regular, which mean they cannot or should not be copied.</p>
-
 <p>Iterators over these objects pretended to be regular because move-only objects were not a thing
 when the STL was first standardized. This led to unsafe, less efficient code.</p>
-
 <p><code>std::ranges</code> allowed us to tweak the <code>iterator</code> concept to allow for move-only iterators.
 This was a very small change to a core concept but it required a lot of work.
 Would I have done it if I knew how much work it would require?
 I don&rsquo;t know but I am sure glad I did.</p>
-
-<h3 id="pulling-source-location-out-of-the-library-ts">Pulling source_location out of the library TS</h3>
-
+<h3 id="pulling-source_location-out-of-the-library-ts">Pulling source_location out of the library TS</h3>
 <p><a href="https://wg21.link/p1208">P1208</a></p>
-
 <p><code>source_location</code> is by large the work of Robert Douglas. It replaces the
 <strong>FILE</strong> and <strong>LINE</strong> macros.
 Unfortunately, it was slowly dying in the Library Fundamentals TS, as proposals in Library
@@ -177,51 +145,35 @@ Fundamentals do.
 I convinced the committee to fish it out and merge it in C++20.
 In the end, I got busy with too many things so I had to ask Robert to push <code>source_location</code>
 through the finish line. It turns out he had to pull multiple all-nighters to redraft the wording several times&hellip; People pull heroics during meetings.</p>
-
 <p>Fun fact, <code>source_location</code> is the first reflection facility merged into the standard and
 the first (and so far only) <code>consteval</code> function in C++. Expect a lot more in 23!</p>
-
 <h3 id="deprecating-comma-operator-in-subscript-expressions">Deprecating comma operator in subscript expressions</h3>
-
 <p><a href="https://wg21.link/p1161">P1161</a></p>
-
 <p>I think a lot of people are excited about this one. It&rsquo;s the first step towards
 a nice multi-dimensional indexing syntax, notably for <code>mdspan</code>.
 I hope to have a proposal for that in Belfast, pending implementation.</p>
-
 <p>Thanks to Isabella Muerte who had a <a href="https://wg21.link/p1277r0">similar proposal</a>!</p>
-
-<h3 id="better-constructors-for-span-and-string-view">Better constructors for span and string_view</h3>
-
+<h3 id="better-constructors-for-span-and-string_view">Better constructors for span and string_view</h3>
 <p><a href="https://wg21.link/P1394">P1394</a>
 <a href="https://wg21.link/P1391">P1391</a>
 <a href="https://wg21.link/P1989">P1989</a></p>
-
 <p><code>span</code> and <code>string_view</code> can now be constructed from a pair of contiguous
 iterators.
 <code>span</code> can additionally be constructed from any <code>contiguous_range</code>.
 I was hoping to do the same treatment to <code>string_view</code> but because of the mess that is the <code>string</code> and <code>string_view</code> construction and conversion overloads, we decided to postpone that to 23.
 I am hoping that this will get accepted in Varna, we will see.</p>
-
-<h3 id="views-keys-views-values-views-elements">views::keys views::values views::elements</h3>
-
+<h3 id="viewskeys-viewsvalues-viewselements">views::keys views::values views::elements</h3>
 <p><a href="https://wg21.link/p1035r7">P1035</a></p>
-
 <p>Christopher Di Bella did 99% of the work on these (and added a whole range of useful views).
 At the names implies, <code>views::keys</code> and <code>views::values</code> let you iterate over the keys and values of an associative container.
 <code>views::elements</code> is a generalisation of that: it let you iterate over the Nth elements of a sequence of tuples</p>
-
 <h2 id="some-personal-failures-and-rejected-proposals">Some personal failures and rejected proposals</h2>
-
 <figure>
     <img src="glass.webp"/> 
 </figure>
 
-
-<h3 id="ranges-to">ranges::to</h3>
-
+<h3 id="rangesto">ranges::to</h3>
 <p><a href="https://wg21.link/P1206">P1206</a></p>
-
 <p><code>ranges::to</code> missed the train - We are hoping it will land early in C++23.
 Many people have voiced their disappointment.
 I&rsquo;ll try to provide a standalone header to do that, at some point.
@@ -229,59 +181,39 @@ One of the reasons it didn&rsquo;t land in 20 is that LWG was extremely busy and
 papers, including <code>stacktrace</code> are still in their queue.
 The other is that I was unable to provide wording.
 <code>static_extent</code> also missed the boat, I have no idea if we will be able to retroactively apply it to span.</p>
-
 <h3 id="make-deprecated-thing-deprecated">Make deprecated thing [[deprecated]].</h3>
-
 <p><a href="https://wg21.link/p1702r0">P1702</a></p>
-
 <p>LEWG decided they wouldn&rsquo;t want to force implementers to warn on depreciation,
 which I think is unfortunate.
 But it led to an interesting discussion about depreciation in the standard library,
 so that paper was still very useful I think.</p>
-
 <h3 id="inline-in-module">inline in module</h3>
-
 <p><a href="https://wg21.link/p1604r1">P1604</a></p>
-
 <p>I failed to convinced the committee that <code>inline</code> in modules made no sense at all.
 Fortunately, some of the damages were fixed by <a href="https://wg21.link/p1779r3">ABI isolation for member functions - Davis Herring</a>.
 Unfortunately, <code>inline</code> still has too many meanings, especially in modules where it just shouldn&rsquo;t be a thing at all.</p>
-
 <h3 id="module-naming">module naming</h3>
-
 <p><a href="https://wg21.link/p1634r0">P1634</a></p>
-
 <p>Tooling rejected offering any kind of naming of structure guideline for modules.</p>
-
 <p><a href="https://cor3ntin.github.io/posts/modules_naming/">I believe</a> this will have a long-lasting, negative effect on the ecosystem.
 As a result of that, we can expect more build scripts, more extensions,
 more incompatibilities between projects and overall, ever more brittle build systems.</p>
-
 <h2 id="a-great-meeting">A great meeting</h2>
-
 <p>Our hosts Avast and Hana Dusíková were fantastic! They arranged for a barista to serve proper tasty coffee which was miles better than the usual conference &ldquo;coffee&rdquo;. It&rsquo;s particularly appreciated in these meetings where many people have very little sleep.</p>
-
 <figure>
     <img src="street.webp"/> 
 </figure>
 
-
 <p>Prague turned out to be a wonderful city with lots of fun museums and great food!</p>
-
 <h2 id="it-takes-an-army">It takes an army</h2>
-
 <p>WG21 has now routinely well over 200 attendees and about 20 study groups.
 It a lot of work by many, many very talented people over multiple years to build something
 like C++20.
 My own proposals were only possible thanks to the help of many people!</p>
-
 <p>We have now turned our attention to C++23.</p>
-
 <p>Independently of the so-called plan, I&rsquo;m looking forward to reflection, sender-receivers, i/o,
 rellocation, freestanding, more Unicode support, pattern matching, <code>std::embed</code> and many small quality of life improvements (including <del>ranges2</del> <code>ranges::to</code>, promise!).</p>
-
 <p>See you in Varna!</p>
-
 <figure>
     <img src="wg21.png"/> 
 </figure>
