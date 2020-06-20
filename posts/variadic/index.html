@@ -177,6 +177,31 @@ f(<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;fo
 <span style="color:#888">// =&gt; f(auto a, auto b1, auto b2, auto b3, auto c, auto d = 1);
 </span></code></pre></div><p>But a better strategy would be to make this scenario ambiguous
 which is less error-prone and more consistent.</p>
+<p>That doesn&rsquo;t mean that variadic parameters and default parameters cannot co-exist.
+Let&rsquo;s go back to the <code>source_location</code> use case:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(<span style="color:#080;font-weight:bold">auto</span>... args, source_location = source_location::current());
+</code></pre></div><p>A call to <code>log(1, 2)</code> is unambiguous.
+after argument type deduction, the following function can be imagined to exist: <code>void log(int, source_location)</code> and <code>void log(int, int, source_location = /*...*/)</code>.
+Overload resolution is then not ambiguous, the program is well-formed.</p>
+<p>But what about <code>log(source_location{})</code>?</p>
+<p>We can imagine both these to be synthetized:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(source_location = source_location::current());
+<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(source_location, source_location = source_location::current());
+</code></pre></div><p>Which during overload resolution would be considered ambiguous, and therefore ill-formed.
+But what if you want to write a function that forward all of it&rsquo;s argument while still having default parameter of its own?
+Maybe <code>log(source_location{})</code> is a perfectly reasonable thing to do!</p>
+<p>This can be solved by a tag on the callee side, without further language modification</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">my_end_of_parameters_tag_t</span>{};
+<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(<span style="color:#080;font-weight:bold">auto</span>... args, my_end_of_parameters_tag_t = {}, source_location = source_location::current());
+</code></pre></div><p>now, the call <code>log(source_location{})</code> can synthetize</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(my_end_of_parameters_tag_t, source_location = source_location::current());
+<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(source_location, my_end_of_parameters_tag_t = {}, source_location = source_location::current());
+</code></pre></div><p>which during overload resolution correctly selects <code>log(source_location, my_end_of_parameters_tag_t, source_location)</code></p>
+<p>The general idea is provide to overload resolution a choice of two synthetized functions, one which assume that
+an argument was provided for the first defaulted parameter, and one which was not.
+Then overload resolution can do its thing without being modified.
+The handling of interaction between variadic parameters and defaulted parameters is some thing that still needs to
+be refined.</p>
 <p>With these rules, a function would still be limited to one parameter pack,
 but this parameter pack would be allowed to appear anywhere in the function
 parameter list, and argument type and overload resolution would behave in
