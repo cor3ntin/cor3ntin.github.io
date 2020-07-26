@@ -82,7 +82,7 @@ are now many compilers that can implement the executors proposal.</p>
 <li>The <code>scheduler</code> concept which let you schedule an operation on a given context (such as a thread pool)</li>
 <li>The <code>executor</code> concept on which let you execute a function on a given context (such as a thread pool).
 We saw how <code>executor</code> were rather not worthy of a concept as <code>executor::execute(Func)</code>
-could simply be a <!-- raw HTML omitted -->CPO<!-- raw HTML omitted --> for <code>submit(schedule(scheduler), std::as_receiver(Func))</code> <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</li>
+could simply be a <abbr title="Customization Point Object">CPO</abbr> for <code>submit(schedule(scheduler), std::as_receiver(Func))</code> <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</li>
 </ul>
 <p>Being able to run code on an execution context, such as a thread is great.
 But, what if you wanted to run code later? Maybe some piece for code needs to run every 5 minutes:</p>
@@ -181,7 +181,7 @@ but has since then improved support for sockets. It is so good it might morph in
 <p><code>io_uring</code> is based on 2 queues (one for submission and one for completion) that are shared between the kernel.
 The kernel can read from the submission queue while the application thread can read from the
 completion queue even as the kernel writes to it.</p>
-<!-- raw HTML omitted -->
+<img src="uring.svg" alt="IO uring Proactor"/>
 <p>The queues are lock-free single consumer, single producer rings (hence the name).
 Since Linux 5.5 the kernel will maintain an overflow list to hold completion until
 there is space in the completion queue.</p>
@@ -293,7 +293,7 @@ It is a simple utility which can represent a time, either relative or absolute</
 </code></pre></div><p>Here, <code>execution::schedule(s, 5min);</code> returns a sender, like we saw last time for the <code>schedule</code>
 algorithm.
 The only difference is that the <code>start</code> method will lead to a timeout &ldquo;i/o&rdquo; operation being scheduled by the kernel.</p>
-<!-- raw HTML omitted -->
+<img src="schedule_deadline.svg" alt="IO uring Proactor"/>
 <p><code>io_uring</code> happens to have built-in timeout support. Other scheduler may use <a href="http://man7.org/linux/man-pages/man2/timerfd_create.2.html"><code>timerfd</code></a> or <a href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpooltimer?"><code>CreateThreadpoolTimer</code></a> on windows.</p>
 <p>Beside timers, most Asynchronous APIS support:</p>
 <ul>
@@ -367,7 +367,7 @@ time as <code>std::jthread</code><sup id="fnref:11"><a href="#fn:11" class="foot
 true once <code>stop_source::request_stop()</code> is called.
 In addition, callbacks can be triggered automatically when <code>stop_source::request_stop()</code>
 is called.</p>
-<!-- raw HTML omitted -->
+<img src="stop.svg" alt="Stop Callback"/>
 <p>All tokens and callbacks attached to the same <code>stop_source</code> share the same
 thread-safe ref-counted shared state.
 (You are still responsible for making sure the functions used as <code>stop_callback</code> are themselves
@@ -442,7 +442,7 @@ success, failure, and cancellation.</p>
 <p>We cannot use types to discriminate success and failure as they may have the same type.</p>
 </li>
 </ol>
-<!-- raw HTML omitted -->
+ <p/>
 <ol start="2">
 <li><strong>Use exceptions to propagate both errors and cancellation</strong></li>
 </ol>
@@ -466,10 +466,10 @@ success, failure, and cancellation.</p>
 This is a simplified diagram of a coroutine.
 The coroutines is suspended and then resumed at a specific point represented by a continuation
 handle.</p>
-<!-- raw HTML omitted -->
+<img src="coro1.svg" alt="Stop Callback"/>
 <p>We could imagine a coroutine having several possible continuations to resume at
 depending on the result of the operation.</p>
-<!-- raw HTML omitted -->
+<img src="coro2.svg" alt="Stop Callback"/>
 <p>This would be a better modelization of receivers and would not suffer the performance and implementabilities issues of exceptions (at the cost of having more <code>coroutine_handle</code> to keep track of.)</p>
 <p>Anyway&hellip; this has turned into blog-post driven design&hellip;</p>
 <p><a href="https://www.destroyallsoftware.com/talks/wat">Let&rsquo;s talk about a language that doesn&rsquo;t suck</a>, let&rsquo;s talk about Go.</p>

@@ -264,8 +264,14 @@ The second form creates one profile <span style="color:#080;font-weight:bold">fo
 <p>Microsoft Windows is designed around case insensitive file systems. Which I’m sure looked like a good idea at the time.</p>
 <p>However, unless you are masochistic enough to run your Linux machine on FAT, chances are your file-system is case sensitive. And that is an issue for us.</p>
 <p>How bad it is, really ? Well…</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+**A**cl**UI**.**L**ib
+ahadmin.lib
+wdsClientAPI.**LIB
+P**sapi.**L**ib
+sensorsapi.lib
+**S**etup**API**.**L**ib
+</pre>
 <p>This is just a small selection of files. I don’t suppose there is anything they can do to fix that now, it’s too late.</p>
 <p>We could attempt to fix the case issues by changing the filename of every library and header. But that will probably not work since third party libraries aren’t consistent either. So even if we attempt to fix our build files sooner or later we will run on a case issue.</p>
 <p>So, the “proper” (for some definition of proper) solution would be to trick the Linux kernel into being case insensitive. And to that we need to use a case-insensitive system. Fortunately, a file can be a file system, so we will create a file large enough to hold the windows SDK, format it with a case-insensitive filesystem such as EXFAT and put the SDK there. Please note that NTFS is case sensitive, even if the Windows kernel is not.</p>

@@ -66,15 +66,15 @@
     <img src="dagger.webp"/> 
 </figure>
 
-<p>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.<!-- raw HTML omitted -->
-There was no applause.<!-- raw HTML omitted -->
+<p>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.<br>
+There was no applause.<br>
 But I&rsquo;m not sure we fully understood what we did and the consequences it could have.</p>
 <p>I do believe none of the consequences will be good.</p>
 <h2 id="what-is-abi">What is ABI</h2>
 <p>ABI is the shared understanding libraries have about how your program is serialized,
 both in term of layout, calling convention and mangling.
 It is exactly a binary protocol, despite not being versioned.
-<!-- raw HTML omitted -->Maybe this is a bit complicated, so I think it is better to list what ABI stability entails:</p>
+<br>Maybe this is a bit complicated, so I think it is better to list what ABI stability entails:</p>
 <p>You won&rsquo;t be able to use a symbol in a new version of a compiled library if you do any of the following:</p>
 <ul>
 <li>Add data member to an existing class</li>
@@ -86,7 +86,7 @@ It is exactly a binary protocol, despite not being versioned.
 <p>And many more thing, but these are usually the one encountered by the committee and the ones that tend to kill proposals on the spot.
 I also omitted ABI breakings operations that are also source breaks (removing or modifying functions).
 But sometimes, removing functions is actually a useful non-breaking change.
-<!-- raw HTML omitted -->For example, <code>std::string</code> has a <code>string_view</code> conversion operator that I want to kill with fire,
+<br>For example, <code>std::string</code> has a <code>string_view</code> conversion operator that I want to kill with fire,
 and that might be an ABI break which is not a source break - or an almost silent one-.</p>
 <h2 id="why-do-we-want-to-break-abi">Why do we want to break ABI</h2>
 <p>There are a few Quality-of-Implementation changes that could be enabled by an ABI break</p>
@@ -144,9 +144,9 @@ as a quality of implementation matter but that might require breaking ABI.</li>
 The committee is, somewhat unsurprisingly, divided.</p>
 <h3 id="reading-the-tea-leaves">Reading the tea leaves</h3>
 <h4 id="c-something-something">C++ something something</h4>
-<p>The obvious flaw in these polls is that we haven&rsquo;t clarified <em>when</em> we would want to break ABI.<!-- raw HTML omitted -->
+<p>The obvious flaw in these polls is that we haven&rsquo;t clarified <em>when</em> we would want to break ABI.<br>
 C++23? Nope, this is a definitive no.
-<!-- raw HTML omitted -->
+<br>
 C++26? Some people definitively intended to vote for that, others probably voted to break ABI in C++41 or voted to
 break ABI once they are retired or otherwise do not have to deal with their current project.
 No way to know. The exact poll mentioned &ldquo;C++SOMETHING&rdquo;. How helpful.</p>
@@ -174,12 +174,12 @@ So we voted to care about performance.
 Although, alarmingly, many people voted against.</p>
 <p>My interpretation is that the committee wants its cake and eat it
 too. Which is not possible.</p>
-<!-- raw HTML omitted -->
+<!-- https://twitter.com/blelbach/status/1228962495865507840 -->
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Performance<br>ABI Stability<br>Ability to Change<br><br>You can pick two, choose wisely.<a href="https://twitter.com/hashtag/cppprg?src=hash&amp;ref_src=twsrc%5Etfw">#cppprg</a></p>&mdash; Bryce | BlackLivesMatter (@blelbach) <a href="https://twitter.com/blelbach/status/1228962495865507840?ref_src=twsrc%5Etfw">February 16, 2020</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <p>Stability and ABI ultimately, given a large enough period, run afoul of one another.
-<!-- raw HTML omitted -->
+<br>
 This poll was important though: It touches a fundamental question:</p>
 <p><strong>What is C++ and what is the standard library?</strong></p>
 <p>The words touted around are &ldquo;performance&rdquo; &ldquo;zero-cost abstractions&rdquo; and &ldquo;don&rsquo;t pay for what you don&rsquo;t use&rdquo;.
@@ -191,7 +191,7 @@ This poll was important though: It touches a fundamental question:</p>
 
 <p>I believe, quite strongly, that not breaking ABI in 23 is the worst mistake the committee ever made.
 And I&rsquo;m sure some people are convinced of the exact opposite.
-<!-- raw HTML omitted -->Regardless, here is what is going to happen as a result of that decision:</p>
+<br>Regardless, here is what is going to happen as a result of that decision:</p>
 <h3 id="education-nightmare">Education nightmare</h3>
 <p>Let&rsquo;s be very clear. Programs that rely on ABI probably violates ODR somewhere, are probably
 using incompatible flags that happen to work.</p>
@@ -223,7 +223,7 @@ Facebook has folly, Google has Abseil, etc.</p>
 <p>This can snowball.
 If people don&rsquo;t use the standard library, they have no interest in improving it.
 Performance is what keeps the standard library alive. Without performance, a lot less energy is going to be pored into it.</p>
-<!-- raw HTML omitted -->
+<!-- https://twitter.com/TitusWinters/status/1224377740306132998 -->
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">They&#39;re common and readily available? (Which does have some value.)<br><br>Committing to ABI is like admitting that the standard library is aiming to be McDonald&#39;s - It&#39;s everywhere, it&#39;s consistent, and it technically solves the problem.</p>&mdash; Titus Winters (@TitusWinters) <a href="https://twitter.com/TitusWinters/status/1224377740306132998?ref_src=twsrc%5Etfw">February 3, 2020</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
@@ -300,7 +300,7 @@ They probably won&rsquo;t be.</p>
 (In the case of the networking TS, we seem unwilling to change anything, so we are looking at standardizing what was
 the state-of-the-art a decade ago, which we know can be improved upon dramatically. A story for another time.)</p>
 <p>But of course, we will make many, many mistakes.</p>
-<!-- raw HTML omitted -->
+<!-- https://twitter.com/hyrumwright/status/1228833676240146434 -->
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">You will eventually want to change every single decision you make.  Build the ability to change into your ecosystem, both tooling and process. <a href="https://t.co/uo5Ir1MzCY">https://t.co/uo5Ir1MzCY</a></p>&mdash; Hyrum Wright (@hyrumwright) <a href="https://twitter.com/hyrumwright/status/1228833676240146434?ref_src=twsrc%5Etfw">February 16, 2020</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 

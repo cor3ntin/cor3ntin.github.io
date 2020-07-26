@@ -75,10 +75,10 @@ of that proposal).</p>
 so in the meantime, I want to explore one of the motivations for <code>std::embed</code>:</p>
 <p>Compiling large arrays is very time and resource-intensive. For any compiler.</p>
 <p>How so? Well&hellip;</p>
-<!-- raw HTML omitted -->
+<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_time_1.html"></iframe>
 <p>Of course, as hinted by ThePhd, If this exercice is taxing for your CPU,
 it&rsquo;s nothing compared to what it does to your RAM:</p>
-<!-- raw HTML omitted -->
+<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_memory_1.html"></iframe>
 <p>50000000 ints, that&rsquo;s about 200MB and maybe that is a bit ludicrous.
 There are valid use cases for large arrays.</p>
 <p>For example, <a href="https://doc.qt.io/qt-5/resources.html">Qt&rsquo;s resource system</a> creates a file system for embedded resources.
@@ -88,7 +88,7 @@ If you want these features to be <code>constexpr</code>, you can&rsquo;t use lin
 these tables have thousands of elements.</p>
 <p>Twitter had many other interesting use cases, to share, for example, people embed neural network
 weights on binaries targeting embedded platforms!</p>
-<!-- raw HTML omitted -->
+<blockquote class="twitter-tweet" data-lang="en" data-theme="light"><p lang="en" dir="ltr">Hey <a href="https://twitter.com/hashtag/cplusplus?src=hash&amp;ref_src=twsrc%5Etfw">#cplusplus</a> twitter, what&#39;s your use cases for very large embedded binary data / const int arrays in C++ ?</p>&mdash; Corentin (@Cor3ntin) <a href="https://twitter.com/Cor3ntin/status/1208389050698215427?ref_src=twsrc%5Etfw">December 21, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <p>There is a well know trick to make your programs significantly faster:
 Use string literals!</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> array[] = {<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#888">/*, ..., */</span> <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">1</span>}; <span style="color:#888">//slow
@@ -97,8 +97,8 @@ Use string literals!</p>
 </span><span style="color:#888"></span><span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#04d;background-color:#fff0f0">\x00\x00\x00\x01\x00\x00\x00\x01</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>
 <span style="color:#888">/*....*/</span>
 <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#04d;background-color:#fff0f0">\x00\x00\x00\x01\x00\x00\x00\x01</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
-</code></pre></div><!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+</code></pre></div><iframe frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_time_string.html"></iframe>
+<iframe frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_memory_string.html"></iframe>
 <p>Unfortunately, there is a catch: <code>MSVC</code> cannot have string literals bigger than <a href="https://docs.microsoft.com/en-us/cpp/cpp/string-and-character-literals-cpp?view=vs-2019">65535 bytes</a>.</p>
 <p>I believe lifting this limitation would be ABI breaking and, therefore unlikely to happen. <a href="https://www.youtube.com/watch?v=k3Q-fPBe9Z0">I hate ABI stability</a>.</p>
 <p>Anyway, It begs the question:
@@ -107,7 +107,7 @@ There are a few tools to help us peek under the hood of the compiler.
 One such tool is the <code>-ast-dump</code> option of <code>clang</code> which&hellip; well dumps its
 internal representation.
 That tool is conveniently available on Compiler Explorer:</p>
-<!-- raw HTML omitted -->
+<iframe width="100%" height="600px" src="https://godbolt.org/e?readOnly=true&hideEditorToolbars=true#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZugHZEDKqAhgDbYgCMALOQCse5dq3qhUAUgBMAIRmzyAZ2ydURAg2rZ6mAMLp2AVwC29HgDZyOzABkC9bADlTAI2yke3cgAd0S4k16A2MzS19/QIZ7RxcTd09ubxU1DQYmIlZSIhDTc24rFOx1IIysohjnNw8vZUzs3LCCuvLKuISvAEpldCNSVC4AclQkLIBqVjHJAFZ5aYARKYBmRckABgBBGWkZvQAPNd2Do8Pp/e5t9a3pHbPju9P9x72Lm6vLh5Ovu9edzY%2Bnt9AT9Lv83p8IcDzqDrrcofd4b93uD4c9nkiwXCEdj0TCATigS88SiCZCiW8lrJBt12CBBtNBuRzIM1oz0HS9AoFGMlL1%2BtgptIltxGUQ6azOt0ANYgXjTAB0crWAE5ptxVdMlgB2ZU3aYiOm8RkmWUADnlwqWvF1awsVptVmZrPI7MGjKUIDW5DFLOp5DgsBQGBw%2BGIZEo1DojBYHC4fEEIGkIjEEi5cmUqmKaXMEBsjXMvC9Nja1USEQC2fzsq9fgrQRL8RqyUzJXS9Ryhjy1YzqVK7YbHWS7arhZa2QHTe6vL6AzpDiIExmc1WKymWtk3jGm%2B35C3u53e8PFy180klL9tPpjKdbI5adkPL5A0FS2kovF1O6SGwrBwnggNKGsaIBqvKFimhY0xrDqSyQdBypLEyH4unS7qet6H6SuQMrSFq8rKmsax8OBvDSKaWqmtwNwGoMSzXshrrvr63QBgg8AQEG6AmD4BCcBQVAQBg3G8TUqCiOIAD6RCkEY9BSuQNC8UQHgehArjIa4DhZAAnnSIrkEJJg6EQADy9DsLpvrkDgJgppwyGEKQWYEAAbtgHpWdgezFEYyl6Yy86qMh7AEK4pA6QYOD%2Bd6pAECagwit0UbMGw9nxkISbiamcgKCIoUepA3ToD42YeQAtEoRCYGe8xSDlcjSKw7ottm2i6FW3jFg4VSNmWtZRMEnZNOWA0TmWRStvQZQNEN%2BQ9s5batN17RNmOHahHNlVLbEpY8FOT5xoBV5IVZrp7BBZUWLwYxiSmYwQNJslSp092hiQpAvpuBjCXxL7SC9nL1VSGHMdKib6peRrkCa3DytwhGmq%2BhG8BYWrcNMFGITeKFuso6E%2BhK/qIBxICsJVEa5oQ70EJgwjJTGaX8Bl82TW1%2BizcIXU7b1wj9ZWHPeHz9bLbtza9otM0bcIE3ZtNFQizzQ7lB1a1jXtR0MidzpnRdV03Vl92PXJL0bJVYwAGoENgADuHivVTZCfbu308b9Mivp0TESkdUMmij8qamqaPw5BaPSNM%2BrY4xeNegTfqsSTQmux4FNJyJni3ZJRvyYp7DKaQqnqVZmn0Dp0WGcZZkWQ52C2eI9lWY5zluR5zpeT5fkJQFjBBVZIVhRFWBDPp0lxf5SUMClsY8EzwhZWg955a4BUAS6JVBB5zXizmeYC9Yuhq4LkT81LR91tECuDizsvDnvMt9ttPVX1tktdkr46X5OPQzlw/00ZrUc6TnQsJda6mdgCGxksbe2YYPruyTGMF26dPoA3vF7T85Bvy/hqKvSGwFYbwySLBLU4d0Y6mVI6BiqEY4g0JgnFAZMiAU2wA7WKtMkz01SnGWeYsFo73ahzaQnUD6f08PwIWDAqxCJGtmNW/B74S3Wl2LU18H4f25h0eRt8pYqJfvLDRNReBYUvAAqhgxgGgP1ndB6UDnpjFNguS2Ns7YQDeo7eBzsuLJzgUKbgntaEYLwdDECsNpAWDIhYIidppjKmVOqLWt5cYeljphMGJD5QqmVKaTUZCqLcFNKaGidEEk43QcYukb4SnRzjlhNyBcgiyiAA"></iframe>
 <p>And that is our culprit:
 Clang represents each number as its own AST NODE, whereas a string literal
 is always one node and each byte is represented by one byte.</p>
@@ -135,7 +135,7 @@ class instances, arrays, aggregates, <code>std::initializer_list</code>, and tem
 do most of that work, and will, for each element of what we naively hoped would be a simple array of integers, check that it is indeed convertible
 to the type of that array.</p>
 <p>This is a lot of work for our poor compiler.</p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><object data="flamgraph_master.svg " type="image/svg+xml" id="Profiling"></object></p>
 <h2 id="improving-performance-for-integer-arrays">Improving performance for integer arrays</h2>
 <p>Given that arrays of integers or bytes are somewhat common can we improve the performance
 of that use case?
@@ -306,7 +306,7 @@ But we now have enough to do some benchmarks, courtesy of some bad python script
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-py" data-lang="py">f.write(<span style="color:#d20;background-color:#fff0f0">&#34;int a [] = {&#34;</span>)
 f.write(<span style="color:#d20;background-color:#fff0f0">&#34;,&#34;</span>.join([<span style="color:#d20;background-color:#fff0f0">&#34;1&#34;</span>] * elems))
 f.write(<span style="color:#d20;background-color:#fff0f0">&#34;}; int main (int argc, char**) { return a[argc]; }&#34;</span>)
-</code></pre></div><!-- raw HTML omitted -->
+</code></pre></div><iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_time_2.html"></iframe>
 <p>We made compile time 3 times better. Not bad!
 It takes under 10 seconds to generate a file with 200MB of data.</p>
 <p>Using <code>-ftime-trace</code>, we get a better sense of the gains:
@@ -314,13 +314,13 @@ You can read more about <code>-ftime-trace</code>: <a href="https://aras-p.info/
 Very handy tool, especially to measure and optimize the compile times of your own code!</p>
 <p>It turns out that chrome even support comparing multiple framgraph by hacking the rendered file.
 I couldn&rsquo;t find any vizualizer beside <code>chrome://tracing</code>, so a png will have to do:</p>
-<p><!-- raw HTML omitted --></p>
+<p><img src="time_trace.png" /></p>
 <p>Interestingly, memory usage does not seem to have improved much.</p>
-<!-- raw HTML omitted -->
+<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_memory_2.html"></iframe>
 <p>The compile times of small arrays are lost in the noise.
 So instead, for the graph below, I measure the compile time of 1000 arrays of the given
 size, the result is then divided by 1000 to give us an average time per array.</p>
-<!-- raw HTML omitted -->
+<iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="500px" src="/arrays_benchmark/benchmark_time_1000.html"></iframe>
 <p>It would seem the improvement is visible for small arrays.
 Take that with a big pinch of salt:
 The modifications probably pessimize the non-array cases.
@@ -433,7 +433,7 @@ can never be optimized once people start to do that. Don&rsquo;t.</p>
 <span style="color:#888">//importer
 </span><span style="color:#888"></span>import M;
 <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {}
-</code></pre></div><!-- raw HTML omitted -->
+</code></pre></div><iframe style="border:none;" seamless="seamless" frameBorder="0" width="100%" height="600px" src="/arrays_benchmark/benchmark_modules2.html"></iframe>
 <p>Modules do seem to provide some performance benefits, but these benefits
 are not obvious until the array is outlandishly big, over 100MB of binary data.</p>
 <h2 id="a-bittersweet-conclusion">A bittersweet conclusion</h2>

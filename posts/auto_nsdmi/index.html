@@ -71,7 +71,7 @@ to prove that it works and that it would be a great addition to the standard.</p
 <p>Having the capacity to test proposed features on Compiler Explorer is a great way to better
 understand a feature and its corner case. <strong>So I encourage you to play with the code snippets</strong>.</p>
 <p>But first thing first.</p>
-<h2 id="what-are-auto-non-static-data-member-initializers-abbr-titlenon-static-data-member-initializersnsdmiabbr-">What are Auto Non Static Data Member Initializers (<!-- raw HTML omitted -->NSDMI<!-- raw HTML omitted -->) ?</h2>
+<h2 id="what-are-auto-non-static-data-member-initializers-abbr-titlenon-static-data-member-initializersnsdmiabbr-">What are Auto Non Static Data Member Initializers (<abbr title="Non Static Data Member Initializers">NSDMI</abbr>) ?</h2>
 <h3 id="data-member-initializers">Data Member Initializers</h3>
 <p>In C++, you can introduce a default value for a member variable, that will be used to initiate a variable if you don&rsquo;t initialize explicitly,
 either in a constructor member initializer list or by using an aggregate initialization.</p>
@@ -353,7 +353,7 @@ Because of that, the author believes that the objection to auto has softened.</p
 <p>I was stuck for quite some time before I thought of checking up the normative definition of <code>variable</code>, which single-out non-static data members. Neat.</p>
 <p>So, adding auto NSDMI to the standard would only requiere to add:</p>
 <blockquote>
-<p><a href="http://eel.is/c++draft/dcl.spec.auto">dcl.spec.auto</a> The type of a variable <!-- raw HTML omitted --> or data-member<!-- raw HTML omitted --> declared using auto or decltype(auto) is deduced from its initializer. This use is allowed in an initializing declaration ([dcl.init]) of a variable.</p>
+<p><a href="http://eel.is/c++draft/dcl.spec.auto">dcl.spec.auto</a> The type of a variable <span style="background-color:#e6ffed;"> or data-member</span> declared using auto or decltype(auto) is deduced from its initializer. This use is allowed in an initializing declaration ([dcl.init]) of a variable.</p>
 </blockquote>
 <p>But the committee may also want to specify exactly the way auto-NSDMI and late class parsing interact, which is easy enough to explain in a blog post but much harder to write wording for.</p>
 <h2 id="acknowledgments">Acknowledgments</h2>

@@ -156,7 +156,7 @@ and that&rsquo;s impossible through even a mutable version of string_view.</p>
 </blockquote>
 <p>It is hard to argue with that, especially given what I just said about strings. So <code>basic_string_view</code> is non-mutable because it&rsquo;s a sensible default <em>for strings</em>.</p>
 <blockquote>
-<p>We could use typedef basic_string_view<!-- raw HTML omitted --> string_view to make the immutable case the default while still supporting the mutable case using the same template.
+<p>We could use typedef basic_string_view<const char> string_view to make the immutable case the default while still supporting the mutable case using the same template.
 I haven&rsquo;t gone this way because it would complicate the template&rsquo;s definition without significantly helping users.</p>
 </blockquote>
 <p>However, C++ is mutable by default, and constness is opt-in.

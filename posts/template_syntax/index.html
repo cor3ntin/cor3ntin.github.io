@@ -245,7 +245,10 @@ found them easier to read and because parentheses are overused in the C and C++
 grammar. As it happens, Tom Pennnello proved that parentheses would have been
 easier to parse, but that doesn&rsquo;t change the key observation that (human) readers prefer
 <code>&lt;.. . &gt;</code>.</p>
-<!-- raw HTML omitted -->
+<div style="text-align: right; margin-bottom:1em;">
+<em>Bjarne Stroustrup, The Design and Evolution of C++, 1994</em><br/>
+<em>Bjarne Stroustrup, Parameterized Types for C++, 1988</em>
+</div>
 <p>And what I did then, was to reinvent a 30 years old idea&hellip;</p>
 <p>However, there are a lot of things to take away from this insightful quote.</p>
 <p>One of the issue with this syntax was that in
@@ -269,8 +272,33 @@ getting rid of the <code>template</code> keyword would increase the terseness wi
 or ambiguous (minimal solution) syntaxes.</p>
 <p>And indeed, if the community and committee are willing to have functions template without any template parameter list at all, surely,
 having a shorter syntax for template parameters would be well received!</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<div style='width: 70vw; position: relative; left: 50%; right: 50%;margin-left: -35vw; margin-right: -35vw;'>
+<div style="margin:auto;overflow-x:auto;">
+<table>
+<tr >
+    <th style="text-align: center"> C++20 </th>
+    <th style="text-align: center"> Proposed </th>
+</tr>
+<tr>
+<td>
+    <pre>auto sort = []&lt;typename RandomAccessIterator>
+        (RandomAccessIterator first, RandomAccessIterator second){}</pre>
+<p>
+    <pre>template&lt;class RandomAccessIterator> constexpr void sort
+        (RandomAccessIterator first, RandomAccessIterator last); </pre>
+</p>
+</td>
+<td> <pre>auto sort = []&lt;typename RandomAccessIterator>
+        (RandomAccessIterator first, RandomAccessIterator second){}</pre>
+<p>
+    <pre>constexpr void sort&lt;class RandomAccessIterator>
+        (RandomAccessIterator first, RandomAccessIterator last);</pre>
+</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
 <h2 id="motivation-rationale-and-design-goals">Motivation, Rationale and design goals.</h2>
 <p>I propose that the <em>template parameter list</em> can be put immediately after a type name in types and function declaration,
 instead of before the declaration. The <code>template</code> keyword is not used.</p>
@@ -310,8 +338,36 @@ Cramming too much information in too few keywords is done at the cost of teachab
 These properties are tied together and at some point terseness becomes detrimental.</p>
 <h2 id="functions-and-lambda">Functions and lambda</h2>
 <p>The following table compares lambdas as in the C++ WD and P1141 and functions as per the following proposal.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<div style='width: 70vw; position: relative; left: 50%; right: 50%;margin-left: -35vw; margin-right: -35vw;'>
+<div style="margin:auto;overflow-x:auto;">
+<table>
+<tr >
+    <th style="text-align: center"> C++20 Lambdas </th>
+    <th style="text-align: center"> Function template </th>
+</tr>
+<tr>
+<td>
+    <pre>auto f = [](){}</pre>
+<p><pre>auto f = []() -> int {} </pre></p>
+<p><pre>auto f = [](const Containter auto &){} </pre></p>
+<p><pre>auto f = []&lt;typename T>(const T & a, const T & b){} </pre></p>
+<p><pre>auto f = []&lt;Regular T>(const T & a, const T & b){} </pre></p>
+<p><pre>auto merge = []<typename IN1, typename IN2, typename Out)
+    requires Mergeable<IN1,IN2,OUT>(IN1, IN1, IN2, IN2, OUT) -> Out;</pre></p>
+</td>
+<td> <pre>void f(){}</pre>
+<p>  <pre>auto f() -> int {} </pre></p>
+<p>  <pre>auto f(const Containter auto &){} </pre></p>
+<p>  <pre>auto f&lt;typename T>(const T & a, const T & b){} </pre></p>
+<p>  <pre>auto f&lt;Regular T>(const T & a, const T & b){} </pre></p>
+<p>  <pre>auto merge<typename IN1, typename IN2, typename Out)
+    requires Mergeable<IN1,IN2,OUT>(IN1, IN1, IN2, IN2, OUT) -> Out; </pre>
+</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
 <h1 id="unified-theory-of-everything">Unified Theory of Everything</h1>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#888">/*A lambda*/</span>

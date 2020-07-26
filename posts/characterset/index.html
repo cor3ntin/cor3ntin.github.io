@@ -111,7 +111,7 @@ Of course, you might argue proper Shakespearian Ænglish of þe old never had to
 <p>Developers are not really human, they are happy with [a-Z] and that&rsquo;s perfectly fine.</p>
 <p>Normal people, they use text.
 And there is no way you can predict which character people will want to use in your system.
-Some idiot may decide to put some some old Persian on their website (BTW Dārayauš was called <!-- raw HTML omitted --> 𐡃𐡓𐡉𐡅𐡄𐡅𐡔 <!-- raw HTML omitted --> in Aramaic)</p>
+Some idiot may decide to put some some old Persian on their website (BTW Dārayauš was called <span class="Aramaic"> 𐡃𐡓𐡉𐡅𐡄𐡅𐡔 </span> in Aramaic)</p>
 <p>The idea of alphabets started to get tenuous when people invented horses and boats.
 The idea of characters sets was bogus from the start.
 The idea that characters are limited to a place is just crazy talk.
@@ -119,8 +119,25 @@ And maybe it was okay for Gutenberg to drop letters he was too lazy to carve, bu
 <p>So, your legacy code? It&rsquo;s broken. <a href="https://en.wikipedia.org/wiki/Haf%C3%BE%C3%B3r_J%C3%BAl%C3%ADus_Bj%C3%B6rnsson">The strongest man alive</a> is so strong he can break your database with his name. That&rsquo;s right.</p>
 <p>Would we know of Dārīus the Great if the Behistun Inscription had been contracted to IBM?</p>
 <p>How much energy should we waste in supporting anything but Unicode?</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<style>
+
+@font-face {
+  font-family: Aramaic;
+  src: url("/NotoSansImperialAramaic-Regular.ttf");
+};
+
+
+@font-face {
+  font-family: OldPersian;
+  src: url("/NotoSansOldPersian-Regular.ttf");
+  unicode-range: U+103A0-103DF;
+}
+
+.Aramaic {
+	font-familly:Aramaic !important
+}
+
+</style>
 
       
     <div id="socialshareDiv">

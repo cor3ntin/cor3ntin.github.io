@@ -205,9 +205,9 @@ So instead of having a container of work in the thread pool, we can make an intr
 <p>Because this might be hard to visualize, here are some
 visualization of how a regular thread pool keeps track
 of its state (enqueued work):</p>
-<!-- raw HTML omitted -->
+<div style="text-align:center"><img height=300 src="thread_pool.png" alt="Classic Thread pool"/></div>
 <p>And what the <code>operation</code> machinery allows us to do:</p>
-<!-- raw HTML omitted -->
+<div style="text-align:center"><img src="operations.png" alt="With operation a pool does not own its state"/></div>
 <p>In the ideal case, there is no heap allocation and enqueuing/dequeuing work is setting a couple of pointers
 which means that the mutex that protects the work queue
 of our thread pool is held for a very short time.</p>
@@ -224,7 +224,7 @@ destroyed the <code>operation</code> whenever one method of the receiver is call
 that has to deal with allocators (allocators themselves
 probably need to be transferred to senders for composed operations).</p>
 <p>To recap things a bit, here is a diagram of the entire thing:</p>
-<!-- raw HTML omitted -->
+<div style="text-align:center"><img src="state.png" alt="State machine"/></div>
 <h2 id="everything-is-a-sender">Everything is a sender</h2>
 <p>Thread pools usually have a <code>wait</code> method.</p>
 <p>But with the sender/receiver model, the thread pool can instead provide a method returning a sender and we can
@@ -288,11 +288,11 @@ oneway_task <span style="color:#06b;font-weight:bold">task_with_coro</span>(exec
 
 <p>Pretty magic<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <p>In fact, this is possible because there is <a href="https://wg21.link/p1745r0">almost</a> a 1/1 mapping between sender/receiver and promise/continuation of coroutines.</p>
-<!-- raw HTML omitted -->
+<div style="text-align:center;width:100%">
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">The factoring of `submit` into `connect`/`start` gives more flexible ownership semantics, and aligns the design conceptually with coroutines, making coroutines an efficient way of expressing sender/receiver.</p>&mdash; Eric Niebler (@ericniebler) <a href="https://twitter.com/ericniebler/status/1186760676938670080?ref_src=twsrc%5Etfw">October 22, 2019</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<!-- raw HTML omitted -->
+</div>
 <p> 
  </p>
 <p>15 years ago <a href="http://www.gotw.ca/publications/concurrency-ddj.htm">Herb Sutter declared the free lunch over</a>.

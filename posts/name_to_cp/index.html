@@ -80,7 +80,7 @@ The challenge will be to minimize the size footprint of that function.</p>
 that looks a bit like CSV but aren&rsquo;t. Fortunately, there is also an XML document describing each character.</p>
 <p>Feeding that to a python script, we can start to count characters, and get a better idea of the size of the
 data we will need:</p>
-<!-- raw HTML omitted -->
+<div style="text-align:center"><img height=400 src="characters_count.png" alt="Analyzing the data"/></div>
 <p>Most of the character names are generated and can be associated with a codepoint computationally
 The <a href="http://www.unicode.org/versions/Unicode12.1.0/">Unicode standard</a>, describes two methods by which character names
 are generated:
@@ -98,12 +98,14 @@ We would like our function to have low overhead so relying on compression scheme
 to the static data - are not considered.
 What the high success of the LZMA compression also tells us, is that there is a lot of repeated sequences in our data.
 In fact, splitting the names by spaces shows that some words are repeated a lot</p>
-<!-- raw HTML omitted -->
+<div style="text-align:center"><img height=400 src="words_count.png" alt="Analyzing the data"/></div>
 <p>Many names share common prefixes. There are 400 or so code points starting with <code>GREEK</code>.</p>
 <h1 id="radix-trees">Radix trees</h1>
 <p>One way to represent our data is to create a tree in which each node is a letter, and children are the next letter in each name.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<div style="text-align:center"><img width=100% height=500 src="digits_graph1.svg" alt="Digits"/></div>
+The worst case size of that data structure would be about 750'000 nodes (There are on average 25 letters per name, and about 30000 unique names).
+But of course, many nodes only have one child, so that can be greatly compacted, by merging all the nodes that have only one child (and no value).
+<div style="text-align:center"><img src="digits_graph2.svg" alt="Digits"/></div><br/>
 <p>This is called a Radix tree, or prefix tree. Lookup is $\mathcal{O}( size(name) )$, not great, not terrible - Unicode names are relatively short.</p>
 <p>Each node has a label (the common prefix) and may have a value (the code point of the character), and children.
 While all leaves have a value, some nodes that are not leaf also have a value: <code>YI SYLLABLE MEX</code> and <code>YI SYLLABLE ME</code>
@@ -128,20 +130,112 @@ So for names longer than 1 character, we will use 3 bytes.</p>
 Therefore a valid character can be represented using 6 bits.
 The simple way to do that is to encode a character as the index in a string such as <code>0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-</code></p>
 <p>We can then use a bit to discriminate between the single character case and the longer name case.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<style>
+.tg  {border-collapse:collapse;border-spacing:0; width:80%; margin-left:auto;margin-right:auto;}
+.tg td{width:auto; font-size:12px;padding:5px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{width:auto; font-size:12px;font-weight:normal;padding:5px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-0lax{text-align:center;vertical-align:top}
+.tg .tg-0pky{border-color:inherit;text-align:center;vertical-align:middle}
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">0</th>
+    <th class="tg-0pky">1</th>
+    <th class="tg-0pky">2</th>
+    <th class="tg-0pky">3</th>
+    <th class="tg-0pky">4</th>
+    <th class="tg-0pky">5</th>
+    <th class="tg-0pky">6</th>
+    <th class="tg-0pky">7</th>
+    <th class="tg-0pky">8</th>
+    <th class="tg-0pky">9</th>
+    <th class="tg-0pky">10</th>
+    <th class="tg-0pky">11</th>
+    <th class="tg-0pky">12</th>
+    <th class="tg-0pky">13</th>
+    <th class="tg-0pky">14</th>
+    <th class="tg-0pky">15</th>
+    <th class="tg-0pky">16</th>
+    <th class="tg-0pky">17</th>
+    <th class="tg-0pky">18</th>
+    <th class="tg-0pky">19</th>
+    <th class="tg-0pky">20</th>
+    <th class="tg-0pky">21</th>
+    <th class="tg-0pky">22</th>
+    <th class="tg-0pky">23</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky" rowspan="2">Has long name</td>
+    <td class="tg-0pky" rowspan="2" style="background-color: grey"></td>
+    <td class="tg-0pky" colspan = "6">Letter</td>
+    <td class="tg-0pky" colspan="16" style="background-color: grey"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky" colspan = "6">Name Size</td>
+    <td class="tg-0pky" colspan = "17">Index</td>
+  </tr>
+</table>
 <p>Using this scheme, the name of a single node is limited to 32 ($2 ^6 $), but that is not an issue as very long names can simply
 be split into multiple nodes.</p>
 <h2 id="codepoint">Codepoint</h2>
 <p>Many nodes, including all leaf nodes, have a value, which is the code points.
 But some nodes do not have a value at all and we should avoid encoding wasting a byte for something null as that immediately many kilobytes wasted.
 Fortunately, we still have a free bit available!</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<div style="text-align:center"><img src="1bit.jpg" alt="Digits"/></div><br/>
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">0</th>
+    <th class="tg-0pky">1</th>
+    <th class="tg-0pky">2</th>
+    <th class="tg-0pky">3</th>
+    <th class="tg-0pky">4</th>
+    <th class="tg-0pky">5</th>
+    <th class="tg-0pky">6</th>
+    <th class="tg-0pky">7</th>
+    <th class="tg-0pky">8</th>
+    <th class="tg-0pky">9</th>
+    <th class="tg-0pky">10</th>
+    <th class="tg-0pky">11</th>
+    <th class="tg-0pky">12</th>
+    <th class="tg-0pky">13</th>
+    <th class="tg-0pky">14</th>
+    <th class="tg-0pky">15</th>
+    <th class="tg-0pky">16</th>
+    <th class="tg-0pky">17</th>
+    <th class="tg-0pky">18</th>
+    <th class="tg-0pky">19</th>
+    <th class="tg-0pky">20</th>
+    <th class="tg-0pky">21</th>
+    <th class="tg-0pky">22</th>
+    <th class="tg-0pky">23</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky" rowspan="2">Has long name</td>
+    <td class="tg-0pky" rowspan="2" style="background-color: yellow">Has value</td>
+    <td class="tg-0pky" colspan = "6">Letter</td>
+    <td class="tg-0pky" colspan="16" style="background-color: grey"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky" colspan = "6">Name Size</td>
+    <td class="tg-0pky" colspan = "17">Index</td>
+  </tr>
+</table>
 <p>Unicode uses 21 bits per code point. leaving us with 3 bits. Exciting.
 The 21 bits size of Unicode codepoints is something that can be exploited with many other Unicode properties:</p>
-<!-- raw HTML omitted -->
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">24-44</th>
+    <th class="tg-0pky">45</th>
+    <th class="tg-0pky">46</th>
+    <th class="tg-0pky">47</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky">Value</td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+  </tr>
+</table>
 <p>We could encode the value as a variable int (using 2 or 3 bytes) depending on the value of the code point,
 using one of the free bit as discriminant - would probably save about 8K.
 It makes it a bit harder to serialize, so it&rsquo;s not something I have implemented yet.</p>
@@ -150,7 +244,20 @@ It makes it a bit harder to serialize, so it&rsquo;s not something I have implem
 Despite my best effort, we will need 3 bytes for that, but we can make it more palatable.
 Most nodes with a value do not have children.
 So we can use one of our 3 free bits (that&rsquo;s luxury), to indicate whether we have some children or not:</p>
-<!-- raw HTML omitted -->
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">24-44</th>
+    <th class="tg-0pky">45</th>
+    <th class="tg-0pky">46</th>
+    <th class="tg-0pky">47</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky">Value</td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: yellow"> Has children</td>
+  </tr>
+</table>
 <p>If the node does not have a value, we know it has at least one child, which means our &ldquo;has value&rdquo; bit actually stores 2 bits of information. Nice :D</p>
 <p>Knowing we have children still require a way to jump to them.
 I originally added a list of offset to jump to but that was incredibly wasteful.
@@ -161,7 +268,20 @@ It took me a while but I realized I could store the offset of the first children
 <p>The last thing we need is a termination condition after the first children of a given node.
 Fortunately, we have a few bits left - we used 24 bits for the offset - where 19 would suffice given our
 serialized radix is about 200KB. We also have 2 bits left next to the value:</p>
-<!-- raw HTML omitted -->
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">24-44</th>
+    <th class="tg-0pky">45</th>
+    <th class="tg-0pky">46</th>
+    <th class="tg-0pky">47</th>
+  </tr>
+  <tr >
+    <td class="tg-0pky">Value</td>
+    <td class="tg-0pky" style="background-color: grey"></td>
+    <td class="tg-0pky" style="background-color: yellow">   Has sibling </td>
+    <td class="tg-0pky"> Has children</td>
+  </tr>
+</table>
 <h1 id="result-and-future-improvements">Result and future Improvements</h1>
 <p>In my current <a href="https://github.com/cor3ntin/ext-unicode-db/tree/name_to_cp">WIP implementation</a>, for the entire Unicode 12 database, (including aliases) the dictionary is 48.6KB and the radix tree is 213Ki. which is about 8 bytes per non-generated name!
 This can be confirmed using a tool such as <a href="https://github.com/google/bloaty">Bloaty McBloatface</a> - I am not making this up!</p>

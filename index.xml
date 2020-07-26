@@ -72,7 +72,9 @@ Auto Non-Static Data Members Initializers A while back I presented auto non-stat
       <pubDate>Mon, 24 Feb 2020 15:30:00 +0100</pubDate>
       
       <guid>https://cor3ntin.github.io/posts/abi/</guid>
-      <description>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.There was no applause.But I&amp;rsquo;m not sure we fully understood what we did and the consequences it could have.
+      <description>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.
+There was no applause.
+But I&amp;rsquo;m not sure we fully understood what we did and the consequences it could have.
 I do believe none of the consequences will be good.
 What is ABI ABI is the shared understanding libraries have about how your program is serialized, both in term of layout, calling convention and mangling.</description>
     </item>
@@ -297,8 +299,7 @@ And since then a new paper, P1141 - Yet another approach for constrained declara
       <pubDate>Wed, 13 Jun 2018 11:32:09 +0200</pubDate>
       
       <guid>https://cor3ntin.github.io/posts/concepts_syntax/</guid>
-      <description>Did you know that the Concept TS was merged into the Working Draft in July 2017, in Toronto? And we are a Planck length away from merging the Range TS in C++20 as well, including a few goodies such as projections, contiguous ranges/iterators and ranges adaptors? We also added a bunch of general-purpose concepts in the std namespace in Rapperswil.
-Concepts have been 3 decades in the making and the Ranges TS is a huge body of work.</description>
+      <description>Please take the quick survey on concept syntax at the end of this article.  Did you know that the Concept TS was merged into the Working Draft in July 2017, in Toronto? And we are a Planck length away from merging the Range TS in C++20 as well, including a few goodies such as projections, contiguous ranges/iterators and ranges adaptors? We also added a bunch of general-purpose concepts in the std namespace in Rapperswil.</description>
     </item>
     
     <item>
