@@ -64,21 +64,21 @@
     <div class="content">
       <p>When he created Go as a knee-jerk Reaction to C++11,
 Rob Pike proclaimed <a href="https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html">Less is exponentially more</a>.
-While it is anyone guess what that is supposed to mean, in this blog post we will see how C++20 is less verbose, yet more expressive than
+While it is anyone&rsquo;s guess what that is supposed to mean, in this blog post we will see how C++20 is less verbose, yet more expressive than
 prior C++ versions.</p>
 <p>I am a big fan of concepts-driven designs.
-The use of concepts lead to less coupled, more generic interfaces that work with more types.
+The use of concepts leads to less coupled, more generic interfaces that work with more types.
 Take <code>std::tuple</code> for example. A tuple can be constructed from a <code>std::pair</code>. But it can&rsquo;t be
 constructed from a <code>QPair</code> or a <code>boost::tuple</code>. Nor can it be constructed from a <code>std::array</code>,
 even if std::array follows the tuple protocol.
 Isn&rsquo;t that a bit arbitrary?
 Shouldn&rsquo;t instead construction and comparison support all objects following the tuple protocol?
 Especially for comparison, if a different part of my system use a different tuple type (of the same arity),
-why should I need to do an expensive conversion to compare their <strong>values</strong> ?</p>
+why should I need to do an expensive conversion to compare their <strong>value</strong> ?</p>
 <p>A better question of course would be <em>why is <code>std::pair</code> a distinct type from <code>std::tuple</code>?</em>, the answer to that
 being <em>legacy</em>, as always. Could we fix it? Probably not.</p>
-<p>But, anyway this lead to me proposing <a href="https://wg21.link/p2165">P2165 - Comparing pair and tuples</a>.
-This in turn, led me to look at libstdc++'s tuple implementation.
+<p>But anyway, this led me to propose <a href="https://wg21.link/p2165">P2165 - Comparing pair and tuples</a>.
+This, in turn led me to look at libstdc++'s tuple implementation.
 This is the topic of today&rsquo;s blog post.</p>
 <p>You can also checkout <a href="https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277">this article</a>
 which explain how std::tuple is implemented in C++17.</p>
@@ -97,7 +97,7 @@ which explain how std::tuple is implemented in C++17.</p>
 };
 </code></pre></div><p>Unfortunately, we do need to explicitly define constructors to be able
 to use that type, which ends up with 14 or so constructors and a few assignment operators.
-Half for those being for allocator support.</p>
+Half of those being for allocator support.</p>
 <p>On top of that, libstdc++ optimises for empty types:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">empty</span>{};
 <span style="color:#080;font-weight:bold">static_assert</span>(<span style="color:#080;font-weight:bold">sizeof</span>(std::tuple&lt;empty, empty&gt;) == <span style="color:#00d;font-weight:bold">1</span>);
@@ -124,11 +124,12 @@ Half for those being for allocator support.</p>
     <span style="color:#888">// LOTS OF CONSTRUCTORS
 </span><span style="color:#888"></span>};
 </code></pre></div><p>The actual libstdc++ implementation is a bit more complicated still.
-but overall, about 70 lines of code, mostly duplicated, are there to
-support not paying the memory cost of empty objects.
-This small optimization, is therefore anything but free in term of maintainance.
-It also have some compilation cost, as moe templates need to be instanciated.</p>
-<p>In C++20, all of that complexity goes away,</p>
+Overall, about 70 lines of code, mostly duplicated, are there to
+support Empty objects.
+This small optimization is therefore anything but free in terms of maintenance.
+It also have some compilation cost, as more templates need to be instantiated.
+Is it even worth it?</p>
+<p>In C++20 all of that complexity goes away,</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
 <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>&gt; {
     <span style="color:#369">[[no_unique_address]]</span> T type;
@@ -142,7 +143,7 @@ It also have some compilation cost, as moe templates need to be instanciated.</p
 };
 </code></pre></div><p><code>[[no_unique_address]]</code> gives us the same optimization as Empty-Base-Class-Optimization,
 without adding aby complexity to our design.
-Less code, more expressiveness, less maintainance.</p>
+Less code, more expressiveness, less maintenance.</p>
 <p>###C++20 is more implicit about being explicit.</p>
 <p>Like watermelons are mostly water, <code>std::tuple</code> is mostly constructors.
 I counted 24 constructors in libstdc++ implementation.
