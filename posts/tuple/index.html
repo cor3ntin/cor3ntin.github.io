@@ -255,11 +255,11 @@ Notice also the <code>requires</code> clause.
 In the definition of <code>operator&lt;=&gt;</code> a nasty comma expression is used to return when 2
 elements compare equal.
 I understand this style might appear novel, maybe even scary, but properly documented
-it is easier to document that something that relies a lot on <code>enable_if</code> and other meta-programming heavy
+it is easier to document than something which relies on a lot of <code>enable_if</code> and other meta-programming heavy
 approaches.</p>
 <p>Interestingly these functions are not constrained by the standard.</p>
 <h2 id="we-cant-have-nice-things">We can&rsquo;t have nice things</h2>
-<p>Using these tricks, I shaved over 700 lines from <code>&lt;tuple&gt;</code> almost a third.
+<p>Using these tricks, I shaved over 700 lines from <code>&lt;tuple&gt;</code>; Almost a third.
 And I am sure tons of improvements could still be made.
 I probably introduced a few bugs doing this experiment, but I feel like I made the code
 easier to read and to maintain. It might even compile faster!</p>
@@ -267,14 +267,14 @@ easier to read and to maintain. It might even compile faster!</p>
 Both libstd++ and libc++ are designed to work in many languages modes.
 As such <code>&lt;tuple&gt;</code> is designed to compile with a C++11 compiler.</p>
 <p>So none of the features presented here are likely to be used by actual standard library maintainers.
-And when they are, they ae conditionally supported leading to even more code!</p>
+And when they are, they are conditionally supported leading to even more code!</p>
 <p>The backward compatibility constraints standard library maintainers put on themselves
 have many costs: code that is harder to maintain, slower to compile and hard to evolve.
-This, in turn might impede new features as we often hear in the committee
-that some classes are too complexes to modify.</p>
+This, in turn, might impede new features as we often hear in the committee
+that some classes are too complex to modify.</p>
 <p>Does it need to be that way?
-Should there be a standard library implementation that track the standard and doesn&rsquo;t support
-multiple C++ version in the same branch?
+Should there be a standard library implementation which tracks the standard and doesn&rsquo;t support
+multiple C++ versions in the same branch?
 Can we imagine an implementation where <code>_Ugly</code> names would not be used, instead of relying on
 non exported symbols name in modules?
 This might be a pipe dream, a fresh standard library would be a herculean effort nobody is likely to
