@@ -6,10 +6,20 @@
     <description>Recent content on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Jun 2020 15:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 23 Aug 2020 16:30:55 +0200</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Standard library made easy with C&#43;&#43;20</title>
+      <link>https://cor3ntin.github.io/posts/tuple/</link>
+      <pubDate>Sun, 23 Aug 2020 16:30:55 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/tuple/</guid>
+      <description>When he created Go as a knee-jerk Reaction to C++11, Rob Pike proclaimed Less is exponentially more. While it is anyone guess what that is supposed to mean, in this blog post we will see how C++20 is less verbose, yet more expressive than prior C++ versions.
+I am a big fan of concepts-driven designs. The use of concepts lead to less coupled, more generic interfaces that work with more types.</description>
+    </item>
     
     <item>
       <title>Non-terminal variadic template parameters</title>
