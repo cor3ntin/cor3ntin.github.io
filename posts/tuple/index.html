@@ -73,12 +73,12 @@ constructed from a <code>QPair</code> or a <code>boost::tuple</code>. Nor can it
 even if std::array follows the tuple protocol.
 Isn&rsquo;t that a bit arbitrary?
 Shouldn&rsquo;t instead construction and comparison support all objects following the tuple protocol?
-Especially for comparison, if a different part of my system use a different tuple type (of the same arity),
+Especially for comparison, if a different part of my system uses a different tuple type (of the same arity),
 why should I need to do an expensive conversion to compare their <strong>value</strong> ?</p>
-<p>A better question of course would be <em>why is <code>std::pair</code> a distinct type from <code>std::tuple</code>?</em>, the answer to that
+<p>A better question, of course, would be <em>why is <code>std::pair</code> a distinct type from <code>std::tuple</code>?</em>, the answer to that
 being <em>legacy</em>, as always. Could we fix it? Probably not.</p>
 <p>But anyway, this led me to propose <a href="https://wg21.link/p2165">P2165 - Comparing pair and tuples</a>.
-This, in turn led me to look at libstdc++'s tuple implementation.
+This, in turn, led me to look at libstdc++'s tuple implementation.
 This is the topic of today&rsquo;s blog post.</p>
 <p>You can also checkout <a href="https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277">this article</a>
 which explain how std::tuple is implemented in C++17.</p>
@@ -126,8 +126,8 @@ Half of those being for allocator support.</p>
 </code></pre></div><p>The actual libstdc++ implementation is a bit more complicated still.
 Overall, about 70 lines of code, mostly duplicated, are there to
 support Empty objects.
-This small optimization is therefore anything but free in terms of maintenance.
-It also have some compilation cost, as more templates need to be instantiated.
+This small optimization is, therefore, anything but free in terms of maintenance.
+It also has some compilation cost, as more templates need to be instantiated.
 Is it even worth it?</p>
 <p>In C++20 all of that complexity goes away,</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
@@ -142,14 +142,14 @@ Is it even worth it?</p>
 {
 };
 </code></pre></div><p><code>[[no_unique_address]]</code> gives us the same optimization as Empty-Base-Class-Optimization,
-without adding aby complexity to our design.
+without adding any complexity to our design.
 Less code, more expressiveness, less maintenance.</p>
-<p>###C++20 is more implicit about being explicit.</p>
+<h3 id="c20-is-more-implicit-about-being-explicit">C++20 is more implicit about being explicit.</h3>
 <p>Like watermelons are mostly water, <code>std::tuple</code> is mostly constructors.
-I counted 24 constructors in libstdc++ implementation.
+I counted 24 constructors in libstdc++'s implementation.
 Let&rsquo;s remove some.</p>
 <p>The standard specifies that a tuple constructor is explicit if any of its
-elements would be constructed explicit.</p>
+elements would have an <code>explicit</code> constructor.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">S</span> {};
 <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">E</span> { <span style="color:#080;font-weight:bold">explicit</span> <span style="color:#06b;font-weight:bold">E</span>(S); };
 <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">I</span> { I(S); };
@@ -177,20 +177,20 @@ one explicit and one not, and SFINAE away the one that should not be considered:
 <span style="color:#080;font-weight:bold">explicit</span> <span style="color:#888">// This is the explicit constuctor
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">constexpr</span>
 tuple(<span style="color:#080;font-weight:bold">const</span> _Elements&amp;... __elements);
-</code></pre></div><p>And this for every single constructor!
-Don&rsquo;t worry, this is not the way, for in C++20 <code>explicit</code> was amended to support another form <code>explicit(boolean-expession)</code>.
-As such <code>explicit(true)</code> is equivalent to <code>explicit</code> while <code>explicit(false)</code> is not explicit.
+</code></pre></div><p>And this is for every single constructor!
+Don&rsquo;t worry, this is not the way, for in C++20 <code>explicit</code> was amended to support another form: <code>explicit(boolean-expression)</code>.
+As such, <code>explicit(true)</code> is equivalent to <code>explicit</code> while <code>explicit(false)</code> is not explicit.
 We can then rewrite the above code as:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _NotEmpty = (<span style="color:#080;font-weight:bold">sizeof</span>...(_Elements) &gt;= <span style="color:#00d;font-weight:bold">1</span>)&gt;
 <span style="color:#080;font-weight:bold">explicit</span>(is_explicit_v&lt;<span style="color:#080;font-weight:bold">const</span> _Elements&amp;...&gt;)
 <span style="color:#080;font-weight:bold">constexpr</span>
 tuple(<span style="color:#080;font-weight:bold">const</span> _Elements&amp;... __elements);
-</code></pre></div><p>This little trick let us remove about 10 constructors and about 150 lines of codes. Don&rsquo;t reinvent yourself!</p>
+</code></pre></div><p>This little trick lets us remove about 10 constructors and about 150 lines of codes. Don&rsquo;t reinvent yourself!</p>
 <h3 id="constrained-copy-pasta">Constrained copy-pasta</h3>
 <p>With so many constructors, <code>std::tuple</code> is a template SFINAE bonanza.
-So it is not surprising that the best way to improve <code>std::tuple</code> is to go all in on C++ concepts.
+So it is not surprising that the best way to improve <code>std::tuple</code> is to go all-in on C++ concepts.
 Or rather, on <code>requires</code> clauses.</p>
-<p>This is the code as in libstdc++ for the default constructor:</p>
+<p>This is the code in libstdc++ for the default constructor:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">typename</span> _Dummy = <span style="color:#888;font-weight:bold">void</span>, _ImplicitDefaultCtor&lt;is_void&lt;_Dummy&gt;::value&gt; = <span style="color:#038">true</span>&gt;
 <span style="color:#080;font-weight:bold">constexpr</span>
 tuple()
@@ -200,29 +200,29 @@ tuple()
 <span style="color:#080;font-weight:bold">constexpr</span> tuple()
 <span style="color:#080;font-weight:bold">noexcept</span>((__and_&lt;is_nothrow_default_constructible&lt;_Elements&gt;::value...&gt;::value))
 <span style="color:#080;font-weight:bold">requires</span>((__and_&lt;std::is_default_constructible&lt;_Elements&gt;::value&gt;...&gt;::value));
-</code></pre></div><p>In fact, if we look at the standard, the code above is a direct translation of the wording!
+</code></pre></div><p>If we look at the standard, the code above is a direct translation of the wording!
 Each <code>Constraint</code> in the wording draft can be converted to a C++ constraint!</p>
 <p><img src="ctr1.png" alt="Example image"></p>
-<p>One other thing we should do, is to use fold expressions and template variables to cut down
+<p>One other thing we should do is to use fold expressions and template variables to cut down
 on the clutter. Both these features are actually C++17 features!</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">explicit</span>(!(__is_implicitly_default_constructible_v&lt;_Elements&gt; &amp;&amp;...))
 <span style="color:#080;font-weight:bold">constexpr</span> tuple()
 <span style="color:#080;font-weight:bold">noexcept</span>((std::is_nothrow_default_constructible_v&lt;_Elements&gt; &amp;&amp;...))
 <span style="color:#080;font-weight:bold">requires</span>((std::is_default_constructible&lt;_Elements&gt; &amp;&amp;...));
-</code></pre></div><p>Because <code>requires</code> clause make it a lot easier to express constraint, and allow to
-basically implement the standard line by line, we can remove a lot of code while increasing
+</code></pre></div><p>Because <code>requires</code> clauses make it a lot easier to express constraint, and allow us to
+implement the standard line by line, we can remove a lot of code while increasing
 readability!</p>
-<h3 id="a-pair-by-any-other-name-would-compile-as-fast">A pair by any other name would compile as fast</h3>
-<p>Because a tuple is constructible from a pair, libstdc++ elects to specialize tuple for 2
+<h3 id="a-pair-by-any-other-name-would-compile-just-as-fast">A pair by any other name would compile just as fast</h3>
+<p>Because a tuple is constructible from a <code>std::pair</code>, libstdc++ elects to specialize tuple for 2
 elements, for the sake of these additional constructors.
-But was is a pair, if not a tuple?
-Following the logic, we could remove that entire specialization, a whooping 360 lines of code.
+But what is a pair, if not a tuple?
+Following this logic, we could remove that entire specialization, a whopping 360 lines of code.
 So satisfying!</p>
 <p>We could also keep the constructors for pair by simply adding a <code>requires (sizeof...(_Elements) == 2)</code>
 to these constructors, no need for specialization!</p>
 <h3 id="-nothing-as-futuristic-as-a-spaceship">🛸 Nothing as futuristic as a spaceship!</h3>
 <p>Tuple provides all the comparison operators which are implemented in about 100 lines of code.
-We can replace that by 2 functions, <code>operator==</code> and <code>operator&lt;=&gt;</code>:</p>
+We can replace them by 2 functions, <code>operator==</code> and <code>operator&lt;=&gt;</code>:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...Elem, <span style="color:#080;font-weight:bold">typename</span>...OElem, <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...&gt; <span style="color:#080;font-weight:bold">typename</span> B&gt;
 <span style="color:#080;font-weight:bold">requires</span> (tuple_like&lt;B&lt;OElem...&gt;&gt;  &amp;&amp; <span style="color:#080;font-weight:bold">sizeof</span>...(Elem) == <span style="color:#080;font-weight:bold">sizeof</span>...(OElem))
 <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>==(<span style="color:#080;font-weight:bold">const</span> tuple&lt;Elem...&gt; &amp; a, <span style="color:#080;font-weight:bold">const</span> B&lt;OElem...&gt; &amp; b) {
@@ -252,8 +252,8 @@ on <code>std::get</code>.</p>
 Notably, generic lambdas, which are of the form: <code>[]&lt;_template-parameters_&gt;(){}</code>.
 These allow us to unpack the tuple to make use of fold expressions directly in the functions.
 Notice also the <code>requires</code> clause.
-in the definition of <code>operator&lt;=&gt;</code> a nasty comma expression is used to return when 2
-elements compare equals.
+In the definition of <code>operator&lt;=&gt;</code> a nasty comma expression is used to return when 2
+elements compare equal.
 I understand this style might appear novel, maybe even scary, but properly documented
 it is easier to document that something that relies a lot on <code>enable_if</code> and other meta-programming heavy
 approaches.</p>
@@ -270,12 +270,12 @@ As such <code>&lt;tuple&gt;</code> is designed to compile with a C++11 compiler.
 And when they are, they ae conditionally supported leading to even more code!</p>
 <p>The backward compatibility constraints standard library maintainers put on themselves
 have many costs: code that is harder to maintain, slower to compile and hard to evolve.
-This in turn might impede new features as we often hear in the committee
+This, in turn might impede new features as we often hear in the committee
 that some classes are too complexes to modify.</p>
 <p>Does it need to be that way?
 Should there be a standard library implementation that track the standard and doesn&rsquo;t support
 multiple C++ version in the same branch?
-Can we imagine an implementation where <code>_Ugly</code> names would not be used, instead relying on
+Can we imagine an implementation where <code>_Ugly</code> names would not be used, instead of relying on
 non exported symbols name in modules?
 This might be a pipe dream, a fresh standard library would be a herculean effort nobody is likely to
 entertain.</p>
