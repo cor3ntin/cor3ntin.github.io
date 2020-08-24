@@ -178,7 +178,7 @@ one explicit and one not, and SFINAE away the one that should not be considered:
 
 <span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _NotEmpty = (<span style="color:#080;font-weight:bold">sizeof</span>...(_Elements) &gt;= <span style="color:#00d;font-weight:bold">1</span>),
     _ExplicitCtor&lt;_NotEmpty, <span style="color:#080;font-weight:bold">const</span> _Elements&amp;...&gt; = <span style="color:#038">false</span>&gt;
-<span style="color:#080;font-weight:bold">explicit</span> <span style="color:#888">// This is the explicit constuctor
+<span style="color:#080;font-weight:bold">explicit</span> <span style="color:#888">// This is the explicit constructor
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">constexpr</span>
 tuple(<span style="color:#080;font-weight:bold">const</span> _Elements&amp;... __elements);
 </code></pre></div><p>And this is for every single constructor!
