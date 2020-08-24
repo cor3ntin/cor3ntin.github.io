@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>Standard library made easy with C&#43;&#43;20 | cor3ntin</title>
+<title>Standard library Development made easy with C&#43;&#43;20 | cor3ntin</title>
 
 
 <link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
@@ -59,7 +59,7 @@
       
     </div>
     <h2 class="subtitle is-6">August 23, 2020</h2>
-    <h1 class="title">Standard library made easy with C&#43;&#43;20</h1>
+    <h1 class="title">Standard library Development made easy with C&#43;&#43;20</h1>
     
     <div class="content">
       <p>When he created Go as a knee-jerk Reaction to C++11,
@@ -70,18 +70,22 @@ prior C++ versions.</p>
 The use of concepts leads to less coupled, more generic interfaces that work with more types.
 Take <code>std::tuple</code> for example. A tuple can be constructed from a <code>std::pair</code>. But it can&rsquo;t be
 constructed from a <code>QPair</code> or a <code>boost::tuple</code>. Nor can it be constructed from a <code>std::array</code>,
-even if std::array follows the tuple protocol.
-Isn&rsquo;t that a bit arbitrary?
-Shouldn&rsquo;t instead construction and comparison support all objects following the tuple protocol?
+even if <code>std::array</code> follows the tuple protocol.
+Isn&rsquo;t that a bit arbitrary?</p>
+<p>Shouldn&rsquo;t instead construction and comparison support all objects following the tuple protocol?
 Especially for comparison, if a different part of my system uses a different tuple type (of the same arity),
 why should I need to do an expensive conversion to compare their <strong>value</strong> ?</p>
 <p>A better question, of course, would be <em>why is <code>std::pair</code> a distinct type from <code>std::tuple</code>?</em>, the answer to that
 being <em>legacy</em>, as always. Could we fix it? Probably not.</p>
 <p>But anyway, this led me to propose <a href="https://wg21.link/p2165">P2165 - Comparing pair and tuples</a>.
 This, in turn, led me to look at libstdc++'s tuple implementation.
-This is the topic of today&rsquo;s blog post.</p>
+That is the topic of today&rsquo;s blog post.</p>
+<p><code>std::tuple</code> is a C++11 addition, and like many standard types, its goal of being a universal
+vocabulary type makes it quite challenging to implement.</p>
 <p>You can also checkout <a href="https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277">this article</a>
-which explain how std::tuple is implemented in C++17.</p>
+which explain how <code>std::tuple</code> is implemented in C++17.</p>
+<p>But since then the language changed a lot, and many new features target easier library development.
+Let see how C++20 can help us simplify <code>std::tuple</code>'s implementation.</p>
 <h3 id="down-with-ebo">Down with EBO</h3>
 <p><code>std::tuple</code> can be implemented as a recursive tuple.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
@@ -124,12 +128,12 @@ Half of those being for allocator support.</p>
     <span style="color:#888">// LOTS OF CONSTRUCTORS
 </span><span style="color:#888"></span>};
 </code></pre></div><p>The actual libstdc++ implementation is a bit more complicated still.
-Overall, about 70 lines of code, mostly duplicated, are there to
-support Empty objects.
+Overall, about 70 lines of code - mostly duplicated - are there to
+support empty objects.
 This small optimization is, therefore, anything but free in terms of maintenance.
 It also has some compilation cost, as more templates need to be instantiated.
 Is it even worth it?</p>
-<p>In C++20 all of that complexity goes away,</p>
+<p>In C++20 all of that complexity goes away:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
 <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>&gt; {
     <span style="color:#369">[[no_unique_address]]</span> T type;
@@ -204,7 +208,7 @@ tuple()
 Each <code>Constraint</code> in the wording draft can be converted to a C++ constraint!</p>
 <p><img src="ctr1.png" alt="Example image"></p>
 <p>One other thing we should do is to use fold expressions and template variables to cut down
-on the clutter. Both these features are actually C++17 features!</p>
+on the clutter. Both these are actually C++17 features!</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">explicit</span>(!(__is_implicitly_default_constructible_v&lt;_Elements&gt; &amp;&amp;...))
 <span style="color:#080;font-weight:bold">constexpr</span> tuple()
 <span style="color:#080;font-weight:bold">noexcept</span>((std::is_nothrow_default_constructible_v&lt;_Elements&gt; &amp;&amp;...))
@@ -212,6 +216,11 @@ on the clutter. Both these features are actually C++17 features!</p>
 </code></pre></div><p>Because <code>requires</code> clauses make it a lot easier to express constraint, and allow us to
 implement the standard line by line, we can remove a lot of code while increasing
 readability!</p>
+<p>You could wonder about the cost of all these concepts on compile-time,
+that would be very legitimate indeed.
+Concepts are in fact a bit taxing on compilers.
+They are however not as costly than the equivalent <code>enable_if</code> machinery,
+so these transformations end up having no negative impact on compile times.</p>
 <h3 id="a-pair-by-any-other-name-would-compile-just-as-fast">A pair by any other name would compile just as fast</h3>
 <p>Because a tuple is constructible from a <code>std::pair</code>, libstdc++ elects to specialize tuple for 2
 elements, for the sake of these additional constructors.
@@ -298,7 +307,7 @@ library types easier to implement, standard libraries might appear increasingly 
     
   </svg>
 </i></a></span>
-        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2ftuple%2f&t=Standard%20library%20made%20easy%20with%20C%2b%2b20" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2ftuple%2f&t=Standard%20library%20Development%20made%20easy%20with%20C%2b%2b20" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
     <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
     
