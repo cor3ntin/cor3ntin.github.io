@@ -89,7 +89,7 @@ Let see how C++20 can help us simplify <code>std::tuple</code>'s implementation.
 <h3 id="down-with-ebo">Down with EBO</h3>
 <p><code>std::tuple</code> can be implemented as a recursive tuple.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>&gt; {
+<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span> {
     T type;
 };
 
@@ -135,7 +135,7 @@ It also has some compilation cost, as more templates need to be instantiated.
 Is it even worth it?</p>
 <p>In C++20 all of that complexity goes away:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>&gt; {
+<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span> {
     <span style="color:#369">[[no_unique_address]]</span> T type;
 };
 
