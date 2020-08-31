@@ -125,7 +125,7 @@ This list does not seem to reflect the many features that were added to C11 and 
 <p>Listing incompatibilities isn&rsquo;t sufficient to get a measure of incompatibilities between both languages.</p>
 <p>Functions that exist in the C++ standard library but whose primary declaration is expected to come from C are difficult to make <code>constexpr</code>, and more difficult still to make <code>noexcept</code>.
 C compatibility translates to performance costs and C functions are optimization barriers.</p>
-<p>Many C constructs are valid C++ but should never pass a code review (<code>NULL</code>, <code>longjmp</code>, <code>malloc</code>, create/destroy functions, VLA, <code>free</code>, C  casts), etc.</p>
+<p>Many C constructs are valid C++ but should never pass a code review (<code>NULL</code>, <code>longjmp</code>, <code>malloc</code>, create/destroy functions, <code>free</code>, C  casts), etc.</p>
 <p>These might not be bad C idioms, but they are bad C++. C++ has a stronger type system,
 and unfortunately using C idioms punch a giant hole in that type system, and so C compatibility has a cost in terms of safety.</p>
 <p>Don&rsquo;t get me wrong, C++ still care about C compatibility. Somewhat.
