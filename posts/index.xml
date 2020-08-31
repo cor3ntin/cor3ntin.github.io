@@ -6,10 +6,21 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 23 Aug 2020 16:30:55 +0200</lastBuildDate>
+    <lastBuildDate>Sun, 30 Aug 2020 17:15:51 +0200</lastBuildDate>
     
 	<atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>The problem with C</title>
+      <link>https://cor3ntin.github.io/posts/c/</link>
+      <pubDate>Sun, 30 Aug 2020 17:15:51 +0200</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/c/</guid>
+      <description>In the early 70s, C was created at Bell Labs as a byproduct of the development of UNIX. It quickly became one of the most popular programming languages. But it was not expressive enough for Bjarne Stroustrup. And so, in 1983, as a byproduct of his Ph.D. thesis, he extended C.
+C with classes was born.
+At the time, Bjarne Stroustrup understood that a programming language has many components, not only the language, its compiler, but also a linker and libraries.</description>
+    </item>
     
     <item>
       <title>Standard library development made easy with C&#43;&#43;20</title>
