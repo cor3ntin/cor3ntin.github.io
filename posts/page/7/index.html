@@ -62,153 +62,14 @@
         <div class="subtitle is-6 is-pulled-right">
             
         </div>
-        <h2 class="subtitle is-6">February 25, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/reference/">How I use references</a></h1>
+        <h2 class="subtitle is-6">October 31, 2016</h2>
+        <h1 class="title"><a href="https://cor3ntin.github.io/posts/stack_queue/">Stranded with a C&#43;&#43; compiler and a bunch of queues</a></h1>
         <div class="content">
-            Following a blog post by Herb Sutter, let me tell you how and when I use references.
- If I do not need to mutate an input parameter, I will use a const reference, unless I know that copying is cheaper (When in doubt use a reference). If I do need a copy of the parameter, I accept it by value and move it If I do need to mutate an input parameter, I will accept an input reference.
+            A friend had a phone interview for a job in a company that I won’t name
+ It’s Microsoft. One of the questions was about describing how he would write a stack, only using standard queues.  I was confounded, because long before an algorithm could form in my mind, I already decided that there was no solution that would actually be useful in any real life scenario.
+template &lt;typename T, typename Container = std::queue&lt;T&gt;&gt; class stack { public: void push(const T &amp;); void pop(); T&amp; top(); std::size_t size() const; bool empty() const; private: void transfer(); Container a, b; }; template &lt;typename T, typename Container&gt; void stack&lt;T, Container&gt;::push(const T&amp; t) { a.
             
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/reference/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">February 24, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/abi/">The Day The Standard Library Died</a></h1>
-        <div class="content">
-            In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.
-There was no applause.
-But I&rsquo;m not sure we fully understood what we did and the consequences it could have.
-I do believe none of the consequences will be good.
-What is ABI ABI is the shared understanding libraries have about how your program is serialized, both in term of layout, calling convention and mangling.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/abi/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">February 19, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/cpp20/">Shipping C&#43;&#43;20 in Prague</a></h1>
-        <div class="content">
-            C++20 has shipped!
-C++ is better and more alive than it has ever been.
-You might have read on the Internet (rarely a good idea), that C++ grows too fast, too complicated, too big. I do not think this is true.
-Bjarne Stroustrup reminded us that concepts are mentioned in Design and Evolution of C++, a book written in 1994, before even the first C++ standard. Coroutines and Modules are also old ideas that represent more than a decade of work.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/cpp20/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">February 18, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/move/">move, even more simply</a></h1>
-        <div class="content">
-            std::move doesn&rsquo;t move.
-It casts to an rvalue-reference, which is a type of reference that can be passed to a move constructor or assignment operator, if one exists.
-template &lt;typename T&gt; decltype(auto) move(T&amp;&amp; a) { return static_cast&lt;std::remove_reference_t&lt;T&gt;&amp;&amp;&gt;(a); } Some expressions will be converted to rvalue-references automatically, when the compiler is certain that the value is expiring (will not be reused).
-This is the case for temporaries or non-reference objects returned from functions.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/move/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">January 31, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/iouring/">A Universal I/O Abstraction for C&#43;&#43;</a></h1>
-        <div class="content">
-            This article is the sequel to A Universal Async Abstraction for C++, in which I talk about the Executor proposal targeting C++23. Quite a bit happened since then.
-SG-11, the study group charged of all things concurrency and parallelism made forward progress and sent the proposal to LEWG - with the hope of landing a future revision in the C++23 draft. This is rather big news given that this work has been brewing for about a decade.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/iouring/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">January 6, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/arrays/">Waiting for std::embed: Very Large Arrays in Clang</a></h1>
-        <div class="content">
-            Before we start This blog post features iframes, interactive SVG files, and graphs which may not render properly on handheld devices. Sorry about that. The charts are however interactive, so you can zoom in an see the exact values.
-If I were a compiler, I would simply put all your bytes in your binary There have been a few interesting and passionate discussions about std::embed lately.
-std::embed would surely be a great tool to have in one&rsquo;s toolbox, and I&rsquo;m sure some version of it will be adopted in time, once a consensus in reach (I have yet to find someone not sold on the usefulness of that proposal).
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/arrays/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">December 11, 2019</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/name_to_cp/">Storing Unicode: Character Name to Codepoint Mapping</a></h1>
-        <div class="content">
-            Unicode Characters have a name, which makes it easier to talk about them without having to know their codepoint. For example, the character λ (U+03BB) is called GREEK SMALL LETTER LAMDA.
-Given a character name, we want to be able to know its code point. There are a few use cases for that, the main one being to be able to put Unicode characters by name in string literals, a feature offered by Python, Perl and Perl 6 Raku.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/name_to_cp/" style="height:28px">
+            <a class="button is-link" href="https://cor3ntin.github.io/posts/stack_queue/" style="height:28px">
             Read more
             <span class="icon is-small">
                 <i class="fa fa-angle-double-right"></i>
@@ -227,7 +88,7 @@ Given a character name, we want to be able to know its code point. There are a f
       <div class="level-left">
         <div class="level-item">
           
-          <a class="button" href="/posts/">
+          <a class="button" href="/posts/page/6/">
             <span class="icon is-small is-marginless">
               <svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
@@ -243,18 +104,6 @@ Given a character name, we want to be able to know its code point. There are a f
       </div>
       <div class="level-right is-marginless">
         <div class="level-item">
-          
-          <a class="button" href="/posts/page/3/">
-            Older
-            <span class="icon is-small is-marginless">
-              <svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
-    
-    <polyline points="14 6 20 12 14 18"/>
-    
-  </svg>
-
-            </span>
-          </a>
           
         </div>
       </div>

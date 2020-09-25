@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
 <head>
+	<meta name="generator" content="Hugo 0.68.3" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>Posts | cor3ntin</title>
+<title></title>
 
 
-<link rel="alternate" type="application/rss&#43;xml" href="https://cor3ntin.github.io/posts/index.xml" title="cor3ntin">
+<link rel="alternate" type="application/rss&#43;xml" href="https://cor3ntin.github.io/index.xml" title="cor3ntin">
 <link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
 <body>
 
@@ -36,7 +37,7 @@
   </svg>
 </i>
             </span>
-          </a><a class="level-item" aria-label="rss" href='https://cor3ntin.github.io/posts/index.xml' target='_blank' rel='noopener'>
+          </a><a class="level-item" aria-label="rss" href='https://cor3ntin.github.io/index.xml' target='_blank' rel='noopener'>
             <span class="icon">
                 <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
@@ -58,135 +59,18 @@
   <div class="container">
     
     
-    
-    
         <article id="article">
         <div class="subtitle is-6 is-pulled-right">
             
         </div>
-        <h2 class="subtitle is-6">August 30, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/c/">The problem with C</a></h1>
+        <h2 class="subtitle is-6">October 31, 2016</h2>
+        <h1 class="title"><a href="https://cor3ntin.github.io/posts/stack_queue/">Stranded with a C&#43;&#43; compiler and a bunch of queues</a></h1>
         <div class="content">
-            In the early 70s, C was created at Bell Labs as a byproduct of the development of UNIX. It quickly became one of the most popular programming languages. But it was not expressive enough for Bjarne Stroustrup. And so, in 1983, as a byproduct of his Ph.D. thesis, he extended C.
-C with classes was born.
-At the time, Bjarne Stroustrup understood that a programming language has many components, not only the language, its compiler, but also a linker and libraries.
+            A friend had a phone interview for a job in a company that I won’t name
+ It’s Microsoft. One of the questions was about describing how he would write a stack, only using standard queues.  I was confounded, because long before an algorithm could form in my mind, I already decided that there was no solution that would actually be useful in any real life scenario.
+template &lt;typename T, typename Container = std::queue&lt;T&gt;&gt; class stack { public: void push(const T &amp;); void pop(); T&amp; top(); std::size_t size() const; bool empty() const; private: void transfer(); Container a, b; }; template &lt;typename T, typename Container&gt; void stack&lt;T, Container&gt;::push(const T&amp; t) { a.
             
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/c/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">August 23, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/tuple/">Standard library development made easy with C&#43;&#43;20</a></h1>
-        <div class="content">
-            When he created Go as a knee-jerk Reaction to C++11, Rob Pike proclaimed Less is exponentially more. While it is anyone&rsquo;s guess what that is supposed to mean, in this blog post we will see how C++20 is less verbose, yet more expressive than prior C++ versions.
-I am a big fan of concepts-driven designs. The use of concepts leads to less coupled, more generic interfaces that work with more types.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/tuple/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">June 16, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/variadic/">Non-terminal variadic template parameters</a></h1>
-        <div class="content">
-            A few months ago I presented a few features that I hope will be considered for C++23. I have since then submitted papers for multi-dimensional subscript expressions and '_` as a variable placeholder.
-In this article I want to talk about another improvement I would like to see in the next C++ version: Non-trailing variadic template parameters.
-Indeed, while parameter packs can appear before the last function parameter, they do not get properly deduced when they do.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/variadic/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">April 12, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/humble_wishlist/">To humbly present a wish-list for C&#43;&#43;23</a></h1>
-        <div class="content">
-            In Prague, the committee adopted To boldly suggest an overall plan for C++23, a paper that lays a list of priorities WG21 should focus on for C++23.
-The vote was almost unanimous. I voted against it. I figured it would be interesting to explain why.
-The problem with plans Plans have a nasty tendency to turn into deadlines and expectations.
-There was an uproar when contracts did not ship (even though that was the right decision), while coroutines have shipped with known issues and modules have shipped with little experience with the feature as it is in the standard.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/humble_wishlist/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">March 23, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/compiletime/">Build C&#43;&#43; from source: Part 1/N - Improving compile times</a></h1>
-        <div class="content">
-            This is both a follow-up to my CppCon talk and the ongoing ABI saga, which I do not expect to end any time soon.
-I hope this article to be the first in a series I hope to write over the next few months.
-A quick reminder, ABI is akin to a binary protocol and decides how your types are laid out in memory, how functions are mangled and are called.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/compiletime/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">March 6, 2020</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/qol23/">A few experimental features for C&#43;&#43;</a></h1>
-        <div class="content">
-            In this article, I present a few language features that I am hoping to see in C++23 and which I have deployed to Compiler Explorer.
-Please note that these features are not part of a working draft and they have not been presented to the C++ committee yet, so it is impossible to comment on whether any of them might land in 23 or not!
-Auto Non-Static Data Members Initializers A while back I presented auto non-static data members initializers.
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/qol23/" style="height:28px">
+            <a class="button is-link" href="https://cor3ntin.github.io/posts/stack_queue/" style="height:28px">
             Read more
             <span class="icon is-small">
                 <i class="fa fa-angle-double-right"></i>
@@ -205,22 +89,22 @@ Auto Non-Static Data Members Initializers A while back I presented auto non-stat
       <div class="level-left">
         <div class="level-item">
           
-        </div>
-      </div>
-      <div class="level-right is-marginless">
-        <div class="level-item">
-          
-          <a class="button" href="/posts/page/2/">
-            Older
+          <a class="button" href="/page/6/">
             <span class="icon is-small is-marginless">
               <svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
-    <polyline points="14 6 20 12 14 18"/>
+    <polyline points="15 18 9 12 15 6"/>
     
   </svg>
 
             </span>
+            Newer
           </a>
+          
+        </div>
+      </div>
+      <div class="level-right is-marginless">
+        <div class="level-item">
           
         </div>
       </div>
