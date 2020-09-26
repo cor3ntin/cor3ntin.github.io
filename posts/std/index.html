@@ -95,6 +95,15 @@ and oh. There is this pandemic you might have heard about.</p>
 reduced. And frankly, we cannot ask of anyone to prioritize C++ standardization with all that&rsquo;s going on right now.
 But even at the best of times, C++ library design is a costly, lengthy process involving a lot of people.
 Which is good, <a href="https://en.wikipedia.org/wiki/Linus%27s_law">Linus&rsquo;s law</a>, plays a huge role in the quality of the standard library.</p>
+<p>I don&rsquo;t know that this used to be a question anyone asked. For a very long time, there were few enough proposals
+that they virtually could accept all of those they liked.
+At the beginning of the committee, there even was a single pipeline for both language and library.
+We can argue whether the separation of rooms we have today is always sensible.
+Most of the time library features can be added without new language proposal, but at the same time ADL, customization points,
+overload sets etc have been growing pain point for the library, and no organization can escape conway&rsquo;s law.</p>
+<p>Anyway, the influx of new proposal has grown enough in the past few years that LEWG has now the luxury
+and the burden to chose which direction to go in and how to use its far too limited time.</p>
+<h2 id="standardization-is-expensive">Standardization is expensive</h2>
 <p>I think the life cycle of a library feature goes a bit like this:</p>
 <ul>
 <li>Someone floats an idea and write a paper</li>
@@ -123,8 +132,8 @@ feature for the standard library.</p>
 <a href="http://eel.is/c++draft/support.srcloc">source_location</a>, <a href="https://wg21.link/p0881r6">std::stacktrace</a>, <a href="https://wg21.link/p1885r2">encoding detection</a>,
 Reflection support library and other introspection capabilities, <a href="https://wg21.link/p0627r3">std::unreachable</a>, <a href="https://wg21.link/p1773r0">std::assume</a>,
 <a href="https://wg21.link/p1040r6">std::embed</a>.
-All of these are magic and rely on the compiler. In other words they cannot be implemented portably outside of the standard library.</p>
-<p>These are necessary for communicating between user code and compiler, and are the basis of higher-level components.
+All of these are magic and rely on the compiler. In other words they cannot be implemented portably outside of the standard library.
+These are necessary for communicating between user code and compiler, and are the basis of higher-level components.
 A logger would use <code>std::source_location</code> for example.</p>
 <p>This is especially true of reflection: until C++ gets reflection, an entire class of program cannot be written.
 Pattern matching make it possible to write cleaner code. Reflection make it possible to write&hellip; code.
@@ -134,11 +143,11 @@ And that can be pretty expensive across the industry.</p>
 <p>Then, even more obvious, come amelioration to what&rsquo;s already there.
 As standard types get deployed, the committee has to improve them. Both in response to usage experience and to increase synergy between types
 or add obvious features that were missing, bug fix, support for new language features.
-As such, this <a href="https://wg21.link/p1679r3">std::string::contains</a> proposal might not be the most exciting that will lang in 23,
+As such, this <a href="https://wg21.link/p1679r3">std::string::contains</a> proposal might not be the most exciting that will land in 23,
 but it might be one of the most useful for many people.</p>
 <p>This is the rationale for my own  <a href="https://wg21.link/p2019r0">thread name proposal</a>.
 It is not possible to name threads created by <code>std::thread</code>,
-and people who rely on that (the game industry) need to write an entire thread class to replace <code>std::thread</code>, just for this extra piece of functionality.
+and people who rely on that (for ex. the game industry) need to write an entire thread class to replace <code>std::thread</code>, just for this extra piece of functionality.
 Other people might give a name to their threads if it&rsquo;s easy, but might not bother if it implies reimplementing <code>std::thread</code> themselves.
 The cost/benefit of using a feature decreases if that feature is present in the standard library. But that is mostly true for small quality-of-life features,
 not larger features that are application critical.</p>
@@ -178,14 +187,14 @@ Not everyone though. <code>folly::fbvector</code> is facebook&rsquo;s implementa
 <p>The higher level you go, the more knobs you can tweak. Design is inherently opinionated.
 Everything is a trade-off. The trade-off of making too many trade-offs is sacrificing universality for higher-level features.
 Opinions are by nature divisive and here I thought that the STL was supposed to be general-purpose.</p>
-<p>At that point, the crowd usually suggests that wg21 members should step away from the whiteboard and instead standardize a widely deployed library.
+<p>At that point, the crowd usually suggests that WG21 members should step away from the whiteboard and instead standardize a widely deployed library.
 A library which by essence is opinionated. But also, not necessarily coherent with the rest of the standard.</p>
 <p>Back to the beginning: There has to be a value beside increasing availability to put something in the standard.
 A high-quality open-source library that is widely deployed reached its target audience, and &ldquo;standardizing it&rdquo; (a process which involves trimming features and frozing it in time), represents a bad value proposition.
 As perfection does not exist (only Haskell is perfect), standardizing is an opportunity to improve upon existing practices.
 Existing practices which might be a few years behind the state of the art.
 If the C++ committee is 10 years ahead of the bulk of the industry, and standardize practices that are 10 years behind, it means that we inflict 20 years old technologies
-to our users.
+to C++ users, for the next 30 years.
 This is, depending on how you look at it &ldquo;well tested and understood&rdquo;, or no longer viable in the industry, because some high-level components (graphics, networking)
 are fast-changing design spaces.</p>
 <p>But also, as I said earlier, the committee might not be the best place for innovation, so it would seem we are stuck between a rock and a bad place as far
@@ -220,7 +229,7 @@ We are doomed to fail over time, the only question is how fast things degrade, a
 This is especially important for composability:  If our understanding of how to write good C++ changing over time, old features might not play well with new ones.
 Integrating ranges with old containers is an ongoing challenge.</p>
 <p>And sure, some of these questions are impossible to answer without a crystal ball. But do we even try?</p>
-<p>We now put a comparative table of examples of code to show the impact of a proposal in papers, which we call Tony Table (the idea came from <a href="https://www.youtube.com/watch?v=Zx_Tjp9WIII">Tony Van Eerd</a>). Maybe we should also try to describe how we expect the proposal to impact the ecosystem and standard over time. We could call that the <a href="https://www.youtube.com/watch?v=zW-i9eVGU_k">Titus hypothesis</a>.
+<p>We now put a comparative table of examples of code to show the impact of a proposal in papers, which we call Tony Table (the idea came from <a href="https://www.youtube.com/watch?v=Zx_Tjp9WIII">Tony Van Eerd</a>). Maybe we should also try to describe how we expect each proposal to impact the ecosystem and standard over time. We could call that the <a href="https://www.youtube.com/watch?v=zW-i9eVGU_k">Titus hypothesis</a>.
 I don&rsquo;t expect that WG21 would be thrilled by that idea, it might impede many proposals.
 Polymorphic Allocators, which were added in C++17 are already unmaintainable. That tends to happen when a language tries to offer both virtual functions and ABI guarantees.</p>
 <p>Frankly, I have no idea how my own proposals would stand the test of time. Probably quite badly.
@@ -232,25 +241,24 @@ The committee has both had recent successes and a desire to expand the standard 
 are good example of that.</p>
 <p>I don&rsquo;t think every component is a complete success either: <code>&lt;regex&gt;</code> has ABI baked implementations issues that make it unreasonably slow,
 <code>&lt;filesystem&gt;</code> has an unusual error management mechanism that makes it somewhat clunky to use and some performance/security issues.
-And let&rsquo;s not mention older large features (<code>&lt;iostream&gt;</code>, <code>&lt;locale&gt;</code>)! As I said, it is a learning process.</p>
-<p>But we should try to understand why some bits of the standard are ultimately less useful than others.</p>
+And let&rsquo;s not mention older large features (<code>&lt;iostream&gt;</code>, <code>&lt;locale&gt;</code>)! As I said, it is a learning process and we should try to understand why some bits of the standard are ultimately less useful than others.</p>
 <h2 id="implementers-are-strained">Implementers are strained.</h2>
 <p>There is a surprising low number of people working on implementations.
-Part of that is because working on implementations is fundamentally hard, part of it is because implementations commitment to older standards, <code>_Ugly</code> name etc makes it less appealing still.
+Part of that is because working on implementations is fundamentally hard, part of it is because implementations&rsquo; commitment to older standards, <code>_Ugly</code> name etc makes it less appealing for people to contribute.
 And mostly because the financial investment companies make in the standard library is maybe not sufficient to match the growing rate of the standard.
-Not all implementations ship C++17 yet. <code>&lt;filesystem&gt;</code>, <code>&lt;charconv&gt;</code> and parallel algorithms required massive investment.
+Not all implementations ship C++17 yet. <code>&lt;filesystem&gt;</code>, <code>&lt;charconv&gt;</code> and parallel algorithms required significant investments.
 This is leading to implementations sharing code or considering to do so.
-I think all of that was considered in the open-sourcing of Microsoft&rsquo;s STL.</p>
+I think all of that was weighted in the open-sourcing of Microsoft&rsquo;s STL.</p>
 <p>We also need to consider that implementers, while brilliant engineers are not perfect.
 It is unlikely that an implementation will be the most efficient possible implementation of some proposal, for any given high-level feature.
 People working on the STL cannot all be expected to be regex/networking/graphics experts.
 <code>&lt;regex&gt;</code> as such might never perform as well as PCRE, on which many people have spent years, if not decade of constant optimization work.
-Same for graphics, networking, or every large component.</p>
+Same for graphics, networking, audio, linear algebra or any large component.</p>
 <p>Unfortunately, there is some disconnect between implementers and the committee here.
 WG21 will often make design choices intended to maximize theoretical efficiency (at the cost of usability),
 even if that efficiency will never be realized in actual implementations.</p>
-<p>If it is critical for your application to scan directories as fast as the system will allow, <code>&lt;filesytem&gt;</code> might come short.
-This is true of networking especially. Whatever the network ts ends up to be, it is unlikely to be used in high-frequency trading and other applications with the same requirements. Yet WG21 operates on the basis that it might be - the expert friendliness of it all would tend to show that the non-high performances use cases were not considered.</p>
+<p>If it is critical for your application to scan directories as fast as the system will allow, <code>&lt;filesytem&gt;</code> might fall short.
+This is true of networking especially. Whatever the network TS ends up to be, it is unlikely to be used in high-frequency trading and other applications with the same requirements. Yet WG21 operates on the basis that it might be - the expert friendliness of it all would tend to show that the non-high performances use cases were not considered.</p>
 <p>Implementers often can not improve on bad performance because of self-inflicted ABI constraints. <code>&lt;regex&gt;</code> is as good as it&rsquo;s gonna be withing these constraints.
 <code>std::regex</code> is also a good example of what happens when faced we many paths in a design space, <a href="https://en.cppreference.com/w/cpp/regex/syntax_option_type">WG21 shies away from picking one</a>.</p>
 <p>And the committee doesn&rsquo;t always have the domain expertise either.
@@ -270,8 +278,7 @@ The main issue with the networking proposal is that it has relatively little to 
 <p>The whole committee seems to agree that a good execution model is needed, but not about what is the best path through the design space.
 So we have a few proposals currently progressing at the same time, trying to accommodate each other, sometimes.
 But the network TS still doesn&rsquo;t see value in sender-receivers, which will make it incompatible with sender-consuming algorithms.</p>
-<p>And this worries me because what the &ldquo;executor&rdquo; proposal (which should really be called executors and scheduler/sender/receiver proposal)
-is trying to do is to define the basics of async algorithms, the same way iterators are the basis of sequential algorithms.
+<p>And this worries me because what the &ldquo;executor&rdquo; proposal (which should really be called executors and scheduler/sender/receiver proposal; Faced with 2 different paths we seem so far to commit to both, at the cost of increased complexity) is trying to do is to define the basics of async algorithms, the same way iterators are the basis of sequential algorithms.
 This is where WG21 can really make a difference in that space: Finding the fundamentals that are agnostic of current or future systems and hardware.
 We need to know what an asynchronous operation is before we can define any. Or at least we need to do both at the same time.
 We also need to understand how error management should work in this context, even as we disagree on how error management should
