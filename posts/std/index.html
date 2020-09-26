@@ -190,7 +190,7 @@ Opinions are by nature divisive and here I thought that the STL was supposed to 
 <p>At that point, the crowd usually suggests that WG21 members should step away from the whiteboard and instead standardize a widely deployed library.
 A library which by essence is opinionated. But also, not necessarily coherent with the rest of the standard.</p>
 <p>Back to the beginning: There has to be a value beside increasing availability to put something in the standard.
-A high-quality open-source library that is widely deployed reached its target audience, and &ldquo;standardizing it&rdquo; (a process which involves trimming features and frozing it in time), represents a bad value proposition.
+A high-quality open-source library that is widely deployed reached its target audience, and &ldquo;standardizing it&rdquo; (a process which involves trimming features and freezing it in time), represents a bad value proposition.
 As perfection does not exist (only Haskell is perfect), standardizing is an opportunity to improve upon existing practices.
 Existing practices which might be a few years behind the state of the art.
 If the C++ committee is 10 years ahead of the bulk of the industry, and standardize practices that are 10 years behind, it means that we inflict 20 years old technologies
@@ -211,14 +211,15 @@ And also the industry-wide cost of dealing with the fallout.</p>
 modifying something that hadn&rsquo;t change since 1998, and was designed by Stepanov.
 We added that to the standard at the very last meeting, with an implementation but no usage experience.
 A huge majority of the committee agreed with me that it was a useful change (💙), but the risk was non-zero.
-Did we break something? Because it changed a fundamental concept, it was now and never and we decided now was better than never.</p>
+Did we break something? Because it changed a fundamental concept, it was now or never and we decided now was better than never.</p>
 <p>A less personal but more canonical example was <code>std::from_chars</code>, although in this case, maybe the risk was taken out of ignorance
 rather than a carefully weighted analysis. It then took about a year of work to implement and I think it was worth it,
 C++ now has an efficient facility that I&rsquo;m sure will be used at the bottom of everything.</p>
 <p>On the other side, we shipped coroutines after having found some <a href="https://wg21.link/P1745">limitations and desirable improvements</a> in the current design.
 We were concerned about applying these changes at the last minute.
 &ldquo;Should we delay coroutines?&rdquo; is a conversation I had many times.
-Ultimately, the committee decided that the cost of depriving the community of coroutines for 3 more years was greater than the benefits of the proposed changes.</p>
+Ultimately, the committee decided that the cost of depriving the community of coroutines for 3 more years was greater than the benefits of the proposed changes.
+Time will tell. 3 years seem like an awefully long time now, but in 10 years it will seem pretty inconsequential.</p>
 <h2 id="everything-is-terrible-over-time">Everything is terrible over time</h2>
 <p>Very few software projects survive the test of time. And, all things considered, the STL which is about 30yo is doing pretty well at remaining current
 and modern. A lot of it is probably due to the at-the-time forward-looking nature of iterators and their strong mathematical underpinning;
@@ -245,7 +246,7 @@ are good example of that.</p>
 <p>I don&rsquo;t think every component is a complete success either: <code>&lt;regex&gt;</code> has ABI baked implementations issues that make it unreasonably slow,
 <code>&lt;filesystem&gt;</code> has an unusual error management mechanism that makes it somewhat clunky to use and some performance/security issues.
 And let&rsquo;s not mention older large features (<code>&lt;iostream&gt;</code>, <code>&lt;locale&gt;</code>)! As I said, it is a learning process and we should try to understand why some bits of the standard are ultimately less useful than others.</p>
-<h2 id="implementers-are-strained">Implementers are strained.</h2>
+<h2 id="implementers-are-spread-thin">Implementers are spread thin</h2>
 <p>There is a surprising low number of people working on implementations.
 Part of that is because working on implementations is fundamentally hard, part of it is because implementations&rsquo; commitment to older standards, <code>_Ugly</code> name etc makes it less appealing for people to contribute.
 And mostly because the financial investment companies make in the standard library is maybe not sufficient to match the growing rate of the standard.
@@ -295,7 +296,7 @@ Given that our resources are scarce, cross-domain proposals serve more users.</p
 the extent to which networking, io, processes, etc share commonalities - composability is important.</p>
 <p>And doing so, we will realize that there are a great many knobs to tweak, would the result please everyone?
 Which platforms and users are we considering?</p>
-<p>When we standardized a well behave horse, maybe we can look at adding a cart.
+<p>When we standardized a well behaved horse, maybe we can look at adding a cart.
 I can only hope that the fact that &ldquo;there exists a proposal since a decade, and someone put a lot of effort in it&rdquo; doesn&rsquo;t obscure the bigger picture.</p>
 <h2 id="sorry-if-you-thought-i-had-the-answers">Sorry if you thought I had the answers</h2>
 <p>Many still believe the STL can&rsquo;t be used on micro-controllers and other constrained devices. Are they right? Should that be a priority?
