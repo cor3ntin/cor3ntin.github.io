@@ -62,10 +62,16 @@
     <h1 class="title">What is the standard Library?</h1>
     
     <div class="content">
-      <hr>
+      <div style="text-align: center;">
+<a href="https://xkcd.com/2347/">
+<img src="https://imgs.xkcd.com/comics/dependency.png"/>
+</a>
+</div>
+<hr>
 <p><strong>DISCLAIMER</strong></p>
-<h2 id="not-that-of-the-committee-any-of-its-members-or-any-person-mentioned-in-this-article">The following represent my opinions,
-not that of the committee, any of its members or any person mentioned in this article.</h2>
+<p>The following represent my opinions,
+not that of the committee, any of its members or any person mentioned in this article.</p>
+<hr>
 <p>I think the most fundamental work done by WG21 is trying to answer meta-questions about itself.
 What is C++, what is its essence, what should we focus on? How to evolve a language with a growing community,
 a growing committee?
@@ -77,15 +83,17 @@ A question that comes over and over again, is what does it mean to deprecate som
 Another is what to put in there to begin with.</p>
 <p>I wrote a few times on the subject <a href="/posts/what_should_go_in_stl/">before</a>,
 hopefully, I will be self-consistent. Not promising anything!</p>
-<p>Bryce Adelstein Lelbach, then chair of LEWGI coined the phrase
-&ldquo;Knowing that our resources are scarce and our time is limited, do we want to give more time to this proposal&rdquo;.
-This has become somewhat of a meme in the committee.
+<p>Bryce Adelstein Lelbach, then chair of LEWGI coined the phrase</p>
+<blockquote>
+<p>Knowing that our resources are scarce and our time is limited, do we want to give more time to this proposal?</p>
+</blockquote>
+<p>This has become somewhat of a meme in the committee.
 Since then, we shipped C++20, Bryce became chair of LEWG (which is a super difficult job that he does brilliantly),
 and oh. There is this pandemic you might have heard about.</p>
 <p>Never have the scarcity of our resources and the limitedness of our time be more apparent.</p>
 <p>We try to make the best of the situation, but I think it&rsquo;s fair to say that WG21&rsquo;s output is
-reduced. And frankly, we cannot ask of anyone to prioritize C++ standardization with all that&rsquo;s going on right now.</p>
-<p>But even at the best of times, C++ library design is a costly, lengthy process involving a lot of people.
+reduced. And frankly, we cannot ask of anyone to prioritize C++ standardization with all that&rsquo;s going on right now.
+But even at the best of times, C++ library design is a costly, lengthy process involving a lot of people.
 Which is good, <a href="https://en.wikipedia.org/wiki/Linus%27s_law">Linus&rsquo;s law</a>, plays a huge role in the quality of the standard library.</p>
 <p>I think the life cycle of a library feature goes a bit like this:</p>
 <ul>
@@ -127,8 +135,8 @@ And that can be pretty expensive across the industry.</p>
 As standard types get deployed, the committee has to improve them. Both in response to usage experience and to increase synergy between types
 or add obvious features that were missing, bug fix, support for new language features.
 As such, this <a href="https://wg21.link/p1679r3">std::string::contains</a> proposal might not be the most exciting that will lang in 23,
-but it might be one of the most useful for many people.
-This is the rationale for my own  <a href="https://wg21.link/p2019r0">thread name proposal</a>.
+but it might be one of the most useful for many people.</p>
+<p>This is the rationale for my own  <a href="https://wg21.link/p2019r0">thread name proposal</a>.
 It is not possible to name threads created by <code>std::thread</code>,
 and people who rely on that (the game industry) need to write an entire thread class to replace <code>std::thread</code>, just for this extra piece of functionality.
 Other people might give a name to their threads if it&rsquo;s easy, but might not bother if it implies reimplementing <code>std::thread</code> themselves.
@@ -139,10 +147,10 @@ These get used everywhere. We spend a lot of time getting them right because of 
 be the simplest type of C++20 and also the one that took the most work getting right.
 One example of glaringly missing vocabulary type is <a href="https://wg21.link/p1059r0"><code>std::expected</code></a>:
 A type that is a bit stuck in another super important meta-conversation: What are the error handlings mechanism that should be used and promoted in C++?
-We still have to answer that qestion.</p>
+We still have to answer that question.</p>
 <p>But&hellip; I am not sure types are the right kind of entities at interfaces boundary.
 Concepts make for a better vocabulary because they prescribe interfaces, not implementations. (<code>span</code> is nothing if not &ldquo;&ldquo;template erasure&rdquo;&rdquo; over any <code>contiguous_range</code>).
-So maybe the standard library should mainly provide concepts to tie all 3rd parties together. The <code>&lt;concept&gt;</code> header is a good start here.</p>
+So maybe the standard library should mainly provide concepts to tie all 3rd parties together? The <code>&lt;concept&gt;</code> header is a good start here.</p>
 <p>There is however an issue with just trying to add concepts in the standard.
 Concepts are informed by concrete types and how they are used, they cannot be pulled out of thin air. Not without making mistakes anyway, and <a href="https://www.youtube.com/watch?v=v_yzLe-wnfk">concepts are not amendable to mistakes</a>.</p>
 <p>So, it would seem that if the STL is to have concepts, it need algorithms.</p>
@@ -152,11 +160,13 @@ Concepts are informed by concrete types and how they are used, they cannot be pu
 <p>Good algorithms are agnostic of domain-specific knowledge and can be used in the widest variety of situations.
 Algorithms are not useful to people who write games, or people who make microcontrollers, they are useful to people who write C++.
 I&rsquo;d write better code if I was able to recognise more algorithms.</p>
-<p>A focus of C++20 was concepts and ranges, and I hope this remains the case in future versions of C++.</p>
-<p>So, magic types, vocabulary types, concepts and improvements of existing facilities. A good list of what might be LEWG priorities.
-But what about networking, Unicode, processes, 15D graphics, audio, a web engine, ML facilities, JSON parsing, crypto, blockchains, Http, event handling, regexes that don&rsquo;t suck, etc?</p>
+<p>A focus of C++20 was concepts and ranges, and I hope this remains the case in future versions of C++. views in particular are one of these things people might not actively looked for if available by default.
+I sure think <code>views::product</code> is more maintainable than nested loops, but I might not try to find a library that has it, if it&rsquo;s not in the standard.</p>
+<p>So, magic types, vocabulary types, concepts and improvements of existing facilities. A good list of what might be LEWG priorities.</p>
+<p>But what about networking, Unicode, processes, 15D graphics, audio, a web engine, ML facilities, JSON parsing, crypto, blockchains, Http, event handling, regexes that don&rsquo;t suck, etc?</p>
 <p>These sure make a great front page cover.
-But here is the thing.  WG21 is&hellip; kinda bad at design?
+But here is the thing:</p>
+<p>WG21 is&hellip; kinda bad at design?
 Not because we are inherently inept, but because library design is fundamentally hard.
 And what we understand to be good library design is a somewhat fast-moving target.</p>
 <p>The STL is the foundation of the entire C++ ecosystem. And often used to demonstrate how to use new features and write good code. And we try to cover as many use cases as possible.
@@ -164,7 +174,7 @@ Design is finding a path in the maze of the design space, and at each crossing, 
 Problem is, the numbers of crossings grows exponentially with the number of abstraction layers or the complexity of the domain.
 It soon becomes impossible to please everybody, or even a majority of people.</p>
 <p><code>vector</code> has a few knobs: allocation strategies, growth strategies, error handling etc. It&rsquo;s a manageable number of knobs that we can tweak to make most people happy.
-Not everyone though. <code>folly::fbvector</code> is facebook&rsquo;s implementation of a vector which for example use a different growth strategy.</p>
+Not everyone though. <code>folly::fbvector</code> is facebook&rsquo;s implementation of a vector with for example a different growth strategy.</p>
 <p>The higher level you go, the more knobs you can tweak. Design is inherently opinionated.
 Everything is a trade-off. The trade-off of making too many trade-offs is sacrificing universality for higher-level features.
 Opinions are by nature divisive and here I thought that the STL was supposed to be general-purpose.</p>
@@ -174,7 +184,7 @@ A library which by essence is opinionated. But also, not necessarily coherent wi
 A high-quality open-source library that is widely deployed reached its target audience, and &ldquo;standardizing it&rdquo; (a process which involves trimming features and frozing it in time), represents a bad value proposition.
 As perfection does not exist (only Haskell is perfect), standardizing is an opportunity to improve upon existing practices.
 Existing practices which might be a few years behind the state of the art.
-If the C++ committee is 10 years ahead of the bulk of the industry, and standardize practices that are 10 years behind, it means that we inflict 20 yo technologies
+If the C++ committee is 10 years ahead of the bulk of the industry, and standardize practices that are 10 years behind, it means that we inflict 20 years old technologies
 to our users.
 This is, depending on how you look at it &ldquo;well tested and understood&rdquo;, or no longer viable in the industry, because some high-level components (graphics, networking)
 are fast-changing design spaces.</p>
