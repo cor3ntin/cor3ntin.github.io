@@ -130,7 +130,7 @@ A logger would use <code>std::source_location</code> for example.</p>
 Pattern matching make it possible to write cleaner code. Reflection make it possible to write&hellip; code.
 Code that you cannot otherwise emulate in standard C++, regardless how much you try.
 And that can be pretty expensive across the industry.</p>
-<p>So library components that make new things possible are obviously high on the list of the things I think should go in the standard library.</p>
+<p>So library components that make new things possible are high on the list of the things I think should go in the standard library.</p>
 <p>Then, even more obvious, come amelioration to what&rsquo;s already there.
 As standard types get deployed, the committee has to improve them. Both in response to usage experience and to increase synergy between types
 or add obvious features that were missing, bug fix, support for new language features.
@@ -216,13 +216,14 @@ and modern. A lot of it is probably due to the at-the-time forward-looking natur
 the bits that consisted of crudely shoving C and POSIX into the standard didn&rsquo;t fare so well.</p>
 <p>And so, the goals of the STL are only aspirational: We may deliver what we consider interfaces and performance that are leading at some point in time,
 but as years pass, features that were once state of the art become barely useable.
-We are doomed to fail over time, the only question is of fast things degrade, and how can we minimize that.</p>
-<p>And sure, some of these questions are impossible to answer without a crystal ball. But do we ever try?</p>
-<p>We now try to put a comparative table of examples of code to show the impact of a proposal in papers, which we call Tony Table (the idea came from <a href="https://www.youtube.com/watch?v=Zx_Tjp9WIII">Tony Van Eerd</a>).
-Maybe we should also try to describe how we expect the proposal to impact the language over time. We could call that the <a href="https://www.youtube.com/watch?v=zW-i9eVGU_k">Titus hypothesis</a>.
+We are doomed to fail over time, the only question is how fast things degrade, and how can we minimize that.
+This is especially important for composability:  If our understanding of how to write good C++ changing over time, old features might not play well with new ones.
+Integrating ranges with old containers is an ongoing challenge.</p>
+<p>And sure, some of these questions are impossible to answer without a crystal ball. But do we even try?</p>
+<p>We now put a comparative table of examples of code to show the impact of a proposal in papers, which we call Tony Table (the idea came from <a href="https://www.youtube.com/watch?v=Zx_Tjp9WIII">Tony Van Eerd</a>). Maybe we should also try to describe how we expect the proposal to impact the ecosystem and standard over time. We could call that the <a href="https://www.youtube.com/watch?v=zW-i9eVGU_k">Titus hypothesis</a>.
 I don&rsquo;t expect that WG21 would be thrilled by that idea, it might impede many proposals.
 Polymorphic Allocators, which were added in C++17 are already unmaintainable. That tends to happen when a language tries to offer both virtual functions and ABI guarantees.</p>
-<p>Frankly, I have no idea how my own proposals would send the test of time. Probably quite badly.
+<p>Frankly, I have no idea how my own proposals would stand the test of time. Probably quite badly.
 Interestingly, I found that the subset of libraries features that are the more widely available (<code>constexpr</code>, allocation-free, exception-free) do better over time.</p>
 <p>And because of that,</p>
 <h2 id="i-dont-think-we-are-ready-for-high-level-features-yet">I don&rsquo;t think we are ready for high-level features yet</h2>
@@ -275,8 +276,7 @@ This is where WG21 can really make a difference in that space: Finding the funda
 We need to know what an asynchronous operation is before we can define any. Or at least we need to do both at the same time.
 We also need to understand how error management should work in this context, even as we disagree on how error management should
 work in synchronous code.
-A concrete executor type (even something as simple as a threadpool) might simply have too many knobs for the eventually
-standardized solution to meet the universal usefulness criteria.</p>
+A concrete executor type (even something as simple as a threadpool) might simply have too many knobs for the eventually standardized solution to meet the universal usefulness criteria.</p>
 <p>If the value of the STL is not in <code>std::vector</code>, but in the design of iterators and <code>&lt;algorithm&gt;</code>, same should be true of asynchronous programming:
 Allowing many 3rd party libraries to compose well ought to be fundamentally more important that allowing polling non-secured sockets like it&rsquo;s 2005.</p>
 <p>I think this fundamentally applies to all of the higher-level proposals that have been or will be considered:
