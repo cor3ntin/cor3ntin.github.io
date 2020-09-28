@@ -69,9 +69,7 @@
 </div>
 <hr>
 <p><strong>DISCLAIMER</strong></p>
-<p>The following represent my opinions,
-not that of the committee, any of its members or any person mentioned in this article.</p>
-<hr>
+<h2 id="the-following-represent-my-opinions-not-that-of-the-c-committeewg21-any-of-its-members-or-any-other-person-mentioned-in-this-article">The following represent my opinions, not that of the C++ committee(WG21), any of its members or any other person mentioned in this article.</h2>
 <p>I think the most fundamental work done by WG21 is trying to answer meta-questions about itself.
 What is C++, what is its essence, what should we focus on? How to evolve a language with a growing community,
 a growing committee?
@@ -100,7 +98,7 @@ that they virtually could accept all of those they liked.
 At the beginning of the committee, there even was a single pipeline for both language and library.
 We can argue whether the separation of rooms we have today is always sensible.
 Most of the time library features can be added without new language proposal, but at the same time ADL, customization points,
-overload sets etc have been growing pain point for the library, and no organization can escape conway&rsquo;s law.</p>
+overload sets etc have been growing pain point for the library, and no organization can escape Conway&rsquo;s law.</p>
 <p>Anyway, the influx of new proposal has grown enough in the past few years that LEWG has now the luxury
 and the burden to chose which direction to go in and how to use its far too limited time.</p>
 <h2 id="standardization-is-expensive">Standardization is expensive</h2>
@@ -183,7 +181,7 @@ Design is finding a path in the maze of the design space, and at each crossing, 
 Problem is, the numbers of crossings grows exponentially with the number of abstraction layers or the complexity of the domain.
 It soon becomes impossible to please everybody, or even a majority of people.</p>
 <p><code>vector</code> has a few knobs: allocation strategies, growth strategies, error handling etc. It&rsquo;s a manageable number of knobs that we can tweak to make most people happy.
-Not everyone though. <code>folly::fbvector</code> is facebook&rsquo;s implementation of a vector with for example a different growth strategy.</p>
+Not everyone though. <code>folly::fbvector</code> is facebook&rsquo;s implementation of a vector with for example a different growth strategy and <a href="https://wg21.link/p1144r5">relocation</a>.</p>
 <p>The higher level you go, the more knobs you can tweak. Design is inherently opinionated.
 Everything is a trade-off. The trade-off of making too many trade-offs is sacrificing universality for higher-level features.
 Opinions are by nature divisive and here I thought that the STL was supposed to be general-purpose.</p>
@@ -253,7 +251,7 @@ And mostly because the financial investment companies make in the standard libra
 Not all implementations ship C++17 yet. <code>&lt;filesystem&gt;</code>, <code>&lt;charconv&gt;</code> and parallel algorithms required significant investments.
 This is leading to implementations sharing code or considering to do so.
 I think all of that was weighted in the open-sourcing of Microsoft&rsquo;s STL.</p>
-<p>We also need to consider that implementers, while brilliant engineers are not perfect.
+<p>We also need to consider that implementers, while brilliant engineers, are not perfect.
 It is unlikely that an implementation will be the most efficient possible implementation of some proposal, for any given high-level feature.
 People working on the STL cannot all be expected to be regex/networking/graphics experts.
 <code>&lt;regex&gt;</code> as such might never perform as well as PCRE, on which many people have spent years, if not decade of constant optimization work.
@@ -296,16 +294,16 @@ Given that our resources are scarce, cross-domain proposals serve more users.</p
 the extent to which networking, io, processes, etc share commonalities - composability is important.</p>
 <p>And doing so, we will realize that there are a great many knobs to tweak, would the result please everyone?
 Which platforms and users are we considering?</p>
-<p>When we standardized a well behaved horse, maybe we can look at adding a cart.
+<p>When we standardized a well-behaved horse, maybe we can look at adding a cart.
 I can only hope that the fact that &ldquo;there exists a proposal since a decade, and someone put a lot of effort in it&rdquo; doesn&rsquo;t obscure the bigger picture.</p>
 <h2 id="sorry-if-you-thought-i-had-the-answers">Sorry if you thought I had the answers</h2>
 <p>Many still believe the STL can&rsquo;t be used on micro-controllers and other constrained devices. Are they right? Should that be a priority?
-Should domain-specific features be amongst the <a href="https://wg21.link/p2137r0">Goals and priorities for C++</a>?
+Or should domain-specific features be amongst the <a href="https://wg21.link/p2137r0">Goals and priorities for C++</a>?
 How do we balance risks when ABI should dissuade us to take any?
 What is the place of the STL in a wider ecosystem? Can the STL scale?</p>
 <p>In the end, the STL is not different from any software project. Software takes more time to create than rot, and as time, money and people
 are very much finite, every feature is added at the expense of another.
-Until WG21 finds way to reduce the overall cost of features, I think the STL should play to its strengths: cross-domains foundational work.</p>
+Until WG21 finds ways to reduce the overall cost of features, I think the STL should play to its strengths: cross-domains foundational work.</p>
 
       
     <div id="socialshareDiv">
