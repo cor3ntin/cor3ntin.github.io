@@ -91,7 +91,7 @@ Eager to please and impress, let me copy the D code and add that oh-so-important
 </code></pre></div><p>That&rsquo;s nice, isn&rsquo;t it?  Interesting how most languages look alike.
 Hum, wait, that doesn&rsquo;t work???!!!</p>
 <p><code>error: 'width' was not declared in this scope</code></p>
-<p>But, you stupid thing, it&rsquo;s <em>RIGHT THERE</em>.\<br>
+<p>But, you stupid thing, it&rsquo;s <em>RIGHT THERE</em>.
 I declared everything in the global scope like a maniac, can&rsquo;t you see?</p>
 <p>Alas, the standard makes the compiler blind.</p>
 <blockquote>
@@ -188,16 +188,16 @@ for itself whether the function was actually non-throwing.</p>
 <h2 id="transaction_safe">transaction_safe</h2>
 <p>The Transactional Memory TS defines the notion of <em>transaction safe expression</em> as follow:</p>
 <blockquote>
-<p>An expression is transaction-unsafe if it contains any of the following as a potentially-evaluated subexpression (3.2[basic.def.odr]):\</p>
+<p>An expression is transaction-unsafe if it contains any of the following as a potentially-evaluated subexpression (3.2[basic.def.odr]):</p>
 </blockquote>
 <blockquote>
 <ul>
-<li>an lvalue-to-rvalue conversion (4.1 [conv.lval]) applied to a volatile glvalue\</li>
-<li>an expression that modifies an object through a volatile glvalue\</li>
-<li>the creation of a temporary object of volatile-qualified type or with a subobject of volatile-qualified type\</li>
+<li>an lvalue-to-rvalue conversion (4.1 [conv.lval]) applied to a volatile glvalue</li>
+<li>an expression that modifies an object through a volatile glvalue</li>
+<li>the creation of a temporary object of volatile-qualified type or with a subobject of volatile-qualified type</li>
 <li>a function call (5.2.2 expr.call) whose postfix-expression is an id-expression that names a non-virtual
-function that is not transaction-safe\</li>
-<li>an implicit call of a non-virtual function that is not transaction-safe\</li>
+function that is not transaction-safe</li>
+<li>an implicit call of a non-virtual function that is not transaction-safe</li>
 <li>any other <strong>call of a function, where the function type is not &ldquo;transaction_safe function&rdquo;</strong></li>
 </ul>
 </blockquote>
