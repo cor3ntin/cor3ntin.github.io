@@ -362,7 +362,7 @@ time as <code>std::jthread</code><sup id="fnref:11"><a href="#fn:11" class="foot
 <li><code>stop_token</code></li>
 <li><code>stop_callback</code></li>
 </ul>
-<p>This is based on the same idea as <a href="https://docs.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads">C#&lsquo;s CancellationToken</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController">Javascript&rsquo;s AbortController</a>.</p>
+<p>This is based on the same idea as <a href="https://docs.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads">C#&rsquo;s CancellationToken</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController">Javascript&rsquo;s AbortController</a>.</p>
 <p><code>stop_source</code> can create tokens, <code>stop_token</code> has a <code>stop_requested</code> method that returns
 true once <code>stop_source::request_stop()</code> is called.
 In addition, callbacks can be triggered automatically when <code>stop_source::request_stop()</code>
@@ -655,23 +655,6 @@ For better or worse, faced with a choice between performance and ergonomy, the c
     
   </div>
 </section>
-
-<section class="section">
-  <div class="container">
-    <aside><div id="disqus_thread"></div></aside>
-    <script type="text/javascript">
-      var disqus_shortname = 'cor3ntin';
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-  </div>
-</section>
-
-
 <section class="section">
   <div class="container has-text-centered">
     <p></p>
