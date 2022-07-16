@@ -178,7 +178,7 @@ i/o scheduler, so maybe we should put a ring on it. More specifically, an <code>
 <p><code>io_uring</code> is an exciting new feature in the Linux kernel which can allow the design of highly efficient, asynchronous frameworks that works just as well for (buffered and unbuffered) file I/O and other devices such as sockets.
 <code>io_uring</code> was added to Linux 5.1<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> as a replacement to <code>AIO</code> and <code>io_submit</code>,
 but has since then improved support for sockets. It is so good it might morph into a general asynchronous system call interface.</p>
-<p><code>io_uring</code> is based on 2 queues (one for submission and one for completion) that are shared between the kernel and the userspace.
+<p><code>io_uring</code> is based on 2 queues (one for submission and one for completion) that are shared between the kernel.
 The kernel can read from the submission queue while the application thread can read from the
 completion queue even as the kernel writes to it.</p>
 <img src="uring.svg" alt="IO uring Proactor"/>
