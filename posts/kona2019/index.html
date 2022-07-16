@@ -256,7 +256,7 @@ I don&rsquo;t really have a choice, do I?</p>
 <p><a href="https://wg21.link/P1206">P1206</a></p>
 <p>No, I haven&rsquo;t proposed ranges 2.</p>
 <p>P1206 was originally called &ldquo;Range constructors for containers&rdquo; but this approach was defeated by <code>initializer_list</code>s.
-So, I went back to the drawing board and came back with a design that was rather close to the existing <code>ranges-v3</code>'s <code>to_</code> facility.</p>
+So, I went back to the drawing board and came back with a design that was rather close to the existing <code>ranges-v3</code>&rsquo;s <code>to_</code> facility.</p>
 <p><code>ranges::to</code> works both as a function and a pipable object and can construct a container from a range (whether that is another container or a view).
 It supports standard containers, associative containers, extra parameters such as allocators and can deduce the type of the container&rsquo;s value type.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std::list&lt;<span style="color:#888;font-weight:bold">int</span>&gt; l;

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>Characters sets: A bad idea since the bronze age | cor3ntin</title>
+<title>Augeas | cor3ntin</title>
 
 
 <link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
@@ -58,103 +58,178 @@
     <div class="subtitle is-6 is-pulled-right">
       
     </div>
-    <h2 class="subtitle is-6">April 27, 2019</h2>
-    <h1 class="title">Characters sets: A bad idea since the bronze age</h1>
+    <h2 class="subtitle is-6">July 16, 2022</h2>
+    <h1 class="title">Augeas</h1>
     
     <div class="content">
-      <figure>
-    <img src="behistun.jpg"/> <figcaption>
-            <h4>You who shall hereafter see this tablet, which I have written, or these sculptures, do not destroy them, but preserve them so long as you live!</h4>
-        </figcaption>
-</figure>
+      <script>
 
-<p>In 522 BC, 𐎭𐎠𐎼𐎹𐎢𐏁 also known as Dārīus was king of the Persian Empire.
-Kings crave fame as they do power and so Darius (who the greek later called Δαρεῖος)
-had his henchmen carve his name in stone.
-One such stone is the Behistun Inscription, which is really more a mountain than a stone.
-And while having your biography carved on the face on the mountain is definitively a sign of success,
-it doesn&rsquo;t mean much if people can&rsquo;t understand what is written.</p>
-<p>From what I can gather the Behistun Inscription seats somewhere near the crossing of three empires: Babylonia, Persia, and Elam.
-To ensure his greatness was known of all, the king has his biography translated into three languages:
-Old Persian (known at the time as just &ldquo;Persian&rdquo;), Elamite and Babylonian.
-Sure, it might not be as impressive as Harry Potter, but J.K. Rowling didn&rsquo;t carve her books on the face on
-a mountain.</p>
-<p>Papyrus with an Aramaic translation of that mountain were also found, which tend to indicate that, in the absence of netflix, a lot of people were keen to know about
-Darius the great.</p>
-<p>As all great kings, Dārīus died and like all empires, the Persian Empire fell.</p>
-<p>A short while after that, people discovered they could turn sand into bugs, and so computer science was born.
-At the time, sand was expensive and so IBM found in the late 50' a way to encode a character using 6 bits.</p>
-<p>It was, however, one bit more than the International Telegraph Alphabet used a few decades before.
-The International Telegraph Alphabet was itself derived from the Baudot code.
-The Baudot code offered the upper case letters A to Z and the letter É.
-That Letter É was very convenient if you happen to know someone called Émile.
-For example Émile Zola, or Émile Baudot inventor of the Baudot code.</p>
-<p>Like all good International Standard, the International Telegraph Alphabet was declined into a dozen slightly incompatible
-versions.
-We tend to see history negatively. At the time the American civil war was raging, Europe was going through a wave of revolutions
-while the rest of the world was suffering the ravages of colonialism.
-But in truth, it was worse than that: To send telegraphs, people had to queue at the post office only to endure mojibake more than a century before the term was coined.</p>
-<p>But as I said, in spite of all of that, in the late 1950s, IBM elected to use a 6 bits encoding which they called binary-coded decimal (BCD).
-The president of IBM at the time was called Thomas J. Watson. Maybe that&rsquo;s why, unlike the Bacon cipher, the IBM 704 BCD encoding
-had a J. And maybe that&rsquo;s why it didn&rsquo;t have an É. Émile is an artist name, not an appropriate name for the CEO of International Business Machines.
-The 704 BCD encoding could represent 64 characters so IBM carefully chose 51 characters. Including ⌑ and ‡ known to IBM as a Recordmark.
-In the Unicode Standard, a good substitute is U+2021 DOUBLE DAGGER. Because punching cards might not appease you enough when dealing with all of this madness.
-There was apparently so many variations of the BCD encoding that Wikipedia does not care to list them all.</p>
-<p>By the time IBM realized 6 bits might not be enough for anyone and came up with EBCDIC, Bill Gates was born and people in Japan realized computers were kinda cool.
-It has now been 245 years since one guy decided to send letters over an electric wire instead of having a nap.
-Unicode was invented in 1991 and we are still debating whether we should use it consistently.</p>
-<p>But here is the thing:</p>
-<p>Text is for people.
-People travel and they mingle.
-They drink caffè with their fiancé. They have stupid names, like Ó Briain. Ó Briain is in the kitchen, cooking jalapeño and chouriço.
-Of course, you might argue proper Shakespearian Ænglish of þe old never had to suffer this nonsense as people only used sensible letters.</p>
-<p>Developers are not really human, they are happy with [a-Z] and that&rsquo;s perfectly fine.</p>
-<p>Normal people, they use text.
-And there is no way you can predict which character people will want to use in your system.
-Some idiot may decide to put some some old Persian on their website (BTW Dārayauš was called <span class="Aramaic"> 𐡃𐡓𐡉𐡅𐡄𐡅𐡔 </span> in Aramaic)</p>
-<p>The idea of alphabets started to get tenuous when people invented horses and boats.
-The idea of characters sets was bogus from the start.
-The idea that characters are limited to a place is just crazy talk.
-And maybe it was okay for Gutenberg to drop letters he was too lazy to carve, but you don&rsquo;t get to make that choice.</p>
-<p>So, your legacy code? It&rsquo;s broken. <a href="https://en.wikipedia.org/wiki/Haf%C3%BE%C3%B3r_J%C3%BAl%C3%ADus_Bj%C3%B6rnsson">The strongest man alive</a> is so strong he can break your database with his name. That&rsquo;s right.</p>
-<p>Would we know of Dārīus the Great if the Behistun Inscription had been contracted to IBM?</p>
-<p>How much energy should we waste in supporting anything but Unicode?</p>
-<style>
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array
+}
 
-@font-face {
-  font-family: Aramaic;
-  src: url("/NotoSansImperialAramaic-Regular.ttf");
+function shuffle_items() {
+    var list = document.getElementById("list");
+    var nodes = list.children;
+    nodes = Array.prototype.slice.call(nodes);
+    nodes = shuffle(nodes);
+    list.append(...nodes);
+}
+
+window.onload = (event) => {
+//  shuffle_items();
 };
 
-
-@font-face {
-  font-family: OldPersian;
-  src: url("/NotoSansOldPersian-Regular.ttf");
-  unicode-range: U+103A0-103DF;
+</script>
+<style>
+.core {
+    color: #008E89;
+}
+.library {
+    color: #084594;
+}
+.async {
+    color: #2C3639;
+}
+.text {
+    color: #A149FA;
+}
+.perf {
+    color: #EB4747;
 }
 
-.Aramaic {
-	font-familly:Aramaic !important
+.unicorn > span {
+   background-image: linear-gradient(to left, violet, indigo, blue, green, #d2d20f, #eb9c0b, red);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
 }
+
+.medium {
+  font-size: 1.175em
+}
+
+.big {
+  font-size: 1.3em
+}
+
 
 </style>
+<ul id="list">
+<li class="core big">Reflection on language constructs.</li>
+<li class="core big">Programmatically inject code.</li>
+<li class="core medium">Scoped and typesafe expressions expansion (hygienic macros).</li>
+<li class="library medium">Starting and controlling child processes.</li>
+<li class="async big">A framework for asynchrony and heterogeneous programming (<abbr title="Senders/Receivers">S/R</abbr>).</li>
+<li class="async">A standard executor to make asynchrony available out of the box.</li>
+<li class="unicorn"><span>Fixed-sized non-allocating coroutines and deferred layouts</span>.</li>
+<li class="async">More ergonomic coroutines APIs.</li>
+<li class="perf">Guaranteed tail calls.</li>
+<li class="library">Mapping of system memory and files.</li>
+<li class="library">More user-friendly Pseudo Random Number Generators.</li>
+<li class="async">Library support for SIMD.</li>
+<li class="async">SIMD algorithms.</li>
+<li class="async">Parallel algorithms for ranges.</li>
+<li class="async big">Asynchronous Networking facilities.</li>
+<li class="async">Parallel execution and executors integration.</li>
+<li class="perf">Small buffer optimization for <code>std::vector</code>.</li>
+<li class="library">Open addressing hash map and set.</li>
+<li class="text medium">Unicode algorithms.</li>
+<li class="text">Unicode properties.</li>
+<li class="text">Tailored Unicode algorithms.</li>
+<li class="text medium">Unicode/BCP 47 locales.</li>
+<li class="text">Collation.</li>
+<li class="text">cldr-compliant localized date formatting.</li>
+<li class="text">cldr-compliant localized number formatting.</li>
+<li class="text">User-friendly encoding conversions.</li>
+<li class="library">A generic facility to get the extent of an array.</li>
+<li class="library"><code>constexpr</code> formatting.</li>
+<li class="core">Expressions in <code>static_assert</code> messages.</li>
+<li class="core">Compile time assertions.</li>
+<li class="core medium">Contracts (assertions).</li>
+<li class="perf">Non-throwing default allocator.</li>
+<li class="core">Terser lambda syntax.</li>
+<li class="core">Language construct for <code>std::forward</code>.</li>
+<li class="core">Pack indexing.</li>
+<li class="core">Pack as members.</li>
+<li class="core">Non-trailing packs deduction.</li>
+<li class="core">Universal template parameters.</li>
+<li class="core medium">First-class support for Customization Points Objects, Niebloids and Overload Sets.</li>
+<li class="library">Trees and ropes types.</li>
+<li class="library">Improving the <code>inserter</code> interface for maps and sets.</li>
+<li class="core">Concepts and variable templates as template parameters.</li>
+<li class="core">A better <code>from_chars</code> interface.</li>
+<li class="core">Template argument deduction for return types.</li>
+<li class="library"><code>views::enumerate</code>.</li>
+<li class="async">Threads should have a name.</li>
+<li class="unicorn"><span>Replace <code>initializer_list</code> with language tuples.</span></li>
+<li class="core">A strong <code>int8_t</code> type.</li>
+<li class="text">Getting rid of <code>std::locale</code>.</li>
+<li class="text">Getting rid of <code>char_traits</code>.</li>
+<li class="core">Embedding resources in source files.</li>
+<li class="perf">Container rellocation.</li>
+<li class="library"><code>optional&lt;T&amp;&gt;</code>.</li>
+<li class="perf">Uninitialized <code>vector</code>.</li>
+<li class="core"><code>constexpr</code> warnings.</li>
+<li class="core">More implicit <code>noexcept</code>.</li>
+<li class="core">Structured bindings in <code>constexpr</code> contexts.</li>
+<li class="library">More formatting support for library types.</li>
+<li class="text"><code>u8/u16/u32</code> support in <code>std::format</code>.</li>
+<li class="text"><code>char*</code> ⬄ <code>char8_t*</code> casting.</li>
+<li class="library">Better hashing facilities.</li>
+<li class="library">Correctly rounded floating points functions.</li>
+<li class="core">Regular <code>void</code></li>
+<li class="unicorn"><span>Fixing ADL</span>.</li>
+<li class="unicorn"><span>Two phases parsing</span>.</li>
+<li class="unicorn"><span>Breaking ABI.</span></li>
+<li class="core">A pipeline operator for improved ranges and sender/receiver code usability.</li>
+<li class="library">Views and iterators facades.</li>
+<li class="library">null-terminated string views.</li>
+<li class="unicorn"><span>Phasing out null-terminated string interfaces.</span></li>
+<li class="library">Max buffer size for <code>to_chars</code>.</li>
+<li class="library">Elastic integers.</li>
+<li class="library">Safe overflow/saturating functions.</li>
+<li class="library">Fixing <code>std::vector&lt;bool&gt;</code></li>
+<li class="library">A replacement for <code>std::bitset</code>.</li>
+<li class="library"><code>ranges::to</code> support for fixed-size arrays.</li>
+<li class="library big">Improving the freestanding and embedded platforms story.</li>
+<li class="library">Make more friends hidden to improve compile times and diagnostics.</li>
+<li class="unicorn"><span>Improve the helpfulness of compilation errors.</span></li>
+<li class="core">Nested structured bindings.</li>
+<li class="core big">Pattern matching.</li>
+<li class="core">Unused variable placeholder.</li>
+<li class="text medium">Efficient, compile-time checked, Unicode compliant regexes.</li>
+<li class="core">More ergonomic allocators.</li>
+<li class="core">Better error management facilities.</li>
+<li class="library">Language or library support for enum bit flags.</li>
+<li class="library">An easier way to construct explicit types in range pipelines.</li>
+<li class="library">Fast binary I/O separate from text facilities.</li>
+<li class="core">Improve the usability of pointer to members.</li>
+<li class="core">A set of replacement functions for <code>volatile</code>.</li>
+<li class="core">Generalized <code>= delete</code>.</li>
+<li class="core">Generalized <code>using</code>.</li>
+<li class="unicorn"><span>ABI resilience features.</span></li>
+</ul>
 
       
     <div id="socialshareDiv">
         <h1>Share on </h1>
-        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fcharacterset%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2faugeas%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
     <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
     
   </svg>
 </i></a></span>
-        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fcharacterset%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2faugeas%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
     <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
     
   </svg>
 </i></a></span>
-        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fcharacterset%2f&t=Characters%20sets%3a%20A%20bad%20idea%20since%20the%20bronze%20age" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2faugeas%2f&t=Augeas" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
     
     <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
     
