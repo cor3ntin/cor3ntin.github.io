@@ -78,14 +78,14 @@ why should I need to do an expensive conversion to compare their <strong>value</
 <p>A better question, of course, would be <em>why is <code>std::pair</code> a distinct type from <code>std::tuple</code>?</em>, the answer to that
 being <em>legacy</em>, as always. Could we fix it? Probably not.</p>
 <p>But anyway, this led me to propose <a href="https://wg21.link/p2165">P2165 - Comparing pair and tuples</a>.
-This, in turn, led me to look at libstdc++'s tuple implementation.
+This, in turn, led me to look at libstdc++&rsquo;s tuple implementation.
 That is the topic of today&rsquo;s blog post.</p>
 <p><code>std::tuple</code> is a C++11 addition, and like many standard types, its goal of being a universal
 vocabulary type makes it quite challenging to implement.</p>
 <p>You can also checkout <a href="https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277">this article</a>
 which explain how <code>std::tuple</code> is implemented in C++17.</p>
 <p>But since then the language changed a lot, and many new features target easier library development.
-Let see how C++20 can help us simplify <code>std::tuple</code>'s implementation.</p>
+Let see how C++20 can help us simplify <code>std::tuple</code>&rsquo;s implementation.</p>
 <h3 id="down-with-ebo">Down with EBO</h3>
 <p><code>std::tuple</code> can be implemented as a recursive tuple.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
@@ -150,7 +150,7 @@ without adding any complexity to our design.
 Less code, more expressiveness, less maintenance.</p>
 <h3 id="c20-is-more-implicit-about-being-explicit">C++20 is more implicit about being explicit.</h3>
 <p>Like watermelons are mostly water, <code>std::tuple</code> is mostly constructors.
-I counted 24 constructors in libstdc++'s implementation.
+I counted 24 constructors in libstdc++&rsquo;s implementation.
 Let&rsquo;s remove some.</p>
 <p>The standard specifies that a tuple constructor is explicit if any of its
 elements would have an <code>explicit</code> constructor.</p>

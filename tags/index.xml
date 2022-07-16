@@ -5,10 +5,6 @@
     <link>https://cor3ntin.github.io/tags/</link>
     <description>Recent content in Tags on cor3ntin</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    
-	<atom:link href="https://cor3ntin.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>en-us</language><atom:link href="https://cor3ntin.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

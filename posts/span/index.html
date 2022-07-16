@@ -117,7 +117,7 @@ An array in c++ being analogous to a sequence of contiguous elements in memory. 
 But people feel like strings are some special snowflakes that need their special container with a bunch of special methods.
 So <code>string</code> gets to have a <code>length()</code> method because <code>size()</code> was probably not good enough for the princess, some <code>find*()</code> methods and lexicographical comparators.</p>
 <p>And I mean, that&rsquo;s fair. A lot of application handle texts more than other kind of data, so having a special class to do so make total sense.
-But fundamentally, the only difference between a vector and a string is that which is conveyed by the programmers&rsquo; intent.</p>
+But fundamentally, the only difference between a vector and a string is that which is conveyed by the programmers' intent.</p>
 <p>It should be noted that  <code>std::string</code> ( or <code>std::wstring</code> and the other <code>std::*string</code> ) is completely unsuited to handle text that is not encoded as ASCII.</p>
 <p>If you are one of the 6 billions people on earth that do not speak English, you are gonna have a f��� bad time if you think <code>std::string</code> can do anything for you.
 (Pardon my Chinese). At best, you can hope that if you don&rsquo;t mutate it in any way or look at it funny, it might still look okay by the time you display it somewhere.

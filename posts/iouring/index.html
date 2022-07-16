@@ -487,7 +487,7 @@ and extensible system.</p>
 <p>I think the end goal would be for every single potentially blocking call to be an
 asynchronous expression instead. Like in <code>go</code>.
 Not bake-in in the language mind you, but as library solutions.</p>
-<p>For example, <code>libunifex</code> implement <a href="https://github.com/facebookexperimental/libunifex/blob/master/include/unifex/async_mutex.hpp">async mutexes</a> (not unlike <code>asio</code>'s strands),
+<p>For example, <code>libunifex</code> implement <a href="https://github.com/facebookexperimental/libunifex/blob/master/include/unifex/async_mutex.hpp">async mutexes</a> (not unlike <code>asio</code>&rsquo;s strands),
 such that you can acquire a lock by resuming a coroutine:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task s::f() {
     <span style="color:#080;font-weight:bold">co_await</span> m_mutex.lock();
