@@ -63,8 +63,7 @@
     
     <div class="content">
       <p>This is Part 3 on my series about cross-compilation. You can check out <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part 1</a> 1 and <a href="https://cor3ntin.github.io/posts/helloworld_p2/">part 2</a> 2 first !</p>
-<figure>
-    <img src="linux.png"/> <figcaption>
+<figure><img src="linux.png"/><figcaption>
             <h4>linuxnewbieguide.org</h4>
         </figcaption>
 </figure>
@@ -85,8 +84,7 @@
 <p>I’m not a lawyer. However it seems to me that Apple is actively forbidding cross-compilation using their libraries, regardless of the technical do-ability.</p>
 <p><strong>Therefore, some of the ideas discussed in the rest of the article could, if applied, void any agreement you have with Apple.</strong></p>
 <p>You need an Apple ID, and so you need to create an account on apple.com. I don’t recall having a more terrible account creation experience in a while. The biggest offense is certainly their antiquated security policies.</p>
-<figure>
-    <img src="form.png"/> <figcaption>
+<figure><img src="form.png"/><figcaption>
             <h4>How not to do account creation and security, courtesy of Apple</h4>
         </figcaption>
 </figure>
@@ -116,25 +114,25 @@ cp osxcross-llvm-dsymutil x86_64-apple-darwin15-dsymutil
 </code></pre>
 <p>This will later help clang finding the proper tools. If you want to support multiple tool-chains, put ldin a subfolder</p>
 <p>Here is my profile configuration than you can adapt</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\qbs\architecture</span>=<span style="color:#d20;background-color:#fff0f0">x86_64</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\qbs\toolchain</span>=<span style="color:#d20;background-color:#fff0f0">unix,clang,llvm,gcc</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\qbs\targetOS</span>=<span style="color:#d20;background-color:#fff0f0">macos,darwin</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\compilerName</span>=<span style="color:#d20;background-color:#fff0f0">clang++</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\driverFlags</span>=<span style="color:#d20;background-color:#fff0f0">--prefix,/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin/</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\minimumMacosVersion</span>=<span style="color:#d20;background-color:#fff0f0">10.11</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\compilerPathByLanguage.cpp</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin/x86_64-apple-darwin15-clang++</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\compilerPathByLanguage.c</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin/x86_64-apple-darwin15-clang</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\toolchainInstallPath</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\systemIncludePaths</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/SDK/MacOSX10.11.sdk/usr/include/c++/v1</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\libraryPaths</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/SDK/MacOSX10.11.sdk/usr/lib,/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/SDK/MacOSX10.11.sdk/usr/lib/system</span>
-<span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\toolchainPrefix</span>=<span style="color:#d20;background-color:#fff0f0">x86_64-apple-darwin15-</span>
-</code></pre></div><p>The -prefix options tells clang where to find the proper ld(ld64) since the system linker is not suitable to link Mach-O application.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\qbs\architecture</span>=<span style="color:#d20;background-color:#fff0f0">x86_64</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\qbs\toolchain</span>=<span style="color:#d20;background-color:#fff0f0">unix,clang,llvm,gcc</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\qbs\targetOS</span>=<span style="color:#d20;background-color:#fff0f0">macos,darwin</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\compilerName</span>=<span style="color:#d20;background-color:#fff0f0">clang++</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\driverFlags</span>=<span style="color:#d20;background-color:#fff0f0">--prefix,/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin/</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\minimumMacosVersion</span>=<span style="color:#d20;background-color:#fff0f0">10.11</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\compilerPathByLanguage.cpp</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin/x86_64-apple-darwin15-clang++</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\compilerPathByLanguage.c</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin/x86_64-apple-darwin15-clang</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\toolchainInstallPath</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/bin</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\systemIncludePaths</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/SDK/MacOSX10.11.sdk/usr/include/c++/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\libraryPaths</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/SDK/MacOSX10.11.sdk/usr/lib,/home/cor3ntin/dev/cross-compilers/osx/osxcross/target/SDK/MacOSX10.11.sdk/usr/lib/system</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">qt-project\qbs\profiles\clang-osx-x86_64\cpp\toolchainPrefix</span>=<span style="color:#d20;background-color:#fff0f0">x86_64-apple-darwin15-</span>
+</span></span></code></pre></div><p>The -prefix options tells clang where to find the proper ld(ld64) since the system linker is not suitable to link Mach-O application.</p>
 <p>The rest is just giving qbs the proper search paths.</p>
 <p>Unfortunately, support for .plist in qbs is not portable, so you will encountered an error</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ERROR: TypeError: Result of expression <span style="color:#d20;background-color:#fff0f0">&#39;PropertyList&#39;</span> [[object Object]] is not a constructor.
-            at JavaScriptCommand.sourceCode
-            at Rule.prepare in /opt/qtcreator/share/qbs/modules/cpp/DarwinGCC.qbs:262:18
-</code></pre></div><p>Comment out the rule in DarwinGCC.qbs to fix the issue.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>ERROR: TypeError: Result of expression <span style="color:#d20;background-color:#fff0f0">&#39;PropertyList&#39;</span> [[object Object]] is not a constructor.
+</span></span><span style="display:flex;"><span>            at JavaScriptCommand.sourceCode
+</span></span><span style="display:flex;"><span>            at Rule.prepare in /opt/qtcreator/share/qbs/modules/cpp/DarwinGCC.qbs:262:18
+</span></span></code></pre></div><p>Comment out the rule in DarwinGCC.qbs to fix the issue.</p>
 <p>Of course, not being able to create info.plist files will be very limitating and it would be great if QBS could handle those files in a platform-agnostic manner.</p>
 <p>For now, in all our .qbs project files, we will put the following to disable bundling and therefore Info.plist generation</p>
 <pre><code>Depends {
@@ -143,20 +141,18 @@ cp osxcross-llvm-dsymutil x86_64-apple-darwin15-dsymutil
 bundle.isBundle: false
 </code></pre>
 <p>At that point, we are able to build the simple console Hello World seen in <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part one</a>.</p>
-<figure>
-    <img src="term1.png"/> 
+<figure><img src="term1.png"/>
 </figure>
 
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#888"># file helloworld</span>
-Mach-O 64-bit x86_64 executable, flags:&lt;NOUNDEFS|DYLDLINK|TWOLEVEL|WEAK_DEFINES|BINDS_TO_WEAK|PIE&gt;
-</code></pre></div><p>But can it run ?</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#888"># file helloworld</span>
+</span></span><span style="display:flex;"><span>Mach-O 64-bit x86_64 executable, flags:&lt;NOUNDEFS|DYLDLINK|TWOLEVEL|WEAK_DEFINES|BINDS_TO_WEAK|PIE&gt;
+</span></span></code></pre></div><p>But can it run ?</p>
 <h3 id="oh-darling-">Oh, darling !</h3>
 <p>To run our windows application we used wine. There is a rather recent effort — It started in 2012 while WINE started in 1993; Windows 3.1 was just released !— to offer a translation layer, called <em><strong>darling.</strong></em> The project is far from being as mature and it doesn’t seems to have any kind of financial support. I hope it will catch on.
 <a href="https://darlinghq.org/">Darling - macOS translation layer for Linux</a></p>
 <p>You can clone and build darling, F<a href="https://github.com/darlinghq/darling">ollow the instructions on github</a>. On my machine, it took a bit under one hour for the whole thing. Once installed, it’s about 800MB. which is unsurprising as it is a complete system which comes with all the usual tools including g++, ruby, python, Perl, git, bash, swift, ssh…</p>
 <p>But, the build complete with no error, and amazingly, it works, and seems very reactive. Being more modern that wine, it is containerized !</p>
-<figure>
-    <img src="term2.png"/> <figcaption>
+<figure><img src="term2.png"/><figcaption>
             <h4>Oh, Hi Mac</h4>
         </figcaption>
 </figure>
@@ -175,8 +171,7 @@ Mach-O 64-bit x86_64 executable, flags:&lt;NOUNDEFS|DYLDLINK|TWOLEVEL|WEAK_DEFIN
 <p>The darling documentation suggests that darling <binary> should work, but it does not.</p>
 <p>After restarting the binfmt service ( systemctl restart systemd-binfmt ), we are able to launch OSX application transparently.</p>
 <p>Which mean we can do this</p>
-<figure>
-    <img src="term3.png"/> <figcaption>
+<figure><img src="term3.png"/><figcaption>
             <h4>Any sufficiently advanced technology is indistinguishable from magic</h4>
         </figcaption>
 </figure>
@@ -195,95 +190,93 @@ Mach-O 64-bit x86_64 executable, flags:&lt;NOUNDEFS|DYLDLINK|TWOLEVEL|WEAK_DEFIN
 <p>&hellip;you can get it to work !</p>
 <pre><code>#configure -release -opensource -confirm-license -xplatform macx-cross-clang -skip qtwebengine -nomake examples -nomake tests    -prefix /home/cor3ntin/dev/cross-compilers/osx/qt5_10
 </code></pre>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">Building on: linux-g++ (x86_64, CPU features: mmx sse sse2)
-Building <span style="color:#080;font-weight:bold">for</span>: macx-cross-clang (x86_64, CPU features: cx16 mmx sse sse2 sse3 ssse3)
-Configuration: cross_compile sse2 aesni sse3 ssse3 sse4_1 sse4_2 avx avx2 avx512f avx512bw avx512cd avx512dq avx512er avx512ifma avx512pf avx512vbmi avx512vl compile_examples f16c largefile precompile_header rdrnd shani shared qt_framework rpath release c++11 c++14 c++1z concurrent dbus no-pkg-config reduce_exports stl
-Build options:
-  Mode ................................... release
-  Optimize release build <span style="color:#080;font-weight:bold">for</span> size ........ no
-  Building shared libraries .............. yes
-  Using C++ standard ..................... C++1z
-  Using ccache ........................... no
-  Using gold linker ...................... no
-  Using precompiled headers .............. yes
-  Using LTCG ............................. no
-  App store compliance ................... no
-Qt modules and options:
-  Qt Concurrent .......................... yes
-  Qt D-Bus ............................... yes
-  Qt D-Bus directly linked to libdbus .... no
-  Qt Gui ................................. yes
-  Qt Network ............................. yes
-  Qt Sql ................................. yes
-  Qt Testlib ............................. yes
-  Qt Widgets ............................. yes
-  Qt Xml ................................. yes
-Qt Network:
-  CoreWLan ............................... yes
-  .....
-Qt Gui:
-  FreeType ............................... yes
-    Using system FreeType ................ no
-  HarfBuzz ............................... yes
-    Using system HarfBuzz ................ no
-  Fontconfig ............................. no
-  Image formats:
-    GIF .................................. yes
-    ICO .................................. yes
-    JPEG ................................. yes
-      Using system libjpeg ............... no
-    PNG .................................. yes
-      Using system libpng ................ no
-  EGL .................................... no
-  OpenVG ................................. no
-  OpenGL:
-    Desktop OpenGL ....................... yes
-    OpenGL ES 2.0 ........................ no
-  Vulkan ................................. no
-  Session Management ..................... yes
-Qt Widgets:
-  GTK+ ................................... no
-  Styles ................................. Fusion macOS Windows
-Qt PrintSupport:
-  CUPS ................................... yes
-Qt QML:
-  QML interpreter ........................ yes
-  QML network support .................... yes
-Qt Quick:
-  Direct3D <span style="color:#00d;font-weight:bold">12</span> ............................ no
-  AnimatedImage item ..................... yes
-  Canvas item ............................ yes
-  Support <span style="color:#080;font-weight:bold">for</span> Qt Quick Designer .......... yes
-  Flipable item .......................... yes
-  GridView item .......................... yes
-  ListView item .......................... yes
-  Path support ........................... yes
-  PathView item .......................... yes
-  Positioner items ....................... yes
-  ShaderEffect item ...................... yes
-  Sprite item ............................ yes
-Note: Also available <span style="color:#080;font-weight:bold">for</span> Linux: linux-clang linux-icc
-
-Note: No wayland-egl support detected. Cross-toolkit compatibility disabled.
-
-Qt is now configured <span style="color:#080;font-weight:bold">for</span> building. Just run <span style="color:#d20;background-color:#fff0f0">&#39;make&#39;</span>.
-Once everything is built, you must run <span style="color:#d20;background-color:#fff0f0">&#39;make install&#39;</span>.
-Qt will be installed into <span style="color:#d20;background-color:#fff0f0">&#39;/home/cor3ntin/dev/cross-compilers/osx/qt5_10&#39;</span>.
-
-Prior to reconfiguration, make sure you remove any leftovers from
-the previous build.
-</code></pre></div><p>It was not quite the end of the road. Qt Widgets failed to build because of missing dependencies. QtLocation failed to build because the libc++ headers were too old or broken ( I fixed that by copying the latest libc++ version within the OSX SDK. It worked). Then QtLocation complained because std::auto_ptr was not defined so I hacked a few headers.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>Building on: linux-g++ (x86_64, CPU features: mmx sse sse2)
+</span></span><span style="display:flex;"><span>Building <span style="color:#080;font-weight:bold">for</span>: macx-cross-clang (x86_64, CPU features: cx16 mmx sse sse2 sse3 ssse3)
+</span></span><span style="display:flex;"><span>Configuration: cross_compile sse2 aesni sse3 ssse3 sse4_1 sse4_2 avx avx2 avx512f avx512bw avx512cd avx512dq avx512er avx512ifma avx512pf avx512vbmi avx512vl compile_examples f16c largefile precompile_header rdrnd shani shared qt_framework rpath release c++11 c++14 c++1z concurrent dbus no-pkg-config reduce_exports stl
+</span></span><span style="display:flex;"><span>Build options:
+</span></span><span style="display:flex;"><span>  Mode ................................... release
+</span></span><span style="display:flex;"><span>  Optimize release build <span style="color:#080;font-weight:bold">for</span> size ........ no
+</span></span><span style="display:flex;"><span>  Building shared libraries .............. yes
+</span></span><span style="display:flex;"><span>  Using C++ standard ..................... C++1z
+</span></span><span style="display:flex;"><span>  Using ccache ........................... no
+</span></span><span style="display:flex;"><span>  Using gold linker ...................... no
+</span></span><span style="display:flex;"><span>  Using precompiled headers .............. yes
+</span></span><span style="display:flex;"><span>  Using LTCG ............................. no
+</span></span><span style="display:flex;"><span>  App store compliance ................... no
+</span></span><span style="display:flex;"><span>Qt modules and options:
+</span></span><span style="display:flex;"><span>  Qt Concurrent .......................... yes
+</span></span><span style="display:flex;"><span>  Qt D-Bus ............................... yes
+</span></span><span style="display:flex;"><span>  Qt D-Bus directly linked to libdbus .... no
+</span></span><span style="display:flex;"><span>  Qt Gui ................................. yes
+</span></span><span style="display:flex;"><span>  Qt Network ............................. yes
+</span></span><span style="display:flex;"><span>  Qt Sql ................................. yes
+</span></span><span style="display:flex;"><span>  Qt Testlib ............................. yes
+</span></span><span style="display:flex;"><span>  Qt Widgets ............................. yes
+</span></span><span style="display:flex;"><span>  Qt Xml ................................. yes
+</span></span><span style="display:flex;"><span>Qt Network:
+</span></span><span style="display:flex;"><span>  CoreWLan ............................... yes
+</span></span><span style="display:flex;"><span>  .....
+</span></span><span style="display:flex;"><span>Qt Gui:
+</span></span><span style="display:flex;"><span>  FreeType ............................... yes
+</span></span><span style="display:flex;"><span>    Using system FreeType ................ no
+</span></span><span style="display:flex;"><span>  HarfBuzz ............................... yes
+</span></span><span style="display:flex;"><span>    Using system HarfBuzz ................ no
+</span></span><span style="display:flex;"><span>  Fontconfig ............................. no
+</span></span><span style="display:flex;"><span>  Image formats:
+</span></span><span style="display:flex;"><span>    GIF .................................. yes
+</span></span><span style="display:flex;"><span>    ICO .................................. yes
+</span></span><span style="display:flex;"><span>    JPEG ................................. yes
+</span></span><span style="display:flex;"><span>      Using system libjpeg ............... no
+</span></span><span style="display:flex;"><span>    PNG .................................. yes
+</span></span><span style="display:flex;"><span>      Using system libpng ................ no
+</span></span><span style="display:flex;"><span>  EGL .................................... no
+</span></span><span style="display:flex;"><span>  OpenVG ................................. no
+</span></span><span style="display:flex;"><span>  OpenGL:
+</span></span><span style="display:flex;"><span>    Desktop OpenGL ....................... yes
+</span></span><span style="display:flex;"><span>    OpenGL ES 2.0 ........................ no
+</span></span><span style="display:flex;"><span>  Vulkan ................................. no
+</span></span><span style="display:flex;"><span>  Session Management ..................... yes
+</span></span><span style="display:flex;"><span>Qt Widgets:
+</span></span><span style="display:flex;"><span>  GTK+ ................................... no
+</span></span><span style="display:flex;"><span>  Styles ................................. Fusion macOS Windows
+</span></span><span style="display:flex;"><span>Qt PrintSupport:
+</span></span><span style="display:flex;"><span>  CUPS ................................... yes
+</span></span><span style="display:flex;"><span>Qt QML:
+</span></span><span style="display:flex;"><span>  QML interpreter ........................ yes
+</span></span><span style="display:flex;"><span>  QML network support .................... yes
+</span></span><span style="display:flex;"><span>Qt Quick:
+</span></span><span style="display:flex;"><span>  Direct3D <span style="color:#00d;font-weight:bold">12</span> ............................ no
+</span></span><span style="display:flex;"><span>  AnimatedImage item ..................... yes
+</span></span><span style="display:flex;"><span>  Canvas item ............................ yes
+</span></span><span style="display:flex;"><span>  Support <span style="color:#080;font-weight:bold">for</span> Qt Quick Designer .......... yes
+</span></span><span style="display:flex;"><span>  Flipable item .......................... yes
+</span></span><span style="display:flex;"><span>  GridView item .......................... yes
+</span></span><span style="display:flex;"><span>  ListView item .......................... yes
+</span></span><span style="display:flex;"><span>  Path support ........................... yes
+</span></span><span style="display:flex;"><span>  PathView item .......................... yes
+</span></span><span style="display:flex;"><span>  Positioner items ....................... yes
+</span></span><span style="display:flex;"><span>  ShaderEffect item ...................... yes
+</span></span><span style="display:flex;"><span>  Sprite item ............................ yes
+</span></span><span style="display:flex;"><span>Note: Also available <span style="color:#080;font-weight:bold">for</span> Linux: linux-clang linux-icc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Note: No wayland-egl support detected. Cross-toolkit compatibility disabled.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Qt is now configured <span style="color:#080;font-weight:bold">for</span> building. Just run <span style="color:#d20;background-color:#fff0f0">&#39;make&#39;</span>.
+</span></span><span style="display:flex;"><span>Once everything is built, you must run <span style="color:#d20;background-color:#fff0f0">&#39;make install&#39;</span>.
+</span></span><span style="display:flex;"><span>Qt will be installed into <span style="color:#d20;background-color:#fff0f0">&#39;/home/cor3ntin/dev/cross-compilers/osx/qt5_10&#39;</span>.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Prior to reconfiguration, make sure you remove any leftovers from
+</span></span><span style="display:flex;"><span>the previous build.
+</span></span></code></pre></div><p>It was not quite the end of the road. Qt Widgets failed to build because of missing dependencies. QtLocation failed to build because the libc++ headers were too old or broken ( I fixed that by copying the latest libc++ version within the OSX SDK. It worked). Then QtLocation complained because std::auto_ptr was not defined so I hacked a few headers.</p>
 <p>I tried to get qwebengine(chromium ) to build, but it uses another build system still, and I had done enough build system hacking for one night.</p>
 <p>But in the end most of Qt did build.</p>
-<figure>
-    <img src="term4.png"/> <figcaption>
+<figure><img src="term4.png"/><figcaption>
             <h4>It took me a few hours but I got Qt compiling!</h4>
         </figcaption>
 </figure>
 
 <p>And what we have then, is something quite interesting. The binaries are natives Linux ELF, while the frameworks and libraries are Macho-O. That will be handy in a minute.</p>
-<figure>
-    <img src="term5.png"/> <figcaption>
+<figure><img src="term5.png"/><figcaption>
             <h4>Hello, I’m a Mac — And I’m a PC. And I am a Mac too. — What ?</h4>
         </figcaption>
 </figure>
@@ -295,16 +288,14 @@ the previous build.
 </code></pre>
 <p>Which created the right profiles and modules. I cleaned up my profiles manually to merge clang-osx and osx-x64-qt510</p>
 <p>And then we can compile or magnificent <em>Hello World</em> app !</p>
-<figure>
-    <img src="term6.png"/> <figcaption>
+<figure><img src="term6.png"/><figcaption>
             <h4>Compiling an OSX application based on Qt on Linux, using qbs : check</h4>
         </figcaption>
 </figure>
 
 <p>What now ?</p>
 <p>Well, we have a complete toolchain, maybe we can check some things ?</p>
-<p><figure>
-    <img src="term7.png"/> <figcaption>
+<p><figure><img src="term7.png"/><figcaption>
             <h4>Using otool -L , the osx equivalent of ldd we can assert that we indeed link to some libraries</h4>
         </figcaption>
 </figure>
@@ -313,8 +304,7 @@ We can use other tools. such as nm or strings or the dreaded <code>install_name_
 <p>Unfortunately, Darling can’t handle anything remotely graphical yet, So we need a Mac to actually launch our app.</p>
 <p>A real mac; It is illegal to visualize Mac OSX, unless it’s on a mac. Some words comes to mind. Imagine my French.</p>
 <p>Let’s talk about the mac. <em>The Mac</em>. You probably know the one. Most companies have it.</p>
-<figure>
-    <img src="mini.png"/> <figcaption>
+<figure><img src="mini.png"/><figcaption>
             <h4>This is a true story. True.</h4>
         </figcaption>
 </figure>
@@ -331,8 +321,7 @@ We can use other tools. such as nm or strings or the dreaded <code>install_name_
 <p>I do happen to have a 2011 mac-mini, gift of a former employer. Its life was a a bit different than <em>the mac</em> ’s. It was never loved and spent the last two years in a box. It only gets to see the life of the day for the needs of this article. It is also the reason why I’m 4 days late in my publication schedule. I tried to install High Sierra — Grey screen; I had to reformat, install Lion, then install El Captain. So El captain is what we will be using. It features a whooping 2GB of memory, the system using 3/4 of that.</p>
 <p>You should enable VNC, remote share and SSH in the systems parameters of your mac.</p>
 <p>This article is starting to be a bit long. So here is a quick visual summary of the work achieved so far:</p>
-<figure>
-    <img src="jobs.png"/> <figcaption>
+<figure><img src="jobs.png"/><figcaption>
             <h4>Definitively improving our productivity</h4>
         </figcaption>
 </figure>
@@ -353,12 +342,11 @@ We can use other tools. such as nm or strings or the dreaded <code>install_name_
 <p>Like on windows, we need to provide a qt.conf file next to our helloworld-gui, to tell Qt where to load its plugins from ( the application will simply not run otherwise ). Mine looks like that</p>
 </li>
 </ul>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#080;font-weight:bold">[Paths]</span>
-<span style="color:#369">Prefix</span>=<span style="color:#d20;background-color:#fff0f0">/Users/cor3ntin/dev/cross-compilation/qt5_10/</span>
-<span style="color:#369">Plugins</span>=<span style="color:#d20;background-color:#fff0f0">plugins</span>
-</code></pre></div><p>Now, connected to the mac through ssh, you can execute your application and it will appear on the mac screen and on the remote display / VNC session.</p>
-<figure>
-    <img src="mountain.png"/> <figcaption>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">[Paths]</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">Prefix</span>=<span style="color:#d20;background-color:#fff0f0">/Users/cor3ntin/dev/cross-compilation/qt5_10/</span>
+</span></span><span style="display:flex;"><span><span style="color:#369">Plugins</span>=<span style="color:#d20;background-color:#fff0f0">plugins</span>
+</span></span></code></pre></div><p>Now, connected to the mac through ssh, you can execute your application and it will appear on the mac screen and on the remote display / VNC session.</p>
+<figure><img src="mountain.png"/><figcaption>
             <h4>It feels like we climbed a mountain !</h4>
         </figcaption>
 </figure>

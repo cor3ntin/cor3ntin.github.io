@@ -81,11 +81,11 @@ copy it and so forth. But since the <code>span</code> doesn&rsquo;t own its elem
 </ul>
 <h1 id="a-better-solution">A better solution</h1>
 <p>Consider the following function</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#888;font-weight:bold">void</span> f(<span style="color:#080;font-weight:bold">const</span> std::span&lt;<span style="color:#080;font-weight:bold">const</span> T&gt; &amp; r);
-</code></pre></div><p>With Ranges and the terse syntax merged into C++20, we can instead write something like that</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> std::ContiguousRange <span style="color:#080;font-weight:bold">auto</span> &amp; r);
-</code></pre></div><p>From the caller perspective, both these function will behave identically and the implementations will be very similar too.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> f(<span style="color:#080;font-weight:bold">const</span> std::span&lt;<span style="color:#080;font-weight:bold">const</span> T&gt; &amp; r);
+</span></span></code></pre></div><p>With Ranges and the terse syntax merged into C++20, we can instead write something like that</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> std::ContiguousRange <span style="color:#080;font-weight:bold">auto</span> &amp; r);
+</span></span></code></pre></div><p>From the caller perspective, both these function will behave identically and the implementations will be very similar too.
 Except the one taking a range has a much easier to understand ownership model</p>
 <p>If called with more that one type of containers the <code>span</code> version will be instantiated only once per element type, whether
 the ContiguousRange will be instantiated per range type.
@@ -94,60 +94,60 @@ But in general, I think <a href="/posts/translation_units">we should try to move
 generic code and the ability of the compiler to do code inlining.</p>
 <p>Anyway, How can you specify that you want a range of a specific type?
 With span, it&rsquo;s quite straightforward:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> std::span&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">int</span>&gt; &amp; r);
-</code></pre></div><p>With ranges, it would look like that:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;std::ContiguousRange R&gt;
-<span style="color:#080;font-weight:bold">requires</span> std::is_same_v&lt;std::ranges::iter_value_t&lt;std::ranges::iterator_t&lt;R&gt;&gt;, <span style="color:#888;font-weight:bold">int</span>&gt;
-<span style="color:#888;font-weight:bold">void</span> f(<span style="color:#080;font-weight:bold">const</span> R &amp; r);
-</code></pre></div><p>There we are done. Easy, right?
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> std::span&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">int</span>&gt; &amp; r);
+</span></span></code></pre></div><p>With ranges, it would look like that:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;std::ContiguousRange R&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">requires</span> std::is_same_v&lt;std::ranges::iter_value_t&lt;std::ranges::iterator_t&lt;R&gt;&gt;, <span style="color:#888;font-weight:bold">int</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> f(<span style="color:#080;font-weight:bold">const</span> R &amp; r);
+</span></span></code></pre></div><p>There we are done. Easy, right?
 With a bit of luck that might be simplifiable further by C++20:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;std::ContiguousRange R&gt;
-<span style="color:#080;font-weight:bold">requires</span> std::is_same_v&lt;std::ranges::range_value_t&lt;R&gt;, <span style="color:#888;font-weight:bold">int</span>&gt;
-<span style="color:#888;font-weight:bold">void</span> f(<span style="color:#080;font-weight:bold">const</span> R &amp; r);
-</code></pre></div><p>And it&rsquo;s easy to use using <code>ranges::subrange</code>:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    <span style="color:#080;font-weight:bold">auto</span> v = std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;(<span style="color:#00d;font-weight:bold">42</span>, <span style="color:#00d;font-weight:bold">0</span>);
-    f(v);
-    f(v | ranges::view::take(<span style="color:#00d;font-weight:bold">5</span>));
-    f(ranges::subrange(v.begin() + <span style="color:#00d;font-weight:bold">1</span>, v.begin() + <span style="color:#00d;font-weight:bold">3</span>));
-}
-</code></pre></div><p>Simple, right? Hum&hellip;it still quite verbose, isn&rsquo;t it?</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;std::ContiguousRange R&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">requires</span> std::is_same_v&lt;std::ranges::range_value_t&lt;R&gt;, <span style="color:#888;font-weight:bold">int</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> f(<span style="color:#080;font-weight:bold">const</span> R &amp; r);
+</span></span></code></pre></div><p>And it&rsquo;s easy to use using <code>ranges::subrange</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> v = std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;(<span style="color:#00d;font-weight:bold">42</span>, <span style="color:#00d;font-weight:bold">0</span>);
+</span></span><span style="display:flex;"><span>    f(v);
+</span></span><span style="display:flex;"><span>    f(v | ranges::view::take(<span style="color:#00d;font-weight:bold">5</span>));
+</span></span><span style="display:flex;"><span>    f(ranges::subrange(v.begin() + <span style="color:#00d;font-weight:bold">1</span>, v.begin() + <span style="color:#00d;font-weight:bold">3</span>));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Simple, right? Hum&hellip;it still quite verbose, isn&rsquo;t it?</p>
 <p>I think it would be nice to be able to write</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> std::ContiguousRangeOf&lt;<span style="color:#888;font-weight:bold">int</span>&gt; <span style="color:#080;font-weight:bold">auto</span> &amp; r);
-</code></pre></div><p>Fortunately, concepts can be parametrized, so this can be easily defined:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">namespace</span> std {
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">concept</span> ContiguousRangeOf = ContiguousRange&lt;R&gt; &amp;&amp;
-    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
-}
-</code></pre></div><p>(The first template parameter is the type the concept is applied to)</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> std::ContiguousRangeOf&lt;<span style="color:#888;font-weight:bold">int</span>&gt; <span style="color:#080;font-weight:bold">auto</span> &amp; r);
+</span></span></code></pre></div><p>Fortunately, concepts can be parametrized, so this can be easily defined:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">namespace</span> std {
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> ContiguousRangeOf = ContiguousRange&lt;R&gt; &amp;&amp;
+</span></span><span style="display:flex;"><span>    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>(The first template parameter is the type the concept is applied to)</p>
 <p>Besides being easier to understand that span as far as ownership goes and not introducing new
 types, it&rsquo;s also generalizable to  all kind of ranges, not just contiguous ones, and as such can be used
 with all kind of containers and views.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">namespace</span> std {
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">concept</span> RangeOf = Range&lt;R&gt; &amp;&amp;
-    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">concept</span> ForwardRangeOf = ForwardRange&lt;R&gt; &amp;&amp;
-    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">concept</span> BidirectionalRangeOf = BidirectionalRange&lt;R&gt; &amp;&amp;
-    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">concept</span> RandomAccessRangeOf = RandomAccessRange&lt;R&gt; &amp;&amp;
-    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">concept</span> ContiguousRangeOf = ContiguousRange&lt;R&gt; &amp;&amp;
-    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
-}
-</code></pre></div><p>Now, we can for example write:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> std::RangeOf&lt;std::string&gt; <span style="color:#080;font-weight:bold">auto</span> &amp; r);
-</code></pre></div><h2 id="concept-template">Concept template</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">namespace</span> std {
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> RangeOf = Range&lt;R&gt; &amp;&amp;
+</span></span><span style="display:flex;"><span>    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> ForwardRangeOf = ForwardRange&lt;R&gt; &amp;&amp;
+</span></span><span style="display:flex;"><span>    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> BidirectionalRangeOf = BidirectionalRange&lt;R&gt; &amp;&amp;
+</span></span><span style="display:flex;"><span>    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> RandomAccessRangeOf = RandomAccessRange&lt;R&gt; &amp;&amp;
+</span></span><span style="display:flex;"><span>    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> ContiguousRangeOf = ContiguousRange&lt;R&gt; &amp;&amp;
+</span></span><span style="display:flex;"><span>    std::is_same_v&lt;ranges::iter_value_t&lt;ranges::iterator_t&lt;R&gt;&gt;, T&gt;;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Now, we can for example write:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> std::RangeOf&lt;std::string&gt; <span style="color:#080;font-weight:bold">auto</span> &amp; r);
+</span></span></code></pre></div><h2 id="concept-template">Concept template</h2>
 <p>Unfortunately, concepts cannot be used as template parameter (<em>yet</em> ?),
 so it is not possible for example to define a <code>std::RangeOf&lt;Number&gt;</code>.
 I hope this limitation will be lifted by C+23.</p>

@@ -64,8 +64,7 @@
     <div class="content">
       <p>I was lucky enough to participate in a third wg21 committee meeting in a row, this time in Kona, Hawaii, a
 mere 13000 kilometers away.</p>
-<figure>
-    <img src="kona.jpg"/> <figcaption>
+<figure><img src="kona.jpg"/><figcaption>
             <h4>Kona</h4>
         </figcaption>
 </figure>
@@ -127,8 +126,7 @@ Gor Nishanov who has been working on coroutines (or so-called Gorroutines) for t
 <li>Well integrated executors</li>
 <li>Sane implementation of Unicode bidirectional iterators</li>
 </ul>
-<figure>
-    <img src="coros.jpg"/> <figcaption>
+<figure><img src="coros.jpg"/><figcaption>
             <h4>co_celebration</h4>
         </figcaption>
 </figure>
@@ -207,8 +205,7 @@ and congratulations are in order.</p>
 <p>We have still time to fix things and SG-15 will be meeting twice a month to do their best to make module adoption as smooth as possible.
 I think it&rsquo;s great that SG-15 new charter is, for the time being, more focused and narrow as it will help the group progress in small steps
 towards where we want to be.</p>
-<figure>
-    <img src="0010.jpg"/> <figcaption>
+<figure><img src="0010.jpg"/><figcaption>
             <h4>Towards Module adoption</h4>
         </figcaption>
 </figure>
@@ -259,31 +256,31 @@ I don&rsquo;t really have a choice, do I?</p>
 So, I went back to the drawing board and came back with a design that was rather close to the existing <code>ranges-v3</code>&rsquo;s <code>to_</code> facility.</p>
 <p><code>ranges::to</code> works both as a function and a pipable object and can construct a container from a range (whether that is another container or a view).
 It supports standard containers, associative containers, extra parameters such as allocators and can deduce the type of the container&rsquo;s value type.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std::list&lt;<span style="color:#888;font-weight:bold">int</span>&gt; l;
-std::map&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#888;font-weight:bold">int</span>&gt; m;
-<span style="color:#888">// copy a list to a vector of the same type
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> a = ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;(l);
-<span style="color:#888">//Specify an allocator
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> b = ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>, Alloc&gt;(l, alloc);
-<span style="color:#888">// copy a list to a vector of the same type, deducing value_type
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> c = ranges::to&lt;std::vector&gt;(l);
-<span style="color:#888">// copy to a container of types ConvertibleTo
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> d = ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">long</span>&gt;&gt;(l);
-<span style="color:#888">//Supports converting associative container to sequence containers
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> f = ranges::to&lt;vector&lt;std::pair&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">int</span>, <span style="color:#888;font-weight:bold">int</span>&gt;&gt;&gt;(m);
-<span style="color:#888">//Supports converting sequence containers to associative ones
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> g = f | ranges::to&lt;map&gt;();
-<span style="color:#888">//Pipe syntaxe
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> g = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&gt;();
-<span style="color:#888">//Pipe syntax with allocator
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> h = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&gt;(alloc);
-<span style="color:#888">//The pipe syntax also support specifying the type and conversions
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> i = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">long</span>&gt;&gt;();
-<span style="color:#888">//Pathenthesis are optional
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> j = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&gt;;
-<span style="color:#888">//and types
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> k = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">long</span>&gt;&gt;;
-</code></pre></div><p>This facility was accepted by LEWG and should be present in C++20 if LWG has the time to review the wording - that I haven&rsquo;t written yet -
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>std::list&lt;<span style="color:#888;font-weight:bold">int</span>&gt; l;
+</span></span><span style="display:flex;"><span>std::map&lt;<span style="color:#888;font-weight:bold">int</span>, <span style="color:#888;font-weight:bold">int</span>&gt; m;
+</span></span><span style="display:flex;"><span><span style="color:#888">// copy a list to a vector of the same type
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> a = ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;(l);
+</span></span><span style="display:flex;"><span><span style="color:#888">//Specify an allocator
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> b = ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>, Alloc&gt;(l, alloc);
+</span></span><span style="display:flex;"><span><span style="color:#888">// copy a list to a vector of the same type, deducing value_type
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> c = ranges::to&lt;std::vector&gt;(l);
+</span></span><span style="display:flex;"><span><span style="color:#888">// copy to a container of types ConvertibleTo
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> d = ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">long</span>&gt;&gt;(l);
+</span></span><span style="display:flex;"><span><span style="color:#888">//Supports converting associative container to sequence containers
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> f = ranges::to&lt;vector&lt;std::pair&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">int</span>, <span style="color:#888;font-weight:bold">int</span>&gt;&gt;&gt;(m);
+</span></span><span style="display:flex;"><span><span style="color:#888">//Supports converting sequence containers to associative ones
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> g = f | ranges::to&lt;map&gt;();
+</span></span><span style="display:flex;"><span><span style="color:#888">//Pipe syntaxe
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> g = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&gt;();
+</span></span><span style="display:flex;"><span><span style="color:#888">//Pipe syntax with allocator
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> h = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&gt;(alloc);
+</span></span><span style="display:flex;"><span><span style="color:#888">//The pipe syntax also support specifying the type and conversions
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> i = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">long</span>&gt;&gt;();
+</span></span><span style="display:flex;"><span><span style="color:#888">//Pathenthesis are optional
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> j = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&gt;;
+</span></span><span style="display:flex;"><span><span style="color:#888">//and types
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">auto</span> k = l | ranges::view::take(<span style="color:#00d;font-weight:bold">42</span>) | ranges::to&lt;std::vector&lt;<span style="color:#888;font-weight:bold">long</span>&gt;&gt;;
+</span></span></code></pre></div><p>This facility was accepted by LEWG and should be present in C++20 if LWG has the time to review the wording - that I haven&rsquo;t written yet -
 in Cologne.
 A lot of work was done by Eric Niebler on this proposal, notably to make the paratheses optional.
 Minor implementation and design changes were made during the week, so expect a new revision in the post mailing list.</p>
@@ -293,8 +290,7 @@ Minor implementation and design changes were made during the week, so expect a n
 accepted - pending wording review, as always.
 This allows constructing span from views and <code>string_view</code> from, for example, a <code>std::vector&lt;char8_t&gt;</code> or a <code>QByteArray</code> -
 which was always the intent of <code>string_view</code>.</p>
-<figure>
-    <img src="0014.jpg"/> <figcaption>
+<figure><img src="0014.jpg"/><figcaption>
             <h4>Tight integration</h4>
         </figcaption>
 </figure>
@@ -324,8 +320,7 @@ Thanks Chris!</p>
 <p><code>zip</code> did not make the cut as it requires careful modifications of pair and tuple. <code>enumerate</code> was not proposed but requires the same modification of <code>tuple</code>
 as <code>zip</code>.
 We expect these very useful views to be offered in C++23.</p>
-<figure>
-    <img src="0002.jpg"/> <figcaption>
+<figure><img src="0002.jpg"/><figcaption>
             <h4>The very best views</h4>
         </figcaption>
 </figure>
@@ -352,8 +347,7 @@ did not make the cut for C++20 but should be adopted in C++23</p>
 <h2 id="spans-size-type">span&rsquo;s size type</h2>
 <p>We made span&rsquo;s size type consistent with size_t and offered a non-member <code>ssize()</code> function that returns a signed size for people who care about that
 kind of thing. Now, we can stop talking about it.</p>
-<figure>
-    <img src="0003.jpg"/> <figcaption>
+<figure><img src="0003.jpg"/><figcaption>
             <h4>An overworked seal of approval</h4>
         </figcaption>
 </figure>
@@ -368,7 +362,7 @@ And, given the burden of adding regex engines to the standard, we would very muc
 And SG-16 may not be ready to tackle that beast for a while.</p>
 <p>Yet, we really want <code>CTRE</code> to be forward compatible with Unicode and <a href="http://unicode.org/reports/tr18/">UTS#18</a>.
 A hurdle with that is that ctre is based on prce&rsquo;s syntax which is not standardized.
-Fortunately, <a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-regexp-regular-expression-objects">ECMAScript 2018</a><br>
+Fortunately, <a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-regexp-regular-expression-objects">ECMAScript 2018</a> <br>
 specifies level 1 support for Unicode so C++ can hopefully rely on that work which would simplify the wording -
 <code>std::regex</code> is derived from an older version of the ECMAScript specification.</p>
 <p>In short, Hana will have her hands full, but Unicode support can be added incrementally as long as we plan ahead.
@@ -411,8 +405,7 @@ And I still have no idea why I&rsquo;m doing all of that.</p>
 The prospect of a New York meeting is quite exciting indeed!</p>
 <p>Most importantly, it was great seeing all the amazing committee members, even (especially ?) <a href="https://twitter.com/TitusWinters/status/1097947543458131969">those we disagree with</a>.
 Take care and see you next time !</p>
-<figure>
-    <img src="0009.jpg"/> <figcaption>
+<figure><img src="0009.jpg"/><figcaption>
             <h4>See you in cologne</h4>
         </figcaption>
 </figure>

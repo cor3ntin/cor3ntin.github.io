@@ -67,8 +67,7 @@
 <p>And so naturally, I found myself in a San Diego hotel straight from the 60s, to do some C++ for a week.
 With the exception of the author of this blog, all people there are incredibly smart and energetic,
 and so a lot of great work was done.</p>
-<figure>
-    <img src="04.jpg"/> <figcaption>
+<figure><img src="04.jpg"/><figcaption>
             <h4>San Diego</h4>
         </figcaption>
 </figure>
@@ -102,8 +101,7 @@ So, while this process might seem chaotic from the outside, there are reasons to
 in 20, will be able to fully satisfy everyone!</p>
 <p>However, we are getting dangerously close to the point it will be too late for coroutines to be merged in the WD for C++20.
 I really hope a decision will be taken soon!</p>
-<figure>
-    <img src="03.jpg"/> <figcaption>
+<figure><img src="03.jpg"/><figcaption>
             <h4>Point of no return</h4>
         </figcaption>
 </figure>
@@ -138,9 +136,9 @@ Exciting stuff!</p>
 I think the current question is whether implementers can give us the unicorns we want. They did not say no. They were very reluctant to say yes.
 The best possible solution seems to be a constexpr, strongly typed, value-based solution.
 It might look something like that:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">    <span style="color:#080;font-weight:bold">constexpr</span> std::meta::class_info classInfo = reflexpr(my_class);
-    <span style="color:#080;font-weight:bold">constexpr</span> std::meta::function_info fInfo = classInfo.functions_by_name(f)[<span style="color:#00d;font-weight:bold">0</span>];
-</code></pre></div><p>Please don&rsquo;t read into the particulars. I made these names up a few thousands of meters over Texas.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">constexpr</span> std::meta::class_info classInfo = reflexpr(my_class);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">constexpr</span> std::meta::function_info fInfo = classInfo.functions_by_name(f)[<span style="color:#00d;font-weight:bold">0</span>];
+</span></span></code></pre></div><p>Please don&rsquo;t read into the particulars. I made these names up a few thousands of meters over Texas.
 The point is that the goal is to have reflection look and be regular c++, using regular containers and algorithms.
 Reflection is the driving force between making as much of the language <code>constexpr</code> as possible.
 Meta-programming is hard and slow, so we try to move away from it.</p>
@@ -163,8 +161,7 @@ we should probably try to improve on the status quo.
 Several people suggested the idea of a module-level syntax to affect some compiler behavior,
 for example to disable exceptions, RTTI, or even to modify the handling of floating types.
 It looks like a very interesting area to explore and something that might be in scope for the Tooling Study Group!</p>
-<figure>
-    <img src="01.jpg"/> 
+<figure><img src="01.jpg"/>
 </figure>
 
 <h1 id="my-papers">My papers</h1>
@@ -185,8 +182,7 @@ an immediate function (<code>consteval</code>), so that you can not take its add
 <p>This paper managed to get consensus from Evolution so I expect it to go through core at Kona and hopefully be merged into the WD.
 I&rsquo;m hoping we will be able to have multidimensional subscript expressions in 23 maybe, 26 definitively.
 Isabella Muerte presented some ways to be able to reclaim the <code>matrice[x,y]</code> syntax in the C++20 timeframe, we will have to wait to see if that can pan out.</p>
-<figure>
-    <img src="02.jpg"/> 
+<figure><img src="02.jpg"/>
 </figure>
 
 <h1 id="more-papers">More papers</h1>
@@ -224,8 +220,7 @@ This is great because it needs compiler support to be implemented in a non-hacki
 <p>There are a lot more papers and feature to look forward in C++20 and C++23, from <code>flat_map</code> (Zach Laine) to a potentially lock-free concurrent queue
 that can be used as a communication channel like in go (Lawrence Crowl).
 Deducing this (Gašper Ažman, Simon Brand, Ben Deane, Barry Revzin) which is also an important feature, might make it to C++23.</p>
-<figure>
-    <img src="00.jpg"/> <figcaption>
+<figure><img src="00.jpg"/><figcaption>
             <h4>ABI break</h4>
         </figcaption>
 </figure>
@@ -239,8 +234,7 @@ which were a huge success and were instrumental in ensuring the committee kept f
 and all the great people I got to meet there. And the scribes, the scribes, the scribes.</p>
 <p>As I left the convention center, people told me &ldquo;See you in Kona&rdquo;.</p>
 <p>Qui vivra verra.</p>
-<figure>
-    <img src="05.jpg"/> <figcaption>
+<figure><img src="05.jpg"/><figcaption>
             <h4>Committee meeting</h4>
         </figcaption>
 </figure>

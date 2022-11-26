@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Soursop and Ponies in Kona: A C&#43;&#43; Committee Trip Report | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">November 25, 2022</h2>
+    <h1 class="title">Soursop and Ponies in Kona: A C&#43;&#43; Committee Trip Report</h1>
+    
+    <div class="content">
+      <figure><img src="kona1.png"/>
+</figure>
+
+<p>Earlier this month, the C++ committee meeting had its penultimate meeting of the C++23 cycle.
+It was also the first in-person meeting of the C++23 cycle.
+This means that C++23 was mostly designed over zoom. Which, sadly, explains in part why the language side of things has been rather stagnant these past couple of years.</p>
+<p>But a lot of things happened in Kona. I forgot how intense these things were. Despite operating on 4 or 5 hours of sleep every night, the week flew by very fast. I also missed a lot of important discussions, as I have yet to develop the ability to be in several rooms at once.</p>
+<p>To get an overview of things you can check out the traditional
+<a href="https://www.reddit.com/r/cpp/comments/yxuqp7/202211_kona_iso_c_committee_trip_report_c23_first/">Kona Trip report on reddit</a> and the <a href="https://github.com/cplusplus/papers/issues?q=is%3Aissue+is%3Aopen+label%3Aplenary-approved">list of papers moved at this meeting</a>.</p>
+<p>If you want my more personal takes on what happened, you are in the right place.</p>
+<h2 id="its-been-a-while">It&rsquo;s been a while!</h2>
+<p>The meeting was held in Kailua-Kona, Hawaii.
+It was the first in-person meeting since the zombie apocalypse.</p>
+<p>But Hawaii is far away (a statement that is true no matter where you live) and not exactly cheap.</p>
+<p>So a large part (around half or so) of the attendance, was remote.
+I will be honest, I expected that to be a disaster, but it went pretty smoothly. In particular, the tech worked well!</p>
+<p>Thanks to the organizers to make that experience viable. Thanks to people who stayed far into the night on zoom to participate in the discussions, and most of all, thanks to the great people of Hawaii for having us.</p>
+<p>Some would like more of the work to be remote.
+I also think more of the work should be not only remote but also asynchronous.
+The model of presenting a paper and immediately having people voice opinions before they could weigh the ins and outs isn&rsquo;t always productive.</p>
+<p>At the same time, speaking as a pretty introverted person, there is value in having the opportunity to exchange ideas with people,
+have 1-on-1 conversations and get a better view of the big picture, rather than talking about a specific paper every week or 2, in an order that rarely makes sense.
+A lot happens outside of the actual meetings.</p>
+<p>There is also value in the time and energy commitment that everyone is able to make.
+As it turns out until they ship you in a plane and forgot about you for a week, companies let people work on C++ things if there is nothing else more pressing to do; there is always something more pressing to do.
+Meeting weeks are an opportunity for people to shift their focus and energy on C++ exclusively, so things move faster.</p>
+<p>They are also very intense weeks, with long days.
+I was up and running from 6 am to midnight every day, and I&rsquo;m still trying to recover!</p>
+<p>The downside is that, with 5 or 6 meetings happening concurrently, it&rsquo;s hard, if not impossible to follow everything and I spent my week running from one room to the next.</p>
+<h2 id="viewsenumerate-in-c23">views::enumerate in C++23?</h2>
+<p>I spent an ungodly amount of time over the past couple of years exploring ways to get
+<code>views::enumerate</code> (a view that yields an index + an element for each element of a range) to produce a struct with named members (index &amp; value), as this is more ergonomic and safer than <code>std::get&lt;0&gt;(*it)</code>. Alas, despite my best efforts and hundreds of hours invested, this proved almost unworkable. In particular, I wanted to avoid that struct (let&rsquo;s call it <code>enumerate_result</code>) to be viral. The standard does not need another half-baked implementation of <code>std::pair</code>.
+My favorite design was for the reference type to be <code>enumerate_result</code> and the value type to be <code>tuple</code>, so that, for example, <code>ranges::to&lt;vector&gt;(some_enumerate_view)</code> would produce a range of <code>tuple</code>s rather than a view of <code>enumerate_result</code>.</p>
+<p>Alas, I thought this could work, but it really can&rsquo;t, or at least, it would be extremely complicated and inefficient.
+So, I explored a design where both the value and reference types are <code>enumerate_result</code>, but this is also ridiculously complicated, both in terms of specification and implementation. And because of that, I wasn&rsquo;t confident that I got it right, despite tons of help. And, as we expect most people would use structured bindings anyway, the cost/benefit of going in that direction made less and less sense.</p>
+<p>That&rsquo;s how <code>std::enumerate</code> missed the design deadline for C++23.
+Fortunately, thanks to the magic of NB comments, we were able to talk about enumerate in Kona.
+I had made sure to have both options (tuple, and aggregate) fully worded, but the deal was simple: we could either get enumerate into C++23 with a tuple as value and reference type… or not at all. The aggregate design simply carried too much risk, for marginal benefits, to the extent I&rsquo;m not convinced that we could get it correct for 26, and even if we could, I was not sure it provided the right ergonomic trade-offs.</p>
+<p>WG21 agreed with me, both that using std::tuple was the sane design direction and that enumerate is valuable enough that getting it into 23 would be useful enough that we should do it at this late stage.
+And so, <code>std::enumerate</code> is now targeting C++23 subject to another round of electronic polling (so it&rsquo;s not yet certain).
+Sometimes, perfect is the enemy of good.</p>
+<p>The time spent on this was not entirely lost. It was a great learning experience, and we got convertibility between different tuple-like types in the standard (P2165), which is great! <code>std::pair</code> is dead, long live <code>std::tuple</code>.</p>
+<figure><img src="sg9.png"/>
+</figure>
+
+<h2 id="unicode">Unicode</h2>
+<p>SG16, the Unicode group did not meet, but through in-person conversations, we are starting to make strides in an area of importance to me: the way we reference Unicode and its terminology in the standard. Currently, we refer to ISO10646, an ISO document that is a stripped-down, not synchronized fork of the Unicode Standard with confusing terminology, whose only purpose is to please lawyers.  Hopefully, we can simply refer to the primary standard to simplify the spec and to make its understanding easier.
+Overall, we made good strides in improving support of Unicode in the core language for C++23 and we are not done yet!</p>
+<p>A plan is also forming to get some Unicode algorithms in C++23. Stay tuned!</p>
+<h2 id="the-future-of-c-safety">The Future of C++: Safety?</h2>
+<p>We Held a session on the future of C++.</p>
+<p>While some of us hoped to touch on the organizational deficiencies the committee and the community are suffering from, influenced by two presentations at the start, the discussions focused on safety.</p>
+<p>One of these presentations was a short form of this <a href="https://www.youtube.com/watch?v=mkkaAWNE-Ig">excellent CppNow talk</a>.</p>
+<p>In the following couple of hours, we said &ldquo;safety&rdquo; a lot.
+It was reminiscent of Prague where, 3 years before, we said &ldquo;ABI&rdquo; a lot.</p>
+<p>One of the concerns is that C and C++ are being <a href="https://media.defense.gov/2022/Nov/10/2003112742/-1/-1/0/CSI_SOFTWARE_MEMORY_SAFETY.PDF">discouraged for new projects by several branches of the US government</a>, which makes memory safety important to address.</p>
+<p>No suggestion was offered. Because this is an incredibly difficult problem to solve.
+For one, are we concerned about safety of new code, or of existing code? (billions of lines of C++ are executed constantly, statistically, that&rsquo;s a huge amount of CVEs already in production!).</p>
+<p>There is no solution, but maybe there are a plethora of targeted solutions to fix some of the common vulnerability vectors.
+I don&rsquo;t think C++ will ever be Safe™, but it can be safer. The goal is to reduce the number of CVEs and the cost of fixing them.
+Safety is a gradient and most vulnerabilities are found in constructs that look more like mediocre C than good modern C++.
+So the tool to write safe code mostly exists.
+At the same time, we can&rsquo;t tell people to write better code
+or to follow 300 un-toolable guidelines to get a shot at reducing vulnerabilities.
+There is no such thing as passive safety. Most developers are not experts, experts have bad days or temporarily lose focus.</p>
+<p>Safety will likely come in the form of both language solutions, static analysis tools, and runtime tools.
+But nothing is free. Safety will ultimately crash against other &ldquo;primary goals&rdquo; of C++ such as backward compatibility and performance.
+Who knows what will happen there?
+We should note that C++ is bad at backward compatibility as we usually break just enough existing code to make migrating to newer standards annoying for large teams, and we only care about performance if it doesn&rsquo;t affect backward compatibility.
+So it&rsquo;s all tradeoffs and it will be interesting to see how safety factors into that inconsistent balancing act over the next few years.</p>
+<p>A couple of specific solutions have been brushed on.</p>
+<p>Starting by address sanitizers. Arguably the most pragmatic approach to safety. Recompile your code, and you are good to go.
+Except ASan is slow, sometimes over 2x perf hit. And it was pointed out that running with ASan can actually expose vulnerabilities rather than prevent them (ASan is not designed to run in production), so we should not encourage its use in production builds (but please use it liberally during development).</p>
+<p>We can however make address sanitizers MUCH faster (fast enough that enabling them in production on safety critical components makes sense). Such performance requires hardware support to allow ~0 cost pointer tagging.
+Both recent Intel and <a href="https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/enhancing-memory-safety">ARM chips</a> have added the necessary instructions, and android devices use them as part of the defense mechanisms in low-level critical system components.
+This is a concrete solution: We need to invest in address sanitizers and hardware support for them. AMD, if you read this blog post…</p>
+<p>The other promising solution is static analysis to track the lifetimes of objects during compilation, in IDEs and tools. See <a href="https://discourse.llvm.org/t/rfc-lifetime-annotations-for-c/61377">The LLVM discourse</a> and <a href="https://www.youtube.com/watch?v=d67kfSnhbpA">This video</a> for what such a tool looks like.</p>
+<p>This is exactly like Rust borrow checker, if the borrow checker was blind (because code is hidden in other translation units or later in the file is invisible to the compiler) and drunk (the borrow checker relies on the fact there can be no more than one mutable reference to a given object), but it&rsquo;s a start.</p>
+<p>Until we are willing to change C++ to the point it is no longer recognizable as C++, memory safety cannot be guaranteed.</p>
+<p>We will have to see if more concrete things materialize and if any of them can gain some consensus.</p>
+<p>During the meeting, we decided to extend the lifetime of temporaries ranges in the range for loop, which is one way to improve safety.
+Shortly after, JF Bastien proposed to do something about uninitialized variables.  <a href="https://twitter.com/jfbastien/status/1592578174763745280">https://twitter.com/jfbastien/status/1592578174763745280</a> . I see that as a sort of litmus test in the coal mine. So far, this has engendered hundreds of comments, so there is interest. I think we are a long way from any kind of consensus, but the ball is rolling. It will be interesting to follow.</p>
+<p>Overall, I&rsquo;m not sure we achieved more in that meeting than the recognition that safety is a problem. I guess it&rsquo;s a necessary first step. And I&rsquo;m pretty sure that there are strong disagreements about what safety is. For example, people care about termination safety (ie the idea that a program should never terminate even when it ends up in a broken state), which seems antithetical to the notion of safety.</p>
+<p>So we are not sure what safety is, or how to get more of that, but we want more of it. Hooray.</p>
+<p>But… Most importantly, that &ldquo;future of C++ session&rdquo; did not, in fact, talk about the future of C++.
+Safety, for example, is laudable but it&rsquo;s a complex topic that will require a lot of research and investments.</p>
+<p>And something that has become very apparent to me is that investment in C++ toolchains is suffering along with everything else, certainly more so.</p>
+<p>And while CVEs are a huge strain on the industry as a whole, someone is going to have to invest in solutions.
+As it stands though… The C++ committee, its members, implementers, and maybe the C++ community as large seem to be spread rather thinly.
+Safety is only one of the <em>many</em> long-standing issues this language faces. How are we going to do all of this?
+It would also be detrimental to focus on a single problem (to which we have no clear solution) at the detriment of the many other axes that would benefit from improvements (and for which proposals often exist).</p>
+<p>It certainly doesn&rsquo;t help that the committee is hard to get into, and it has gotten harder to get into this past year.  One of the many issues here is ISO, an organization that prides itself on amorality and whose benefits to C++ and its users are, I think, questionable at best. Some of the challenges faced by C++ require swift solutions and WG21 is hardly swift.
+If safety-related work happens and trickles down to users in a decade or so, will our users still be there waiting? There is a sense of urgency but no mechanism to react urgently.</p>
+<p>As C++ evolves and gains features, we increase the surface area of things needing maintenance. We can&rsquo;t release half-baked features like concepts, variadic parameters, ranges, etc, make a keynote about it and move on to the next big thing, so overall the workload increases over time, and our resources are in fact diluted.</p>
+<p>As the pandemic struck, many were happy to pause the work entirely until we could get back to business as usual. C++23 is still a great release thanks to the dedication of many people though!</p>
+<p>We also did not talk about the successor elephants in the room. I think it&rsquo;s fair to say many people are dismissive of Carbon, Circle, Val (and even Rust at times), but whether these projects succeed is, to me less important than the question of whether all these groups of people decided to start from scratch than to put up with the C++ committee. I don&rsquo;t believe these projects can be ignored. At the very least they further dilute the pile of talents the C++ community, the committee, and implementers can draw from.</p>
+<p>Following that meeting, we were asked whether we are optimistic about the future of C++. Maybe I&rsquo;m biased in that I&rsquo;ve always been bad at this optimism thing but… are you?</p>
+<figure><img src="kona4.png"/>
+</figure>
+
+<h2 id="customization-function-objects">Customization Function Objects.</h2>
+<p>The excellent Lewis Baker Presented <a href="wg21.link/P2547R1">P2547R1</a> (Language Support for Customisable Functions) to Evolution.</p>
+<p>I don&rsquo;t think it went particularly great.</p>
+<p>P2547 was born from taking the requirements of sender/receivers (currently based on <code>tag_invoke</code>), and that of other customization mechanisms in the standard library (of which there are many), and designing something that supports these use cases while reusing as much of the existing features of the language as possible.
+As such a CFO is just a regular object, which when called has slightly tweaked lookup rules to find the right implementation of the customization function in the appropriate namespace, and support a default implementation. Because there are 2 declarations (that of the CFO and that of the actual customization), we also need to tweak the resolution of constraints and no except specifications. Because there is a need for sender receivers to be able to forward calls through executors and senders we needed a way to specify these forwarding functions. The last complexity comes from the need to support explicit template parameters in calls such as <code>std::get&lt;N&gt;</code> and <code>std::get&lt;T&gt;</code> (which are 2 different overload sets despite having the same name).
+Yet our solution is deemed too complex, so I guess we need to go back to the drawing board.
+It is not clear to me if the criticism is about the solution or the requirements though.
+See, the C++ committee is divided into these groups, like &ldquo;Language Evolution&rdquo; and &ldquo;Library Evolution&rdquo; so when we try to solve a problem that the library folks have, well, the library folks aren&rsquo;t in the room. And we end up having to palliate core language deficiencies with library solutions which are always, by their very nature, clunky and inefficient.
+It&rsquo;s a pervasive organizational and cultural problem. Library folks are not usually hopeful that the language will solve their needs and will devise the craziest hacks to get what they need, becoming desensitized to the craziness of their workarounds over time, to the detriment of end users.
+I don&rsquo;t know if the language folks understand how bad this problem truly is for people writing and using libraries.
+We need more vertical integration!
+I remember Titus Winters once said, &ldquo;If the librarians of your language are starting to
+recommend that we stop writing functions, that should be a warning sign&rdquo;. One of the issues here is ADL and CFO shield users from ADL. The problem is exacerbated by the fact each new library component introduces a different approach to solving that problem, and <code>tag_invoke</code> is but the last iteration in that design space.</p>
+<p>The good news is that yes, the language folks do agree there is a problem that needs solving and wants to see a different solution.
+What would a solution look like, we have no idea.
+We want ponies.
+Maybe one that looks more like Rust generics, even if generics do not solve the forwarding use cases on which <code>std::execution</code> built its castle.
+In the meantime, Sean Baxter has been experimenting with features in the design space of C++0x Concepts, rust traits, and generic type erasure.
+I hope something comes to fruition. But something needs to happen soon if we are to save our users and our compilers from <code>tag_invoke</code> and its one giant overload set.
+The best part is, no one is paid to work on this!</p>
+<figure><img src="kona3.png"/>
+</figure>
+
+<h2 id="indexing-a-pack-by-committee">Indexing a pack by Committee</h2>
+<p>The most important thing for me that week was to present <a href="wg21.link/P2632">P2632. A plan for better template meta programming facilities in C++26</a>. It is, after all, the reason a 24h hour journey seemed justified.
+The idea of this paper was, in no small part to take some good ideas from Circle which are known to improve maintainability and productivity and standardize them, being careful to strike for a reasonably minimal subset and to reimplement everything in Clang so that we can derive a specification with confidence and gain more experience with it all.
+The set of features proposed either made currently impossible-to-write code possible (universal template parameters) or greatly reduced the complexity of already used techniques (improving pack manipulation greatly reduces code complexity).</p>
+<figure><img src="tuple.png"/>
+</figure>
+
+<p>It also draws a lot from preexisting work over the past decade. And it extends the languages in mostly obvious ways, in many cases. It&rsquo;s about plugging holes, not inventing a brand-new paradigm. We don&rsquo;t need new paradigms!</p>
+<p>In particular, I expected pack indexing to be a trivial sale.
+I even had a paper, complete with wording and 2 implementations.
+The only thing missing was girl scouts cookies.</p>
+<p>The way I see it, packs are sequences and indexing is a basis operation of sequences. Done deal, right?
+(Inevitably there would have been bikeshedding discussions but there aren&rsquo;t many logical choices here.)</p>
+<p>Boy was I wrong. The reception to that paper was a lot colder than I expected.
+WG21, even after a few years, is rather unpredictable.</p>
+<p>One argument that I was not expecting is that… users don&rsquo;t write templates and do metaprogramming even less so. It is an interesting position, as generic programming is to me one of the cornerstones of C++. Template Meta Programming is the entire reason Stepanov concluded that C++ was the only language that could support his revolutionary library, which we now know as the STL.
+And as types became more complex, we needed more tools to manipulate them. Variadic template parameters in C++11 simplified a lot of code and allowed the implementation of variant, tuple, etc.
+Further refinements, like fold expressions, were also successful additions addressing real problems.</p>
+<p>How many people write libraries relying on these features is hard to quantify. Certainly a rather small subset of our user base, that&rsquo;s true. Still a few thousand people, at least. And how many users do these people serve? The entire community!</p>
+<p>See, making the standard types faster to compile, making boost, CTRE, FMT, Qt, libunifex, the various JSON libraries which are heavily using template metaprogramming and the list goes on and on, benefits everyone (it&rsquo;s not just compile times, but also better error messages, easier maintenance and therefore fewer opportunities for bugs) that would benefit…</p>
+<p>The dichotomy between &ldquo;library writers&rdquo; and &ldquo;application writers&rdquo; is also very C++ specific and artificial. The reason few people write library code, or generic code, or implement strong types, is that it is very hard to do. If it was much easier to express, more would do it.
+There is a safety argument to that: strong type safety reduces the risk of vulnerabilities and so we should encourage these techniques by making them more accessible.</p>
+<p>Don&rsquo;t worry though, reflection will solve everything. At least, that was another argument against
+improving metaprogramming. This one, I expected.</p>
+<p>And it is true. If you can reflect on a pack (which needs syntax), you can write a function that takes a vector of meta info (which needs library support), returns the first one, and reifies it (which needs syntax).
+You might, I was told, avoid the vector entirely somehow, so maybe the compiler would not die in the process, but it would require yet more syntax and if you can do that for reflection, why not allow indexing of packs in the first place?</p>
+<p>Because… it would require syntax and add complexity to the language!
+<code>sizeof…(pack)</code> also uses syntax and that has not been challenging to users, despite the interesting reuse of the sizeof keyword.</p>
+<p>Don&rsquo;t get me wrong, I fully support reflection (although I will say that we have not made progress in the past few years), but using reflection to index a pack is like trying to kill a fly with a nuclear warhead.
+For pack slicing (getting a subset of a pack), the case for reflection is a little more nuanced - the language should not support arbitrary slicing; we have algorithms for that, but in practice, most slicing operations are excluding either the first or last elements. The way I see it, the language should make simple things simple, and everything else possible.</p>
+<p>Another argument was that template meta-programming is terrible actually, which I find hilarious given that TMP is often a reason cited by people not to jump to rust. And we could make it better.</p>
+<p>Finally, we should just be able to convert packs to some kind of objects that we can iterate.
+I could not completely follow that discussion, having to be in multiple rooms at once,
+but I do have one question: what is the type of a pack of template template parameters?
+Packs are fundamentally heterogeneous beasts and with luck, they may even contain heterogeneous kinds of entities in the future.</p>
+<p>Given that our time is, in fact, limited, maybe introducing new kinds of objects/expressions in the language isn&rsquo;t something we should entertain given that the few operations that are actually useful and packs and for which reflection is overkill are actually few.</p>
+<p>Tuple unpacking is also a bit stuck because of the implementation complexity for one vendor, so we might burden users with syntactic ornaments that other implementations could maybe not require. If we even want tuple unpacking?
+The issue with the fact my paper presented a vision is that I&rsquo;m not sure which parts of it people had cold or warm reactions to.</p>
+<p>In particular, forwarding reference deduction and universal template parameters are not things reflection or even code injection could ever solve.</p>
+<p>Anyway, I&rsquo;ll keep trying. The beauty of WG21 is that you&rsquo;d be a fool to expect the same result twice.</p>
+<h2 id="random-bits">Random bits</h2>
+<h3 id="static_vector-sbo-vectors">static_vector, SBO vectors</h3>
+<p>The discussions about new vector-like containers were interesting. Namely, what happens when pushing to a full <code>static_vector</code>?
+I&rsquo;m strongly in the camp that it should be a precondition violation (UB, bonus point for terminating), while others prefer an exception.
+But, are there scenarios when you can throw but not allocate? and if you can allocate, maybe you wanted an SBO vector instead!
+A compromise might be to have <code>try_push</code>/<code>try_emplace</code> methods on all containers.</p>
+<h3 id="embed">#embed</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">unsigned</span> <span style="color:#888;font-weight:bold">char</span> foo[] = {
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#embed &#34;foo.bin&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><a href="https://wg21.link/P1967R9"><code>#embed</code></a> is heading to C++26. I&rsquo;m annoyed that we ended up with a preprocessor solution that spews integer tokens unless the implementation does some clever optimization, but… It does the job and we missed enough opportunities for some better solutions. There is also no reason to deviate from C. This is not an area where purity of design would justify investing more resources into research! Ship it!</p>
+<h3 id="a-nice-placeholder-with-no-name">A nice placeholder with no name</h3>
+<p>Naming is hard, and not everything needs a name.
+We decided we like <a href="wg21.link/P2169">P2169</a>.</p>
+<p>We should be able to use <code>_</code> as the name of variables whose name
+really doesn&rsquo;t matter, as well as in pattern matching patterns.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">int</span> _ = <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>    _++; <span style="color:#888">// ok
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>    <span style="color:#080;font-weight:bold">auto</span> [_, foo] = some_destructurable();
+</span></span><span style="display:flex;"><span>    _++; <span style="color:#888">// ill-formed, multiple _ in the same scope
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>}
+</span></span></code></pre></div><h3 id="library-fundamentals-no-more">Library fundamentals no more!</h3>
+<p>We decided to publish the <a href="https://cplusplus.github.io/fundamentals-ts/v3.html">library fundamentals V3</a>, which contains
+a bunch of things the committee neither wanted to standardize nor kill.
+But, more importantly, we decided not to pursue these kind of general-purpose grab-all library TSes in the future. Library fundamental TS v3 is therefore the last of its name.
+In the future, proposals should all be iterated as paper until LEWG is happy
+with them, or decide not to pursue them.
+This is excellent news as doing TSes aimlessly strains limited resources
+and has not, historically, led to a better outcome.</p>
+<h2 id="whats-next">What&rsquo;s next?</h2>
+<p>The next meeting is in Issaquah (near Seatle) in February, and I plan to be there.
+I&rsquo;m not particularly looking forward to the weather, but it will be the very last meeting of C++23.
+All the remaining NB comments will be resolved and C++ will be done!</p>
+<p>Well&hellip; until C++26 at least.</p>
+<p>I plan to keep working on Template Meta Programming, Unicode, ranges, and small improvements, and trying to balance that with Clang maintenance. Time flies.</p>
+<p>The committee as a whole is certainly going to focus on asynchronous and heterogeneous programming.
+Reflection, Pattern Matching, and SIMD are also areas that might make significant progress.</p>
+<p>Going forward, the plan or the hope at least is to continue meeting both remotely and in person.
+We certainly need to do both to keep up with the workload!</p>
+<figure><img src="kona2.png"/>
+</figure>
+
+<p><em>A hui hou kākou.</em></p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fkona22%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fkona22%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fkona22%2f&t=Soursop%20and%20Ponies%20in%20Kona%3a%20A%20C%2b%2b%20Committee%20Trip%20Report" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-119011218-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a -Wall"},
+        "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"},
+        "meta"         : {"lang": "cppx", "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1,
+                lang: settings["lang"] || "c++"
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true, libraryCode: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"boost", "ver" :"171"}, {"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

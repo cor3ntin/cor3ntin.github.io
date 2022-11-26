@@ -64,84 +64,84 @@
     <div class="content">
       <p>A few months ago I <a href="/posts/qol23">presented a few features</a> that I hope will be considered for C++23.
 I have since then submitted papers for <a href="https://wg21.link/p2128r1">multi-dimensional subscript expressions</a> and
-<a href="https://wg21.link/p2169">'_` as a variable placeholder</a>.</p>
+<a href="https://wg21.link/p2169">&rsquo;_` as a variable placeholder</a>.</p>
 <p>In this article I want to talk about another improvement I would like to see in the next C++ version:
 Non-trailing variadic template parameters.</p>
 <p>Indeed, while parameter packs can appear before the last function parameter, they do not get
 properly deduced when they do.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... A, <span style="color:#080;font-weight:bold">typename</span> B&gt;
-<span style="color:#888;font-weight:bold">void</span> f(A...a, B b); <span style="color:#888">// OK
-</span><span style="color:#888"></span>
-f(<span style="color:#00d;font-weight:bold">0</span>); <span style="color:#888">// Compiler is confused
-</span></code></pre></div><p>Note that, they can appear in a different order in the template head, that&rsquo;s perfectly fine:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> B, <span style="color:#080;font-weight:bold">typename</span>... A&gt; <span style="color:#888">// OK
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... A, <span style="color:#080;font-weight:bold">typename</span> B&gt; <span style="color:#888">// also OK
-</span></code></pre></div><p>Unfortunately, this limitation is an issue in many instances.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... A, <span style="color:#080;font-weight:bold">typename</span> B&gt;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> f(A...a, B b); <span style="color:#888">// OK
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>
+</span></span><span style="display:flex;"><span>f(<span style="color:#00d;font-weight:bold">0</span>); <span style="color:#888">// Compiler is confused
+</span></span></span></code></pre></div><p>Note that, they can appear in a different order in the template head, that&rsquo;s perfectly fine:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> B, <span style="color:#080;font-weight:bold">typename</span>... A&gt; <span style="color:#888">// OK
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... A, <span style="color:#080;font-weight:bold">typename</span> B&gt; <span style="color:#888">// also OK
+</span></span></span></code></pre></div><p>Unfortunately, this limitation is an issue in many instances.</p>
 <p>For example, many people are surprised that <code>std::visit</code> accept
 the visitor argument first, and this is because it accepts a variadic number
 of variants:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">Visitor</span>, <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2">... </span><span style="color:#b06;font-weight:bold">Variants</span>&gt;
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> visit( Visitor&amp;&amp; vis, Variants&amp;&amp;... vars );
-</code></pre></div><p>The following would make a better interface (easier to read, symmetric with <code>std::transform</code>, etc) but would not be viable because
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">Visitor</span>, <span style="color:#080;font-weight:bold">class</span><span style="color:#a61717;background-color:#e3d2d2">... </span><span style="color:#b06;font-weight:bold">Variants</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> visit( Visitor&amp;&amp; vis, Variants&amp;&amp;... vars );
+</span></span></code></pre></div><p>The following would make a better interface (easier to read, symmetric with <code>std::transform</code>, etc) but would not be viable because
 of the current deduction rules.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">visit</span>(Variants&amp;&amp;... vars, Visitor&amp;&amp; vis);
-</code></pre></div><h3 id="source_location">source_location</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">visit</span>(Variants&amp;&amp;... vars, Visitor&amp;&amp; vis);
+</span></span></code></pre></div><h3 id="source_location">source_location</h3>
 <p>In C++20, we added <code>source_location</code>, such that <code>source_location::current()</code> returns the location
 (filename, line number etc) of where that call is made.</p>
 <p>Typically, you would use it as default parameter of a log function:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(std::string view, std::source_location loc = std::source_location::current());
-</code></pre></div><p>But what if your log function accepts a variadic number of arguments?
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(std::string view, std::source_location loc = std::source_location::current());
+</span></span></code></pre></div><p>But what if your log function accepts a variadic number of arguments?
 For example,  <a href="https://github.com/gabime/spdlog">spdlog</a> uses <a href="https://github.com/fmtlib/fmt">fmt</a>,
 such that its log function looks like this:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(std::string view, <span style="color:#080;font-weight:bold">auto</span>... args);
-log(<span style="color:#d20;background-color:#fff0f0">&#34;Hello {}&#34;</span>, <span style="color:#d20;background-color:#fff0f0">&#34;World&#34;</span>);
-</code></pre></div><p>We would probably want to write it as follow, but we can&rsquo;t</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(std::string_view, <span style="color:#080;font-weight:bold">auto</span>... args,
-         std::source_location loc = std::source_location::current());
-</code></pre></div><p>A clever <a href="https://stackoverflow.com/a/57548488">stackoverflow</a> contributor suggested that it can be achieved
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(std::string view, <span style="color:#080;font-weight:bold">auto</span>... args);
+</span></span><span style="display:flex;"><span>log(<span style="color:#d20;background-color:#fff0f0">&#34;Hello {}&#34;</span>, <span style="color:#d20;background-color:#fff0f0">&#34;World&#34;</span>);
+</span></span></code></pre></div><p>We would probably want to write it as follow, but we can&rsquo;t</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(std::string_view, <span style="color:#080;font-weight:bold">auto</span>... args,
+</span></span><span style="display:flex;"><span>         std::source_location loc = std::source_location::current());
+</span></span></code></pre></div><p>A clever <a href="https://stackoverflow.com/a/57548488">stackoverflow</a> contributor suggested that it can be achieved
 through deduction guide as follow:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... T&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">log</span> {
-    log(std::string_view, T&amp;&amp;...,
-        std::source_location loc = std::source_location::current());
-};
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... T&gt;
-log(std::string_view, T&amp;&amp;...) -&gt; log&lt;T...&gt;;
-</code></pre></div><p>This works by avoiding having trailing default parameters during the initial overload resolution of the call to log.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">log</span> {
+</span></span><span style="display:flex;"><span>    log(std::string_view, T&amp;&amp;...,
+</span></span><span style="display:flex;"><span>        std::source_location loc = std::source_location::current());
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>... T&gt;
+</span></span><span style="display:flex;"><span>log(std::string_view, T&amp;&amp;...) -&gt; log&lt;T...&gt;;
+</span></span></code></pre></div><p>This works by avoiding having trailing default parameters during the initial overload resolution of the call to log.
 It is, however, still the object of an <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1609">active issue</a>,
 but all compilers seem to accept that code.</p>
 <h2 id="apply_last">apply_last</h2>
 <p>A while back I wanted to use <code>std::apply</code>, but I needed to handle the last tuple element
 differently from the rest, which is a common pattern.
 Here is what I came up with.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">F</span>, <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">Tuple</span>&gt;
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#080;font-weight:bold">auto</span>) apply_last(F &amp;&amp;f, <span style="color:#080;font-weight:bold">const</span> Tuple &amp;t) {
-    <span style="color:#080;font-weight:bold">return</span> [&amp;]&lt;<span style="color:#080;font-weight:bold">auto</span>... I&gt;(std::index_sequence&lt;I...&gt;) {
-        <span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">f</span>(std::get&lt;std::tuple_size_v&lt;std::remove_reference_t&lt;Tuple&gt;&gt; - <span style="color:#00d;font-weight:bold">1</span>&gt;(t),
-                std::get&lt;I&gt;(t)...);
-    }(std::make_index_sequence&lt;std::tuple_size_v&lt;std::remove_cvref_t&lt;Tuple&gt;&gt; -<span style="color:#00d;font-weight:bold">1</span>&gt;{});
-}
-
-<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>() {
-    apply_last([](<span style="color:#080;font-weight:bold">auto</span> &amp;&amp; last, <span style="color:#080;font-weight:bold">auto</span>&amp;&amp;... first) {
-        assert(last == <span style="color:#00d;font-weight:bold">3</span>);
-    }, std::tuple{<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>});
-}
-</code></pre></div><p>There is some amount of complexity here.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">F</span>, <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">Tuple</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#080;font-weight:bold">auto</span>) apply_last(F &amp;&amp;f, <span style="color:#080;font-weight:bold">const</span> Tuple &amp;t) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> [&amp;]&lt;<span style="color:#080;font-weight:bold">auto</span>... I&gt;(std::index_sequence&lt;I...&gt;) {
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">f</span>(std::get&lt;std::tuple_size_v&lt;std::remove_reference_t&lt;Tuple&gt;&gt; - <span style="color:#00d;font-weight:bold">1</span>&gt;(t),
+</span></span><span style="display:flex;"><span>                std::get&lt;I&gt;(t)...);
+</span></span><span style="display:flex;"><span>    }(std::make_index_sequence&lt;std::tuple_size_v&lt;std::remove_cvref_t&lt;Tuple&gt;&gt; -<span style="color:#00d;font-weight:bold">1</span>&gt;{});
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>() {
+</span></span><span style="display:flex;"><span>    apply_last([](<span style="color:#080;font-weight:bold">auto</span> &amp;&amp; last, <span style="color:#080;font-weight:bold">auto</span>&amp;&amp;... first) {
+</span></span><span style="display:flex;"><span>        assert(last == <span style="color:#00d;font-weight:bold">3</span>);
+</span></span><span style="display:flex;"><span>    }, std::tuple{<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>});
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>There is some amount of complexity here.
 Most notably, the <code>last</code> parameter appears first on the lambda, on the caller side.</p>
 <p>It would be a lot more intuitive to be able to write:</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;tuple&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;cassert&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;utility&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>() {
-    std::apply([](<span style="color:#080;font-weight:bold">auto</span>&amp;&amp;..., <span style="color:#080;font-weight:bold">auto</span> &amp;&amp; last) {
-        assert(last == <span style="color:#00d;font-weight:bold">3</span>);
-    }, std::tuple{<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>});
-}
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;tuple&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;cassert&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;utility&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>() {
+</span></span><span style="display:flex;"><span>    std::apply([](<span style="color:#080;font-weight:bold">auto</span>&amp;&amp;..., <span style="color:#080;font-weight:bold">auto</span> &amp;&amp; last) {
+</span></span><span style="display:flex;"><span>        assert(last == <span style="color:#00d;font-weight:bold">3</span>);
+</span></span><span style="display:flex;"><span>    }, std::tuple{<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>});
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
 </div>
 
 <p>And you can click the compiler explorer icon to test this
@@ -161,45 +161,45 @@ a bug fix as much as it is a feature.</p>
 <p>It is hard to argue that overloading rules in C++ are not complicated.
 But, in theory that feature is actually quite intuitive</p>
 <p>lets say you have</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">f(<span style="color:#080;font-weight:bold">auto</span> a, <span style="color:#080;font-weight:bold">auto</span>... b, <span style="color:#080;font-weight:bold">auto</span> c, <span style="color:#080;font-weight:bold">auto</span> d);
-f(<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">5</span>);
-</code></pre></div><p>We know that we have 5 arguments and <code>f</code> has 3
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>f(<span style="color:#080;font-weight:bold">auto</span> a, <span style="color:#080;font-weight:bold">auto</span>... b, <span style="color:#080;font-weight:bold">auto</span> c, <span style="color:#080;font-weight:bold">auto</span> d);
+</span></span><span style="display:flex;"><span>f(<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">5</span>);
+</span></span></code></pre></div><p>We know that we have 5 arguments and <code>f</code> has 3
 non-variadic parameters (<code>a</code>, <code>c</code> and <code>d</code>).</p>
 <p>So for the call to <code>f</code> to be valid, we can synthesize
 the following overload</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">f(<span style="color:#080;font-weight:bold">auto</span> a, <span style="color:#080;font-weight:bold">auto</span> b1, <span style="color:#080;font-weight:bold">auto</span> b2, <span style="color:#080;font-weight:bold">auto</span> c, <span style="color:#080;font-weight:bold">auto</span> d);
-</code></pre></div><p>After that argument type resolution and overload
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>f(<span style="color:#080;font-weight:bold">auto</span> a, <span style="color:#080;font-weight:bold">auto</span> b1, <span style="color:#080;font-weight:bold">auto</span> b2, <span style="color:#080;font-weight:bold">auto</span> c, <span style="color:#080;font-weight:bold">auto</span> d);
+</span></span></code></pre></div><p>After that argument type resolution and overload
 resolution applies as it would to any non-variadic function.</p>
 <p>The story is a bit less clear cut when there are default arguments.
 Our implementation will eagerly make the pack as large as possible</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">f(<span style="color:#080;font-weight:bold">auto</span> a, <span style="color:#080;font-weight:bold">auto</span>... b, <span style="color:#080;font-weight:bold">auto</span> c, <span style="color:#080;font-weight:bold">auto</span> d = <span style="color:#00d;font-weight:bold">1</span>);
-f(<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">5</span>);
-<span style="color:#888">// =&gt; f(auto a, auto b1, auto b2, auto b3, auto c, auto d = 1);
-</span></code></pre></div><p>But a better strategy would be to make this scenario ambiguous
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>f(<span style="color:#080;font-weight:bold">auto</span> a, <span style="color:#080;font-weight:bold">auto</span>... b, <span style="color:#080;font-weight:bold">auto</span> c, <span style="color:#080;font-weight:bold">auto</span> d = <span style="color:#00d;font-weight:bold">1</span>);
+</span></span><span style="display:flex;"><span>f(<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">5</span>);
+</span></span><span style="display:flex;"><span><span style="color:#888">// =&gt; f(auto a, auto b1, auto b2, auto b3, auto c, auto d = 1);
+</span></span></span></code></pre></div><p>But a better strategy would be to make this scenario ambiguous
 which is less error-prone and more consistent.</p>
 <p>That doesn&rsquo;t mean that variadic parameters and default parameters cannot co-exist.
 Let&rsquo;s go back to the <code>source_location</code> use case:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(<span style="color:#080;font-weight:bold">auto</span>... args, source_location = source_location::current());
-</code></pre></div><p>A call to <code>log(1, 2)</code> is unambiguous.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(<span style="color:#080;font-weight:bold">auto</span>... args, source_location = source_location::current());
+</span></span></code></pre></div><p>A call to <code>log(1, 2)</code> is unambiguous.
 after argument type deduction, the following function can be imagined to exist: <code>void log(int, source_location)</code> and <code>void log(int, int, source_location = /*...*/)</code>.
 Overload resolution is then not ambiguous, the program is well-formed.</p>
 <p>But what about <code>log(source_location{})</code>?</p>
 <p>We can imagine both these to be synthetized:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(source_location = source_location::current());
-<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(source_location, source_location = source_location::current());
-</code></pre></div><p>Which during overload resolution would be considered ambiguous, and therefore ill-formed.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(source_location = source_location::current());
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(source_location, source_location = source_location::current());
+</span></span></code></pre></div><p>Which during overload resolution would be considered ambiguous, and therefore ill-formed.
 But what if you want to write a function that forward all of it&rsquo;s argument while still having default parameter of its own?
 Maybe <code>log(source_location{})</code> is a perfectly reasonable thing to do!</p>
 <p>This can be solved by a tag on the callee side, without further language modification</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">my_end_of_parameters_tag_t</span>{};
-<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(<span style="color:#080;font-weight:bold">auto</span>... args,
-         my_end_of_parameters_tag_t = {}, source_location = source_location::current());
-</code></pre></div><p>now, the call <code>log(source_location{})</code> can synthetize</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(my_end_of_parameters_tag_t, source_location = source_location::current());
-<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(source_location,
-        my_end_of_parameters_tag_t = {},
-        source_location = source_location::current());
-</code></pre></div><p>which during overload resolution correctly selects <code>log(source_location, my_end_of_parameters_tag_t, source_location)</code></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">my_end_of_parameters_tag_t</span>{};
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(<span style="color:#080;font-weight:bold">auto</span>... args,
+</span></span><span style="display:flex;"><span>         my_end_of_parameters_tag_t = {}, source_location = source_location::current());
+</span></span></code></pre></div><p>now, the call <code>log(source_location{})</code> can synthetize</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(my_end_of_parameters_tag_t, source_location = source_location::current());
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">log</span>(source_location,
+</span></span><span style="display:flex;"><span>        my_end_of_parameters_tag_t = {},
+</span></span><span style="display:flex;"><span>        source_location = source_location::current());
+</span></span></code></pre></div><p>which during overload resolution correctly selects <code>log(source_location, my_end_of_parameters_tag_t, source_location)</code></p>
 <p>The general idea is provide to overload resolution a choice of two synthetized functions, one which assume that
 an argument was provided for the first defaulted parameter, and one which was not.
 Then overload resolution can do its thing without being modified.

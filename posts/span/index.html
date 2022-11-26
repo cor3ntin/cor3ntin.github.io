@@ -72,30 +72,29 @@ And an easy-to-review, <a href="https://wg21.link/P1037">200 pages</a> long prop
 <p>First off, if you are not on the Cpp Slack, you should, it&rsquo;s a great community.</p>
 <p>Second, maybe you heard that <code>std::span</code> was already merged in the C++20 draft last meeting so why talk about it and why would a modest library addition make so much virtual ink flow?</p>
 <p>Or maybe you never heard of <code>std::span</code> and are wondering what <code>std::span</code> even is.</p>
-<figure>
-    <img src="question.gif"/> <figcaption>
+<figure><img src="question.gif"/><figcaption>
             <h4>Life, the universe and span</h4>
         </figcaption>
 </figure>
 
 <p>Trying not to break any eggs, I would say it can be described as <strong>a fixed-sized, non-owning wrapper over a contiguous sequence of objects letting you iterate and mutate the individual items in that sequence</strong>.</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;gsl/span&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span>
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    std::vector&lt;std::string&gt; greeting = {<span style="color:#d20;background-color:#fff0f0">&#34;hello&#34;</span>, <span style="color:#d20;background-color:#fff0f0">&#34;world&#34;</span>};
-    gsl::span&lt;std::string&gt; span (greeting);
-    <span style="color:#080;font-weight:bold">for</span>(<span style="color:#080;font-weight:bold">auto</span> &amp;&amp; <span style="color:#369;font-style:italic">s</span> : span) {
-        s[<span style="color:#00d;font-weight:bold">0</span>] = std::toupper(s[<span style="color:#00d;font-weight:bold">0</span>]);
-    }
-    <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span>&amp; <span style="color:#369;font-style:italic">word</span>: greeting) {
-        std::cout &lt;&lt; word &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#39; &#39;</span>;
-    }
-}
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;gsl/span&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    std::vector&lt;std::string&gt; greeting = {<span style="color:#d20;background-color:#fff0f0">&#34;hello&#34;</span>, <span style="color:#d20;background-color:#fff0f0">&#34;world&#34;</span>};
+</span></span><span style="display:flex;"><span>    gsl::span&lt;std::string&gt; span (greeting);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">for</span>(<span style="color:#080;font-weight:bold">auto</span> &amp;&amp; <span style="color:#369;font-style:italic">s</span> : span) {
+</span></span><span style="display:flex;"><span>        s[<span style="color:#00d;font-weight:bold">0</span>] = std::toupper(s[<span style="color:#00d;font-weight:bold">0</span>]);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span>&amp; <span style="color:#369;font-style:italic">word</span>: greeting) {
+</span></span><span style="display:flex;"><span>        std::cout &lt;&lt; word &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#39; &#39;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
 </div>
 
 <p>This simply prints <code>Hello World</code> and illustrate the mutability of span&rsquo;s content.</p>
@@ -117,7 +116,7 @@ An array in c++ being analogous to a sequence of contiguous elements in memory. 
 But people feel like strings are some special snowflakes that need their special container with a bunch of special methods.
 So <code>string</code> gets to have a <code>length()</code> method because <code>size()</code> was probably not good enough for the princess, some <code>find*()</code> methods and lexicographical comparators.</p>
 <p>And I mean, that&rsquo;s fair. A lot of application handle texts more than other kind of data, so having a special class to do so make total sense.
-But fundamentally, the only difference between a vector and a string is that which is conveyed by the programmers' intent.</p>
+But fundamentally, the only difference between a vector and a string is that which is conveyed by the programmers&rsquo; intent.</p>
 <p>It should be noted that  <code>std::string</code> ( or <code>std::wstring</code> and the other <code>std::*string</code> ) is completely unsuited to handle text that is not encoded as ASCII.</p>
 <p>If you are one of the 6 billions people on earth that do not speak English, you are gonna have a f��� bad time if you think <code>std::string</code> can do anything for you.
 (Pardon my Chinese). At best, you can hope that if you don&rsquo;t mutate it in any way or look at it funny, it might still look okay by the time you display it somewhere.
@@ -135,18 +134,18 @@ First, we&rsquo;d like to make it as easy as possible to convert code to use str
 </blockquote>
 <p>There you have it : a backward compatibility wart.</p>
 <p>So, maybe we could actually define <code>std::string_view</code> in term of <code>span</code>?</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> CharT&gt;
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">basic_string_view</span> : <span style="color:#080;font-weight:bold">public</span> std::span&lt;CharT&gt; {
-    std::size_t length() <span style="color:#080;font-weight:bold">const</span> {
-        <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;size();
-    }
-};
-</code></pre></div><p>Simple and easy!</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> CharT&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">basic_string_view</span> : <span style="color:#080;font-weight:bold">public</span> std::span&lt;CharT&gt; {
+</span></span><span style="display:flex;"><span>    std::size_t length() <span style="color:#080;font-weight:bold">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;size();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Simple and easy!</p>
 <p><strong>Except</strong> this is completely wrong because unlike span, <code>std::string_view</code> is a <strong>non-mutable</strong> view.</p>
 <p>So it is actually more like more like</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> CharT&gt;
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">basic_string_view</span> : <span style="color:#080;font-weight:bold">public</span> std::span&lt;<span style="color:#080;font-weight:bold">const</span> CharT&gt; {<span style="color:#888">/**/</span>};
-</code></pre></div><p>Going back to the <a href="https://wg21.link/n3921"><code>string_view</code> paper</a>, the author explains that:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> CharT&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">basic_string_view</span> : <span style="color:#080;font-weight:bold">public</span> std::span&lt;<span style="color:#080;font-weight:bold">const</span> CharT&gt; {<span style="color:#888">/**/</span>};
+</span></span></code></pre></div><p>Going back to the <a href="https://wg21.link/n3921"><code>string_view</code> paper</a>, the author explains that:</p>
 <blockquote>
 <p>The constant case is enough more common than the mutable case that it needs to be the default.
 Making the mutable case the default would prevent passing string literals into string_view parameters, which would defeat a significant use case for string_view.
@@ -186,10 +185,10 @@ We can verify that this is indeed the case:</p>
 #include <vector>
 #include <gsl/span></xmp>
 
-<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::Range&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
-<span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::Range&lt;gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
-</code></pre></div></div>
+<div style="margin: 0px;"><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::Range&lt;std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::Range&lt;gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
+</span></span></code></pre></div></div>
 
 
 </div>
@@ -202,11 +201,11 @@ We can verify that this is indeed the case:</p>
 <xmp style="display:none; margin:0;">#include <stl2/detail/range/concepts.hpp>
 #include <gsl/span></xmp>
 
-<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::ext::ContiguousRange&lt;gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
-
-
-</code></pre></div></div>
+<div style="margin: 0px;"><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">static_assert</span>(std::experimental::ranges::ext::ContiguousRange&lt;gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span></code></pre></div></div>
 
 
 </div>
@@ -215,53 +214,53 @@ We can verify that this is indeed the case:</p>
 can implement it ourselves?</p>
 <p>For example, we could add some sugar coating over a pair of iterators:</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-concepts" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;gsl/span&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;stl2/detail/range/concepts.hpp&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span>
-<span style="color:#080;font-weight:bold">template</span> &lt;
-    std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
-    std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E
-&gt;
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">span</span> : <span style="color:#080;font-weight:bold">private</span> std::pair&lt;B, E&gt; {
-<span style="color:#080;font-weight:bold">public</span>:
-    <span style="color:#080;font-weight:bold">using</span> std::pair&lt;B, E&gt;::pair;
-    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">begin</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;first; }
-
-    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">end</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;second; }
-
-    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">size</span>() <span style="color:#080;font-weight:bold">const</span> { <span style="color:#080;font-weight:bold">return</span> std::count(begin(), end()); }
-
-    <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
-    span(CR &amp;c)
-        : std::pair&lt;B, E&gt;::pair(std::begin(c), std::end(c)) {}
-};
-
-<span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
-<span style="color:#080;font-weight:bold">explicit</span> span(CR &amp;)-&gt;span&lt;<span style="color:#080;font-weight:bold">decltype</span>(std::begin(CR())), <span style="color:#080;font-weight:bold">decltype</span>(std::end(CR()))&gt;;
-
-<span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
-          std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
-<span style="color:#080;font-weight:bold">explicit</span> span(B &amp;&amp; e, E &amp;&amp; b)-&gt;span&lt;B, E&gt;;
-
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; v;
-    span s(v);
-    span s2(std::begin(v), std::end(v));
-    <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">auto</span> &amp;&amp;<span style="color:#369;font-style:italic">e</span> : s) {
-    }
-}
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;gsl/span&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;stl2/detail/range/concepts.hpp&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;
+</span></span><span style="display:flex;"><span>    std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
+</span></span><span style="display:flex;"><span>    std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E
+</span></span><span style="display:flex;"><span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">span</span> : <span style="color:#080;font-weight:bold">private</span> std::pair&lt;B, E&gt; {
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">public</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">using</span> std::pair&lt;B, E&gt;::pair;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">begin</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;first; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">end</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;second; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">size</span>() <span style="color:#080;font-weight:bold">const</span> { <span style="color:#080;font-weight:bold">return</span> std::count(begin(), end()); }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
+</span></span><span style="display:flex;"><span>    span(CR &amp;c)
+</span></span><span style="display:flex;"><span>        : std::pair&lt;B, E&gt;::pair(std::begin(c), std::end(c)) {}
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">explicit</span> span(CR &amp;)-&gt;span&lt;<span style="color:#080;font-weight:bold">decltype</span>(std::begin(CR())), <span style="color:#080;font-weight:bold">decltype</span>(std::end(CR()))&gt;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
+</span></span><span style="display:flex;"><span>          std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">explicit</span> span(B &amp;&amp; e, E &amp;&amp; b)-&gt;span&lt;B, E&gt;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; v;
+</span></span><span style="display:flex;"><span>    span s(v);
+</span></span><span style="display:flex;"><span>    span s2(std::begin(v), std::end(v));
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">auto</span> &amp;&amp;<span style="color:#369;font-style:italic">e</span> : s) {
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
 </div>
 
 <p>Isn&rsquo;t that nice and dandy?</p>
 <p>Well&hellip; except, of course, this is not a <code>span&lt;int&gt;</code> <em><strong>at all</strong></em>. It&rsquo;s a freaking</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">span&lt;
-    __gnu_cxx::__normal_iterator&lt;<span style="color:#888;font-weight:bold">int</span>*, std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;,
-    __gnu_cxx::__normal_iterator&lt;<span style="color:#888;font-weight:bold">int</span>*, std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;
-&gt;
-</code></pre></div><p>Pretty pointless, right?</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>span&lt;
+</span></span><span style="display:flex;"><span>    __gnu_cxx::__normal_iterator&lt;<span style="color:#888;font-weight:bold">int</span>*, std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;,
+</span></span><span style="display:flex;"><span>    __gnu_cxx::__normal_iterator&lt;<span style="color:#888;font-weight:bold">int</span>*, std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt;&gt;
+</span></span><span style="display:flex;"><span>&gt;
+</span></span></code></pre></div><p>Pretty pointless, right?</p>
 <p>See, we can think of <code>views</code> and <code>span</code> and all those things as basically &ldquo;template erasure&rdquo; over ranges.
 Instead of a representing a range with a pair of iterators whose type depends on the underlying container,
 you&rsquo;d use a view/span.</p>
@@ -273,13 +272,13 @@ it is not possible to construct a <code>span</code>.</p>
 <xmp style="display:none; margin:0;">#include <vector>
 #include <gsl/span></xmp>
 
-<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> uniform_unitialization_workaround = -<span style="color:#00d;font-weight:bold">1</span>;
-    std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; a = {<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">1</span>, uniform_unitialization_workaround};
-    gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt; span (std::begin(a), std::end(a));
-}
-</code></pre></div></div>
+<div style="margin: 0px;"><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> uniform_unitialization_workaround = -<span style="color:#00d;font-weight:bold">1</span>;
+</span></span><span style="display:flex;"><span>    std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; a = {<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">1</span>, uniform_unitialization_workaround};
+</span></span><span style="display:flex;"><span>    gsl::span&lt;<span style="color:#888;font-weight:bold">int</span>&gt; span (std::begin(a), std::end(a));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></div>
 
 
 </div>
@@ -299,17 +298,17 @@ int main() {
     std::vector<std::string> names {
         "Alexender", "Alphonse", "Batman", "Eric", "Linus", "Maria", "Zoe"
     };</xmp>
-<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-    <span style="color:#080;font-weight:bold">auto</span> begin = std::begin(names);
-    <span style="color:#080;font-weight:bold">auto</span> end = std::find_if(begin, std::end(names), [](<span style="color:#080;font-weight:bold">const</span> std::string &amp;n) {
-                    <span style="color:#080;font-weight:bold">return</span> std::toupper(n[<span style="color:#00d;font-weight:bold">0</span>]) &gt; <span style="color:#d20;background-color:#fff0f0">&#39;A&#39;</span>;
-    });
-    gsl::span&lt;std::string&gt; span {
-        &amp;(*begin),
-        std::distance(begin, end)
-    };
-}
-</code></pre></div></div>
+<div style="margin: 0px;"><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> begin = std::begin(names);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> end = std::find_if(begin, std::end(names), [](<span style="color:#080;font-weight:bold">const</span> std::string &amp;n) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#080;font-weight:bold">return</span> std::toupper(n[<span style="color:#00d;font-weight:bold">0</span>]) &gt; <span style="color:#d20;background-color:#fff0f0">&#39;A&#39;</span>;
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    gsl::span&lt;std::string&gt; span {
+</span></span><span style="display:flex;"><span>        &amp;(*begin),
+</span></span><span style="display:flex;"><span>        std::distance(begin, end)
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></div>
 
 
 </div>
@@ -317,8 +316,7 @@ int main() {
 <p>Which is nice, safe and obvious.</p>
 <p>Because we are speaking about contiguous memory, there is an equivalent relationship between a pair of
 <code>(begin, end)</code> pointers and a <code>begin</code> pointer + the size.</p>
-<figure>
-    <img src="drake.jpeg"/> <figcaption>
+<figure><img src="drake.jpeg"/><figcaption>
             <h4>Ranges all the things</h4>
         </figcaption>
 </figure>
@@ -329,34 +327,34 @@ int main() {
 <xmp style="display:none; margin:0;">#include <gsl/span>
 #include <stl2/detail/range/concepts.hpp>
 #include <vector></xmp>
-<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">span</span> : <span style="color:#080;font-weight:bold">private</span> std::pair&lt;T*, T*&gt; {
-<span style="color:#080;font-weight:bold">public</span>:
-    <span style="color:#080;font-weight:bold">using</span> std::pair&lt;T*, T*&gt;::pair;
-    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">begin</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;first; }
-
-    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">end</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;second; }
-
-    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">size</span>() <span style="color:#080;font-weight:bold">const</span> { <span style="color:#080;font-weight:bold">return</span> std::count(begin(), end()); }
-
-    <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
-    span(CR &amp;c)
-        : std::pair&lt;T*, T*&gt;::pair(&amp;(*std::begin(c)), &amp;(*std::end(c))) {}
-
-    <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
-              std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
-    span(B &amp;&amp; b, E &amp;&amp; e)
-        : std::pair&lt;T*, T*&gt;::pair(&amp;(*b), &amp;(*e)) {}
-};
-
-<span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
-<span style="color:#080;font-weight:bold">explicit</span> span(CR &amp;)-&gt;span&lt;<span style="color:#080;font-weight:bold">typename</span> CR::value_type&gt;;
-
-<span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
-          std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
-<span style="color:#080;font-weight:bold">explicit</span> span(B &amp;&amp; b, E &amp;&amp; e)-&gt;span&lt;<span style="color:#080;font-weight:bold">typename</span> B::value_type&gt;;
-</code></pre></div></div>
+<div style="margin: 0px;"><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">span</span> : <span style="color:#080;font-weight:bold">private</span> std::pair&lt;T*, T*&gt; {
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">public</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">using</span> std::pair&lt;T*, T*&gt;::pair;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">begin</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;first; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">end</span>() { <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>-&gt;second; }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">size</span>() <span style="color:#080;font-weight:bold">const</span> { <span style="color:#080;font-weight:bold">return</span> std::count(begin(), end()); }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
+</span></span><span style="display:flex;"><span>    span(CR &amp;c)
+</span></span><span style="display:flex;"><span>        : std::pair&lt;T*, T*&gt;::pair(&amp;(*std::begin(c)), &amp;(*std::end(c))) {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
+</span></span><span style="display:flex;"><span>              std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
+</span></span><span style="display:flex;"><span>    span(B &amp;&amp; b, E &amp;&amp; e)
+</span></span><span style="display:flex;"><span>        : std::pair&lt;T*, T*&gt;::pair(&amp;(*b), &amp;(*e)) {}
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::ext::ContiguousRange CR&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">explicit</span> span(CR &amp;)-&gt;span&lt;<span style="color:#080;font-weight:bold">typename</span> CR::value_type&gt;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator B,
+</span></span><span style="display:flex;"><span>          std::experimental::ranges::<span style="color:#888">/*Contiguous*/</span>Iterator E&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">explicit</span> span(B &amp;&amp; b, E &amp;&amp; e)-&gt;span&lt;<span style="color:#080;font-weight:bold">typename</span> B::value_type&gt;;
+</span></span></code></pre></div></div>
 <xmp style="display:none; margin:0;">int main() {
     std::vector<int> v;
     span s(v);
@@ -370,18 +368,17 @@ int main() {
 
 <p>This behaves conceptually like the standard <code>std::span</code> and yet it is easier to understand and reason about.</p>
 <h3 id="wait-what-are-we-talking-about-i-forgot">Wait, what are we talking about? I forgot&hellip;</h3>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">struct</span> {
-    T* data;
-    std::size_t size;
-};
-</code></pre></div><p>Oh, right, freaking <code>span</code>!</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> {
+</span></span><span style="display:flex;"><span>    T* data;
+</span></span><span style="display:flex;"><span>    std::size_t size;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Oh, right, freaking <code>span</code>!</p>
 <p>I guess that my point is that <code>contiguous ranges</code> are the general solution to <code>span</code>. <code>span</code> can be easily described in term of a contiguous range.
 Implementing or reasoning about <code>span</code> without <code>contiguous ranges</code> however is trickier.
 <code>string_view</code> being a further refinement on span, it&rsquo;s clear that the committee started with the more specialized solution
 and is progressing to the general cases, leaving odd inconsistencies in its wake.</p>
-<figure>
-    <img src="vasa.jpg"/> <figcaption>
+<figure><img src="vasa.jpg"/><figcaption>
             <h4>Death by a thousand paper cuts</h4>
         </figcaption>
 </figure>
@@ -435,14 +432,14 @@ A lot can be said about the importance of naming things properly, and as far as 
 <p>There are whole fields of mathematics dedicated to describing how things are &ldquo;equal&rdquo; or comparable.
 Careers were made, books were written, libraries filled, it was theorized, organized, researched, and ported to Haskell.
 That&rsquo;s why, in its infinite wisdom, <code>perl 6</code> dedicated a few tokens to describe the equality of things:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-perl" data-lang="perl">==
-<span style="color:#080">eq</span>
-===
-aqv
-=:=
-=~=
-~~
-</code></pre></div><p>Meanwhile, <code>std::span</code> is collapsing the entire group theory into 2 characters.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-perl" data-lang="perl"><span style="display:flex;"><span>==
+</span></span><span style="display:flex;"><span><span style="color:#080">eq</span>
+</span></span><span style="display:flex;"><span>===
+</span></span><span style="display:flex;"><span>aqv
+</span></span><span style="display:flex;"><span>=:=
+</span></span><span style="display:flex;"><span>=~=
+</span></span><span style="display:flex;"><span>~~
+</span></span></code></pre></div><p>Meanwhile, <code>std::span</code> is collapsing the entire group theory into 2 characters.
 And of course, there is only so much meaning one can imbue to a 2-byte token.</p>
 <p>A lot of arguing between committee members has been about whether <code>operator==</code>
 should compare the identity (whether two span points to the same underlying data),
@@ -462,28 +459,28 @@ If you can&rsquo;t compare them, you can&rsquo;t compare them wrongly.</p>
 <p>A solution may be to resort to some <code>ADL</code> trickery to make <code>span</code> comparable only in the context of the standard library.
 That can be demonstrated:</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;algorithm&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span>
-<span style="color:#080;font-weight:bold">namespace</span> std {
-    <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">span</span> { };
-}
-
-<span style="color:#080;font-weight:bold">namespace</span> __gnu_cxx::__ops {
-    <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>&lt;(<span style="color:#080;font-weight:bold">const</span> std::span &amp;a, std::span &amp;b);
-}
-
-<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">compile</span>() {
-    std::vector&lt;std::span&gt; s;
-    std::sort(s.begin(), s.end());
-}
-
-<span style="color:#888">//void do_no_compile() {
-</span><span style="color:#888">//    std::span a, b;
-</span><span style="color:#888">//    a &lt; b;
-</span><span style="color:#888">//}
-</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;algorithm&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">namespace</span> std {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">span</span> { };
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">namespace</span> __gnu_cxx::__ops {
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>&lt;(<span style="color:#080;font-weight:bold">const</span> std::span &amp;a, std::span &amp;b);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">compile</span>() {
+</span></span><span style="display:flex;"><span>    std::vector&lt;std::span&gt; s;
+</span></span><span style="display:flex;"><span>    std::sort(s.begin(), s.end());
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">//void do_no_compile() {
+</span></span></span><span style="display:flex;"><span><span style="color:#888">//    std::span a, b;
+</span></span></span><span style="display:flex;"><span><span style="color:#888">//    a &lt; b;
+</span></span></span><span style="display:flex;"><span><span style="color:#888">//}
+</span></span></span></code></pre></div>
 </div>
 
 <p>That would make <code>span</code> truly regular within the stl, and prevent people comparing the wrong thing.
@@ -524,20 +521,19 @@ And I wonder if - as much fun as it may be to see them jumping over the canopy -
 </ul>
 <p>Maybe that&rsquo;s not quite accurate. But we need an unifying theory of everything.</p>
 <p>To conclude this short introduction of <code>span</code>, I will leave you with this photo of a giraffe.</p>
-<figure>
-    <img src="horse.jpg"/> <figcaption>
+<figure><img src="horse.jpg"/><figcaption>
             <h4>Span</h4>
         </figcaption>
 </figure>
 
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>I originally mentioned incorrectly that <code>ContiguousRange</code> was not proposed for inclusion in the C++ Standard. <a href="https://wg21.link/P0944">This is incorrect</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>I originally mentioned incorrectly that <code>ContiguousRange</code> was not proposed for inclusion in the C++ Standard. <a href="https://wg21.link/P0944">This is incorrect</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
       
     <div id="socialshareDiv">

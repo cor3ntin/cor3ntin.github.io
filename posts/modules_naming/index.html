@@ -82,9 +82,9 @@ You can&rsquo;t go wild and <code>import foo.*;</code> because there is no such 
 <p>What you can do, however, like all respectable spy agencies, is start an <code>export import</code> scheme.
 For example, given a module <code>foo.bar</code> (declared in <code>foo.bar.cppm</code>), you can further have a module
 <code>foo</code> in a file <code>foo.cppm</code></p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">export</span> module foo;
-<span style="color:#080;font-weight:bold">export</span> import foo.bar;
-</code></pre></div><p>Doing so makes all names exported by <code>foo.bar</code> visible to <code>foo</code> and all other translation units importing foo,
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">export</span> module foo;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">export</span> import foo.bar;
+</span></span></code></pre></div><p>Doing so makes all names exported by <code>foo.bar</code> visible to <code>foo</code> and all other translation units importing foo,
 thereby creating a hierarchy.
 But <code>foo</code> could equally <code>export import</code> <code>bar</code> or <code>foo_bar</code>;</p>
 <h1 id="say-my-name">Say my name.</h1>
@@ -109,8 +109,7 @@ One thing I didn&rsquo;t mention is that names are hard to find and harder to re
 Of course, a module can open several namespaces, a namespace can spread over several modules, and a library can be composed of several namespaces and modules.
 There are header-only libraries and there will be module-interfaces only libraries.</p>
 <p>Maurits Escher was 25 years old when John Venn died. Did they met?</p>
-<figure>
-    <img src="doll.jpg"/> <figcaption>
+<figure><img src="doll.jpg"/><figcaption>
             <h4>Modules, libraries and namespaces</h4><p>
                     <a href="http://angelsbarcelona.com/en/artists/jaime-pitarch/projects/chernobyl/192">Jaime Pitarch</a></p>
         </figcaption>
@@ -230,7 +229,7 @@ but they are less official and we can only reap the benefits of consistent namin
 <li><strong>Do not use characters outside of the basic source character set in module name identifiers.</strong></li>
 </ul>
 <h1 id="conclusion">Conclusion</h1>
-<p>Modules might give the C++ community the rare opportunity to federate the ecosystem under a common set of rules.\<br>
+<p>Modules might give the C++ community the rare opportunity to federate the ecosystem under a common set of rules.\
 This set of rules would permit the emergence of more modern module-oriented dependencies managers and tools.</p>
 <p>As modules cannot be renamed, these rules would have to be published along with the same C++ version that introduces modules as a language feature.</p>
 <p>What do you think?</p>

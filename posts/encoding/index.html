@@ -70,12 +70,12 @@ and ascribed meaning.</p>
 <p>Code, in the presence of arbitrary identifiers and string literals as to be considered as text.
 In the context of C++, how is the text of our program interepreted and transcoded during compilation?</p>
 <p>Let say we want to execute this program:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Γειά σου Κόσμε&#34;</span>;
-}
-</code></pre></div><p>Possibly, what the compiler sees looks like this:</p>
-<pre><code>23696e636c756465203c696f73747265616d3e0a696e74206d
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Γειά σου Κόσμε&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Possibly, what the compiler sees looks like this:</p>
+<pre tabindex="0"><code>23696e636c756465203c696f73747265616d3e0a696e74206d
 61696e2829207b0a202020207374643a3a636f7574203c3c20
 22ce93ceb5ceb9ceac20cf83cebfcf8520ce9acf8ccf83cebc
 ceb5223b0a7d0a
@@ -141,16 +141,16 @@ So some information <strong>necessary</strong> to build your code is offloaded t
 And as I said, compiler flags operate on translation units whereas you want to set the encoding on individual files.
 Modules will solve everything as in a fully modular world 1 file = 1 translation unit.</p>
 <p>In the meantime, maybe we can put the encoding in the source file, like <a href="https://www.python.org/dev/peps/pep-0263/">python does</a>?</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#pragma encoding &#34;UTF-8&#34;
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Γειά σου Κόσμε&#34;</span>;
-}
-</code></pre></div><p>There is a couple of issues with is.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#pragma encoding &#34;UTF-8&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Γειά σου Κόσμε&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>There is a couple of issues with is.
 First, it doesn&rsquo;t work for EBCDIC encodings at all.
 If interpreted as EBCDIC, the above UTF-8 file might look something like
 that</p>
-<pre><code>?/_/?&gt;?&gt;??????&gt;%??/_??&gt;?_/&gt;???#???????????l?ce?c???'?\
+<pre tabindex="0"><code>?/_/?&gt;?&gt;??????&gt;%??/_??&gt;?_/&gt;???#???????????l?ce?c???&#39;?\
 </code></pre><p><em>Doesn&rsquo;t look like C++ to me.</em></p>
 <p>Ok, so let&rsquo;s not care about EBCDIC<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, as people working on these systems already have to transcode everything.
 We can use that directive at the beginning of all and single files that is UTF-8?</p>
@@ -235,29 +235,29 @@ from I/O to reflection, DNS, etc.</p>
 nor do I think it is worth trying to deprecate them as so much code depend on them.</p>
 <p>It will be interesting to see how that pans out from an education perspective. Nevertheless, that duplication is probably a necessary evil;
 Improved Unicode is what ultimately lead to <a href="https://snarky.ca/why-python-3-exists/">Python 3</a> and we might want to avoid that in C++.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>For a very loose definition of &ldquo;suitable&rdquo;. Shift-JIS can only encode a bit over 10% of Japanese characters. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>For a very loose definition of &ldquo;suitable&rdquo;. Shift-JIS can only encode a bit over 10% of Japanese characters.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4210.pdf">C++ is mostly an ASCII-centric language now</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4210.pdf">C++ is mostly an ASCII-centric language now</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<pre><code class="language-a" data-lang="a">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+<li id="fn:3">
+<pre tabindex="0"><code class="language-a" data-lang="a">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 0 1 2 3 4 5 6 7 8 9
-_ { } [ ] # ( ) &lt; &gt; % : ; . ? * + - / ^ &amp; | ~ ! = , \ &quot; '
-</code></pre> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></li>
-<li id="fn:4" role="doc-endnote">
+_ { } [ ] # ( ) &lt; &gt; % : ; . ? * + - / ^ &amp; | ~ ! = , \ &#34; &#39;
+</code></pre>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></li>
+<li id="fn:4">
 <p>It hurts writing that because the idea that locale and encoding are tied to begin with <a href="https://github.com/mpv-player/mpv/commit/1e70e82baa9193f6f027338b0fab0f5078971fbe">is bonkers</a> to begin with.
-But remember these assumptions were made 70 years ago. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+But remember these assumptions were made 70 years ago.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:5" role="doc-endnote">
-<p><a href="D1854.pdf">I am hoping to make that ill-formed</a>. <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:5">
+<p><a href="D1854.pdf">I am hoping to make that ill-formed</a>.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
       
     <div id="socialshareDiv">

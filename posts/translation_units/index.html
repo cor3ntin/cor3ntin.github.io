@@ -67,28 +67,28 @@
 <p>You could of course do that:</p>
 <p><code>int area(square s) { return s.width * s.width; }</code></p>
 <p>But, your friend Tony told you to use more functions, so instead you do that</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s) { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
-</code></pre></div><p><code>area</code> being the function you really care about it is defined first - after all, code reads from top to bottom.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s) { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</span></span></code></pre></div><p><code>area</code> being the function you really care about it is defined first - after all, code reads from top to bottom.</p>
 <p>As you may have guessed from the lack of <code>;</code> after the struct&rsquo;s closing bracket, the above code is written in D.
 I figure my readership isn&rsquo;t really into D, so maybe you would prefer some <strong>Rust</strong>?</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rs" data-lang="rs"><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">area</span>(square: <span style="color:#b06;font-weight:bold">Square</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#888;font-weight:bold">i32</span> {<span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">return</span><span style="color:#bbb"> </span>width(s)<span style="color:#bbb"> </span>*<span style="color:#bbb"> </span>width(s)<span style="color:#bbb"> </span>}<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">width</span>(square: <span style="color:#b06;font-weight:bold">Square</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#888;font-weight:bold">i32</span> {<span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">return</span><span style="color:#bbb"> </span>s.width<span style="color:#bbb"> </span>}<span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Square</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>width: <span style="color:#888;font-weight:bold">i32</span> }<span style="color:#bbb">
-</span></code></pre></div><p>You can even compute the area of you square <strong><em>at scale</em></strong> with go</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">Area</span>(s square) <span style="color:#888;font-weight:bold">int</span> { <span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">width</span>(s) * <span style="color:#06b;font-weight:bold">width</span>(s); }
-<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">width</span>(s square) <span style="color:#888;font-weight:bold">int</span> { <span style="color:#080;font-weight:bold">return</span> s.width }
-<span style="color:#080;font-weight:bold">type</span> square <span style="color:#080;font-weight:bold">struct</span> { width  <span style="color:#888;font-weight:bold">int</span> }
-</code></pre></div><p>Or even <strong>Swift</strong>ly.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-swift" data-lang="swift"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">area</span>(s: Square) -&gt; <span style="color:#038">Int</span> { <span style="color:#080;font-weight:bold">return</span> width(s:s) * width(s:s); }
-<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">width</span>(s: Square) -&gt; <span style="color:#038">Int</span> { <span style="color:#080;font-weight:bold">return</span> s.width }
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Square</span> { <span style="color:#080;font-weight:bold">var</span> <span style="color:#369">width</span>:<span style="color:#038">Int</span> = <span style="color:#00d;font-weight:bold">0</span>; }
-</code></pre></div><p>But of course, <em>you</em> will worry about the overhead and will want the language the most performant (that&rsquo;s not a word).
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rs" data-lang="rs"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">area</span>(square: <span style="color:#b06;font-weight:bold">Square</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#888;font-weight:bold">i32</span> {<span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">return</span><span style="color:#bbb"> </span>width(s)<span style="color:#bbb"> </span>*<span style="color:#bbb"> </span>width(s)<span style="color:#bbb"> </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">width</span>(square: <span style="color:#b06;font-weight:bold">Square</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#888;font-weight:bold">i32</span> {<span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">return</span><span style="color:#bbb"> </span>s.width<span style="color:#bbb"> </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Square</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>width: <span style="color:#888;font-weight:bold">i32</span> }<span style="color:#bbb">
+</span></span></span></code></pre></div><p>You can even compute the area of you square <strong><em>at scale</em></strong> with go</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">Area</span>(s square) <span style="color:#888;font-weight:bold">int</span> { <span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">width</span>(s) * <span style="color:#06b;font-weight:bold">width</span>(s); }
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">width</span>(s square) <span style="color:#888;font-weight:bold">int</span> { <span style="color:#080;font-weight:bold">return</span> s.width }
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">type</span> square <span style="color:#080;font-weight:bold">struct</span> { width  <span style="color:#888;font-weight:bold">int</span> }
+</span></span></code></pre></div><p>Or even <strong>Swift</strong>ly.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-swift" data-lang="swift"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">area</span>(s: Square) -&gt; <span style="color:#038">Int</span> { <span style="color:#080;font-weight:bold">return</span> width(s:s) * width(s:s); }
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">width</span>(s: Square) -&gt; <span style="color:#038">Int</span> { <span style="color:#080;font-weight:bold">return</span> s.width }
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Square</span> { <span style="color:#080;font-weight:bold">var</span> <span style="color:#369">width</span>:<span style="color:#038">Int</span> = <span style="color:#00d;font-weight:bold">0</span>; }
+</span></span></code></pre></div><p>But of course, <em>you</em> will worry about the overhead and will want the language the most performant (that&rsquo;s not a word).
 Eager to please and impress, let me copy the D code and add that oh-so-important semi-colon.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">square</span> { <span style="color:#888;font-weight:bold">int</span> width; };
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s)  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
-</code></pre></div><p>That&rsquo;s nice, isn&rsquo;t it?  Interesting how most languages look alike.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">square</span> { <span style="color:#888;font-weight:bold">int</span> width; };
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s)  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</span></span></code></pre></div><p>That&rsquo;s nice, isn&rsquo;t it?  Interesting how most languages look alike.
 Hum, wait, that doesn&rsquo;t work???!!!</p>
 <p><code>error: 'width' was not declared in this scope</code></p>
 <p>But, you stupid thing, it&rsquo;s <em>RIGHT THERE</em>.
@@ -102,18 +102,18 @@ proven by other languages. Or you know, C++ classes. (imagine replacing a big na
 Unless of course, it&rsquo;s a performance thing.
 But, you are a very great engineer, so you wouldn&rsquo;t let a source file grow above a few hundred lines of code, would you?
 I bet your code is beautiful, like this small self-contained super useful program</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span> () {
-    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Hello world</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
-}
-</code></pre></div><p>Which on my system expands to about <em>33000</em> lines of code. The freaking thing. But more on that later.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span> () {
+</span></span><span style="display:flex;"><span>    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Hello world</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Which on my system expands to about <em>33000</em> lines of code. The freaking thing. But more on that later.</p>
 <p>Let&rsquo;s go back to square one.
 C++, in its infinite wisdom, lets us forward-declare functions, so we can write this:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">square</span> { <span style="color:#888;font-weight:bold">int</span> width; };
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s);
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s)  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
-</code></pre></div><p>Which is nice and dandy, if you squint.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">square</span> { <span style="color:#888;font-weight:bold">int</span> width; };
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s);
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s)  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</span></span></code></pre></div><p>Which is nice and dandy, if you squint.</p>
 <p>Besides requiring you to get the exact declaration of functions perfectly right - which is hard to maintain, lots of entities are not forward-declarable,
 notably type alias, templated types, etc.
 Which is an odd limitation given that where forward declaring a function require you
@@ -126,19 +126,19 @@ That is, there is no subexpression of <code>area</code> that can throw, ever.</p
 <p>Inevitably,  that fails.
 <code>error: static assertion failed</code>.
 We indeed forgot to tell the compiler that our function could not throw.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span>;
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span> { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span> { <span style="color:#080;font-weight:bold">return</span> s.width; }
-</code></pre></div><p>Notice that we need to add <code>noexcept</code> on all declarations, including the forward declarations.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span>;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span> { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span> { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</span></span></code></pre></div><p>Notice that we need to add <code>noexcept</code> on all declarations, including the forward declarations.
 And, you can lie to the compiler pretty easily.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span> {
-    <span style="color:#080;font-weight:bold">return</span> width(s) * width(s);
-}
-
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) {
-    <span style="color:#080;font-weight:bold">throw</span> <span style="color:#00d;font-weight:bold">42</span>;
-}
-</code></pre></div><p>The above code will <code>std::terminate()</code>, you know that the compiler knows that, everybody knows that.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) <span style="color:#080;font-weight:bold">noexcept</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> width(s) * width(s);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(<span style="color:#080;font-weight:bold">const</span> square&amp; s) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">throw</span> <span style="color:#00d;font-weight:bold">42</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The above code will <code>std::terminate()</code>, you know that the compiler knows that, everybody knows that.</p>
 <p>So&hellip;what functions should be marked <code>noexcept</code>?
 It&rsquo;s pretty simple actually. All the functions that can not throw.
 That is the functions that:</p>
@@ -159,13 +159,13 @@ if all of it&rsquo;s subexpression is noexcept manually.</p>
 <p>And the compiler can not trust you that the function will indeed not throw, so implementers will inject calls to <code>std::terminate</code>
 here and there, negating somewhat the performance benefits of marking the function <code>noexcept</code> in the first place.</p>
 <p>Let&rsquo;s rewrite our code using lambda instead</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">auto</span> width = [](<span style="color:#080;font-weight:bold">const</span> square&amp; s) -&gt; <span style="color:#888;font-weight:bold">int</span> {
-    <span style="color:#080;font-weight:bold">return</span> s.width;
-};
-<span style="color:#080;font-weight:bold">auto</span> area = [](<span style="color:#080;font-weight:bold">const</span> square&amp; s) -&gt; <span style="color:#888;font-weight:bold">int</span> {
-    <span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">width</span>(s) * width(s);
-};
-</code></pre></div><p>Of course, lambdas cannot be forward declared.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> width = [](<span style="color:#080;font-weight:bold">const</span> square&amp; s) -&gt; <span style="color:#888;font-weight:bold">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> s.width;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> area = [](<span style="color:#080;font-weight:bold">const</span> square&amp; s) -&gt; <span style="color:#888;font-weight:bold">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">width</span>(s) * width(s);
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Of course, lambdas cannot be forward declared.
 So I had to reorganize the code.</p>
 <p>And now, despite the lack of <code>noexcept</code> keyword,
 <code>static_assert(noexcept(area(square{})));</code> passes.</p>
@@ -216,10 +216,10 @@ because removing the constexpr-ness of a function may be a source breaking chang
 By its very nature, <code>constexpr</code> implies that <code>constexpr</code> functions are defined somewhere is the TU. And everything not defined in the TU cannot be constant-evaluated.
 <a href="https://wg21.link/p1235">A proposal for C++20 proposes to make it implicit in some cases</a></p>
 <p>For now, we are left with the following code, and it is on you to use the appropriate qualifiers.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe;
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe { <span style="color:#080;font-weight:bold">return</span> s.width; }
-</code></pre></div><p>As of C++20, <code>constexpr</code> functions can throw. The committee is also considering making <code>new</code> expressions
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">area</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe  { <span style="color:#080;font-weight:bold">return</span> width(s) * width(s); }
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">width</span>(square s) <span style="color:#080;font-weight:bold">noexcept</span> transaction_safe { <span style="color:#080;font-weight:bold">return</span> s.width; }
+</span></span></code></pre></div><p>As of C++20, <code>constexpr</code> functions can throw. The committee is also considering making <code>new</code> expressions
 <code>noexcept</code> by 23 or 26 so we are slowly getting to a place where 95%+ of functions will be both <code>constexpr</code> and <code>noexcept</code>
 eligible and will have to be marked manually.</p>
 <p><strong>Is there a better way ?</strong></p>
@@ -247,11 +247,11 @@ at compile time in a chaotic manner (here chaotic means deterministic, but well 
 Well, is it a good enough reason?
 I don&rsquo;t know&hellip;
 But, as a consequence (I <em>think</em> this is not really voluntary), Overload and name lookup work as first-good match rather than best match.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#888;font-weight:bold">double</span> x) { <span style="color:#080;font-weight:bold">return</span> x * <span style="color:#00d;font-weight:bold">2</span>; }
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> a = f(<span style="color:#00d;font-weight:bold">1</span>);
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#888;font-weight:bold">int</span> x) { <span style="color:#080;font-weight:bold">return</span> x * <span style="color:#00d;font-weight:bold">4</span>; }
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> b = f(<span style="color:#00d;font-weight:bold">1</span>);
-</code></pre></div><p>Pop quiz: What&rsquo;s the value of <code>a</code> and <code>b</code>?</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#888;font-weight:bold">double</span> x) { <span style="color:#080;font-weight:bold">return</span> x * <span style="color:#00d;font-weight:bold">2</span>; }
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> a = f(<span style="color:#00d;font-weight:bold">1</span>);
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#888;font-weight:bold">int</span> x) { <span style="color:#080;font-weight:bold">return</span> x * <span style="color:#00d;font-weight:bold">4</span>; }
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#080;font-weight:bold">auto</span> b = f(<span style="color:#00d;font-weight:bold">1</span>);
+</span></span></code></pre></div><p>Pop quiz: What&rsquo;s the value of <code>a</code> and <code>b</code>?</p>
 <p>If you are neither wrong nor aghast, you may be suffering for Stockholm syndrome. There is no cure.
 And, because the order of declarations may impact the semantics of a program, and because macros can rewrite everything,
 there is no cure for C++ either.</p>
@@ -300,18 +300,18 @@ transitively, even if you don&rsquo;t modify existing declarations.</p>
 <ul>
 <li>A scoping mechanism, or a way to replace namespaces.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">//MyFoo.cppm
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module my.foo;
-<span style="color:#080;font-weight:bold">export</span> <span style="color:#080;font-weight:bold">namespace</span> my::foo {
-    <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>() {}
-}
-
-<span style="color:#888">//MyBar.cpp
-</span><span style="color:#888"></span>import my.foo;
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    my::foo::f();
-}
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888">//MyFoo.cppm
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module my.foo;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">export</span> <span style="color:#080;font-weight:bold">namespace</span> my::foo {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>() {}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">//MyBar.cpp
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>import my.foo;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    my::foo::f();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
 <li>A way to permit used-before-declared symbols.</li>
 </ul>
 <p>I guess they <em>could</em> have been. Modules being closed, it seems reasonable to consider all the declarations in the same module before doing any parsing of definitions,
@@ -336,19 +336,19 @@ Python 2 is often used as a cautionary tale in these circumstances.</p>
 A module is still split as its interface (the compiler can transform the source of that module into a BMI - binary module interface -),
 and the definition of the things implemented in the interface (an object file).
 In fact, the following code will not link</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">//m1.cppm
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module m1;
-<span style="color:#080;font-weight:bold">export</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>() {
-    <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">0</span>;
-}
-<span style="color:#888">//main.cpp
-</span><span style="color:#888"></span>import m1;
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    f();
-}
-clang++ -fmodules-ts --precompile m1.cppm -o m1.pcm
-clang++ -fmodules-ts -fmodule-file=m1.pcm main.cpp
-</code></pre></div><p>because the <code>m1</code> module binary <em>interface</em> will not consider the definition of <code>f()</code>, unless you mark it inline,
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888">//m1.cppm
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module m1;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">export</span> <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">f</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#888">//main.cpp
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>import m1;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    f();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>clang++ -fmodules-ts --precompile m1.cppm -o m1.pcm
+</span></span><span style="display:flex;"><span>clang++ -fmodules-ts -fmodule-file=m1.pcm main.cpp
+</span></span></code></pre></div><p>because the <code>m1</code> module binary <em>interface</em> will not consider the definition of <code>f()</code>, unless you mark it inline,
 or build a .o out of it.
 Despite that, the BMI on my system definitively contains the definition of the function, as changing it also changes the
 BMI. leading to a rebuild of all dependencies anyway.</p>

@@ -86,17 +86,17 @@ could simply be a <abbr title="Customization Point Object">CPO</abbr> for <code>
 </ul>
 <p>Being able to run code on an execution context, such as a thread is great.
 But, what if you wanted to run code later? Maybe some piece for code needs to run every 5 minutes:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">child</span>() {
-    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
-        fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Are we there yet?&#34;</span>);
-        this_thread::sleep(<span style="color:#00d;font-weight:bold">5</span>min);
-    }
-}
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    scheduler <span style="color:#080;font-weight:bold">auto</span> s = <span style="color:#888">/*...*/</span>
-    execution::execute(s, as_receiver(child));
-}
-</code></pre></div><p>This will work<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">child</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+</span></span><span style="display:flex;"><span>        fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Are we there yet?&#34;</span>);
+</span></span><span style="display:flex;"><span>        this_thread::sleep(<span style="color:#00d;font-weight:bold">5</span>min);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    scheduler <span style="color:#080;font-weight:bold">auto</span> s = <span style="color:#888">/*...*/</span>
+</span></span><span style="display:flex;"><span>    execution::execute(s, as_receiver(child));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This will work<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.
 But nothing else will ever run on that thread which is a rather poor usage of resources.
 Threads are less expensive than processes but they <a href="https://lemire.me/blog/2020/01/30/cost-of-a-thread-in-c-under-linux/">still take time to create</a>: Avoid having one thread per task if you have thousands of tasks.</p>
 <p>What we would want is for the <em>task</em> rather than the <em>thread</em> to be interrupted for 5 minutes.</p>
@@ -191,20 +191,20 @@ The submission queue can only be accessed by a single thread at once<sup id="fnr
 to both submit all new work in the submission queue and wait for entries to be added to
 the completion queue.</p>
 <p>Here is a pseudo implementation of an i/o thread:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> io_context::run() {
-    io_uring ring;
-    io_uring_queue_init(URING_ENTRIES, &amp;ring, <span style="color:#00d;font-weight:bold">0</span>);
-    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">io_uring_cqe</span>* cqe;
-    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
-        add_pending_operations_to_io_uring();
-        io_uring_wait_cqe(&amp;ring, &amp;cqe); <span style="color:#888">// single syscall to submit and wait
-</span><span style="color:#888"></span>        <span style="color:#080;font-weight:bold">auto</span>* operation = operation_from_completion(cqe);
-        io_uring_cqe_seen(&amp;ring, cqe);
-        execute_completion(cqe);
-    }
-    io_uring_queue_exit(&amp;m_ring);
-}
-</code></pre></div><p>This slide code features the <a href="https://github.com/axboe/liburing">liburing</a> library
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> io_context::run() {
+</span></span><span style="display:flex;"><span>    io_uring ring;
+</span></span><span style="display:flex;"><span>    io_uring_queue_init(URING_ENTRIES, &amp;ring, <span style="color:#00d;font-weight:bold">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">io_uring_cqe</span>* cqe;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+</span></span><span style="display:flex;"><span>        add_pending_operations_to_io_uring();
+</span></span><span style="display:flex;"><span>        io_uring_wait_cqe(&amp;ring, &amp;cqe); <span style="color:#888">// single syscall to submit and wait
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>        <span style="color:#080;font-weight:bold">auto</span>* operation = operation_from_completion(cqe);
+</span></span><span style="display:flex;"><span>        io_uring_cqe_seen(&amp;ring, cqe);
+</span></span><span style="display:flex;"><span>        execute_completion(cqe);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    io_uring_queue_exit(&amp;m_ring);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This slide code features the <a href="https://github.com/axboe/liburing">liburing</a> library
 which handles the very low-level user-space ring management for us.</p>
 <p><code>run</code> can be executed on several threads, each with its own ring.
 However, each queue can only be accessed from a single thread at once.
@@ -212,15 +212,15 @@ Moreover, <code>io_uring_wait_cqe</code> being, as the name suggests a blocking 
 how can we add work to the queue?</p>
 <p>First, we need a thread-safe way to push an operation to the
 submission queue buffer<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup> represented on the graphic above as a green rectangle.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">io_context</span> {
-    std::mutex mutex;
-    intrusive_queue&lt;operation*&gt; pending;
-    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">start_operation</span>(operation* op) {
-        std::unique_lock _(mutex);
-        pending.push(op);
-    }
-};
-</code></pre></div><p>But, if the i/o thread is currently blocked in an <code>io_uring_wait_cqe</code>,
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">io_context</span> {
+</span></span><span style="display:flex;"><span>    std::mutex mutex;
+</span></span><span style="display:flex;"><span>    intrusive_queue&lt;operation*&gt; pending;
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">start_operation</span>(operation* op) {
+</span></span><span style="display:flex;"><span>        std::unique_lock _(mutex);
+</span></span><span style="display:flex;"><span>        pending.push(op);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>But, if the i/o thread is currently blocked in an <code>io_uring_wait_cqe</code>,
 how can it see that we added elements to the queue?</p>
 <p>A naive solution is to use <code>io_uring_wait_cqe_timeout</code> but this has
 a few issues:</p>
@@ -234,34 +234,34 @@ and, in the sender thread, write to that file descriptor, which will cause the <
 to return.</p>
 <p>On Linux, we can use <code>eventfd</code>, which, as far as I can tell is the most efficient way to do that
 little dance.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">io_context</span> {
-    std::mutex mutex;
-    std::queue&lt;operation*&gt; pending;
-    <span style="color:#888;font-weight:bold">int</span> fd = ::eventfd(<span style="color:#00d;font-weight:bold">0</span>, O_NONBLOCK);
-    eventfd_t dummy;
-    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">run</span>() {
-        schedule_notify();
-        <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
-            <span style="color:#888">// --
-</span><span style="color:#888"></span>            io_uring_wait_cqe(&amp;ring, &amp;cqe);
-            <span style="color:#080;font-weight:bold">if</span>(cqe-&gt;user_data == <span style="color:#080;font-weight:bold">this</span>) {
-            schedule_notify(); <span style="color:#888">// re-arm
-</span><span style="color:#888"></span>            }
-            <span style="color:#888">//...
-</span><span style="color:#888"></span>        }
-    }
-    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">schedule_notify</span>() {
-        <span style="color:#080;font-weight:bold">auto</span> sqe = io_uring_get_sqe(&amp;m_ring);
-        io_uring_prep_poll_read(sqe, fd, &amp;dummy, <span style="color:#080;font-weight:bold">sizeof</span>(dummy));
-        io_uring_set_data(sqe, <span style="color:#080;font-weight:bold">this</span>);
-    }
-    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">start_operation</span>(operation* op) {
-        std::unique_lock _(mutex);
-        pending.push(op);
-        eventfd_write(fd, <span style="color:#00d;font-weight:bold">0</span>); <span style="color:#888">// causes io_uring_wait_cqe to return
-</span><span style="color:#888"></span>    }
-};
-</code></pre></div><p>This mechanism to enqueue work is not specific to <code>io_uring</code> and would also be used
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">io_context</span> {
+</span></span><span style="display:flex;"><span>    std::mutex mutex;
+</span></span><span style="display:flex;"><span>    std::queue&lt;operation*&gt; pending;
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">int</span> fd = ::eventfd(<span style="color:#00d;font-weight:bold">0</span>, O_NONBLOCK);
+</span></span><span style="display:flex;"><span>    eventfd_t dummy;
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">run</span>() {
+</span></span><span style="display:flex;"><span>        schedule_notify();
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#888">// --
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>            io_uring_wait_cqe(&amp;ring, &amp;cqe);
+</span></span><span style="display:flex;"><span>            <span style="color:#080;font-weight:bold">if</span>(cqe-&gt;user_data == <span style="color:#080;font-weight:bold">this</span>) {
+</span></span><span style="display:flex;"><span>            schedule_notify(); <span style="color:#888">// re-arm
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#888">//...
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">schedule_notify</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">auto</span> sqe = io_uring_get_sqe(&amp;m_ring);
+</span></span><span style="display:flex;"><span>        io_uring_prep_poll_read(sqe, fd, &amp;dummy, <span style="color:#080;font-weight:bold">sizeof</span>(dummy));
+</span></span><span style="display:flex;"><span>        io_uring_set_data(sqe, <span style="color:#080;font-weight:bold">this</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">start_operation</span>(operation* op) {
+</span></span><span style="display:flex;"><span>        std::unique_lock _(mutex);
+</span></span><span style="display:flex;"><span>        pending.push(op);
+</span></span><span style="display:flex;"><span>        eventfd_write(fd, <span style="color:#00d;font-weight:bold">0</span>); <span style="color:#888">// causes io_uring_wait_cqe to return
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>This mechanism to enqueue work is not specific to <code>io_uring</code> and would also be used
 with <code>epoll</code>, <code>select</code>, <code>io_submit</code>, etc.</p>
 <h4 id="polling">Polling</h4>
 <p>This way of notifying the queue and waiting for completion events incur some overhead
@@ -274,23 +274,23 @@ supporting such mode in the standard.</p>
 <p>In <a href="https://cor3ntin.github.io/posts/executors/">A Universal Async Abstraction for C++</a>, we discussed
 the <code>schedule</code> algorithm which runs an operation on the execution context associated
 with a given scheduler</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">oneway_task <span style="color:#06b;font-weight:bold">do_something</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
-    <span style="color:#080;font-weight:bold">co_await</span> execution::schedule(s);
-    fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>); <span style="color:#888">//runs in the context associated to the scheduler s
-</span><span style="color:#888"></span>}
-</code></pre></div><p>Now that we understand io contexts, aka execution contexts in which we can run
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>oneway_task <span style="color:#06b;font-weight:bold">do_something</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">co_await</span> execution::schedule(s);
+</span></span><span style="display:flex;"><span>    fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>); <span style="color:#888">//runs in the context associated to the scheduler s
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>}
+</span></span></code></pre></div><p>Now that we understand io contexts, aka execution contexts in which we can run
 io operations, we can add a <code>deadline</code> parameter to the <code>schedule</code> <sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup> algorithm.
 I stole the idea of deadline from <a href="https://wg21.link/p1031">P1031 - Low level file i/o library</a>.
 It is a simple utility which can represent a time, either relative or absolute</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">annoying_child</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
-    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
-        <span style="color:#888">//Suspend the task for 5 minutes,
-</span><span style="color:#888"></span>        <span style="color:#888">//The thread is free to do something else in the meantime
-</span><span style="color:#888"></span>        <span style="color:#080;font-weight:bold">co_await</span> execution::schedule(s, <span style="color:#00d;font-weight:bold">5</span>min);
-        fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Are we there yet?&#34;</span>);
-    }
-}
-</code></pre></div><p>Here, <code>execution::schedule(s, 5min);</code> returns a sender, like we saw last time for the <code>schedule</code>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>task <span style="color:#06b;font-weight:bold">annoying_child</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#888">//Suspend the task for 5 minutes,
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>        <span style="color:#888">//The thread is free to do something else in the meantime
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>        <span style="color:#080;font-weight:bold">co_await</span> execution::schedule(s, <span style="color:#00d;font-weight:bold">5</span>min);
+</span></span><span style="display:flex;"><span>        fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Are we there yet?&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Here, <code>execution::schedule(s, 5min);</code> returns a sender, like we saw last time for the <code>schedule</code>
 algorithm.
 The only difference is that the <code>start</code> method will lead to a timeout &ldquo;i/o&rdquo; operation being scheduled by the kernel.</p>
 <img src="schedule_deadline.svg" alt="IO uring Proactor"/>
@@ -303,19 +303,19 @@ The only difference is that the <code>start</code> method will lead to a timeout
 <li>Connecting to a remote socket and accepting connections</li>
 </ul>
 <p>While it is possible to imagine low-level APIs such as</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">read_file</span>(scheduler, native_handle, buffers) -&gt; read_sender;
-<span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">close_file</span>(scheduler, native_handle) -&gt; close_sender;
-</code></pre></div><p>It is more likely that instead, we get few io objects such as <code>file</code>s and <code>socket</code>s</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;execution::scheduler scheduler = std::default_scheduler&gt;
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">file</span>;
-
-task <span style="color:#06b;font-weight:bold">read_data</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s, buffers &amp; buffs) {
-    file f(s);
-    <span style="color:#080;font-weight:bold">co_await</span> f.open(<span style="color:#d20;background-color:#fff0f0">&#34;myfile.txt&#34;</span>);
-    <span style="color:#080;font-weight:bold">co_await</span> f.read(buffs);
-    <span style="color:#080;font-weight:bold">co_await</span> f.close();
-}
-</code></pre></div><p>If you wonder why <code>f.close()</code> is not simply handled by RAII, read <a href="https://wg21.link/p1662r0">P1662</a>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">read_file</span>(scheduler, native_handle, buffers) -&gt; read_sender;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#06b;font-weight:bold">close_file</span>(scheduler, native_handle) -&gt; close_sender;
+</span></span></code></pre></div><p>It is more likely that instead, we get few io objects such as <code>file</code>s and <code>socket</code>s</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;execution::scheduler scheduler = std::default_scheduler&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">file</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>task <span style="color:#06b;font-weight:bold">read_data</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s, buffers &amp; buffs) {
+</span></span><span style="display:flex;"><span>    file f(s);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">co_await</span> f.open(<span style="color:#d20;background-color:#fff0f0">&#34;myfile.txt&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">co_await</span> f.read(buffs);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">co_await</span> f.close();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>If you wonder why <code>f.close()</code> is not simply handled by RAII, read <a href="https://wg21.link/p1662r0">P1662</a>
 and weep.</p>
 <h2 id="threads-are-shared-resources">Threads are shared resources</h2>
 <p>There are a limited, fixed number of hardware threads, and unlike RAM,
@@ -350,8 +350,8 @@ Indeed, <a href="https://wg21.link/p1677r2">cancellation is not an error</a><sup
 request.
 You would typically cancel an entire task, or an operation, which would then cancel the
 the entire chain of subsequent operations.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">sequence(read(stdin, buffer), write(stdout, buffer))
-</code></pre></div><p>For example, here if we cancel the read, the write should not be executed.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>sequence(read(stdin, buffer), write(stdout, buffer))
+</span></span></code></pre></div><p>For example, here if we cancel the read, the write should not be executed.
 As mentioned in [P1677] cancellation is the asynchronous version
 of returning early from a function.</p>
 <p><code>std::stop_token</code> which is a C++20 feature that was accepted at the same
@@ -375,23 +375,23 @@ thread-safe if you have multiple threads.)</p>
 <p>It has already been implemented in GCC so you can play with it on compiler explorer</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="gcc-trunk">
     
-<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;stop_token&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;cstdio&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span>
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    std::stop_source stop;
-    <span style="color:#080;font-weight:bold">auto</span> token = stop.get_token();
-    std::stop_callback cb(token, [] {
-        std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;I don&#39;t want to stop at all</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
-    });
-    std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;Don&#39;t stop me now, I&#39;m having such a good time</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
-    stop.request_stop();
-    <span style="color:#080;font-weight:bold">if</span>(token.stop_requested()) {
-        std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;Alright</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
-    }
-}
-</code></pre></div></div>
+<div style="margin: 0px;"><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;stop_token&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;cstdio&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    std::stop_source stop;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> token = stop.get_token();
+</span></span><span style="display:flex;"><span>    std::stop_callback cb(token, [] {
+</span></span><span style="display:flex;"><span>        std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;I don&#39;t want to stop at all</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;Don&#39;t stop me now, I&#39;m having such a good time</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
+</span></span><span style="display:flex;"><span>    stop.request_stop();
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">if</span>(token.stop_requested()) {
+</span></span><span style="display:flex;"><span>        std::puts(<span style="color:#d20;background-color:#fff0f0">&#34;Alright</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></div>
 
 
 </div>
@@ -425,20 +425,20 @@ success, failure, and cancellation.</p>
 <ol>
 <li>
 <p><strong>Returning some kind of <code>variant&lt;ValueType, ErrorType, cancelled_t&gt;</code></strong></p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">example</span>() {
-    inspect(<span style="color:#080;font-weight:bold">auto</span> res = <span style="color:#080;font-weight:bold">co_await</span> sender) {
-        &lt;cancelled_t&gt;: {
-
-        }
-        res.success():{
-
-        }
-        res.failure(): {
-
-        }
-    };
-}
-</code></pre></div><p>The above example showcases <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p1371r2.pdf">Pattern Matching</a>, although I am not sure that we can mix both types and expressions matchers.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>task <span style="color:#06b;font-weight:bold">example</span>() {
+</span></span><span style="display:flex;"><span>    inspect(<span style="color:#080;font-weight:bold">auto</span> res = <span style="color:#080;font-weight:bold">co_await</span> sender) {
+</span></span><span style="display:flex;"><span>        &lt;cancelled_t&gt;: {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        res.success():{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        res.failure(): {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The above example showcases <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p1371r2.pdf">Pattern Matching</a>, although I am not sure that we can mix both types and expressions matchers.</p>
 <p>We cannot use types to discriminate success and failure as they may have the same type.</p>
 </li>
 </ol>
@@ -446,14 +446,14 @@ success, failure, and cancellation.</p>
 <ol start="2">
 <li><strong>Use exceptions to propagate both errors and cancellation</strong></li>
 </ol>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task <span style="color:#06b;font-weight:bold">example</span>() {
-    <span style="color:#080;font-weight:bold">try</span> {
-        <span style="color:#080;font-weight:bold">co_await</span> sender;
-    }
-    <span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::error_status&amp;) {<span style="color:#888">/*...*/</span>}
-    <span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::cancelled_operation&amp;) {<span style="color:#888">/*...*/</span>}
-}
-</code></pre></div><p>This suffers a couple of issues:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>task <span style="color:#06b;font-weight:bold">example</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">try</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">co_await</span> sender;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::error_status&amp;) {<span style="color:#888">/*...*/</span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">catch</span>(<span style="color:#080;font-weight:bold">const</span> std::cancelled_operation&amp;) {<span style="color:#888">/*...*/</span>}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This suffers a couple of issues:</p>
 <ul>
 <li>
 <p>Semantic - Using exceptions to signal cancellation makes it look like cancellation is an error, which it is not. Such a zemblanity!</p>
@@ -489,12 +489,12 @@ asynchronous expression instead. Like in <code>go</code>.
 Not bake-in in the language mind you, but as library solutions.</p>
 <p>For example, <code>libunifex</code> implement <a href="https://github.com/facebookexperimental/libunifex/blob/master/include/unifex/async_mutex.hpp">async mutexes</a> (not unlike <code>asio</code>&rsquo;s strands),
 such that you can acquire a lock by resuming a coroutine:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">task s::f() {
-    <span style="color:#080;font-weight:bold">co_await</span> m_mutex.lock();
-    <span style="color:#888">// Do stuff
-</span><span style="color:#888"></span>    m_mutex.unlock();
-}
-</code></pre></div><h3 id="channel-your-inner-gopher">Channel your inner Gopher</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>task s::f() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">co_await</span> m_mutex.lock();
+</span></span><span style="display:flex;"><span>    <span style="color:#888">// Do stuff
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>    m_mutex.unlock();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="channel-your-inner-gopher">Channel your inner Gopher</h3>
 <p>Along Goroutines, go offers channels, which are one of the best features of Go.
 Channels are, conceptually, relatively simple.
 A channel is a multi-producers, multi-consummers queue.
@@ -502,40 +502,40 @@ Reading from the queue suspend the goroutine until data is available.
 Writing can be either buffered (The written data is saved and the writer can continue on its
 merry way) - or Unbuffered (The writer is suspended until a reader is ready to take the data).
 Well&hellip;</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">using</span> <span style="color:#080;font-weight:bold">namespace</span> cor3ntin::corio;
-<span style="color:#080;font-weight:bold">template</span> &lt;execution::scheduler scheduler&gt;
-oneway_task go_write(scheduler sch, <span style="color:#080;font-weight:bold">auto</span> w) {
-    <span style="color:#888;font-weight:bold">int</span> i = <span style="color:#00d;font-weight:bold">10</span>;
-    <span style="color:#080;font-weight:bold">while</span>(i) {
-        <span style="color:#080;font-weight:bold">co_await</span> sch.schedule(std::chrono::milliseconds(<span style="color:#00d;font-weight:bold">100</span>));
-        <span style="color:#080;font-weight:bold">co_await</span> w.write(--i);
-    }
-}
-
-<span style="color:#080;font-weight:bold">template</span> &lt;execution::scheduler scheduler&gt;
-oneway_task go_read(scheduler sch, <span style="color:#080;font-weight:bold">auto</span> r, stop_source&amp; stop) {
-    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
-        <span style="color:#888;font-weight:bold">int</span> value = <span style="color:#080;font-weight:bold">co_await</span> r.read();
-        std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Got value &#34;</span> &lt;&lt; value &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
-        <span style="color:#080;font-weight:bold">if</span>(value == <span style="color:#00d;font-weight:bold">0</span>) {
-            stop.request_stop();
-            <span style="color:#080;font-weight:bold">break</span>;
-        }
-    }
-}
-
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    stop_source stop;
-    io_uring_context ctx;
-    std::<span style="color:#080;font-weight:bold">thread</span> t([&amp;ctx, &amp;stop] { ctx.run(stop.get_token()); });
-
-    <span style="color:#080;font-weight:bold">auto</span> c = make_channel&lt;<span style="color:#888;font-weight:bold">int</span>&gt;(ctx.scheduler());
-
-    go_write(ctx.scheduler(), c.write());
-    go_read(ctx.scheduler(), c.read(), stop);
-    t.join();
-}
-</code></pre></div><p>Nothing C++ can&rsquo;t do!</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">using</span> <span style="color:#080;font-weight:bold">namespace</span> cor3ntin::corio;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;execution::scheduler scheduler&gt;
+</span></span><span style="display:flex;"><span>oneway_task go_write(scheduler sch, <span style="color:#080;font-weight:bold">auto</span> w) {
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">int</span> i = <span style="color:#00d;font-weight:bold">10</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">while</span>(i) {
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">co_await</span> sch.schedule(std::chrono::milliseconds(<span style="color:#00d;font-weight:bold">100</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">co_await</span> w.write(--i);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;execution::scheduler scheduler&gt;
+</span></span><span style="display:flex;"><span>oneway_task go_read(scheduler sch, <span style="color:#080;font-weight:bold">auto</span> r, stop_source&amp; stop) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">while</span>(<span style="color:#038">true</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#888;font-weight:bold">int</span> value = <span style="color:#080;font-weight:bold">co_await</span> r.read();
+</span></span><span style="display:flex;"><span>        std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Got value &#34;</span> &lt;&lt; value &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">if</span>(value == <span style="color:#00d;font-weight:bold">0</span>) {
+</span></span><span style="display:flex;"><span>            stop.request_stop();
+</span></span><span style="display:flex;"><span>            <span style="color:#080;font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    stop_source stop;
+</span></span><span style="display:flex;"><span>    io_uring_context ctx;
+</span></span><span style="display:flex;"><span>    std::<span style="color:#080;font-weight:bold">thread</span> t([&amp;ctx, &amp;stop] { ctx.run(stop.get_token()); });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> c = make_channel&lt;<span style="color:#888;font-weight:bold">int</span>&gt;(ctx.scheduler());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    go_write(ctx.scheduler(), c.write());
+</span></span><span style="display:flex;"><span>    go_read(ctx.scheduler(), c.read(), stop);
+</span></span><span style="display:flex;"><span>    t.join();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Nothing C++ can&rsquo;t do!</p>
 <p>My implementation of channels is not quite ready yet, and this article is already long enough.
 I might come back to the implementation of channels, and the few utilities required to implement them, including <code>async_mutex</code>, the <code>on</code> algorithm and the <code>get_scheduler</code> customisation point!</p>
 <h2 id="a-great-opportunity-awaits">A great opportunity awaits</h2>
@@ -578,56 +578,56 @@ For better or worse, faced with a choice between performance and ergonomy, the c
 <p><a href="https://wg21.link/p2052">P2052</a> -  Making modern C++ i/o a consistent API experience from bottom to top - Niall Douglas</p>
 <p><a href="https://wg21.link/p0443">P0443</a> -  A Unified Executors Proposal for C++ - Jared Hoberock, Michael Garland, Chris Kohlhoff, Chris Mysen, Carter Edwards, Gordon Brown, David Hollman, Lee Howes, Kirk Shoop, Eric Niebler</p>
 <p><a href="https://wg21.link/p2024">P2024</a> - Bloomberg Analysis of Unified Executors - David Sankel, Frank Birbacher, Marina Efimova, Dietmar Kuhl, Vern Riedlin</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>A group that is in fact not chaired by Jack O&rsquo;Neill. I never went there by fear of speaking out of order. Legend says they eat at round tables and fight for the forks. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>A group that is in fact not chaired by Jack O&rsquo;Neill. I never went there by fear of speaking out of order. Legend says they eat at round tables and fight for the forks.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>A hill I&rsquo;d rather not die on! <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>A hill I&rsquo;d rather not die on!&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>If <code>main</code> doesn&rsquo;t return too soon which we can&rsquo;t prevent with <code>execution::execute</code> because <a href="https://wg21.link/p1525r0">One-Way execute is a Poor Basis Operation</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>If <code>main</code> doesn&rsquo;t return too soon which we can&rsquo;t prevent with <code>execution::execute</code> because <a href="https://wg21.link/p1525r0">One-Way execute is a Poor Basis Operation</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:4" role="doc-endnote">
-<p>Something you would learn in <a href="https://www.amazon.com/Software-Engineering-Google-Lessons-Programming/dp/1492082791/">Software Engineering at Google: Lessons Learned from Programming Over Time</a>, along with many great insights about software engineering. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:4">
+<p>Something you would learn in <a href="https://www.amazon.com/Software-Engineering-Google-Lessons-Programming/dp/1492082791/">Software Engineering at Google: Lessons Learned from Programming Over Time</a>, along with many great insights about software engineering.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:5" role="doc-endnote">
-<p>Linux 5.6 will come with many improvements such as a redesigned worker threads. <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:5">
+<p>Linux 5.6 will come with many improvements such as a redesigned worker threads.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:6" role="doc-endnote">
-<p>A first draft of this sentence read <em><strong>&ldquo;The submission queue can only be accessed by a single thread concurrently&rdquo;</strong></em>. But <code>concurrent</code> is a too subtle word to be ever used properly by the mere mortal that I am. <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:6">
+<p>A first draft of this sentence read <em><strong>&ldquo;The submission queue can only be accessed by a single thread concurrently&rdquo;</strong></em>. But <code>concurrent</code> is a too subtle word to be ever used properly by the mere mortal that I am.&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:7" role="doc-endnote">
-<p>A name I did made up. <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:7">
+<p>A name I did made up.&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:8" role="doc-endnote">
-<p>I made up that too. libunifex uses <code>schedule_after(duration)</code> and <code>schedule_at(time_point)</code> <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:8">
+<p>I made up that too. libunifex uses <code>schedule_after(duration)</code> and <code>schedule_at(time_point)</code>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:9" role="doc-endnote">
-<p>It&rsquo;s not and never will be. [<a href="https://wg21.link/p0709">P0709</a>] [<a href="https://wg21.link/p1947">P1947</a>] [<a href="https://wg21.link/P1886">P1886</a>] [<a href="https://wg21.link/P1886">P1886</a>] [<a href="https://wg21.link/p0824">P0824</a>] [<a href="https://wg21.link/p1028">P1028</a>] [<a href="https://wg21.link/p0323">P0323</a>] <a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:9">
+<p>It&rsquo;s not and never will be. [<a href="https://wg21.link/p0709">P0709</a>] [<a href="https://wg21.link/p1947">P1947</a>] [<a href="https://wg21.link/P1886">P1886</a>] [<a href="https://wg21.link/P1886">P1886</a>] [<a href="https://wg21.link/p0824">P0824</a>] [<a href="https://wg21.link/p1028">P1028</a>] [<a href="https://wg21.link/p0323">P0323</a>]&#160;<a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:10" role="doc-endnote">
-<p><a href="https://wg21.link/p1677r2">P1677 - Cancellation is not an error</a> is a paper worth reading if only because it contains 54 instances of the word <strong>serendipitous</strong>. <a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:10">
+<p><a href="https://wg21.link/p1677r2">P1677 - Cancellation is not an error</a> is a paper worth reading if only because it contains 54 instances of the word <strong>serendipitous</strong>.&#160;<a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:11" role="doc-endnote">
-<p><a href="https://en.cppreference.com/w/cpp/thread/jthread"><code>std::jthread</code></a> is now the recommended way to start a thread in C++ - I think it would be fair to consider <code>std::thread</code> deprecated, and maybe reflect on how we got into this infortunate situation. <a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:11">
+<p><a href="https://en.cppreference.com/w/cpp/thread/jthread"><code>std::jthread</code></a> is now the recommended way to start a thread in C++ - I think it would be fair to consider <code>std::thread</code> deprecated, and maybe reflect on how we got into this infortunate situation.&#160;<a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:12" role="doc-endnote">
-<p><a href="https://lewissbaker.github.io"><em>Someone</em></a> should write a blog post about that&hellip; <a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:12">
+<p><a href="https://lewissbaker.github.io"><em>Someone</em></a> should write a blog post about that&hellip;&#160;<a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:13" role="doc-endnote">
-<p>In fact, continuations in C++20 can never be <code>noexcept</code>, which is rather unfortunate. <a href="#fnref:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:13">
+<p>In fact, continuations in C++20 can never be <code>noexcept</code>, which is rather unfortunate.&#160;<a href="#fnref:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:14" role="doc-endnote">
-<p>Coroutines are sometimes called Gorroutines (with 2 Rs) after the name of the man who worked on them for the best part of a decade: Gor Nishanov. Thanks Gor! <a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:14">
+<p>Coroutines are sometimes called Gorroutines (with 2 Rs) after the name of the man who worked on them for the best part of a decade: Gor Nishanov. Thanks Gor!&#160;<a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:15" role="doc-endnote">
-<p>Try not to think about standard associative containers when reading that. Too late! <a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:15">
+<p>Try not to think about standard associative containers when reading that. Too late!&#160;<a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
       
     <div id="socialshareDiv">

@@ -65,11 +65,11 @@
       <p><code>std::move</code> doesn&rsquo;t move.</p>
 <p>It casts to an rvalue-reference, which is a type of reference that can
 be passed to a move constructor or assignment operator, if one exists.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#080;font-weight:bold">auto</span>) move(T&amp;&amp; a) {
-    <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">static_cast</span>&lt;std::remove_reference_t&lt;T&gt;&amp;&amp;&gt;(a);
-}
-</code></pre></div><p>Some expressions will be converted to rvalue-references automatically,
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#080;font-weight:bold">auto</span>) move(T&amp;&amp; a) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">static_cast</span>&lt;std::remove_reference_t&lt;T&gt;&amp;&amp;&gt;(a);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Some expressions will be converted to rvalue-references automatically,
 when the compiler is certain that the value is expiring (will not be reused).</p>
 <p>This is the case for temporaries or non-reference objects returned from functions.</p>
 <p>In many cases, you still need to use <code>std::move</code> explicitly: C++ compilers will for example never check whether an object might be reused later in the function.</p>

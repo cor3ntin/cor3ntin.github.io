@@ -62,8 +62,8 @@
     <h1 class="title">Parentheses</h1>
     
     <div class="content">
-      <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">foo();
-</code></pre></div><p>This is <code>foo</code>. But what is <code>foo</code>?
+      <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>foo();
+</span></span></code></pre></div><p>This is <code>foo</code>. But what is <code>foo</code>?
 An astute reader may assume <code>foo</code> is a function.</p>
 <p>What kind of function?
 It is obviously not a virtual function. But it might be a function pointer. It might be a function object.
@@ -74,9 +74,9 @@ All these things amount to plain, old and boring functions.
 You can call them. It creates a stack frame with its own scope and local variables, some computation happen, registers are shuffled around and
 ultimately you may get a value representing the result of that runtime computation, aptly named return value.
 This functions can also be parametrized with runtime values.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#888;font-weight:bold">int</span>);
-foo(<span style="color:#00d;font-weight:bold">42</span>);
-</code></pre></div><p>Parameters can be references, pointers, values. All of this is just boring register shuffling.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#888;font-weight:bold">int</span>);
+</span></span><span style="display:flex;"><span>foo(<span style="color:#00d;font-weight:bold">42</span>);
+</span></span></code></pre></div><p>Parameters can be references, pointers, values. All of this is just boring register shuffling.</p>
 <p>BUT</p>
 <p>It might very well be that <code>foo()</code> is a macro that <strong>expands</strong> to something. <em>Anything</em>.
 Maybe a hexadecimal encoding of a picture of a famous Swedish sunken ship. Or a string containing the whole content of Wikipedia.
@@ -104,34 +104,34 @@ A motivational example for <code>consteval</code> is reflection, where the infor
 <p>It&rsquo;s getting complicating. But we are not done yet!</p>
 <p>There are also template functions.
 Which would not be that interesting and unusual if not for non-type  template parameter</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">auto</span> a&gt;
-<span style="color:#888;font-weight:bold">void</span> foo(<span style="color:#888;font-weight:bold">int</span> b);
-</code></pre></div><p>such that <code>foo&lt;1&gt;(0);</code>  and <code>foo&lt;2&gt;(0);</code> call two different version of <code>foo</code>. <code>a</code> is always evaluated at compile time while <code>b</code> is evaluated at runtime.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">auto</span> a&gt;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> foo(<span style="color:#888;font-weight:bold">int</span> b);
+</span></span></code></pre></div><p>such that <code>foo&lt;1&gt;(0);</code>  and <code>foo&lt;2&gt;(0);</code> call two different version of <code>foo</code>. <code>a</code> is always evaluated at compile time while <code>b</code> is evaluated at runtime.
 of course, you can miss and match features.
 For example</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">auto</span> a&gt;
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">void</span> foo(<span style="color:#888;font-weight:bold">int</span> b);
-</code></pre></div><p>One non-existing feature often discussed is <code>constexpr</code> parameters.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">auto</span> a&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">void</span> foo(<span style="color:#888;font-weight:bold">int</span> b);
+</span></span></code></pre></div><p>One non-existing feature often discussed is <code>constexpr</code> parameters.
 You would write</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> a);
-</code></pre></div><p>such that <code>a</code> is evaluated at compile time. Note that, for historical reasons, <code>constexpr</code> variables are always <em>constant-evaluated</em> and should probably be called <code>consteval</code> instead.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> a);
+</span></span></code></pre></div><p>such that <code>a</code> is evaluated at compile time. Note that, for historical reasons, <code>constexpr</code> variables are always <em>constant-evaluated</em> and should probably be called <code>consteval</code> instead.</p>
 <p>To be less confusing, less rewrite our function to:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">consteval</span> <span style="color:#888;font-weight:bold">int</span> a);
-</code></pre></div><p>Which beg the question: what is the difference between these two declarations?</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">consteval</span> <span style="color:#888;font-weight:bold">int</span> a);
-
-<span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">auto</span> a&gt;
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">void</span> foo();
-</code></pre></div><p>Since <code>consteval</code> parameters are only an idea, we can only speculate.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">consteval</span> <span style="color:#888;font-weight:bold">int</span> a);
+</span></span></code></pre></div><p>Which beg the question: what is the difference between these two declarations?</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">consteval</span> <span style="color:#888;font-weight:bold">int</span> a);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">auto</span> a&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">void</span> foo();
+</span></span></code></pre></div><p>Since <code>consteval</code> parameters are only an idea, we can only speculate.
 But I guess there is a couple of ways to implement them.</p>
 <p>The first would be to evaluate the parameter at the call site at compile type,
 store it in read-only memory and push the address of the object resulting from
 that compile-time evaluation onto the stack.</p>
 <p>Aka, it would be equivalent to.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> &amp; a);
-<span style="color:#080;font-weight:bold">consteval</span> <span style="color:#888;font-weight:bold">int</span> a = compiletime_computation();
-foo(a);
-</code></pre></div><p>The second option would be to make functions with <code>constexpr</code> parameters
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> &amp; a);
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">consteval</span> <span style="color:#888;font-weight:bold">int</span> a = compiletime_computation();
+</span></span><span style="display:flex;"><span>foo(a);
+</span></span></code></pre></div><p>The second option would be to make functions with <code>constexpr</code> parameters
 function templates where each constexpr parameter becomes a non-type template parameter.
 The second option might, in theory, be more efficient but would create quite a lot of template
 bloat.</p>
@@ -139,9 +139,9 @@ bloat.</p>
 <p>We have functions, functions evaluated at compile time, functions never evaluated at runtime, functions guaranteed to be evaluatable at compile time, functions whose definition is injected into the call site, function templates and functions whose parameters are evaluated at compile time.
 And it-was-the sixties unscoped, unchecked wild parametrized token replacement. aka macros.</p>
 <p>I am afraid that the list is not complete. Consider the following:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#888;font-weight:bold">int</span>);
-<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#888;font-weight:bold">double</span>);
-</code></pre></div><p>Now, <code>foo</code> is no longer a function, but an overload set. An overload set then
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#888;font-weight:bold">int</span>);
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#888;font-weight:bold">double</span>);
+</span></span></code></pre></div><p>Now, <code>foo</code> is no longer a function, but an overload set. An overload set then
 is a set of 1 or more function. In other words, <code>foo</code> is both a bunch of functions
 and a name.
 Overload sets are currently poorly handled by C++.

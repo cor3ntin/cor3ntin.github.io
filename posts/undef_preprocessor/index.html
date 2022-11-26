@@ -73,51 +73,51 @@
 <p>However.</p>
 <p>Let me offer you a scenario, you might find it contrived but please bear with me. So, Imagine that you are refactoring some cross platform application and you decide to do something unusual like, say, renaming a function.</p>
 <p>That’s not possible. Never have been, probably never will be.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#ifdef WINDOWS
-</span><span style="color:#c00;font-weight:bold"></span>  foo(<span style="color:#00d;font-weight:bold">43</span>);
-<span style="color:#c00;font-weight:bold">#else
-</span><span style="color:#c00;font-weight:bold"></span>  foo(<span style="color:#00d;font-weight:bold">42</span>);
-<span style="color:#c00;font-weight:bold">#endif
-</span></code></pre></div><p>Fundamentally, neither the compiler nor your tools ( a tool being by necessity a full fledged compiler front end ) have a full view of your code. The disabled parts are not compiled, parsed, lexed or otherwise analyzed.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#ifdef WINDOWS
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>  foo(<span style="color:#00d;font-weight:bold">43</span>);
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>  foo(<span style="color:#00d;font-weight:bold">42</span>);
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#endif
+</span></span></span></code></pre></div><p>Fundamentally, neither the compiler nor your tools ( a tool being by necessity a full fledged compiler front end ) have a full view of your code. The disabled parts are not compiled, parsed, lexed or otherwise analyzed.</p>
 <p>First, the disabled paths have no obligation to be valid C++. This is valid:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
-</span><span style="color:#888">#!/bin/bash
-</span><span style="color:#888">    g++ &#34;$0&#34; &amp;&amp; ./a.out &amp;&amp; rm ./a.out
-</span><span style="color:#888">    exit $?;
-</span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Hello ?</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
-}
-<span style="color:#c00;font-weight:bold">#endif
-</span></code></pre></div><p>So if the compiler were to take into account the disabled paths of the preprocessor it may not be able to for a valid AST. Worse, preprocessing, as the name suggests, happen as a separate state and a preprocessing directive may be inserted between any two C++ token including in the middle of any expression or statement.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
-</span><span style="color:#888">  void
-</span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
-</span><span style="color:#c00;font-weight:bold"></span>  <span style="color:#888;font-weight:bold">bool</span>
-<span style="color:#c00;font-weight:bold">#endif
-</span><span style="color:#c00;font-weight:bold"></span>
-<span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
-</span><span style="color:#888">  &amp;
-</span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#endif
-</span><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
-</span><span style="color:#888">  bar(int
-</span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
-</span><span style="color:#c00;font-weight:bold"></span>  baz(<span style="color:#888;font-weight:bold">long</span>,
-<span style="color:#c00;font-weight:bold">#endif
-</span><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
-</span><span style="color:#888">  , std::vector&lt;
-</span><span style="color:#888">#   if 0
-</span><span style="color:#888">      double
-</span><span style="color:#888">#   else
-</span><span style="color:#888">      int
-</span><span style="color:#888">#   endif
-</span><span style="color:#888">    &gt;)
-</span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
-</span><span style="color:#c00;font-weight:bold"></span>  <span style="color:#888;font-weight:bold">double</span>)
-<span style="color:#c00;font-weight:bold">#endif
-</span><span style="color:#c00;font-weight:bold"></span>;
-</code></pre></div><p>The other equally concerning issue is that the compiler can not possibly know what combination of #ifdefand #defines statements are supposed to form a valid program.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
+</span></span></span><span style="display:flex;"><span><span style="color:#888">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#888">    g++ &#34;$0&#34; &amp;&amp; ./a.out &amp;&amp; rm ./a.out
+</span></span></span><span style="display:flex;"><span><span style="color:#888">    exit $?;
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    std::cout &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#34;Hello ?</span><span style="color:#04d;background-color:#fff0f0">\n</span><span style="color:#d20;background-color:#fff0f0">&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#endif
+</span></span></span></code></pre></div><p>So if the compiler were to take into account the disabled paths of the preprocessor it may not be able to for a valid AST. Worse, preprocessing, as the name suggests, happen as a separate state and a preprocessing directive may be inserted between any two C++ token including in the middle of any expression or statement.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
+</span></span></span><span style="display:flex;"><span><span style="color:#888">  void
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>  <span style="color:#888;font-weight:bold">bool</span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
+</span></span></span><span style="display:flex;"><span><span style="color:#888">  &amp;
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
+</span></span></span><span style="display:flex;"><span><span style="color:#888">  bar(int
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>  baz(<span style="color:#888;font-weight:bold">long</span>,
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
+</span></span></span><span style="display:flex;"><span><span style="color:#888">  , std::vector&lt;
+</span></span></span><span style="display:flex;"><span><span style="color:#888">#   if 0
+</span></span></span><span style="display:flex;"><span><span style="color:#888">      double
+</span></span></span><span style="display:flex;"><span><span style="color:#888">#   else
+</span></span></span><span style="display:flex;"><span><span style="color:#888">      int
+</span></span></span><span style="display:flex;"><span><span style="color:#888">#   endif
+</span></span></span><span style="display:flex;"><span><span style="color:#888">    &gt;)
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>  <span style="color:#888;font-weight:bold">double</span>)
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>;
+</span></span></code></pre></div><p>The other equally concerning issue is that the compiler can not possibly know what combination of #ifdefand #defines statements are supposed to form a valid program.</p>
 <p>As an example, Qt offers a set of defines that can be set to enable or disable certain features of Qt at compile time. Say you don’t need a calendar widget, you can define #QT_NO_CALENDAR_WIDGET and that makes for a smaller binary. It doesn’t work. I suspect it <em>never</em> worked. See, At some point Qt had about 100 such compile time configuration options. Given that the number of build configurations possible explodes exponentially with the number of variables. when you may have 2¹⁰⁰ variation of your program, automation proves difficult , even at big-web-deep-cloud-hexa scale.</p>
 <blockquote>
 <p>Untested code is broken code.</p>
@@ -130,7 +130,7 @@
 <h3 id="1-strongly-prefer-constants-over-define">1. Strongly Prefer constants over #define</h3>
 <p>This one is simple enough, yet I still see a lot of constants defined using macros. Always use static const or constexpr rather than a define. If your build process involves setting a set of variable such as a version number or a git hash, consider generating a source file rather than using defines as build parameters.</p>
 <h3 id="2-a-function-is-always-better-than-a-macro">2. A function is always better than a macro</h3>
-<pre><code>#ifndef max
+<pre tabindex="0"><code>#ifndef max
 #define max(a,b) ((a)&gt;(b)?(a):(b))
 #endif
 #ifndef min
@@ -163,20 +163,20 @@
 <p>Macros are not scoped, use long uppercase names prefixed with the name of your project.</p>
 <p>If you are using a third party framework such as Qt that have both short and long macro names ( signal and QT_SIGNAL ), make sure to disable the former, especially if they may leak as part of your API. Don’t offer such short names yourself. A macro name should stand from the rest of the code and not conflict with boost::signal or std::min</p>
 <h3 id="8-avoid-putting-an-ifdef-block-in-the-middle-of-a-c-statement">8. Avoid putting an ifdef block in the middle of a C++ statement.</h3>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">foo( <span style="color:#00d;font-weight:bold">42</span>,
-<span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
-</span><span style="color:#888">    &#34;42&#34;,
-</span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#endif
-</span><span style="color:#c00;font-weight:bold"></span>    <span style="color:#00d;font-weight:bold">42.0</span>
-);
-</code></pre></div><p>The above code has a a few issues. It’s hard to read, hard to maintain and will cause issues to tools such as clang-format. And, it also happen to be broken.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>foo( <span style="color:#00d;font-weight:bold">42</span>,
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
+</span></span></span><span style="display:flex;"><span><span style="color:#888">    &#34;42&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>    <span style="color:#00d;font-weight:bold">42.0</span>
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>The above code has a a few issues. It’s hard to read, hard to maintain and will cause issues to tools such as clang-format. And, it also happen to be broken.</p>
 <p>Instead, write two distinct statements:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
-</span><span style="color:#888">    foo(42, &#34;42&#34;, 42.0);
-</span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
-</span><span style="color:#c00;font-weight:bold"></span>    foo(<span style="color:#00d;font-weight:bold">42</span>, <span style="color:#00d;font-weight:bold">42.0</span>);
-<span style="color:#c00;font-weight:bold">#endif
-</span></code></pre></div><p>You may find some cases where that’s hard to do, but that’s probably a sign that you need to split your code into more functions or better abstract the thing you are conditionally compiling.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#if 0</span><span style="color:#888">
+</span></span></span><span style="display:flex;"><span><span style="color:#888">    foo(42, &#34;42&#34;, 42.0);
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>    foo(<span style="color:#00d;font-weight:bold">42</span>, <span style="color:#00d;font-weight:bold">42.0</span>);
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#endif
+</span></span></span></code></pre></div><p>You may find some cases where that’s hard to do, but that’s probably a sign that you need to split your code into more functions or better abstract the thing you are conditionally compiling.</p>
 <h3 id="9-prefer-static_assert-over-error">9. Prefer static_assert over #error</h3>
 <p>Simply use static_assert(false)to fail a build.</p>
 <h2 id="the-preprocessor-of-the-future-past">The preprocessor of the future past</h2>
@@ -195,53 +195,53 @@
 <h3 id="1-replace--d-with-compiler-defined-variables">1. Replace -D with compiler-defined variables</h3>
 <p>One of the most frequent use case for defineis to query the build environment. Debug/Release, target architecture, operating system, optimizations…</p>
 <p>We can imagine having a set of constants exposed through a std::compiler to expose some of these build environment variables.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">if</span> <span style="color:#06b;font-weight:bold">constexpr</span>(std::compiler.is_debug_build()) {  }
-</code></pre></div><p>In the same vein, we can imagine having some kind of extern compiler constexpr variables declared in the source code but defined or overwritten by the compiler. That would only have a real benefit over constexpr x = SOME_DEFINE; if there is a way to constrain the values that these variables can hold.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">if</span> <span style="color:#06b;font-weight:bold">constexpr</span>(std::compiler.is_debug_build()) {  }
+</span></span></code></pre></div><p>In the same vein, we can imagine having some kind of extern compiler constexpr variables declared in the source code but defined or overwritten by the compiler. That would only have a real benefit over constexpr x = SOME_DEFINE; if there is a way to constrain the values that these variables can hold.</p>
 <p>Maybe something like that</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">enum</span> <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">OS</span> {
-    Linux,
-    Windows,
-    MacOsX
-};
-
-<span style="color:#369">[[compilation_variable(OS::Linux, OS::Windows, OS::MacOsX)]]</span>  <span style="color:#080;font-weight:bold">extern</span> <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> os;
-</code></pre></div><p>My hope is that giving more information to the compiler about what the various configuration variables are and maybe even what combination of variables are valid would lead to a better modeling (and therefore tooling and static analysis ) of the source code.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">enum</span> <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">OS</span> {
+</span></span><span style="display:flex;"><span>    Linux,
+</span></span><span style="display:flex;"><span>    Windows,
+</span></span><span style="display:flex;"><span>    MacOsX
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#369">[[compilation_variable(OS::Linux, OS::Windows, OS::MacOsX)]]</span>  <span style="color:#080;font-weight:bold">extern</span> <span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">int</span> os;
+</span></span></code></pre></div><p>My hope is that giving more information to the compiler about what the various configuration variables are and maybe even what combination of variables are valid would lead to a better modeling (and therefore tooling and static analysis ) of the source code.</p>
 <h3 id="2-more-attributes">2. More attributes</h3>
 <p>C++ attributes are great and we should have more or them. [[visibility]] would be a great place to start. it could take a constexpr variable as argument to switch from import to export.</p>
 <h3 id="3-taking-a-page-from-rusts-book">3. Taking a page from Rust’s book</h3>
 <p>The Rust community never misses an occasion to promote fiercely the merits of the Rust language. And indeed, Rust does a lot of things really well. And compile time configuration is one of them.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#888">// The function is only included in the build when compiling for macOS
-</span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#[cfg(target_os = </span><span style="color:#d20;background-color:#fff0f0">&#34;macos&#34;</span><span style="color:#c00;font-weight:bold">)]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">macos_only</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#888">// ...
-</span><span style="color:#888"></span>}<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#888">// This function is only included when either foo or bar is defined
-</span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#[cfg(any(foo, bar))]</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">needs_foo_or_bar</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">  </span><span style="color:#888">// ...
-</span><span style="color:#888"></span>}<span style="color:#bbb">
-</span></code></pre></div><p>Using an attribute system to conditionally include a symbol in the compilation unit is a very interesting idea indeed.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#888">// The function is only included in the build when compiling for macOS
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#[cfg(target_os = </span><span style="color:#d20;background-color:#fff0f0">&#34;macos&#34;</span><span style="color:#c00;font-weight:bold">)]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">macos_only</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#888">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#888">// This function is only included when either foo or bar is defined
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#c00;font-weight:bold">#[cfg(any(foo, bar))]</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">needs_foo_or_bar</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#888">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>Using an attribute system to conditionally include a symbol in the compilation unit is a very interesting idea indeed.</p>
 <p>First, it’s really readable and self documenting. Second, even if a symbol is not to be included in the build, we can still attempt to parse it, and more importantly, the sole declaration gives the compiler sufficient information about the entity to enable powerful tooling, static analysis and refactoring.</p>
 <p>Consider the following code:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#369">[[static_if(std::compiler.arch() == &#34;arm&#34;)]]</span>
-<span style="color:#888;font-weight:bold">void</span> f() {}
-
-
-<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>() {
-    <span style="color:#080;font-weight:bold">if</span> <span style="color:#080;font-weight:bold">constexpr</span>(std::compiler.arch() == <span style="color:#d20;background-color:#fff0f0">&#34;arm&#34;</span>) {
-        f();
-    }
-}
-</code></pre></div><p>It has an amazing property : It’s well formed. Because the compiler knows that f is a valid entity and that it is a function name, it can unambiguously parse the body of the discarded if constexpr statement.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#369">[[static_if(std::compiler.arch() == &#34;arm&#34;)]]</span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> f() {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">if</span> <span style="color:#080;font-weight:bold">constexpr</span>(std::compiler.arch() == <span style="color:#d20;background-color:#fff0f0">&#34;arm&#34;</span>) {
+</span></span><span style="display:flex;"><span>        f();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>It has an amazing property : It’s well formed. Because the compiler knows that f is a valid entity and that it is a function name, it can unambiguously parse the body of the discarded if constexpr statement.</p>
 <p>You can applies the same syntax to any kind of C++ declaration and the compiler would be able to make sense of it.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#369">[[static_if(std::compiler.arch() == &#34;arm&#34;)]]</span>
-<span style="color:#888;font-weight:bold">int</span> x = <span style="color:#888">/*...*/</span>
-</code></pre></div><p>Here the compiler could only parse the left hand side since the rest is not needed for static analysis or tooling.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#369">[[static_if(std::compiler.is_debugbuild())]]</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">X</span> {
-};
-</code></pre></div><p>For static analysis purposes we only need to index the class name and its public members.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#369">[[static_if(std::compiler.arch() == &#34;arm&#34;)]]</span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> x = <span style="color:#888">/*...*/</span>
+</span></span></code></pre></div><p>Here the compiler could only parse the left hand side since the rest is not needed for static analysis or tooling.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#369">[[static_if(std::compiler.is_debugbuild())]]</span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">X</span> {
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>For static analysis purposes we only need to index the class name and its public members.</p>
 <p>Of course, referencing a discarded declaration from an active code path would be ill formed, but the compiler could check that it <em>never</em> happens for any valid configuration. Sure, it wouldn’t be computationally free but you would have a strong guarantee that <em>all</em> of your code is well formed. Breaking the windows build because you wrote your code on a Linux machine would become much harder.</p>
 <p>It’s however not easy as it sounds. What if the body of discarded entities contains syntax the current compiler doesn’t know about ? Maybe a vendor extension or some newer C++ feature ? I think it’s reasonable that parsing happens on a best-effort basis and when a parsing failure happens the compiler can skip the current statement and warns about the parts of the source it doesn’t understand. “I haven’t been able to rename Foo between lines 110 and 130” is miles better that “I have rename some instances of Foo. Maybe not all, good luck skimming through the whole project by hand, really don’t bother with a compiler, just use grep”.</p>
 <h3 id="4-constexpr-all-the-things">4. constexpr all the things.</h3>
@@ -258,22 +258,22 @@
 <a href="https://github.com/cor3ntin/CppInjectionReflection">Research on code injection &amp; reflection in c++</a></p>
 <p>My idea is to use the facilities offered by code injection to create a new kind of “macros” which I call “syntactic macros” for lack of a better name. Fundamentally, if you give a name to a code fragment ( a piece of code that you can inject at a given point of your program), and allow it to take a number of parameters, you’ve got yourself a macro. But a macro which is checked at the syntax level (rather than the token source the preprocessor offers).</p>
 <p>How would it work ?</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> {
-    <span style="color:#888;font-weight:bold">bool</span> debug = <span style="color:#888">/*...*/</span>;
-    log-&gt;(std::meta::expression&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">char</span>*&gt; c,  std::meta::expression&lt;&gt;... args) {
-            <span style="color:#080;font-weight:bold">if</span>(debug) {
-                -&gt; {
-                   printf(-&gt;c, -&gt;(args)...);
-               };
-         }
-    }
-}
-
-<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>() {
-     <span style="color:#888">//expand to printf(&#34;Hello World&#34;)  only and only if debug is true
-</span><span style="color:#888"></span>    log-&gt;(<span style="color:#d20;background-color:#fff0f0">&#34;Hello %&#34;</span>, <span style="color:#d20;background-color:#fff0f0">&#34;World&#34;</span>);
-}
-</code></pre></div><p>Ok, What’s happening here.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">bool</span> debug = <span style="color:#888">/*...*/</span>;
+</span></span><span style="display:flex;"><span>    log-&gt;(std::meta::expression&lt;<span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">char</span>*&gt; c,  std::meta::expression&lt;&gt;... args) {
+</span></span><span style="display:flex;"><span>            <span style="color:#080;font-weight:bold">if</span>(debug) {
+</span></span><span style="display:flex;"><span>                -&gt; {
+</span></span><span style="display:flex;"><span>                   printf(-&gt;c, -&gt;(args)...);
+</span></span><span style="display:flex;"><span>               };
+</span></span><span style="display:flex;"><span>         }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>() {
+</span></span><span style="display:flex;"><span>     <span style="color:#888">//expand to printf(&#34;Hello World&#34;)  only and only if debug is true
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>    log-&gt;(<span style="color:#d20;background-color:#fff0f0">&#34;Hello %&#34;</span>, <span style="color:#d20;background-color:#fff0f0">&#34;World&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Ok, What’s happening here.</p>
 <p>We first create a constexpr block with <code>constexpr { }</code>. This is part of The meta class proposal. A constexpr block is a compound statement in which all the variables are constexpr and free of side effects. The only purpose of that block is to create injection fragments and modify the properties of the entity in which the block is declared, at compile time. ( <strong>Metaclasses</strong> are syntactic sugar on top of <strong>constexpr</strong> blocks and I’d argue that we don’t actually need metaclasses.)</p>
 <p>Within the constexpr block we define a macro log. Notice that macro are not functions. They expand to code, they don’t return anything nor do they exist on the stack. log is an identifier that can be qualified and can not be the name of any other entity in the same scope. Syntactic macros obey the same lookup rules as all other identifier.</p>
 <p>They use the <code>-&gt;</code> injection operator. <code>-&gt;</code> can be used to describe all code injection related operations without conflicting with its current uses. In this case since <code>log</code> is a syntactic macro which is a form of code injection, we define the macro with <code>log-&gt;(){....}</code>.</p>

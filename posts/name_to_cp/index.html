@@ -72,8 +72,8 @@ by name in string literals, a feature offered by <a href="https://repl.it/repls/
 and <del>Perl 6</del> Raku.
 It&rsquo;s also a <a href="https://wg21.link/p1097r2">proposed feature for C++</a> and this post is
 an implementation experience report. And this is the function we want to implement:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">char32_t</span> <span style="color:#06b;font-weight:bold">cp_from_name</span>(std::string_view) <span style="color:#080;font-weight:bold">noexcept</span>;
-</code></pre></div><p>It seems simple enough. Alas, there are many Unicode codepoints - Currently 137,928 in Unicode 12,
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">char32_t</span> <span style="color:#06b;font-weight:bold">cp_from_name</span>(std::string_view) <span style="color:#080;font-weight:bold">noexcept</span>;
+</span></span></code></pre></div><p>It seems simple enough. Alas, there are many Unicode codepoints - Currently 137,928 in Unicode 12,
 The challenge will be to minimize the size footprint of that function.</p>
 <h1 id="analyzing-the-data">Analyzing the data</h1>
 <p>The <a href="https://www.unicode.org/ucd/">Unicode Character Database</a> is delivered as a set of hard to parse text files,
