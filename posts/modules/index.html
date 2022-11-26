@@ -93,24 +93,24 @@ Imagine you have 100s/1000s of modules. Maybe more.
 You don&rsquo;t have to be a big company to have that many modules. Maybe you wanted to add a small feature to LLVM or chrome.
 Or maybe you use <code>vcpkg</code> to handle a large number of dependencies. Why reinvent the wheel when all this beautiful code exist?</p>
 <p>You create a bunch of files for a new project</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">//foo.cppm
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module cor3ntin.foo;
-<span style="color:#080;font-weight:bold">export</span> import cor3ntin.foo.bar;
-import google.chrome.net.http;
-
-<span style="color:#080;font-weight:bold">export</span> <span style="color:#080;font-weight:bold">namespace</span> cor3ntin {
-    <span style="color:#080;font-weight:bold">inline</span> <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">this_is_not_important</span>() {}
-}
-
-<span style="color:#888">//bar.cppm
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module cor3ntin.foo.bar;
-
-<span style="color:#888">//main.cpp
-</span><span style="color:#888"></span>import cor3ntin.foo;
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    cor3ntin::this_is_not_important();
-}
-</code></pre></div><p>This actually look rather elegant and modern, even if these things are somewhat subjective.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888">//foo.cppm
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module cor3ntin.foo;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">export</span> import cor3ntin.foo.bar;
+</span></span><span style="display:flex;"><span>import google.chrome.net.http;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">export</span> <span style="color:#080;font-weight:bold">namespace</span> cor3ntin {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">inline</span> <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">this_is_not_important</span>() {}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">//bar.cppm
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">export</span> module cor3ntin.foo.bar;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">//main.cpp
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>import cor3ntin.foo;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    cor3ntin::this_is_not_important();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This actually look rather elegant and modern, even if these things are somewhat subjective.
 It is important to note a couple of things</p>
 <ul>
 <li>My modules are called <code>cor3ntin.foo</code>: The <code>.</code> has no intrinsic meaning: modules are <strong>not</strong> hierarchical, but for the sake of one day have a nice ecosystem it is important to behave like if they were.
@@ -119,28 +119,28 @@ By having an organization name as part of your modules name you ensure uniquenes
 namespaces and modules, but it surprises a lot of people (I was surprised too at first) because it is contrary to what is done is a lot of other languages</li>
 </ul>
 <p>You also have a CMakeFile.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span>
-               <span style="color:#d20;background-color:#fff0f0">main.cpp</span>
-               <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>
-               <span style="color:#d20;background-color:#fff0f0">bar.cppm</span>
-)<span style="color:#a61717;background-color:#e3d2d2">
-</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">PUBLIC</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net</span>)<span style="color:#a61717;background-color:#e3d2d2">
-</span></code></pre></div><p>And you ask Cmake to run the build. Or rather to generate a script for an even more ill-equipped tool that will run the build.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#d20;background-color:#fff0f0">main.cpp</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#d20;background-color:#fff0f0">bar.cppm</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">PUBLIC</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span></code></pre></div><p>And you ask Cmake to run the build. Or rather to generate a script for an even more ill-equipped tool that will run the build.
 I imagine cmake will see that <code>main.cpp</code> depends on nothing, so that&rsquo;s the first thing it will put in the dependency graph.</p>
-<pre><code>&gt; compilator3000 main.cpp -o main.o
+<pre tabindex="0"><code>&gt; compilator3000 main.cpp -o main.o
 Error: no module named cor3ntin.foo
 </code></pre><p>Because of course, at this point the module binary interface it is looking for has not been precompiled yet. How do we fix that?</p>
 <h1 id="manually-expressing-the-dependencies-graph">Manually expressing the dependencies graph</h1>
 <p>Well, an obvious solution is to build a dependency graph for all your modules manually.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">add_cpp_module</span>(<span style="color:#d20;background-color:#fff0f0">bar-module</span> <span style="color:#d20;background-color:#fff0f0">bar.cppm</span>)<span style="color:#a61717;background-color:#e3d2d2">
-</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_cpp_module</span>(<span style="color:#d20;background-color:#fff0f0">foo-module</span> <span style="color:#d20;background-color:#fff0f0">foo.cppm</span> <span style="color:#d20;background-color:#fff0f0">DEPENDS</span> <span style="color:#d20;background-color:#fff0f0">bar-module</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net-http-module</span>)<span style="color:#a61717;background-color:#e3d2d2">
-</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span>
-               <span style="color:#d20;background-color:#fff0f0">main.cpp</span>
-               <span style="color:#d20;background-color:#fff0f0">foo-module</span>
-               <span style="color:#d20;background-color:#fff0f0">bar-module</span>
-)<span style="color:#a61717;background-color:#e3d2d2">
-</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">PUBLIC</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net</span>)<span style="color:#a61717;background-color:#e3d2d2">
-</span></code></pre></div><p>This is not currently valid <code>CMake</code> syntax, but hopefully, you can understand what it would do: explicitly create a target (graph node) for each module.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span><span style="color:#038">add_cpp_module</span>(<span style="color:#d20;background-color:#fff0f0">bar-module</span> <span style="color:#d20;background-color:#fff0f0">bar.cppm</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_cpp_module</span>(<span style="color:#d20;background-color:#fff0f0">foo-module</span> <span style="color:#d20;background-color:#fff0f0">foo.cppm</span> <span style="color:#d20;background-color:#fff0f0">DEPENDS</span> <span style="color:#d20;background-color:#fff0f0">bar-module</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net-http-module</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#d20;background-color:#fff0f0">main.cpp</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#d20;background-color:#fff0f0">foo-module</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#d20;background-color:#fff0f0">bar-module</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">PUBLIC</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span></code></pre></div><p>This is not currently valid <code>CMake</code> syntax, but hopefully, you can understand what it would do: explicitly create a target (graph node) for each module.
 And while cmake has no support for modules, this kind of manual way of expressing the dependency graph is how modules seem to have been used by companies
 who tested the module TS.</p>
 <p>With that cmake can do things in the correct order:</p>
@@ -171,13 +171,13 @@ Meaning each time we want to add or remove a module from a file we to edit the b
 The last thing I want or need is more build scripts.</p>
 <h1 id="automatic-dependency-graph-building">Automatic dependency graph building</h1>
 <p>Instead, what we really want is to go back to the simplicity of our first <code>CMakeFiles</code></p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span>
-               <span style="color:#d20;background-color:#fff0f0">main.cpp</span>
-               <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>
-               <span style="color:#d20;background-color:#fff0f0">bar.cppm</span>
-)<span style="color:#a61717;background-color:#e3d2d2">
-</span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">PUBLIC</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net</span>)<span style="color:#a61717;background-color:#e3d2d2">
-</span></code></pre></div><p>And, will make <code>cmake</code> smart. It&rsquo;s a tall order but bear with me.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span><span style="color:#038">add_executable</span>(<span style="color:#d20;background-color:#fff0f0">foo</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#d20;background-color:#fff0f0">main.cpp</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#d20;background-color:#fff0f0">bar.cppm</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#038">target_link_library</span>(<span style="color:#d20;background-color:#fff0f0">foo</span> <span style="color:#d20;background-color:#fff0f0">PUBLIC</span> <span style="color:#d20;background-color:#fff0f0">google-chrome::net</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span></code></pre></div><p>And, will make <code>cmake</code> smart. It&rsquo;s a tall order but bear with me.
 Cmake will open all the files and lex them to extract the list of dependencies of every module.</p>
 <p>Main: not a module declaration, but depends on <code>cor3ntin.foo</code>
 foo.cppm : this is a module called <code>cor3ntin.foo</code>, it depends on <code>cor3ntin.foo.bar</code> and <code>google.chrome.net.http</code>. Add it to the dependencies of <code>main.cpp</code>

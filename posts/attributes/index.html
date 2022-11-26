@@ -135,8 +135,7 @@ wouldn’t make sense either, making the point moot.</p>
 <p>I’ve tried to ask several committee members the nagging question :
 <strong>Why ? Why attributes need to have no semantic meaning ?</strong></p>
 <p>The answer I got was : <em>Because.</em></p>
-<figure>
-    <img src="https://cdn-images-1.medium.com/max/800/1*arziEb8HG5FkhINW70umHw.gif"/> <figcaption>
+<figure><img src="https://cdn-images-1.medium.com/max/800/1*arziEb8HG5FkhINW70umHw.gif"/><figcaption>
             <h4>It is so</h4>
         </figcaption>
 </figure>
@@ -197,10 +196,10 @@ subtlety that will be loss on non-expert, would almost certainly add no
 value to the language. And would of course add delay while that new
 syntax is argued about. C++ is running out of tokens.</p>
 <p>For example, which of the following do you think is the most readable ?</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#369">[[deprecated]]</span> QSignal&lt;<span style="color:#888;font-weight:bold">void</span>&gt; f();
-<span style="color:#369">[[deprecated]]</span> <span style="color:#a61717;background-color:#e3d2d2">@@</span>qt::signal<span style="color:#a61717;background-color:#e3d2d2">@@</span> <span style="color:#888;font-weight:bold">void</span> f();
-<span style="color:#369">[[deprecated]] [[qt::signal]]</span> <span style="color:#888;font-weight:bold">void</span> f();
-</code></pre></div><p>There are other challenges with reflecting on attributes. Attributes can
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#369">[[deprecated]]</span> QSignal&lt;<span style="color:#888;font-weight:bold">void</span>&gt; f();
+</span></span><span style="display:flex;"><span><span style="color:#369">[[deprecated]]</span> <span style="color:#a61717;background-color:#e3d2d2">@@</span>qt::signal<span style="color:#a61717;background-color:#e3d2d2">@@</span> <span style="color:#888;font-weight:bold">void</span> f();
+</span></span><span style="display:flex;"><span><span style="color:#369">[[deprecated]] [[qt::signal]]</span> <span style="color:#888;font-weight:bold">void</span> f();
+</span></span></code></pre></div><p>There are other challenges with reflecting on attributes. Attributes can
 take parameters that are presently defined as being a token soup. Hem, I
 mean token-sequence sorry. A well balanced token-soup-sequence. Which I
 guess makes total sense for tooling and compilers. But is pretty

@@ -76,30 +76,30 @@ understand a feature and its corner case. <strong>So I encourage you to play wit
 <p>In C++, you can introduce a default value for a member variable, that will be used to initiate a variable if you don&rsquo;t initialize explicitly,
 either in a constructor member initializer list or by using an aggregate initialization.</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">S</span> {
-        <span style="color:#888;font-weight:bold">int</span> a = <span style="color:#00d;font-weight:bold">42</span>;
-    };
-    S s;
-    <span style="color:#080;font-weight:bold">return</span> s.a;
-}
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">S</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#888;font-weight:bold">int</span> a = <span style="color:#00d;font-weight:bold">42</span>;
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    S s;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> s.a;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
 </div>
 
 <p>This is called <em>Data Member Initializers</em>.
 The initializer is only evaluated if the member isn&rsquo;t initialized explicitly.
 For example, in the following example, <code>main</code> returns 0;</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#888;font-weight:bold">int</span> ret = <span style="color:#00d;font-weight:bold">0</span>;
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span> () {
-    <span style="color:#080;font-weight:bold">struct</span> {
-        <span style="color:#888;font-weight:bold">int</span> x = ++ret;
-    } x = {<span style="color:#00d;font-weight:bold">0</span>};
-    <span style="color:#080;font-weight:bold">return</span> ret;
-}
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> ret = <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span> () {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">struct</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#888;font-weight:bold">int</span> x = ++ret;
+</span></span><span style="display:flex;"><span>    } x = {<span style="color:#00d;font-weight:bold">0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> ret;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
 </div>
 
 <h3 id="static-data-member-initializers">Static Data Member Initializers</h3>
@@ -107,12 +107,12 @@ For example, in the following example, <code>main</code> returns 0;</p>
 First, a static data member initializer is always evaluated and supersedes out-of-class definition.</p>
 <p>The following code fails because we try to define <code>s::foo</code> twice:
 <div class="compiler_explorer compiler_explorer_block highlight"  >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    <span style="color:#080;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">int</span> foo = <span style="color:#00d;font-weight:bold">42</span>;
-};
-<span style="color:#888;font-weight:bold">int</span> s::foo = <span style="color:#00d;font-weight:bold">42</span>;
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">const</span> <span style="color:#888;font-weight:bold">int</span> foo = <span style="color:#00d;font-weight:bold">42</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> s::foo = <span style="color:#00d;font-weight:bold">42</span>;
+</span></span></code></pre></div>
 </div>
 </p>
 <p>Only static data members that represent a literal value can have a data member initializer. This is because
@@ -121,11 +121,11 @@ in the whole program. Otherwise, you would run into ODR violations. <em>gasp</em
 <h3 id="auto-static-data-member-initializers">Auto Static Data Member Initializers</h3>
 <p>Static data members that have a <em>data member initializer</em> can be declared with auto.</p>
 <p><div class="compiler_explorer compiler_explorer_block highlight"  >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    <span style="color:#080;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> foo = <span style="color:#00d;font-weight:bold">42</span>;
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">static</span> <span style="color:#080;font-weight:bold">const</span> <span style="color:#080;font-weight:bold">auto</span> foo = <span style="color:#00d;font-weight:bold">42</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 In this case, <code>foo</code> is deduced to be of type <code>int</code> and it works exactly the same as any declaration of a variable with <code>auto</code>:
@@ -133,11 +133,11 @@ The right-hand side expression is evaluated and its type determines the type of 
 <h3 id="auto-non-static-data-member-initializers">Auto Non-Static Data Member Initializers</h3>
 <p>With all those pieces, we can now see what an NSDMI is, simply a class or struct data member with an initializer, whose type is deduced.</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    <span style="color:#080;font-weight:bold">auto</span> foo = <span style="color:#00d;font-weight:bold">42</span>;
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> foo = <span style="color:#00d;font-weight:bold">42</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 <p>However, this won&rsquo;t compile: the standard forbids it.</p>
@@ -153,56 +153,56 @@ Users might try to use them naturally, wonder why they don&rsquo;t work and then
 <h3 id="expressiveness-of-auto">Expressiveness of auto</h3>
 <p>The reason why you may want to use auto NSDMI is the same you would use <code>auto</code> in any other context. I think the strongest showcase at the moment would type deduction</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    <span style="color:#080;font-weight:bold">auto</span> v1 = std::vector{<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">5</span>};
-    std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; v2 = std::vector{<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">5</span>};
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> v1 = std::vector{<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">5</span>};
+</span></span><span style="display:flex;"><span>    std::vector&lt;<span style="color:#888;font-weight:bold">int</span>&gt; v2 = std::vector{<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">5</span>};
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 <p><code>make_unique</code> and <code>make_shared</code> would also make good candidates, along with all <code>make_</code> functions</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;memory&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    <span style="color:#080;font-weight:bold">auto</span> ptr = std::make_shared&lt;Foo&gt;();
-    std::shared_ptr&lt;Foo&gt; ptr2 = std::make_shared&lt;Foo&gt;();
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;memory&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> ptr = std::make_shared&lt;Foo&gt;();
+</span></span><span style="display:flex;"><span>    std::shared_ptr&lt;Foo&gt; ptr2 = std::make_shared&lt;Foo&gt;();
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 <p>Literals can also make good candidates, however, they require a <code>using namespace</code> which you should avoid doing in headers. Which is more a problem with literals
 and the inability to do using namespace at class-scope.</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;chrono&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">using</span> <span style="color:#080;font-weight:bold">namespace</span> std::chrono_literals;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">doomsday_clock</span> {
-    <span style="color:#080;font-weight:bold">auto</span> to_midnight = <span style="color:#00d;font-weight:bold">2</span>min;
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;chrono&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">using</span> <span style="color:#080;font-weight:bold">namespace</span> std::chrono_literals;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">doomsday_clock</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> to_midnight = <span style="color:#00d;font-weight:bold">2</span>min;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 <h3 id="it-already-works">It already works</h3>
 <p>As noted in <a href="https://wg21.link/n2713">N2713 - Allow auto for non-static data members - 2008</a>, almost anything that can be expressed by <code>auto</code> can be expressed with <code>decltype</code></p>
 <div class="compiler_explorer compiler_explorer_block highlight"  >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    <span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#00d;font-weight:bold">42</span>) foo = <span style="color:#00d;font-weight:bold">42</span>;
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#00d;font-weight:bold">42</span>) foo = <span style="color:#00d;font-weight:bold">42</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 <p>In fact, we can devise a macro ( please, don&rsquo;t try this at home )</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#c00;font-weight:bold">#define AUTO(var, expr) decltype(expr) var = (expr)
-</span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    AUTO(foo, <span style="color:#00d;font-weight:bold">42</span>);
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#define AUTO(var, expr) decltype(expr) var = (expr)
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    AUTO(foo, <span style="color:#00d;font-weight:bold">42</span>);
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 <p>And, if it works with a less convenient syntax, why not make people life easier?</p>
@@ -216,25 +216,25 @@ Except that, lambdas having capture group, you could store variables specific to
 giving you less data member to care about.</p>
 <p>For example, the following example captures a global variable (again, don&rsquo;t try this at home!) at construction time.</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888">/*
-</span><span style="color:#888">  prints 10 9 8 7 6 5 4 3 2 1
-</span><span style="color:#888">*/</span>
-<span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;range/v3/view/reverse.hpp&gt;</span><span style="color:#c00;font-weight:bold">
-</span><span style="color:#c00;font-weight:bold"></span>
-<span style="color:#888;font-weight:bold">int</span> counter = <span style="color:#00d;font-weight:bold">0</span>;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">object</span> {
-    <span style="color:#080;font-weight:bold">auto</span> id = [counter = ++counter] { <span style="color:#080;font-weight:bold">return</span> counter;};
-};
-
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    std::vector&lt;object&gt; v(<span style="color:#00d;font-weight:bold">10</span>);
-    <span style="color:#080;font-weight:bold">for</span>(<span style="color:#080;font-weight:bold">auto</span> &amp; <span style="color:#369;font-style:italic">obj</span> : v | ranges::view::reverse) {
-        std::cout &lt;&lt; obj.id() &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#39; &#39;</span>;
-    }
-}
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#888">  prints 10 9 8 7 6 5 4 3 2 1
+</span></span></span><span style="display:flex;"><span><span style="color:#888">*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;vector&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;iostream&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold">#include</span> <span style="color:#c00;font-weight:bold">&lt;range/v3/view/reverse.hpp&gt;</span><span style="color:#c00;font-weight:bold">
+</span></span></span><span style="display:flex;"><span><span style="color:#c00;font-weight:bold"></span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> counter = <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">object</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> id = [counter = ++counter] { <span style="color:#080;font-weight:bold">return</span> counter;};
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    std::vector&lt;object&gt; v(<span style="color:#00d;font-weight:bold">10</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">for</span>(<span style="color:#080;font-weight:bold">auto</span> &amp; <span style="color:#369;font-style:italic">obj</span> : v | ranges::view::reverse) {
+</span></span><span style="display:flex;"><span>        std::cout &lt;&lt; obj.id() &lt;&lt; <span style="color:#d20;background-color:#fff0f0">&#39; &#39;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
 </div>
 
 <h2 id="so-why-are-auto-nsdmi-not-in-the-standard">So&hellip; why are auto NSDMI not in the standard?</h2>
@@ -244,24 +244,24 @@ giving you less data member to care about.</p>
 then parse the inline definitions, method default parameters, and data member initializers.</p>
 <p>That lets you initialize a member with an expression depending on a member not yet declared.</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    <span style="color:#888;font-weight:bold">int</span> a = b();
-    <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">b</span>();
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">int</span> a = b();
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">b</span>();
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 <p>However, if you introduce auto members, things aren&rsquo;t that simple. Take the following valid code</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span>{
-    <span style="color:#080;font-weight:bold">auto</span> a = b();
-    <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">b</span>() {
-        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">42</span>;
-    };
-} foo;
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> a = b();
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">b</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">42</span>;
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>} foo;
+</span></span></code></pre></div>
 </div>
 
 <p>Here, what happens is</p>
@@ -284,12 +284,12 @@ then parse the inline definitions, method default parameters, and data member in
 </ol>
 <p>In some cases, the class is not yet complete when the compiler deduces a data member type, leading to an ill-formed program:</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    <span style="color:#080;font-weight:bold">auto</span> a = <span style="color:#080;font-weight:bold">sizeof</span>(s);
-    <span style="color:#080;font-weight:bold">auto</span> b = <span style="color:#00d;font-weight:bold">0</span>;
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> a = <span style="color:#080;font-weight:bold">sizeof</span>(s);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> b = <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 <p>Here:</p>
@@ -302,24 +302,24 @@ then parse the inline definitions, method default parameters, and data member in
 <p>So there are certain things you can not do within auto-nsdmi: calling <code>sizeof</code> referring to <code>*this</code> (even in decltype), constructing an instance of the class, etc.
 All of this makes sense and you would run with the same issue with <code>decltype</code>. Or simply by doing</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    s nope;
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    s nope;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </div>
 
 <p>Another gotcha is that an <code>auto</code> data member cannot depend on another data member declared after:</p>
 <div class="compiler_explorer compiler_explorer_block highlight"  compiler="autonsdmi" >
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
-    <span style="color:#080;font-weight:bold">auto</span> a = b;
-    <span style="color:#080;font-weight:bold">auto</span> b = <span style="color:#00d;font-weight:bold">0</span>;
-};
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    <span style="color:#080;font-weight:bold">return</span> s{}.a;
-}
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">s</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> a = b;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> b = <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> s{}.a;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
 </div>
 
 <p>Here:</p>

@@ -106,16 +106,16 @@ Templates were always somewhat unfriendly to non-experts, and adding a bunch of 
 
 <h1 id="short-syntaxes">Short syntaxes</h1>
 <p>To make concepts more palatable, the Concept-Lite proposal (circa 2013) introduced a bunch of shorthand syntaxes.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
-<span style="color:#080;font-weight:bold">concept</span> Foo = <span style="color:#038">true</span>;
-
-<span style="color:#888">//template introducer syntax.
-</span><span style="color:#888"></span>Foo{T} <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">const</span> T&amp;);
-<span style="color:#888">//abbreviated function syntax
-</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">bar</span>(<span style="color:#080;font-weight:bold">const</span> Foo&amp;);
-<span style="color:#888">//abbreviated function syntax, auto being the least constrained possible constraint
-</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">bar</span>(<span style="color:#080;font-weight:bold">auto</span>);
-</code></pre></div><p>And it was easy, it was reasonably elegant, and everything was well in the world.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> Foo = <span style="color:#038">true</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888">//template introducer syntax.
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>Foo{T} <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">foo</span>(<span style="color:#080;font-weight:bold">const</span> T&amp;);
+</span></span><span style="display:flex;"><span><span style="color:#888">//abbreviated function syntax
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">bar</span>(<span style="color:#080;font-weight:bold">const</span> Foo&amp;);
+</span></span><span style="display:flex;"><span><span style="color:#888">//abbreviated function syntax, auto being the least constrained possible constraint
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">bar</span>(<span style="color:#080;font-weight:bold">auto</span>);
+</span></span></code></pre></div><p>And it was easy, it was reasonably elegant, and everything was well in the world.
 But then, questions arise, concerns were raised:</p>
 <p>What about the meaning of multiple parameters constrained by the same concepts?
 How to distinguish generic functions from the non-generic ones? What about collapsing <del>universal</del> forwarding references?</p>
@@ -248,12 +248,12 @@ A non-type non-reference template-parameter cannot have its address taken.</p>
 <p>So a concept or set of constraints can only ever be applied at the time of instantiation.</p>
 <p>The following snippet is valid; at no point can a concept constrain a runtime value.
 That&rsquo;s what contracts are for!</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;Even e&gt; <span style="color:#080;font-weight:bold">decltype</span>(e) f()  {
-    <span style="color:#080;font-weight:bold">return</span> e + <span style="color:#00d;font-weight:bold">1</span>;
-}
-<span style="color:#369">[[assert: f&lt;0&gt;() == 1]]</span>;
-f&lt;<span style="color:#00d;font-weight:bold">1</span>&gt;(); <span style="color:#888">// ill-formed
-</span></code></pre></div><p>I don&rsquo;t think this is an actual issue people struggle with? If you think it&rsquo;s confusing, let me know!</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;Even e&gt; <span style="color:#080;font-weight:bold">decltype</span>(e) f()  {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> e + <span style="color:#00d;font-weight:bold">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#369">[[assert: f&lt;0&gt;() == 1]]</span>;
+</span></span><span style="display:flex;"><span>f&lt;<span style="color:#00d;font-weight:bold">1</span>&gt;(); <span style="color:#888">// ill-formed
+</span></span></span></code></pre></div><p>I don&rsquo;t think this is an actual issue people struggle with? If you think it&rsquo;s confusing, let me know!</p>
 <p><em> Note : Concepts may be accompanied by runtime requirements not expressed as code but that the function expects to hold true.
 They may take the form of comment or be implicitly assumed by developers. </em></p>
 <p>To sum things up:</p>

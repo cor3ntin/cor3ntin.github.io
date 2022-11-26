@@ -88,64 +88,64 @@ which explain how <code>std::tuple</code> is implemented in C++17.</p>
 Let see how C++20 can help us simplify <code>std::tuple</code>&rsquo;s implementation.</p>
 <h3 id="down-with-ebo">Down with EBO</h3>
 <p><code>std::tuple</code> can be implemented as a recursive tuple.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span> {
-    T type;
-};
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">int</span> index, <span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>... Tail&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Tuple</span>
-    : Wrapper&lt;T, index&gt;
-    , Tuple&lt;index + <span style="color:#00d;font-weight:bold">1</span>, Tail...&gt;
-{
-};
-</code></pre></div><p>Unfortunately, we do need to explicitly define constructors to be able
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span> {
+</span></span><span style="display:flex;"><span>    T type;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">int</span> index, <span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>... Tail&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Tuple</span>
+</span></span><span style="display:flex;"><span>    : Wrapper&lt;T, index&gt;
+</span></span><span style="display:flex;"><span>    , Tuple&lt;index + <span style="color:#00d;font-weight:bold">1</span>, Tail...&gt;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Unfortunately, we do need to explicitly define constructors to be able
 to use that type, which ends up with 14 or so constructors and a few assignment operators.
 Half of those being for allocator support.</p>
 <p>On top of that, libstdc++ optimises for empty types:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">empty</span>{};
-<span style="color:#080;font-weight:bold">static_assert</span>(<span style="color:#080;font-weight:bold">sizeof</span>(std::tuple&lt;empty, empty&gt;) == <span style="color:#00d;font-weight:bold">1</span>);
-</code></pre></div><p>To that end, it implements <a href="https://en.cppreference.com/w/cpp/language/ebo">empty base class optimization</a></p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index, <span style="color:#888;font-weight:bold">bool</span> <span style="color:#888">/* is the class empty */</span>&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>;
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>&lt;T, index, std::is_empty_v&lt;T&gt;&gt; {
-    <span style="color:#888">// LOTS OF CONSTRUCTORS
-</span><span style="color:#888"></span>};
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>&lt;T, index, !std::is_empty_v&lt;T&gt;&gt; {
-    <span style="color:#888">// LOTS OF CONSTRUCTORS
-</span><span style="color:#888"></span>    T type;
-};
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">int</span> index, <span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>... Tail&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Tuple</span>
-    : Wrapper&lt;T, index&gt;
-    , TupleImpl&lt;index + <span style="color:#00d;font-weight:bold">1</span>, Tail...&gt;
-{
-    <span style="color:#888">// LOTS OF CONSTRUCTORS
-</span><span style="color:#888"></span>};
-</code></pre></div><p>The actual libstdc++ implementation is a bit more complicated still.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">empty</span>{};
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">static_assert</span>(<span style="color:#080;font-weight:bold">sizeof</span>(std::tuple&lt;empty, empty&gt;) == <span style="color:#00d;font-weight:bold">1</span>);
+</span></span></code></pre></div><p>To that end, it implements <a href="https://en.cppreference.com/w/cpp/language/ebo">empty base class optimization</a></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index, <span style="color:#888;font-weight:bold">bool</span> <span style="color:#888">/* is the class empty */</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>&lt;T, index, std::is_empty_v&lt;T&gt;&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#888">// LOTS OF CONSTRUCTORS
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span>&lt;T, index, !std::is_empty_v&lt;T&gt;&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#888">// LOTS OF CONSTRUCTORS
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>    T type;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">int</span> index, <span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>... Tail&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Tuple</span>
+</span></span><span style="display:flex;"><span>    : Wrapper&lt;T, index&gt;
+</span></span><span style="display:flex;"><span>    , TupleImpl&lt;index + <span style="color:#00d;font-weight:bold">1</span>, Tail...&gt;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#888">// LOTS OF CONSTRUCTORS
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>};
+</span></span></code></pre></div><p>The actual libstdc++ implementation is a bit more complicated still.
 Overall, about 70 lines of code - mostly duplicated - are there to
 support empty objects.
 This small optimization is, therefore, anything but free in terms of maintenance.
 It also has some compilation cost, as more templates need to be instantiated.
 Is it even worth it?</p>
 <p>In C++20 all of that complexity goes away:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span> {
-    <span style="color:#369">[[no_unique_address]]</span> T type;
-};
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">int</span> index, <span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>... Tail&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">TupleImpl</span>
-    : Wrapper&lt;T, index&gt;
-    , TupleImpl&lt;index + <span style="color:#00d;font-weight:bold">1</span>, Tail...&gt;
-{
-};
-</code></pre></div><p><code>[[no_unique_address]]</code> gives us the same optimization as Empty-Base-Class-Optimization,
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#888;font-weight:bold">int</span> index&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">Wrapper</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#369">[[no_unique_address]]</span> T type;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#888;font-weight:bold">int</span> index, <span style="color:#080;font-weight:bold">typename</span> T, <span style="color:#080;font-weight:bold">typename</span>... Tail&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">TupleImpl</span>
+</span></span><span style="display:flex;"><span>    : Wrapper&lt;T, index&gt;
+</span></span><span style="display:flex;"><span>    , TupleImpl&lt;index + <span style="color:#00d;font-weight:bold">1</span>, Tail...&gt;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p><code>[[no_unique_address]]</code> gives us the same optimization as Empty-Base-Class-Optimization,
 without adding any complexity to our design.
 Less code, more expressiveness, less maintenance.</p>
 <h3 id="c20-is-more-implicit-about-being-explicit">C++20 is more implicit about being explicit.</h3>
@@ -154,66 +154,66 @@ I counted 24 constructors in libstdc++&rsquo;s implementation.
 Let&rsquo;s remove some.</p>
 <p>The standard specifies that a tuple constructor is explicit if any of its
 elements would have an <code>explicit</code> constructor.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">S</span> {};
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">E</span> { <span style="color:#080;font-weight:bold">explicit</span> <span style="color:#06b;font-weight:bold">E</span>(S); };
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">I</span> { I(S); };
-
-std::tuple&lt;E&gt; x = S{};  <span style="color:#888">// ill-formed
-</span><span style="color:#888"></span>std::tuple&lt;I&gt; x = S{};  <span style="color:#888">// OK
-</span></code></pre></div><p>Pretty neat. But how does it work ?</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">S</span> {};
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">E</span> { <span style="color:#080;font-weight:bold">explicit</span> <span style="color:#06b;font-weight:bold">E</span>(S); };
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">I</span> { I(S); };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>std::tuple&lt;E&gt; x = S{};  <span style="color:#888">// ill-formed
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>std::tuple&lt;I&gt; x = S{};  <span style="color:#888">// OK
+</span></span></span></code></pre></div><p>Pretty neat. But how does it work ?</p>
 <p>Simply by having defining 2 constructors,
 one explicit and one not, and SFINAE away the one that should not be considered:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _Cond, <span style="color:#080;font-weight:bold">typename</span>... _Args&gt;
-<span style="color:#080;font-weight:bold">using</span> _ImplicitCtor =
-    __enable_if_t&lt;_TCC&lt;_Cond&gt;::<span style="color:#080;font-weight:bold">template</span> __is_implicitly_constructible&lt;_Args...&gt;(), <span style="color:#888;font-weight:bold">bool</span>&gt;;
-
-<span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _Cond, <span style="color:#080;font-weight:bold">typename</span>... _Args&gt;
-<span style="color:#080;font-weight:bold">using</span> _ExplicitCtor =
-    __enable_if_t&lt;_TCC&lt;_Cond&gt;::<span style="color:#080;font-weight:bold">template</span> __is_explicitly_constructible&lt;_Args...&gt;(), <span style="color:#888;font-weight:bold">bool</span>&gt;;
-
-
-<span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _NotEmpty = (<span style="color:#080;font-weight:bold">sizeof</span>...(_Elements) &gt;= <span style="color:#00d;font-weight:bold">1</span>),
-    _ImplicitCtor&lt;_NotEmpty, <span style="color:#080;font-weight:bold">const</span> _Elements&amp;...&gt; = <span style="color:#038">true</span>&gt;
-<span style="color:#080;font-weight:bold">constexpr</span> tuple(<span style="color:#080;font-weight:bold">const</span> _Elements&amp;... __elements);
-
-<span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _NotEmpty = (<span style="color:#080;font-weight:bold">sizeof</span>...(_Elements) &gt;= <span style="color:#00d;font-weight:bold">1</span>),
-    _ExplicitCtor&lt;_NotEmpty, <span style="color:#080;font-weight:bold">const</span> _Elements&amp;...&gt; = <span style="color:#038">false</span>&gt;
-<span style="color:#080;font-weight:bold">explicit</span> <span style="color:#888">// This is the explicit constructor
-</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">constexpr</span>
-tuple(<span style="color:#080;font-weight:bold">const</span> _Elements&amp;... __elements);
-</code></pre></div><p>And this is for every single constructor!
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _Cond, <span style="color:#080;font-weight:bold">typename</span>... _Args&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">using</span> _ImplicitCtor =
+</span></span><span style="display:flex;"><span>    __enable_if_t&lt;_TCC&lt;_Cond&gt;::<span style="color:#080;font-weight:bold">template</span> __is_implicitly_constructible&lt;_Args...&gt;(), <span style="color:#888;font-weight:bold">bool</span>&gt;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _Cond, <span style="color:#080;font-weight:bold">typename</span>... _Args&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">using</span> _ExplicitCtor =
+</span></span><span style="display:flex;"><span>    __enable_if_t&lt;_TCC&lt;_Cond&gt;::<span style="color:#080;font-weight:bold">template</span> __is_explicitly_constructible&lt;_Args...&gt;(), <span style="color:#888;font-weight:bold">bool</span>&gt;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _NotEmpty = (<span style="color:#080;font-weight:bold">sizeof</span>...(_Elements) &gt;= <span style="color:#00d;font-weight:bold">1</span>),
+</span></span><span style="display:flex;"><span>    _ImplicitCtor&lt;_NotEmpty, <span style="color:#080;font-weight:bold">const</span> _Elements&amp;...&gt; = <span style="color:#038">true</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> tuple(<span style="color:#080;font-weight:bold">const</span> _Elements&amp;... __elements);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _NotEmpty = (<span style="color:#080;font-weight:bold">sizeof</span>...(_Elements) &gt;= <span style="color:#00d;font-weight:bold">1</span>),
+</span></span><span style="display:flex;"><span>    _ExplicitCtor&lt;_NotEmpty, <span style="color:#080;font-weight:bold">const</span> _Elements&amp;...&gt; = <span style="color:#038">false</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">explicit</span> <span style="color:#888">// This is the explicit constructor
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#080;font-weight:bold">constexpr</span>
+</span></span><span style="display:flex;"><span>tuple(<span style="color:#080;font-weight:bold">const</span> _Elements&amp;... __elements);
+</span></span></code></pre></div><p>And this is for every single constructor!
 Don&rsquo;t worry, this is not the way, for in C++20 <code>explicit</code> was amended to support another form: <code>explicit(boolean-expression)</code>.
 As such, <code>explicit(true)</code> is equivalent to <code>explicit</code> while <code>explicit(false)</code> is not explicit.
 We can then rewrite the above code as:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _NotEmpty = (<span style="color:#080;font-weight:bold">sizeof</span>...(_Elements) &gt;= <span style="color:#00d;font-weight:bold">1</span>)&gt;
-<span style="color:#080;font-weight:bold">explicit</span>(is_explicit_v&lt;<span style="color:#080;font-weight:bold">const</span> _Elements&amp;...&gt;)
-<span style="color:#080;font-weight:bold">constexpr</span>
-tuple(<span style="color:#080;font-weight:bold">const</span> _Elements&amp;... __elements);
-</code></pre></div><p>This little trick lets us remove about 10 constructors and about 150 lines of codes. Don&rsquo;t reinvent yourself!</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#888;font-weight:bold">bool</span> _NotEmpty = (<span style="color:#080;font-weight:bold">sizeof</span>...(_Elements) &gt;= <span style="color:#00d;font-weight:bold">1</span>)&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">explicit</span>(is_explicit_v&lt;<span style="color:#080;font-weight:bold">const</span> _Elements&amp;...&gt;)
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span>
+</span></span><span style="display:flex;"><span>tuple(<span style="color:#080;font-weight:bold">const</span> _Elements&amp;... __elements);
+</span></span></code></pre></div><p>This little trick lets us remove about 10 constructors and about 150 lines of codes. Don&rsquo;t reinvent yourself!</p>
 <h3 id="constrained-copy-pasta">Constrained copy-pasta</h3>
 <p>With so many constructors, <code>std::tuple</code> is a template SFINAE bonanza.
 So it is not surprising that the best way to improve <code>std::tuple</code> is to go all-in on C++ concepts.
 Or rather, on <code>requires</code> clauses.</p>
 <p>This is the code in libstdc++ for the default constructor:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">typename</span> _Dummy = <span style="color:#888;font-weight:bold">void</span>, _ImplicitDefaultCtor&lt;is_void&lt;_Dummy&gt;::value&gt; = <span style="color:#038">true</span>&gt;
-<span style="color:#080;font-weight:bold">constexpr</span>
-tuple()
-<span style="color:#080;font-weight:bold">noexcept</span>(__and_&lt;is_nothrow_default_constructible&lt;_Elements&gt;...&gt;::value);
-</code></pre></div><p>It can be rewritten using a <code>requires</code> clause easily: No <code>std::enable_if</code> wizardry.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">explicit</span>(!(__and_&lt;__is_implicitly_default_constructible&lt;_Elements&gt;::value...&gt;::value))
-<span style="color:#080;font-weight:bold">constexpr</span> tuple()
-<span style="color:#080;font-weight:bold">noexcept</span>((__and_&lt;is_nothrow_default_constructible&lt;_Elements&gt;::value...&gt;::value))
-<span style="color:#080;font-weight:bold">requires</span>((__and_&lt;std::is_default_constructible&lt;_Elements&gt;::value&gt;...&gt;::value));
-</code></pre></div><p>If we look at the standard, the code above is a direct translation of the wording!
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">typename</span> _Dummy = <span style="color:#888;font-weight:bold">void</span>, _ImplicitDefaultCtor&lt;is_void&lt;_Dummy&gt;::value&gt; = <span style="color:#038">true</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span>
+</span></span><span style="display:flex;"><span>tuple()
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">noexcept</span>(__and_&lt;is_nothrow_default_constructible&lt;_Elements&gt;...&gt;::value);
+</span></span></code></pre></div><p>It can be rewritten using a <code>requires</code> clause easily: No <code>std::enable_if</code> wizardry.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">explicit</span>(!(__and_&lt;__is_implicitly_default_constructible&lt;_Elements&gt;::value...&gt;::value))
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> tuple()
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">noexcept</span>((__and_&lt;is_nothrow_default_constructible&lt;_Elements&gt;::value...&gt;::value))
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">requires</span>((__and_&lt;std::is_default_constructible&lt;_Elements&gt;::value&gt;...&gt;::value));
+</span></span></code></pre></div><p>If we look at the standard, the code above is a direct translation of the wording!
 Each <code>Constraint</code> in the wording draft can be converted to a C++ constraint!</p>
 <p><img src="ctr1.png" alt="Example image"></p>
 <p>One other thing we should do is to use fold expressions and template variables to cut down
 on the clutter. Both these are actually C++17 features!</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">explicit</span>(!(__is_implicitly_default_constructible_v&lt;_Elements&gt; &amp;&amp;...))
-<span style="color:#080;font-weight:bold">constexpr</span> tuple()
-<span style="color:#080;font-weight:bold">noexcept</span>((std::is_nothrow_default_constructible_v&lt;_Elements&gt; &amp;&amp;...))
-<span style="color:#080;font-weight:bold">requires</span>((std::is_default_constructible&lt;_Elements&gt; &amp;&amp;...));
-</code></pre></div><p>Because <code>requires</code> clauses make it a lot easier to express constraint, and allow us to
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">explicit</span>(!(__is_implicitly_default_constructible_v&lt;_Elements&gt; &amp;&amp;...))
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> tuple()
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">noexcept</span>((std::is_nothrow_default_constructible_v&lt;_Elements&gt; &amp;&amp;...))
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">requires</span>((std::is_default_constructible&lt;_Elements&gt; &amp;&amp;...));
+</span></span></code></pre></div><p>Because <code>requires</code> clauses make it a lot easier to express constraint, and allow us to
 implement the standard line by line, we can remove a lot of code while increasing
 readability!</p>
 <p>You could wonder about the cost of all these concepts on compile-time,
@@ -232,29 +232,29 @@ to these constructors, no need for specialization!</p>
 <h3 id="-nothing-as-futuristic-as-a-spaceship">🛸 Nothing as futuristic as a spaceship!</h3>
 <p>Tuple provides all the comparison operators which are implemented in about 100 lines of code.
 We can replace them by 2 functions, <code>operator==</code> and <code>operator&lt;=&gt;</code>:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...Elem, <span style="color:#080;font-weight:bold">typename</span>...OElem, <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...&gt; <span style="color:#080;font-weight:bold">typename</span> B&gt;
-<span style="color:#080;font-weight:bold">requires</span> (tuple_like&lt;B&lt;OElem...&gt;&gt;  &amp;&amp; <span style="color:#080;font-weight:bold">sizeof</span>...(Elem) == <span style="color:#080;font-weight:bold">sizeof</span>...(OElem))
-<span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>==(<span style="color:#080;font-weight:bold">const</span> tuple&lt;Elem...&gt; &amp; a, <span style="color:#080;font-weight:bold">const</span> B&lt;OElem...&gt; &amp; b) {
-    <span style="color:#080;font-weight:bold">return</span> [&amp;]&lt;std::size_t... I&gt;(index_sequence&lt;I...&gt;)
-    {
-        <span style="color:#080;font-weight:bold">return</span>  ((std::get&lt;I&gt;(a) == std::get&lt;I&gt;(b)) &amp;&amp; ...);
-    }
-    (std::make_index_sequence&lt;<span style="color:#080;font-weight:bold">sizeof</span>...(Elem)&gt;{});
-}
-
-<span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...Elem, <span style="color:#080;font-weight:bold">typename</span>...OElem, <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...&gt; <span style="color:#080;font-weight:bold">typename</span> B&gt;
-<span style="color:#080;font-weight:bold">requires</span> (tuple_like&lt;B&lt;OElem...&gt;&gt;  &amp;&amp; <span style="color:#080;font-weight:bold">sizeof</span>...(Elem) == <span style="color:#080;font-weight:bold">sizeof</span>...(OElem))
-<span style="color:#080;font-weight:bold">auto</span> <span style="color:#080;font-weight:bold">operator</span>&lt;=&gt;(<span style="color:#080;font-weight:bold">const</span> tuple&lt;Elem...&gt; &amp; a, <span style="color:#080;font-weight:bold">const</span> B&lt;OElem...&gt; &amp; b) {
-    <span style="color:#080;font-weight:bold">using</span> ret = common_comparison_category_t&lt;__detail::__synth3way_t&lt;Elem, OElem&gt;...&gt;;
-    <span style="color:#080;font-weight:bold">return</span> [&amp;]&lt;std::size_t... I&gt;(index_sequence&lt;I...&gt;)
-    {
-        ret c = ret::equivalent;
-        <span style="color:#888">// http://eel.is/c++draft/expos.only.func#2
-</span><span style="color:#888"></span>        <span style="color:#080;font-weight:bold">return</span>  ((c = synth3way(std::get&lt;I&gt;(a), std::get&lt;I&gt;(b)), c != <span style="color:#00d;font-weight:bold">0</span>) || ...), c;
-    }
-    (std::make_index_sequence&lt;<span style="color:#080;font-weight:bold">sizeof</span>...(Elem)&gt;{});
-}
-</code></pre></div><p>Both these functions will support comparing a tuple to any <em>tuple-like</em> object.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...Elem, <span style="color:#080;font-weight:bold">typename</span>...OElem, <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...&gt; <span style="color:#080;font-weight:bold">typename</span> B&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">requires</span> (tuple_like&lt;B&lt;OElem...&gt;&gt;  &amp;&amp; <span style="color:#080;font-weight:bold">sizeof</span>...(Elem) == <span style="color:#080;font-weight:bold">sizeof</span>...(OElem))
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>==(<span style="color:#080;font-weight:bold">const</span> tuple&lt;Elem...&gt; &amp; a, <span style="color:#080;font-weight:bold">const</span> B&lt;OElem...&gt; &amp; b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> [&amp;]&lt;std::size_t... I&gt;(index_sequence&lt;I...&gt;)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">return</span>  ((std::get&lt;I&gt;(a) == std::get&lt;I&gt;(b)) &amp;&amp; ...);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    (std::make_index_sequence&lt;<span style="color:#080;font-weight:bold">sizeof</span>...(Elem)&gt;{});
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...Elem, <span style="color:#080;font-weight:bold">typename</span>...OElem, <span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span>...&gt; <span style="color:#080;font-weight:bold">typename</span> B&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">requires</span> (tuple_like&lt;B&lt;OElem...&gt;&gt;  &amp;&amp; <span style="color:#080;font-weight:bold">sizeof</span>...(Elem) == <span style="color:#080;font-weight:bold">sizeof</span>...(OElem))
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#080;font-weight:bold">operator</span>&lt;=&gt;(<span style="color:#080;font-weight:bold">const</span> tuple&lt;Elem...&gt; &amp; a, <span style="color:#080;font-weight:bold">const</span> B&lt;OElem...&gt; &amp; b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">using</span> ret = common_comparison_category_t&lt;__detail::__synth3way_t&lt;Elem, OElem&gt;...&gt;;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> [&amp;]&lt;std::size_t... I&gt;(index_sequence&lt;I...&gt;)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        ret c = ret::equivalent;
+</span></span><span style="display:flex;"><span>        <span style="color:#888">// http://eel.is/c++draft/expos.only.func#2
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>        <span style="color:#080;font-weight:bold">return</span>  ((c = synth3way(std::get&lt;I&gt;(a), std::get&lt;I&gt;(b)), c != <span style="color:#00d;font-weight:bold">0</span>) || ...), c;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    (std::make_index_sequence&lt;<span style="color:#080;font-weight:bold">sizeof</span>...(Elem)&gt;{});
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Both these functions will support comparing a tuple to any <em>tuple-like</em> object.
 They could be hidden friends, which would improve compile times, if not for the dependency
 on <code>std::get</code>.</p>
 <p>To implement them, I have used a few C++20 features.

@@ -73,11 +73,11 @@ unless I know that copying is cheaper (When in doubt use a reference).</li>
 <li>I avoid <a href="https://cor3ntin.github.io/posts/move/">rvalue references</a></li>
 </ul>
 <p>A bit of code is better than a blob of text:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> Foo &amp;); <span style="color:#888">// input parameter
-</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(Foo);         <span style="color:#888">// input parameter, modified or sinked
-</span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(Foo &amp;);       <span style="color:#888">// input-output
-</span><span style="color:#888"></span>Foo <span style="color:#06b;font-weight:bold">f</span>();             <span style="color:#888">// output
-</span></code></pre></div><p>I try to never use pointers, at least in interfaces.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(<span style="color:#080;font-weight:bold">const</span> Foo &amp;); <span style="color:#888">// input parameter
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(Foo);         <span style="color:#888">// input parameter, modified or sinked
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">f</span>(Foo &amp;);       <span style="color:#888">// input-output
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>Foo <span style="color:#06b;font-weight:bold">f</span>();             <span style="color:#888">// output
+</span></span></span></code></pre></div><p>I try to never use pointers, at least in interfaces.
 Pointers should be non-owning, but in practice, there is too much C and legacy code for this to be the case.
 When I see a pointer, I am wary of ownership and lifetime. I always will be, because we cannot magically get rid of owning pointers.</p>
 <p>These are general advices, and I recommend to follow them in in interfaces.
@@ -90,18 +90,18 @@ The answer is however quite simple: <a href="https://wg21.link/p1175r0"><strong>
 I don&rsquo;t know why but many people seem compelled to provide operators for everything when it doesn&rsquo;t make sense or is otherwise confusing.
 <strong>When there is no good default, do not try to provide a default</strong></p>
 <p>Here is how to support reference in optional without having to specialize it.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt;
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">optional</span> {
-  <span style="color:#080;font-weight:bold">public</span>:
-    <span style="color:#369">[[deprecated]]</span> <span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">U</span> = T&gt;
-    <span style="color:#080;font-weight:bold">requires</span> std::semiregular&lt;T&gt;
-    optional&amp; <span style="color:#080;font-weight:bold">operator</span>=(U&amp;&amp;);
-  };
-
-<span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>, <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">U</span>&gt;
-<span style="color:#080;font-weight:bold">requires</span> (std::regular&lt;T&gt; &amp;&amp; std::regular&lt;U&gt;)
-<span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>==(<span style="color:#080;font-weight:bold">const</span> optional&lt;T&gt;&amp;, <span style="color:#080;font-weight:bold">const</span> optional&lt;U&gt;&amp;);
-</code></pre></div><p>This would be nothing new - we do that for views. Wrapper objects should never try to expose more regularity than the wrapped type.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">optional</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#080;font-weight:bold">public</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#369">[[deprecated]]</span> <span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">U</span> = T&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">requires</span> std::semiregular&lt;T&gt;
+</span></span><span style="display:flex;"><span>    optional&amp; <span style="color:#080;font-weight:bold">operator</span>=(U&amp;&amp;);
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;<span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">T</span>, <span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">U</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">requires</span> (std::regular&lt;T&gt; &amp;&amp; std::regular&lt;U&gt;)
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">constexpr</span> <span style="color:#888;font-weight:bold">bool</span> <span style="color:#080;font-weight:bold">operator</span>==(<span style="color:#080;font-weight:bold">const</span> optional&lt;T&gt;&amp;, <span style="color:#080;font-weight:bold">const</span> optional&lt;U&gt;&amp;);
+</span></span></code></pre></div><p>This would be nothing new - we do that for views. Wrapper objects should never try to expose more regularity than the wrapped type.</p>
 <p>We removed <code>span::operator==</code> and, unsurprisingly, exactly nobody is missing it.
 Instead of endless, unsolvable debates of what a given operation should do, a better question is: is that operation useful? The answer here is no, look at usages.</p>
 <p>And this is in line with Herb Sutter&rsquo;s argument that references are mostly useful as

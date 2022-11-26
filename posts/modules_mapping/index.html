@@ -110,9 +110,9 @@ Tools providing completion, metrics on dependencies (including package manager),
 <h2 id="manually-describe-the-mapping-in-the-build-system">Manually describe the mapping in the build system</h2>
 <p>The idea is to let developers describe modules in the build system directly.
 For example, if you use cmake, you could write:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake">    <span style="color:#038">add_module</span>(<span style="color:#d20;background-color:#fff0f0">foo,</span> <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>)<span style="color:#a61717;background-color:#e3d2d2">
-</span></code></pre></div><p>But this is not about cmake, for example, <code>build2</code> supports exactly that</p>
-<pre><code>    mxx{foo}@./: cxx.module_name = foo
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span>    <span style="color:#038">add_module</span>(<span style="color:#d20;background-color:#fff0f0">foo,</span> <span style="color:#d20;background-color:#fff0f0">foo.cppm</span>)<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span></code></pre></div><p>But this is not about cmake, for example, <code>build2</code> supports exactly that</p>
+<pre tabindex="0"><code>    mxx{foo}@./: cxx.module_name = foo
 </code></pre><p>This is a bit cumbersome, as one might have hundreds of modules.
 It also duplicates information (Modules names are encoded in source files and in the build systems).
 It forces you to know what modules each of your dependencies use and  in general, makes it very hard to migrate from one build system to another, or for example
@@ -122,7 +122,7 @@ use a library originally wrote with Meson in a Bazel build.</p>
 you would put it in another file that whose syntax would be specified in a Standing Document
 (in the hope of making it an industry standard even though it would not be standard).</p>
 <p>Conceptually this file would be very simple:</p>
-<pre><code>foo: foo.cppm
+<pre tabindex="0"><code>foo: foo.cppm
 bar: bar.mpp
 </code></pre><p>This solves the issue of portability across build system. But the other issue remains: The module name is still duplicated.
 This also poses interesting challenges: For example, how to handle modules generated during the build?

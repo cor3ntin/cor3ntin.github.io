@@ -100,19 +100,19 @@ systematically imply asynchrony.</em>]</p>
 <p>A receiver represents the code we want to run on an execution context.
 In simplest terms, a function.
 But, an important point of the design of the executors proposal is to systematically provide error handling and error management so there are 3 functions we need to provide.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> Error, <span style="color:#080;font-weight:bold">typename</span>... Value&gt;
-<span style="color:#080;font-weight:bold">concept</span> receiver = <span style="color:#080;font-weight:bold">requires</span>(R &amp;r Error... e, Value&amp;&amp;...v) {
-    set_value(r, v...); <span style="color:#888">// happy path
-</span><span style="color:#888"></span>    set_error(r, e); <span style="color:#888">// error
-</span><span style="color:#888"></span>    set_done(r); <span style="color:#888">// cancelation
-</span><span style="color:#888"></span>};
-</code></pre></div><p><strong>This is bad blog code - In reality <code>receiver</code> will be split in <code>receiver</code> and <code>receiver_of</code> to allow overloading <code>set_value</code>.</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> R, <span style="color:#080;font-weight:bold">typename</span> Error, <span style="color:#080;font-weight:bold">typename</span>... Value&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> receiver = <span style="color:#080;font-weight:bold">requires</span>(R &amp;r Error... e, Value&amp;&amp;...v) {
+</span></span><span style="display:flex;"><span>    set_value(r, v...); <span style="color:#888">// happy path
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>    set_error(r, e); <span style="color:#888">// error
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>    set_done(r); <span style="color:#888">// cancelation
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>};
+</span></span></code></pre></div><p><strong>This is bad blog code - In reality <code>receiver</code> will be split in <code>receiver</code> and <code>receiver_of</code> to allow overloading <code>set_value</code>.</strong></p>
 <p>The standard will probably provide a receiver that wraps an <code>invocable</code>, throws on error and does nothing on cancellation.</p>
 <p>So maybe we could write something like this:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">fugazzi_async(execution_context, as_receiver([] {
-    fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Hello from an executor&#34;</span>);
-}));
-</code></pre></div><p>But now we have a problem.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>fugazzi_async(execution_context, as_receiver([] {
+</span></span><span style="display:flex;"><span>    fmt::print(<span style="color:#d20;background-color:#fff0f0">&#34;Hello from an executor&#34;</span>);
+</span></span><span style="display:flex;"><span>}));
+</span></span></code></pre></div><p>But now we have a problem.
 By the time <code>fugazzi_async</code> has returned, the lambda may have been enqueued, somewhere.
 Or even already executed.</p>
 <p>The traditional way to solve that is to use a future and a promise, sharing a ref counted shared state, heap
@@ -128,10 +128,10 @@ we add a level of indirection (that always works).
 Also, I suppose that in some cases the execution context may never be materialized in the type system.</p>
 <p><code>scheduler</code> represents a lightweight handle to an execution context. Its only purpose is to create <code>sender</code>s.</p>
 <p><em><code>execution context</code></em> -&gt; <code>scheduler</code> -&gt; <code>sender</code>.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">thread_pool <span style="color:#06b;font-weight:bold">tp</span>(std::<span style="color:#080;font-weight:bold">thread</span>::hardware_concurrency());
-<span style="color:#080;font-weight:bold">auto</span> scheduler = tp.scheduler();
-<span style="color:#080;font-weight:bold">auto</span> sender = scheduler.schedule();
-</code></pre></div><p>There are other ways to create <code>sender</code>s, for example
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>thread_pool <span style="color:#06b;font-weight:bold">tp</span>(std::<span style="color:#080;font-weight:bold">thread</span>::hardware_concurrency());
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> scheduler = tp.scheduler();
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> sender = scheduler.schedule();
+</span></span></code></pre></div><p>There are other ways to create <code>sender</code>s, for example
 <code>auto async_read(device, buffer) -&gt; sender</code> can be a function that creates a sender able to enqueue a read operation on a reactor queue.</p>
 <p>Timers would also be senders, etc</p>
 <p>Once we have a sender, we can start thinking about doing some work. If you have been paying attention, so far we have done very little work.</p>
@@ -140,25 +140,25 @@ By preparing our operations lazily we can compose them with algorithms.
 Let&rsquo;s not get ahead of ourselves.</p>
 <p>For now, we just need a function that takes a <code>sender</code> and a <code>receiver</code> and
 submits the sender for execution.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">submit(my_sender, my_receiver);
-</code></pre></div><p>If the <em>execution context</em> of <code>my_sender</code> is, for example, a thread pool
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>submit(my_sender, my_receiver);
+</span></span></code></pre></div><p>If the <em>execution context</em> of <code>my_sender</code> is, for example, a thread pool
 the receiver will be enqueued and then executed on a thread of that thread pool (by calling <code>my_receiver.set_value()</code>).</p>
 <p>And some work will finally be done.
 And that&rsquo;s it? According to <a href="https://wg21.link/P0443R11">P0443R11</a>, yes, pretty much.</p>
 <p>But there is a catch.</p>
 <p>Let&rsquo;s write a thread pool to illustrate</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">my_first_thread_pool</span> {
-    std::vector&lt;std::any_receiver&lt;<span style="color:#888;font-weight:bold">void</span>&gt;&gt; work;
-
-    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">enqueue</span>(receiver <span style="color:#080;font-weight:bold">auto</span> r) {
-        std::any_receiver&lt;<span style="color:#888;font-weight:bold">void</span>&gt; oh_no{std::move(r)}; <span style="color:#888">// 😰
-</span><span style="color:#888"></span>        work.emplace_back(oh_no); <span style="color:#888">// 😱
-</span><span style="color:#888"></span>        <span style="color:#888">/* ... */</span>
-    }
-
-    <span style="color:#888">/* ... */</span>
-};
-</code></pre></div><p>To implement our thread pool, <code>enqueue</code> function (which is called by <code>submit(sender, receiver)</code>, we do have to pay the cost of type-erasure (which <em>probably</em> implies an allocation),and another allocation (at least) to put our type-erased receiver on the heap so we can have a container of them).</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">my_first_thread_pool</span> {
+</span></span><span style="display:flex;"><span>    std::vector&lt;std::any_receiver&lt;<span style="color:#888;font-weight:bold">void</span>&gt;&gt; work;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">enqueue</span>(receiver <span style="color:#080;font-weight:bold">auto</span> r) {
+</span></span><span style="display:flex;"><span>        std::any_receiver&lt;<span style="color:#888;font-weight:bold">void</span>&gt; oh_no{std::move(r)}; <span style="color:#888">// 😰
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>        work.emplace_back(oh_no); <span style="color:#888">// 😱
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>        <span style="color:#888">/* ... */</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#888">/* ... */</span>
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>To implement our thread pool, <code>enqueue</code> function (which is called by <code>submit(sender, receiver)</code>, we do have to pay the cost of type-erasure (which <em>probably</em> implies an allocation),and another allocation (at least) to put our type-erased receiver on the heap so we can have a container of them).</p>
 <p>While this is fine for many people, it is not ideal and a deal-breaker for some.</p>
 <p>Is there a better way?
 Yes.
@@ -168,38 +168,38 @@ Note that I invented nothing of what follows - there will be a paper about these
 so let&rsquo;s do that.</p>
 <h2 id="operation">Operation</h2>
 <p>Instead of a <code>submit(sender, receiver)</code> that submits the work immediately, we can have a function that takes a sender, a receiver, and returns an aggregate of both, but do nothing else. Let&rsquo;s call that function <code>connect</code> :</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">thread_pool <span style="color:#06b;font-weight:bold">tp</span>(std::<span style="color:#080;font-weight:bold">thread</span>::hardware_concurrency());
-<span style="color:#080;font-weight:bold">auto</span> scheduler = tp.scheduler();
-<span style="color:#080;font-weight:bold">auto</span> sender = scheduler.schedule();
-
-<span style="color:#080;font-weight:bold">auto</span> op = connect(std::move(sender), as_receiver([] {
-    <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">42</span>;
-}));
-</code></pre></div><p>The return object <code>op</code> satisfies the <code>operation</code>.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>thread_pool <span style="color:#06b;font-weight:bold">tp</span>(std::<span style="color:#080;font-weight:bold">thread</span>::hardware_concurrency());
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> scheduler = tp.scheduler();
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> sender = scheduler.schedule();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> op = connect(std::move(sender), as_receiver([] {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">42</span>;
+</span></span><span style="display:flex;"><span>}));
+</span></span></code></pre></div><p>The return object <code>op</code> satisfies the <code>operation</code>.
 Again, this does nothing but preparing some workload that can be enqueued in the execution context later.</p>
 <p>But the nice thing about that extra indirection is that, if we need to enqueue a single object and wait for it,
 you can allocate it on the stack.
 And while you would still need to type erase the receiver,
 now you only need a virtual call to do it.</p>
 <p>It might be better to explain with some code:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">schedule_operation_base</span> {
-    <span style="color:#080;font-weight:bold">virtual</span> <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">set_value</span>() = <span style="color:#00d;font-weight:bold">0</span>;
-};
-
-<span style="color:#080;font-weight:bold">template</span> &lt;sender S, receiver R&gt;
-<span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">schedule_operation</span> : schedule_operation_base {
-    <span style="color:#888">//...
-</span><span style="color:#888"></span>    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">set_value</span>() <span style="color:#080;font-weight:bold">override</span> {
-        my_receiver.set_value();
-    }
-<span style="color:#080;font-weight:bold">private</span>:
-    R my_receiver;
-};
-</code></pre></div><p>Each <code>sender</code> type has its own specific operation type.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;receiver MyReceiverType&gt;
-<span style="color:#080;font-weight:bold">auto</span>(thread_pool::sender, MyReceiverType my_receiver)
-    -&gt; thread_pool::schedule_operation&lt;thread_pool::sender, MyReceiverType&gt;;
-</code></pre></div><p>This in turns allows us to store the execution context&rsquo;s associated state in each operation rather than in the execution context itself.
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">schedule_operation_base</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">virtual</span> <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">set_value</span>() = <span style="color:#00d;font-weight:bold">0</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;sender S, receiver R&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">schedule_operation</span> : schedule_operation_base {
+</span></span><span style="display:flex;"><span>    <span style="color:#888">//...
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>    <span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">set_value</span>() <span style="color:#080;font-weight:bold">override</span> {
+</span></span><span style="display:flex;"><span>        my_receiver.set_value();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">private</span>:
+</span></span><span style="display:flex;"><span>    R my_receiver;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Each <code>sender</code> type has its own specific operation type.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;receiver MyReceiverType&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span>(thread_pool::sender, MyReceiverType my_receiver)
+</span></span><span style="display:flex;"><span>    -&gt; thread_pool::schedule_operation&lt;thread_pool::sender, MyReceiverType&gt;;
+</span></span></code></pre></div><p>This in turns allows us to store the execution context&rsquo;s associated state in each operation rather than in the execution context itself.
 So instead of having a container of work in the thread pool, we can make an intrusive linked list of all the queued operations.</p>
 <p>[Note: This implies that <code>operation</code> can neither be copied nor moved]</p>
 <p>Because this might be hard to visualize, here are some
@@ -216,8 +216,8 @@ to complete.</p>
 <p>In these cases, you will need an extra function to heap
 allocate (or allocate with a custom allocator).
 The heap allocating function is called <code>spawn</code>.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">spawn</span>(sender, receiver);
-</code></pre></div><p><code>spawn</code> wraps the receiver in another receiver that will
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">spawn</span>(sender, receiver);
+</span></span></code></pre></div><p><code>spawn</code> wraps the receiver in another receiver that will
 destroyed the <code>operation</code> whenever one method of the receiver is called.</p>
 <p>This makes the ownership model rather simple. A feat for asynchronous code.</p>
 <p><code>spawn</code> is also the only point in that whole system
@@ -229,10 +229,10 @@ probably need to be transferred to senders for composed operations).</p>
 <p>Thread pools usually have a <code>wait</code> method.</p>
 <p>But with the sender/receiver model, the thread pool can instead provide a method returning a sender and we can
 attach that sender to a receiver that will be invoked when the thread pool is empty, by the means of a generic wait algorithm.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">thread_pool p;
-<span style="color:#888">//...
-</span><span style="color:#888"></span>wait(p.depleted());
-</code></pre></div><p>Many such algorithms can be provided, including:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>thread_pool p;
+</span></span><span style="display:flex;"><span><span style="color:#888">//...
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>wait(p.depleted());
+</span></span></code></pre></div><p>Many such algorithms can be provided, including:</p>
 <ul>
 <li><code>when_all</code></li>
 <li><code>when_any</code></li>
@@ -250,9 +250,9 @@ change of blowing one&rsquo;s feet off.</p>
 and not have to pay for it when we don&rsquo;t want to use them.</p>
 <p>Seems complicated?</p>
 <p>We actually need to define a single function:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">template</span> &lt;sender S&gt;
-<span style="color:#080;font-weight:bold">auto</span> <span style="color:#080;font-weight:bold">operator</span> <span style="color:#080;font-weight:bold">co_await</span>(S&amp;&amp; sender);
-</code></pre></div><p>That will make <em>all</em> <code>sender</code> <code>awaitable</code> which means they can be used
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;sender S&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">auto</span> <span style="color:#080;font-weight:bold">operator</span> <span style="color:#080;font-weight:bold">co_await</span>(S&amp;&amp; sender);
+</span></span></code></pre></div><p>That will make <em>all</em> <code>sender</code> <code>awaitable</code> which means they can be used
 in a <code>co_await</code> expression.
 The complete prototype implementation is about 100 loc. Not bad.</p>
 <p>and now we can write this:</p>
@@ -261,27 +261,27 @@ The complete prototype implementation is about 100 loc. Not bad.</p>
 <xmp style="display:none; margin:0;">#include <https://gist.githubusercontent.com/cor3ntin/14b9d30e07d48f5cdd13413c4fd96398/raw/f56dff4a94e053a41a16b66542e2322401f7fdbe/corio.hpp>
 
 using namespace cor3ntin::corio;</xmp>
-<div style="margin: 0px;"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-oneway_task <span style="color:#06b;font-weight:bold">task_with_coro</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
-    <span style="color:#080;font-weight:bold">co_await</span> s.schedule();
-    printf(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>); <span style="color:#888">//runs in thread pool
-</span><span style="color:#888"></span>}
-
-<span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">task_with_spawn</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
-    <span style="color:#080;font-weight:bold">auto</span> sender = s.schedule();
-    execution::spawn(std::move(sender), as_receiver([]{
-        printf(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>);
-    }));
-}
-
-<span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
-    static_thread_pool p(std::<span style="color:#080;font-weight:bold">thread</span>::hardware_concurrency());
-    task_with_coro(p.scheduler());
-    task_with_spawn(p.scheduler());
-    wait(p.depleted());
-}
-
-</code></pre></div></div>
+<div style="margin: 0px;"><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>oneway_task <span style="color:#06b;font-weight:bold">task_with_coro</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">co_await</span> s.schedule();
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>); <span style="color:#888">//runs in thread pool
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">task_with_spawn</span>(execution::scheduler <span style="color:#080;font-weight:bold">auto</span> s) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> sender = s.schedule();
+</span></span><span style="display:flex;"><span>    execution::spawn(std::move(sender), as_receiver([]{
+</span></span><span style="display:flex;"><span>        printf(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>);
+</span></span><span style="display:flex;"><span>    }));
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    static_thread_pool p(std::<span style="color:#080;font-weight:bold">thread</span>::hardware_concurrency());
+</span></span><span style="display:flex;"><span>    task_with_coro(p.scheduler());
+</span></span><span style="display:flex;"><span>    task_with_spawn(p.scheduler());
+</span></span><span style="display:flex;"><span>    wait(p.depleted());
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span></code></pre></div></div>
 
 
 </div>
@@ -289,7 +289,7 @@ oneway_task <span style="color:#06b;font-weight:bold">task_with_coro</span>(exec
 <p>Pretty magic!<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <p>In fact, this is possible because there is <a href="https://wg21.link/p1745r0">almost</a> a 1/1 mapping between sender/receiver and promise/continuation of coroutines.</p>
 <div style="text-align:center;width:100%">
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">The factoring of `submit` into `connect`/`start` gives more flexible ownership semantics, and aligns the design conceptually with coroutines, making coroutines an efficient way of expressing sender/receiver.</p>&mdash; 🇺🇦 Eric Niebler 🇺🇦 #BLM (@ericniebler) <a href="https://twitter.com/ericniebler/status/1186760676938670080?ref_src=twsrc%5Etfw">October 22, 2019</a></blockquote>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">The factoring of `submit` into `connect`/`start` gives more flexible ownership semantics, and aligns the design conceptually with coroutines, making coroutines an efficient way of expressing sender/receiver.</p>&mdash; Eric Niebler 🇺🇦 #BLM (@ericniebler) <a href="https://twitter.com/ericniebler/status/1186760676938670080?ref_src=twsrc%5Etfw">October 22, 2019</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 </div>
@@ -319,9 +319,9 @@ does not make any <a href="https://www.youtube.com/watch?v=FJIn1YhPJJc">forward 
 These are not areas I am very comfortable with for now and this article is getting long, stay tuned.</p>
 <p>I also want to explore in the future how we can leverage executors and <code>io_uring</code>, Grand Central Dispatch and Windows Thread Pools.</p>
 <p>Because I want to be able to write</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#080;font-weight:bold">co_await</span> socket.write(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>);
-<span style="color:#080;font-weight:bold">co_await</span> socket.read(buffer);
-</code></pre></div><p>But here is that word again, <code>executor</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">co_await</span> socket.write(<span style="color:#d20;background-color:#fff0f0">&#34;Hello&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">co_await</span> socket.read(buffer);
+</span></span></code></pre></div><p>But here is that word again, <code>executor</code>.</p>
 <h2 id="executors">Executors</h2>
 <p><a href="https://wg21.link/P0761">P0761</a> explains</p>
 <blockquote>
@@ -330,11 +330,11 @@ functions for creating execution agents from a callable function object. [&helli
 </blockquote>
 <p>But because receivers are a more fundamental building block than
 functions, we can implement an execute function trivially:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">execute</span>(execution_context ctx, invocable <span style="color:#080;font-weight:bold">auto</span>&amp;&amp; f) {
-    <span style="color:#080;font-weight:bold">auto</span> sender = ctx.scheduler().schedule();
-    spawn(std::move(sender), as_receiver(std::forward&lt;<span style="color:#080;font-weight:bold">decltype</span>(f)&gt;(f)));
-}
-</code></pre></div><p>So it might be that executors are the least important part of the Executor proposal.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">void</span> <span style="color:#06b;font-weight:bold">execute</span>(execution_context ctx, invocable <span style="color:#080;font-weight:bold">auto</span>&amp;&amp; f) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> sender = ctx.scheduler().schedule();
+</span></span><span style="display:flex;"><span>    spawn(std::move(sender), as_receiver(std::forward&lt;<span style="color:#080;font-weight:bold">decltype</span>(f)&gt;(f)));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>So it might be that executors are the least important part of the Executor proposal.</p>
 <p>And what that means then is that&hellip;</p>
 <p>&hellip; <code>operation</code> is the basis of operations.</p>
 <h2 id="acknowledgments">Acknowledgments</h2>
@@ -364,14 +364,14 @@ functions, we can implement an execute function trivially:</p>
 <p><a href="https://github.com/facebook/folly/tree/master/folly/experimental/pushmi">Pushmi</a> - Facebook/folly&rsquo;s implementation of a previous iteration of the Sender/Receiver model.</p>
 <p><a href="https://github.com/cor3ntin/corio">Corio</a> - The very incomplete and immature project I started recently - the best way to understand something is to implement it.
 There is barely enough in there to support this blog post</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Compiler Explorer does not support executing multi-thread code, but they are working on it. Thanks, Matt! <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>Compiler Explorer does not support executing multi-thread code, but they are working on it. Thanks, Matt!&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
       
     <div id="socialshareDiv">

@@ -194,23 +194,23 @@ But it makes the interface very very clear. And bounded.
 In rust, for example, calling a C function doesn&rsquo;t force Rust
 to sacrifice some of its design to accommodate a C subset.
 No, C is contained.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">mod</span> <span style="color:#b06;font-weight:bold">confinment</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#080;font-weight:bold">use</span><span style="color:#bbb"> </span>std::os::raw::{c_char};<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#080;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#d20;background-color:#fff0f0">&#34;C&#34;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">        </span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">puts</span>(txt: *<span style="color:#080;font-weight:bold">const</span><span style="color:#bbb"> </span>c_char);<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span><span style="color:#bbb">
-</span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">main</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">    </span><span style="color:#080;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>confinment::puts(<span style="color:#bbb">
-</span><span style="color:#bbb">            </span>std::ffi::CString::new(<span style="color:#d20;background-color:#fff0f0">&#34;Hello, world!&#34;</span>).expect(<span style="color:#d20;background-color:#fff0f0">&#34;failed!&#34;</span>).as_ptr()<span style="color:#bbb">
-</span><span style="color:#bbb">        </span>);<span style="color:#bbb">
-</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
-</span><span style="color:#bbb"></span>}<span style="color:#bbb">
-</span></code></pre></div><p><a href="https://godbolt.org/z/YP66Tf">Compiler Explorer</a></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">mod</span> <span style="color:#b06;font-weight:bold">confinment</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#080;font-weight:bold">use</span><span style="color:#bbb"> </span>std::os::raw::{c_char};<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#080;font-weight:bold">extern</span><span style="color:#bbb"> </span><span style="color:#d20;background-color:#fff0f0">&#34;C&#34;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">puts</span>(txt: *<span style="color:#080;font-weight:bold">const</span><span style="color:#bbb"> </span>c_char);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#080;font-weight:bold">fn</span> <span style="color:#06b;font-weight:bold">main</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#080;font-weight:bold">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>confinment::puts(<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>std::ffi::CString::new(<span style="color:#d20;background-color:#fff0f0">&#34;Hello, world!&#34;</span>).expect(<span style="color:#d20;background-color:#fff0f0">&#34;failed!&#34;</span>).as_ptr()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p><a href="https://godbolt.org/z/YP66Tf">Compiler Explorer</a></p>
 <p>This code will works util the C <em>ABI</em> changes. And the Rust/C boundary is self-documenting and clearly visible.</p>
 <p>And so C++ may be the language that pays its C compatibility the most.</p>
 <p>And worse, open any C header, you will soon find a bunch of <code>#ifdef __cplusplus</code>.
