@@ -143,7 +143,11 @@ This is a concrete solution: We need to invest in address sanitizers and hardwar
 <p>Until we are willing to change C++ to the point it is no longer recognizable as C++, memory safety cannot be guaranteed.</p>
 <p>We will have to see if more concrete things materialize and if any of them can gain some consensus.</p>
 <p>During the meeting, we decided to extend the lifetime of temporaries ranges in the range for loop, which is one way to improve safety.
-Shortly after, JF Bastien proposed to do something about uninitialized variables.  <a href="https://twitter.com/jfbastien/status/1592578174763745280">https://twitter.com/jfbastien/status/1592578174763745280</a> . I see that as a sort of litmus test in the coal mine. So far, this has engendered hundreds of comments, so there is interest. I think we are a long way from any kind of consensus, but the ball is rolling. It will be interesting to follow.</p>
+Shortly after, JF Bastien proposed to do something about uninitialized variables.</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Wherein I propose that C++ initialize all stack variables to zero, preventing ~10% of CVEs.<br><br>Cost: none.<br><br>🔗 <a href="https://t.co/LJsDiRl7ZR">https://t.co/LJsDiRl7ZR</a> 🔗 <a href="https://t.co/M0dhOkIvOm">pic.twitter.com/M0dhOkIvOm</a></p>&mdash; JF Bastien 🔗 @jfbastien@mastodon.social (@jfbastien) <a href="https://twitter.com/jfbastien/status/1592578174763745280?ref_src=twsrc%5Etfw">November 15, 2022</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>I see that as a sort of litmus test in the coal mine. So far, this has engendered hundreds of comments, so there is interest. I think we are a long way from any kind of consensus, but the ball is rolling. It will be interesting to follow.</p>
 <p>Overall, I&rsquo;m not sure we achieved more in that meeting than the recognition that safety is a problem. I guess it&rsquo;s a necessary first step. And I&rsquo;m pretty sure that there are strong disagreements about what safety is. For example, people care about termination safety (ie the idea that a program should never terminate even when it ends up in a broken state), which seems antithetical to the notion of safety.</p>
 <p>So we are not sure what safety is, or how to get more of that, but we want more of it. Hooray.</p>
 <p>But… Most importantly, that &ldquo;future of C++ session&rdquo; did not, in fact, talk about the future of C++.
@@ -215,6 +219,9 @@ You might, I was told, avoid the vector entirely somehow, so maybe the compiler 
 <code>sizeof…(pack)</code> also uses syntax and that has not been challenging to users, despite the interesting reuse of the sizeof keyword.</p>
 <p>Don&rsquo;t get me wrong, I fully support reflection (although I will say that we have not made progress in the past few years), but using reflection to index a pack is like trying to kill a fly with a nuclear warhead.
 For pack slicing (getting a subset of a pack), the case for reflection is a little more nuanced - the language should not support arbitrary slicing; we have algorithms for that, but in practice, most slicing operations are excluding either the first or last elements. The way I see it, the language should make simple things simple, and everything else possible.</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Given a C++ parameter pack `P`, how to you get the `n`th type in it? Rules: short as possible, no additional definitions. I&#39;m sure we can do better than `std::remove_reference_t&lt;decltype(std::get&lt;n&gt;(*static_cast&lt;std::tuple&lt;P...&gt;*&gt;(nullptr)))&gt;`?</p>&mdash; 🇺🇦 Andrei Alexandrescu 🇺🇦 (@incomputable) <a href="https://twitter.com/incomputable/status/1590733659694583808?ref_src=twsrc%5Etfw">November 10, 2022</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 <p>Another argument was that template meta-programming is terrible actually, which I find hilarious given that TMP is often a reason cited by people not to jump to rust. And we could make it better.</p>
 <p>Finally, we should just be able to convert packs to some kind of objects that we can iterate.
 I could not completely follow that discussion, having to be in multiple rooms at once,
