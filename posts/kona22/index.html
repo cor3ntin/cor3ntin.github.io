@@ -136,8 +136,9 @@ So it&rsquo;s all tradeoffs and it will be interesting to see how safety factors
 <p>Starting by address sanitizers. Arguably the most pragmatic approach to safety. Recompile your code, and you are good to go.
 Except ASan is slow, sometimes over 2x perf hit. And it was pointed out that running with ASan can actually expose vulnerabilities rather than prevent them (ASan is not designed to run in production), so we should not encourage its use in production builds (but please use it liberally during development).</p>
 <p>We can however make address sanitizers MUCH faster (fast enough that enabling them in production on safety critical components makes sense). Such performance requires hardware support to allow ~0 cost pointer tagging.
-Both recent Intel and <a href="https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/enhancing-memory-safety">ARM chips</a> have added the necessary instructions, and android devices use them as part of the defense mechanisms in low-level critical system components.
-This is a concrete solution: We need to invest in address sanitizers and hardware support for them. AMD, if you read this blog post…</p>
+Both recent Intel and <a href="https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/enhancing-memory-safety">ARM chips</a> have added the necessary instructions, and android devices use them as part of the defense mechanisms in low-level critical system components. AMD&rsquo;s zen 4 similarly supports <a href="https://www.amd.com/system/files/TechDocs/24593.pdf">Upper Address Ignore</a>, so it would seem hardware support for ASan is generally available on recent iterations of common architectures. Note that as far as I can tell, AMD&rsquo;s
+version of that feature is <a href="https://lwn.net/Articles/888914/">not supported by the linux Kernel</a>.</p>
+<p>Either way, this is a concrete solution: We need to invest in address sanitizers and hardware support for them.</p>
 <p>The other promising solution is static analysis to track the lifetimes of objects during compilation, in IDEs and tools. See <a href="https://discourse.llvm.org/t/rfc-lifetime-annotations-for-c/61377">The LLVM discourse</a> and <a href="https://www.youtube.com/watch?v=d67kfSnhbpA">This video</a> for what such a tool looks like.</p>
 <p>This is exactly like Rust borrow checker, if the borrow checker was blind (because code is hidden in other translation units or later in the file is invisible to the compiler) and drunk (the borrow checker relies on the fact there can be no more than one mutable reference to a given object), but it&rsquo;s a start.</p>
 <p>Until we are willing to change C++ to the point it is no longer recognizable as C++, memory safety cannot be guaranteed.</p>
@@ -224,14 +225,16 @@ For pack slicing (getting a subset of a pack), the case for reflection is a litt
 
 <p>Another argument was that template meta-programming is terrible actually, which I find hilarious given that TMP is often a reason cited by people not to jump to rust. And we could make it better.</p>
 <p>Finally, we should just be able to convert packs to some kind of objects that we can iterate.
-I could not completely follow that discussion, having to be in multiple rooms at once,
-but I do have one question: what is the type of a pack of template template parameters?
+I could not completely follow that discussion, having to be in multiple rooms at once, but I do have one question: what is the type of a pack of template template parameters?
 Packs are fundamentally heterogeneous beasts and with luck, they may even contain heterogeneous kinds of entities in the future.</p>
 <p>Given that our time is, in fact, limited, maybe introducing new kinds of objects/expressions in the language isn&rsquo;t something we should entertain given that the few operations that are actually useful and packs and for which reflection is overkill are actually few.</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">C++ variadic templates seem to be the result of a gang war. One faction wanted to make them as complicated as possible. Another wanted to give variadics as little power as possible. Those gangs canceled each other out and the design was done by a group of TeX macro experts.</p>&mdash; 🇺🇦 Andrei Alexandrescu 🇺🇦 (@incomputable) <a href="https://twitter.com/incomputable/status/1579939413756612609?ref_src=twsrc%5Etfw">October 11, 2022</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 <p>Tuple unpacking is also a bit stuck because of the implementation complexity for one vendor, so we might burden users with syntactic ornaments that other implementations could maybe not require. If we even want tuple unpacking?
 The issue with the fact my paper presented a vision is that I&rsquo;m not sure which parts of it people had cold or warm reactions to.</p>
 <p>In particular, forwarding reference deduction and universal template parameters are not things reflection or even code injection could ever solve.</p>
-<p>Anyway, I&rsquo;ll keep trying. The beauty of WG21 is that you&rsquo;d be a fool to expect the same result twice.</p>
+<p>Anyway, I&rsquo;ll keep trying. The beauty of WG21 is that you&rsquo;d be a fool to do the same thing twice and expect the same result.</p>
 <h2 id="random-bits">Random bits</h2>
 <h3 id="static_vector-sbo-vectors">static_vector, SBO vectors</h3>
 <p>The discussions about new vector-like containers were interesting. Namely, what happens when pushing to a full <code>static_vector</code>?
