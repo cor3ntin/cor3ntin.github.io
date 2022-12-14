@@ -110,7 +110,7 @@ Often, we can&rsquo;t even convince people to update their toolchains.
 Most of all, we can&rsquo;t ask people to abandon all their code.</p>
 <p>By Rust&rsquo;s definition, all of C++ is unsafe. Well, not all: functions dealing only in values are fine.
 But then again no, values can be non-owning pointers in disguise! Oh span, span, delicious span.
-We can&rsquo;t even make any statement about <code>constexpr</code> code: if constant evaluations are indeed safe, <code>constexpr</code> is just an ornament we put everywhere to celebrate Xmas.</p>
+We can&rsquo;t even make any statement about <code>constexpr</code> functions: if constant evaluations are indeed safe, <code>constexpr</code> is just an ornament we put everywhere to celebrate Xmas.</p>
 <h2 id="borrowing-the-borrow-checker">Borrowing the borrow checker</h2>
 <p>We can imagine adding non-aliasing references to C++.
 I am not sure exactly how. But it would go swimmingly though, exactly as it went with rvalue references. We also would have to figure out destructive move. We failed to do that once, but why should that stop anyone?
