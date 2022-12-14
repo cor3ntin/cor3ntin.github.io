@@ -253,17 +253,16 @@ Well, what if it doesn&rsquo;t crash? Are you really letting a transaction overf
 </ul>
 <p>I should be a bit nuanced here. We can find dramatic examples both ways. The inaugural <a href="https://en.wikipedia.org/wiki/Ariane_flight_V88">Ariane 5 flight</a> was probably doomed because of trapping overflow. Who knows what would have happened if it wrapped instead? Maybe the thing would have gone on its merry way or crashed a few seconds later.</p>
 <p>The Linux Kernel has a policy that nothing can violently terminate because being the kernel, there would not be any opportunity to report the error otherwise. Fair enough. but you also open yourself to attack vectors. Or loss of data, or whatever else can happen when a kernel goes rabid.</p>
-<p>I&rsquo;m sure there are unknown unknowns that cause the Linux Kernel crashes anyway (but this being an article about C++, the Linux Kernel is forever off-topic).</p>
+<p>I&rsquo;m sure there are unknown unknowns that cause the Linux Kernel crashes anyway (but this being an article about C++, the Linux kernel is forever off-topic).</p>
 <p>If the system is critical enough, having redundancies a level down is the only realistic way to ensure it keeps running. Let the thing crash, reboot it. Of course, these fail-safe systems are hard to test and may also cause problems. UB all the way down!
 Rust will probably take the approach of having a set of libraries that are designed to work in a no-panic environment, which some C++ folks would call a dialect and be angry about.
 But that shows that termination being <em>bad</em> is not the common case and so it needs dedicated considerations and tools that should have no impact on the 99% use case. I guess in such an environment, everything would have to be safe.</p>
 <p>Leaving the kernel aside, for integer overflow specifically, Rust takes the approach of panicking in debug, and letting signed overflows wrap in release - it&rsquo;s still UB in the spec, though, so if you were to rely on it you&rsquo;d anger the crab gods.
-It&rsquo;s UB because it does not make sense. That&rsquo;s not how math works.
-If you explain to a kid that if they have 127 candies at Halloween and they get one more candy, they have to give all of their candies away. They might realize too young that grown-ups deserve to sit in the corner forever.
+It&rsquo;s UB because it does not make sense. That&rsquo;s not how math work.
+If you explain to a kid that if they have 127 candies at Halloween and they get one more candy, they have to give all of their candies away, they might realize too young that grown-ups deserve to sit in the corner forever.
 Wrapping just transforms a bug into another bug, which then snowballs into a bigger issue, hoping that it will become someone else&rsquo;s mess to deal with.</p>
-<p>John Regehr <a href="https://blog.regehr.org/archives/1154">makes the case</a> that
-languages do have little choice of following the semantics of what the hardware supports, and trapping semantics for integer overflow would need some help from the hardware folks (neither amd64 nor Arm can trap on overflow) - which in turn would have industry-wide benefits. The reason this hardware does not exist is that Hardware folks 20 years ago thought it wasn&rsquo;t worth the real estate cost.</p>
-<p>Division always panics. I wonder what happens if one divides in the kernel. It&rsquo;s probably not allowed.</p>
+<p>John Regehr <a href="https://blog.regehr.org/archives/1154">makes the case</a> that languages do have little choice of following the semantics of what the hardware supports, and trapping semantics for integer overflow would need some help from the hardware folks (neither amd64 nor Arm can trap on overflow) - which in turn would have industry-wide benefits. The reason this hardware does not exist is that Hardware folks 20 years ago thought it wasn&rsquo;t worth the real estate cost.</p>
+<p>Division always panics. I wonder what happens if one divides in the kernel. <a href="https://www.cve.org/CVERecord?id=CVE-2019-14284">It&rsquo;s not exactly safe</a>.</p>
 <h2 id="correct-by-confusion">Correct by confusion</h2>
 <p>Back to C++. In no case should exceptions ever be involved. Ever.
 Even if there is a fire.
@@ -300,10 +299,9 @@ If you expect overflow to happen, deal with it before it does, not after.</p>
 <p>Things like hardware ASan, hardware overflow trapping, etc would be useful to Rust as well.
 A good defense has many layers and relying on any one solution exclusively is not sufficient.</p>
 <h2 id="first-born-unicorn-dream-of-carcinization">First born unicorn, dream of Carcinization</h2>
-<p>The Rust borrow checker is just one such tool, one that works because Rust was designed from the start
-around the idea of not having aliasing. And sure it&rsquo;s something we should marvel at, as it was novel and exciting, or at least novel and exciting outside of academic toys.
+<p>The Rust borrow checker is just one such tool, one that works because Rust was designed fairly early on around the idea of not having aliasing. And sure it&rsquo;s something we should marvel at, as it was novel and exciting, or at least novel and exciting outside of academic toys.
 But novelty fades into the ordinary. Rust developers don&rsquo;t think about the borrow checker that much, it&rsquo;s just very natural and mundane for them.
-Why would you not have strong memory safety guarantees in your programming language? Crazy talk!</p>
+After all, why would you not have strong memory safety guarantees in your programming language? Crazy talk!</p>
 <p>But maybe the reason discussions about Rust in the C++ community focus solely on memory safety and the borrow checker is because we want a taste of the greener grass.
 It&rsquo;s the one thing we can&rsquo;t have.</p>
 <p>We could have everything else. We can have asserting preconditions, we can have runtime bound checking. We can have well-defined or asserting arithmetics. We can have correctness and we can have safety. We don&rsquo;t.</p>
