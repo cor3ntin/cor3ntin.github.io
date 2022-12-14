@@ -258,17 +258,15 @@ Rust will probably take the approach of having a set of libraries that are desig
 But that shows that termination being <em>bad</em> is not the common case and so it needs dedicated considerations and tools that should have no impact on the 99% use case. I guess in such an environment, everything would have to be safe.</p>
 <p>Leaving the kernel aside, for integer overflow specifically, Rust takes the approach of panicking in debug, and letting signed overflows wrap in release - it&rsquo;s still UB in the spec, though, so if you were to rely on it you&rsquo;d anger the crab gods.
 It&rsquo;s UB because it does not make sense. That&rsquo;s not how math works.
-If you explain to a kid that if they have 127 candies at Halloween and they get one more candy, they have to give all of their candies away, they might realize too young that grown-ups deserve to go seat in the corner forever.
+If you explain to a kid that if they have 127 candies at Halloween and they get one more candy, they have to give all of their candies away, they might realize too young that grown-ups deserve to go sit in the corner forever.
 Wrapping just transforms a bug into another bug, which then snowballs, into a bigger issue, hoping that it will become someone else&rsquo;s mess to deal with.</p>
 <p>John Regehr <a href="https://blog.regehr.org/archives/1154">makes the case</a> that
-languages do have little choice of following the semantics of what the hardware supports, and trapping semantics
-for integer overflow would need some help from the hardware folks - which in turn would have industry-wide benefits. The reason this hardware does not exist is that Hardware folks 20 years ago thought it wasn&rsquo;t worth the real estate cost</p>
+languages do have little choice of following the semantics of what the hardware supports, and trapping semantics for integer overflow would need some help from the hardware folks - which in turn would have industry-wide benefits. The reason this hardware does not exist is that Hardware folks 20 years ago thought it wasn&rsquo;t worth the real estate cost.</p>
 <p>Division always panics. I wonder what happens if one divides in the kernel. It&rsquo;s probably not allowed.</p>
 <h2 id="correct-by-confusion">Correct by confusion</h2>
 <p>Back to C++. In no case should exceptions ever be involved. Ever.
 Even if there is a fire.
-<code>std::logic_error</code> should not exist. It should be understood as <code>std::wtf_exception</code>. And if someone throws that,
-what are you going to do? Especially if the exception comes from a third-party library or something deep in the application having an aneurysm. It manages to be, impressively, even less actionable than <code>std::bad_alloc</code>.</p>
+<code>std::logic_error</code> should not exist. It should be understood as <code>std::wtf_exception</code>. And if someone throws that, what are you going to do? Especially if the exception comes from a third-party library or something deep in the application having an aneurysm. It manages to be, impressively, even less actionable than <code>std::bad_alloc</code>.</p>
 <figure><img src="clippy.png" height="250"/>
 </figure>
 
