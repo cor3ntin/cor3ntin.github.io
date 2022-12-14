@@ -63,6 +63,30 @@
         <div class="subtitle is-6 is-pulled-right">
             
         </div>
+        <h2 class="subtitle is-6">February 18, 2020</h2>
+        <h1 class="title"><a href="https://cor3ntin.github.io/posts/move/">move, even more simply</a></h1>
+        <div class="content">
+            std::move doesn&rsquo;t move.
+It casts to an rvalue-reference, which is a type of reference that can be passed to a move constructor or assignment operator, if one exists.
+template &lt;typename T&gt; decltype(auto) move(T&amp;&amp; a) { return static_cast&lt;std::remove_reference_t&lt;T&gt;&amp;&amp;&gt;(a); } Some expressions will be converted to rvalue-references automatically, when the compiler is certain that the value is expiring (will not be reused).
+This is the case for temporaries or non-reference objects returned from functions.
+            
+            <a class="button is-link" href="https://cor3ntin.github.io/posts/move/" style="height:28px">
+            Read more
+            <span class="icon is-small">
+                <i class="fa fa-angle-double-right"></i>
+            </span>
+            </a>
+            
+        </div>
+        </article>
+        
+    
+    
+        <article id="article">
+        <div class="subtitle is-6 is-pulled-right">
+            
+        </div>
         <h2 class="subtitle is-6">January 31, 2020</h2>
         <h1 class="title"><a href="https://cor3ntin.github.io/posts/iouring/">A Universal I/O Abstraction for C&#43;&#43;</a></h1>
         <div class="content">
@@ -182,28 +206,6 @@ Code, in the presence of arbitrary identifiers and string literals as to be cons
             You who shall hereafter see this tablet, which I have written, or these sculptures, do not destroy them, but preserve them so long as you live! In 522 BC, 𐎭𐎠𐎼𐎹𐎢𐏁 also known as Dārīus was king of the Persian Empire. Kings crave fame as they do power and so Darius (who the greek later called Δαρεῖος) had his henchmen carve his name in stone. One such stone is the Behistun Inscription, which is really more a mountain than a stone.
             
             <a class="button is-link" href="https://cor3ntin.github.io/posts/characterset/" style="height:28px">
-            Read more
-            <span class="icon is-small">
-                <i class="fa fa-angle-double-right"></i>
-            </span>
-            </a>
-            
-        </div>
-        </article>
-        
-    
-    
-        <article id="article">
-        <div class="subtitle is-6 is-pulled-right">
-            
-        </div>
-        <h2 class="subtitle is-6">February 28, 2019</h2>
-        <h1 class="title"><a href="https://cor3ntin.github.io/posts/kona2019/">Kona: A trip report</a></h1>
-        <div class="content">
-            I was lucky enough to participate in a third wg21 committee meeting in a row, this time in Kona, Hawaii, a mere 13000 kilometers away.
-Kona As is tradition, Bryce and others wrote a rather thorough trip report on Reddit and you should check it out. However, if you want to read more details about my experience and some of the proposals I find important, please read on (knowing that your time is limited, and doing so will leave less time to read other blog posts).
-            
-            <a class="button is-link" href="https://cor3ntin.github.io/posts/kona2019/" style="height:28px">
             Read more
             <span class="icon is-small">
                 <i class="fa fa-angle-double-right"></i>
