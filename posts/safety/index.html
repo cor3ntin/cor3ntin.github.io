@@ -104,11 +104,11 @@ After all, there is no point in putting a warning sign in the very middle of a v
 <p>I like to think that most vulnerabilities in C++ have already been written.
 New code is more likely to abide by modern practices and use language and library facilities that make it easier to write correct code. Maybe. I am trying to be optimistic.
 Safety by good practices and convention certainly is no guarantee of anything but it does help, to a point.<br/>
-Good abstractions, good interfaces, good types. All of that lead to safer code.</p>
+Good abstractions, good interfaces, good types. All of that leads to safer code.</p>
 <p>But the point I&rsquo;m trying to make here is that to improve safety in C++ at the language level, we need to somehow consider all that existing C and C++ code. We cannot just ask people to write excellent and perfect code at all times. People are not machines (and you should see the kind of code machines write&hellip;)!
 Often, we can&rsquo;t even convince people to update their toolchains.
 Most of all, we can&rsquo;t ask people to abandon all their code.</p>
-<p>By Rust&rsquo;s definition, all of C++ is unsafe. Well, not all, functions dealing only in values are fine.
+<p>By Rust&rsquo;s definition, all of C++ is unsafe. Well, not all: functions dealing only in values are fine.
 But then again no, values can be non-owning pointers in disguise! Oh span, span, delicious span.
 We can&rsquo;t even make any statement about <code>constexpr</code> code: if constant evaluations are indeed safe, <code>constexpr</code> is just an ornament we put everywhere to celebrate Xmas.</p>
 <h2 id="borrowing-the-borrow-checker">Borrowing the borrow checker</h2>
@@ -123,10 +123,10 @@ Rust is not about having no dragons, it&rsquo;s about containing them.
 <p>So even if we could add a borrow checker to C++, would there be even a point?
 C++, is a &ldquo;continent of unsafety&rdquo;; by having a safe C++-ish language in C++, that dialect would look a bit foreign to most C++ devs, and it would integrate poorly, by design. We would need a clear boundary. And the safe dialect would have different capabilities, could not reuse existing libraries (or even the standard library), and so forth.
 And then we&rsquo;d try to make it generic, which would be a good way to stretch our zombie metaphor for a few more seasons.</p>
-<p>Sure, there are self-contained components that require more safety than others. For example, an authentification component, and a cryptography library.</p>
+<p>Sure, there are self-contained components that require more safety than others. For example, an authentication component, and a cryptography library.</p>
 <p>We could use our safe dialect to write these.</p>
 <p>And, because we are doing that to decrease the risk of vulnerabilities, we would reduce the surface area of the boundary between that new safe, green field component and the rest of the code as much as possible.</p>
-<p>We end up with a piece of code that does not look like the rest of our C++ nor integrate with it. At this point, could have we not written that piece of code in&hellip; Rust?</p>
+<p>We end up with a piece of code that does not look like the rest of our C++ nor integrate with it. At this point, could we have not written that piece of code in&hellip; Rust?</p>
 <p>The rules of interaction between a hypothetical safe C++ and C++ would be no different than that of C++ and Rust through a foreign function interface.</p>
 <figure><img src="rewrite.jpg" height="450"/>
 </figure>
@@ -173,7 +173,7 @@ Address sanitizer advertises a 2x slowdown. Much better, but way too slow for an
 <p>Something like ARM MTE advertises a 1%-5% slowdown, and a 5% or so increase in memory usage. (Note that this is at some point trading accuracy for performance, and some incorrect access may go undetected by ARM&rsquo;s MTE, there is no free lunch, sorry.)</p>
 <p>Now, we can have a conversation: Is a 1-5% overhead justifiable in the name of increased memory safety?</p>
 <p>As an industry, when it was found out that programs can spy on the internal state of CPUs and recover sensitive
-information, bypassing all forms of VMs isolations and kernel protection, we quickly deployed mitigations, sparing no expense. In fact, in the worse cases, Meltdown mitigations could cost 20% of CPU performance.
+information, bypassing all forms of VMs isolations and kernel protection, we quickly deployed mitigations, sparing no expense. In fact, in the worst cases, Meltdown mitigations could cost 20% of CPU performance.
 Fine. It&rsquo;s not like we had a choice, did we? Process isolation is the only thing between us and complete anarchy.
 Of course, that was annoying, and through improved CPUs architectures, compilers, and kernels heroics smart folks got that cost down to 0-5%.</p>
 <p>But if we were able to eat 20% of our compute and survive, maybe a few percent perf hit to mitigate <a href="https://www.zdnet.com/article/microsoft-70-percent-of-all-security-bugs-are-memory-safety-issues/">70% of vulnerabilities</a> isn&rsquo;t a bad deal, is it?</p>
@@ -185,7 +185,7 @@ We are more than happy to lose performance in the name of ABI, or in the name of
 <p>So the question of the price we are willing to pay for safety is an important point.
 In other professions, I doubt engineers would be too keen to argue against safety margins.
 Journalists tend to make a big fuss when bridges collapse.</p>
-<p>Maybe the winds are shifting. I mean, they definitively are.</p>
+<p>Maybe the winds are shifting. I mean, they definitely are.</p>
 <p>Users, Governments, and Industries want safety.</p>
 <p>In part, because they see it&rsquo;s possible, and in part because they had this great idea to link your toaster to your bank account, so now they kind of need safety, preferably 10 years ago. It&rsquo;s costing serious money.
 Maybe, we can hold the cynical view that these talks of safety are just trendy, or a phase, or something, and it&rsquo;s all hot air.
@@ -205,7 +205,7 @@ More generally, most logic bugs can&rsquo;t be caught by the language or the too
 our jobs won&rsquo;t be automated away just yet.</p>
 <p>I think this is a better way to frame the discussion:
 <strong>How do we deal with code known to be incorrect?</strong></p>
-<p>A program that for example, tries to access out-of-bound memory is incorrect and out-of-line.
+<p>A program that, for example, tries to access out-of-bound memory is incorrect and out-of-line.
 An interesting property of incorrect programs is that we never know why they are incorrect when they start to act unexpectedly. If the program was expecting to be in that specific state, it would be correct.
 Bugs are unknowns and failure of expectations.
 The program found itself in a state that was unaccounted for and its behavior is now&hellip; undefined.</p>
@@ -226,10 +226,10 @@ And yes, through optimizations UB can affect code preceding it. Spooky indeed.</
 <p>There is no denying that UB is a very sharp knife and ideally we&rsquo;d like less or none of it.
 Let&rsquo;s remove it all!
 To remove undefined behavior is to define behavior. Let&rsquo;s say you access uninitialized memory, should we just&hellip;pretend that this memory is not garbage? What about all the invariants some type now imposes on your garbage memory?
-What about integer division by 0? Should we make up new maths?</p>
+What about integer division by 0? Should we make up new math?</p>
 <p>And yeah, not all UB is always reasonable, I&rsquo;ll gladly concede that. Sometimes, UB is added out of laziness, to gain consensus, or for failure to realize how dangerous it is. But a lot of times, people simply would rather not give meaning to which has none, for there lies madness.</p>
 <p>And so, if our CPU is nice enough and lucky enough to trap incorrect memory access, it should crash.
-Note that, your program will already crash in that scenario.
+Note that your program will already crash in that scenario.
 But only if your request is so ludicrous it happens to correspond to an unloaded page.
 Imagine <code>ptr</code> points to an array of 1 element.
 Maybe <code>*(ptr + 43)</code> crashes, but <code>*(ptr + 42)</code> points to garbage memory.
@@ -243,7 +243,7 @@ It might also do something bad. Like going off on a murderous rampage.</p>
 <p>There is no way to tell sadly.
 And yes, I&rsquo;m being a tad hyperbolic but the arguments against termination are also too often alarmist.</p>
 <ul>
-<li><em>&ldquo;What if, a pacemaker terminates? That would be bad!!&rdquo;</em>
+<li><em>&ldquo;What if a pacemaker terminates? That would be bad!!&rdquo;</em>
 Are you telling me that you got some C++ in a medical device, with no redundancy whatsoever and the thing would overflow, or access out-of-bound memory? But what if the chip inside the pacemaker doesn&rsquo;t terminate, and instead does its thing slightly out of beat, sending the patient into arrhythmia, and killing them in the process?</li>
 </ul>
 <br/>
@@ -251,7 +251,7 @@ Are you telling me that you got some C++ in a medical device, with no redundancy
 <li><em>&ldquo;What if an application at the heart of the banking system overflows and crashes, and&hellip;&rdquo;</em>
 Well, what if it doesn&rsquo;t crash? Are you really letting a transaction overflow?</li>
 </ul>
-<p>I should be a bit nuanced here. We can find dramatic examples both ways. The inaugural <a href="https://en.wikipedia.org/wiki/Ariane_flight_V88">Ariane 5 flight</a> was probably doomed because of trapping overflow. Who knows what would have happened if it wrap? Maybe the thing would have gone on its merry way or crashed a few seconds later.</p>
+<p>I should be a bit nuanced here. We can find dramatic examples both ways. The inaugural <a href="https://en.wikipedia.org/wiki/Ariane_flight_V88">Ariane 5 flight</a> was probably doomed because of trapping overflow. Who knows what would have happened if it wrapped instead? Maybe the thing would have gone on its merry way or crashed a few seconds later.</p>
 <p>The Linux Kernel has a policy that nothing can violently terminate because being the kernel, there would not be any opportunity to report the error otherwise. Fair enough. but you also open yourself to attack vectors. Or loss of data, or whatever else can happen when a kernel goes rabid.</p>
 <p>I&rsquo;m sure there are unknown unknowns that cause the Linux Kernel crashes anyway (but this being an article about C++, the Linux Kernel is forever off-topic).</p>
 <p>If the system is critical enough, having redundancies a level down is the only realistic way to ensure it keeps running. Let the thing crash, reboot it. Of course, these fail-safe systems are hard to test and may also cause problems. UB all the way down!
@@ -259,8 +259,8 @@ Rust will probably take the approach of having a set of libraries that are desig
 But that shows that termination being <em>bad</em> is not the common case and so it needs dedicated considerations and tools that should have no impact on the 99% use case. I guess in such an environment, everything would have to be safe.</p>
 <p>Leaving the kernel aside, for integer overflow specifically, Rust takes the approach of panicking in debug, and letting signed overflows wrap in release - it&rsquo;s still UB in the spec, though, so if you were to rely on it you&rsquo;d anger the crab gods.
 It&rsquo;s UB because it does not make sense. That&rsquo;s not how math works.
-If you explain to a kid that if they have 127 candies at Halloween and they get one more candy, they have to give all of their candies away, they might realize too young that grown-ups deserve to go sit in the corner forever.
-Wrapping just transforms a bug into another bug, which then snowballs, into a bigger issue, hoping that it will become someone else&rsquo;s mess to deal with.</p>
+If you explain to a kid that if they have 127 candies at Halloween and they get one more candy, they have to give all of their candies away. They might realize too young that grown-ups deserve to sit in the corner forever.
+Wrapping just transforms a bug into another bug, which then snowballs into a bigger issue, hoping that it will become someone else&rsquo;s mess to deal with.</p>
 <p>John Regehr <a href="https://blog.regehr.org/archives/1154">makes the case</a> that
 languages do have little choice of following the semantics of what the hardware supports, and trapping semantics for integer overflow would need some help from the hardware folks (neither amd64 nor Arm can trap on overflow) - which in turn would have industry-wide benefits. The reason this hardware does not exist is that Hardware folks 20 years ago thought it wasn&rsquo;t worth the real estate cost.</p>
 <p>Division always panics. I wonder what happens if one divides in the kernel. It&rsquo;s probably not allowed.</p>
@@ -287,14 +287,14 @@ UNSAFETY, shouts the crab, smugly.</p>
 This is what I hoped for contract, the other C++ feature is highly related to the S-word and going nowhere.</p>
 <p>There is absolutely nothing new here.
 Some distributions even ship a standard C++ with assertions enabled.
-These tools exist and are definitively a piece of the puzzle.
+These tools exist and are definitely a piece of the puzzle.
 <code>std::span</code> was designed from the start to be bound-checked and that kind of safety has seemingly <a href="https://blog.readyset.io/bounds-checks/">very little performance impact</a> in Rust.
 I&rsquo;d <em>love</em> to see similar measurements in C++.</p>
 <p>Other ideas include <a href="https://discourse.llvm.org/t/rfc-c-buffer-hardening/65734">banning pointer arithmetics</a>,
-and even <a href="https://discourse.llvm.org/t/rfc-lifetime-annotations-for-c/61377">improving diagnostics for lifetime issues</a>. Indeed, we cannot offer the same guarantees as Rust but we can sometimes know at compile time that a piece of code is definitively wrong.</p>
+and even <a href="https://discourse.llvm.org/t/rfc-lifetime-annotations-for-c/61377">improving diagnostics for lifetime issues</a>. Indeed, we cannot offer the same guarantees as Rust but we can sometimes know at compile time that a piece of code is definitely wrong.</p>
 <p>We also need better tools to prevent UB from happening. In its arsenal, Rust offers saturating arithmetic, checked arithmetics (returning <code>Optional</code>), and wrapping arithmetics. I hope some of that comes to C++26.
 If you expect overflow to happen, deal with it before it does, not after.</p>
-<p>None of that requires changes to the core C++ language though. They are practical solutions, that we could have deployed years ago, most of these things don&rsquo;t even need to involve the C++ committee, luckily.</p>
+<p>None of that requires changes to the core C++ language though. They are practical solutions that we could have deployed years ago. Luckily, most of these things don&rsquo;t even need to involve the C++ committee.</p>
 <p>And to be clear, there is no one solution to the safety and correctness problems, but a myriad of imperfect and incomplete solutions that, when combined, would get us to a much less scary place.</p>
 <p>Neither C++ nor Rust will ever be safe. They don&rsquo;t need to be. They just need to be safe enough that vulnerabilities are rare, easier to find, and harder to exploit.</p>
 <p>Things like hardware ASan, hardware overflow trapping, etc would be useful to Rust as well.
