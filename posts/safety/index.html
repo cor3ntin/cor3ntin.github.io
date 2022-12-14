@@ -116,10 +116,10 @@ We can&rsquo;t even make any statement about <code>constexpr</code> code: if con
 I am not sure exactly how. But it would go swimmingly though, exactly as it went with rvalue references. We also would have to figure out destructive move. We failed to do that once, but why should that stop anyone?
 So armed with our imaginary tools, we can start to have a nice and cozy &ldquo;island of safety&rdquo;.
 Our new safe code can call other safe code.</p>
-<p>Surrounded by an army of raw pointer zombies, every time we would call or be called by the &ldquo;unsafe subset of C++&rdquo; (which would be 99.999% of C++ at that point), we risk the walls around our little safe heaven to be toppled over.</p>
+<p>Surrounded by an army of raw pointer zombies, every time we would call or be called by the &ldquo;unsafe subset of C++&rdquo; (which would be 99.999% of C++ at that point), we risk the walls around our little safe haven to be toppled over.</p>
 <p>See, there is relatively little unsafe code in Rust and a lot of care has to be put to ensure that this code is, in fact, safe. It&rsquo;s manageable because it is limited, clearly delimited, and contained in space. Keeping a zombie in the basement is a tolerable risk, living encircled by zombies very much less so.
 Rust is not about having no dragons, it&rsquo;s about containing them.
-<code>usafe</code> also rises red flags in code reviews, which is exactly what we want.</p>
+<code>unsafe</code> also raises red flags in code reviews, which is exactly what we want.</p>
 <p>So even if we could add a borrow checker to C++, would there be even a point?
 C++, is a &ldquo;continent of unsafety&rdquo;; by having a safe C++-ish language in C++, that dialect would look a bit foreign to most C++ devs, and it would integrate poorly, by design. We would need a clear boundary. And the safe dialect would have different capabilities, could not reuse existing libraries (or even the standard library), and so forth.
 And then we&rsquo;d try to make it generic, which would be a good way to stretch our zombie metaphor for a few more seasons.</p>
@@ -189,7 +189,7 @@ Journalists tend to make a big fuss when bridges collapse.</p>
 <p>Users, Governments, and Industries want safety.</p>
 <p>In part, because they see it&rsquo;s possible, and in part because they had this great idea to link your toaster to your bank account, so now they kind of need safety, preferably 10 years ago. It&rsquo;s costing serious money.
 Maybe, we can hold the cynical view that these talks of safety are just trendy, or a phase, or something, and it&rsquo;s all hot air.
-Even if it was, which I really don&rsquo;t think it is, people are going to use tools they enjoy using, not meetings the wants of users is not a recipe for success.</p>
+Even if it was, which I really don&rsquo;t think it is, people are going to use tools they enjoy using, not meeting the wants of users is not a recipe for success.</p>
 <p>And then maybe that question about the affordability of safety reduces to &ldquo;Do we buy more hardware or do we rewrite it in Rust?&rdquo;. I hope we give the people who can&rsquo;t rewrite it in Rust options. Soon. Rewrites ain&rsquo;t cheap.</p>
 <p>Okay so for the sake of the argument, let&rsquo;s say that we are all convinced we need to check memory accesses at runtime, at least until the unicorns shine down on us.</p>
 <p><em>Now what?</em></p>
@@ -200,12 +200,13 @@ What does it mean? Seriously?
 &ldquo;Safety&rdquo; is hyper-focusing on the wrong thing and we are hyper-focusing on it.</p>
 <p>Under the right circumstances, any bug can be exploited, and lead to vulnerabilities. On the contrary, a correct system (both per the specification and the developer&rsquo;s intent), is less likely to have vectors of attacks.</p>
 <p>The only difference between an exploitable bug and one which isn&rsquo;t is who is holding the foot gun.</p>
-<p>Of course, things tend to only be correct in some domains so you can always poke at things with adversarial inputs, but can a system that let unsanitized input slip in ever be correct by any stretch of the imagination?</p>
+<p>Of course, things tend to only be correct in some domains so you can always poke at things with adversarial inputs, but can a system that let unsanitized input slip in ever be correct by any stretch of the imagination?
+More generally, most logic bugs can&rsquo;t be caught by the language or the tools,
+our jobs won&rsquo;t be automated away just yet.</p>
 <p>I think this is a better way to frame the discussion:
-<strong>How do we deal with incorrect code?</strong></p>
+<strong>How do we deal with code known to be incorrect?</strong></p>
 <p>A program that for example, tries to access out-of-bound memory is incorrect and out-of-line.
-An interesting property of incorrect programs is that we never know why they are incorrect when they
-start to act unexpectedly. If the program was expecting to be in that specific state, it would be correct.
+An interesting property of incorrect programs is that we never know why they are incorrect when they start to act unexpectedly. If the program was expecting to be in that specific state, it would be correct.
 Bugs are unknowns and failure of expectations.
 The program found itself in a state that was unaccounted for and its behavior is now&hellip; undefined.</p>
 <figure><img src="dragon.png" height="250"/>
@@ -218,7 +219,7 @@ In other words, behavior that does not make sense.
 An optimizer, which inlines, reorders, unloops, removes, factorizes, vectorizes, etc code, needs to ensure all of these transformations preserve semantics throughout.
 And the only way it can do that is to assume at the start that the program makes sense. One cannot preserve the semantics of something which does not make sense.</p>
 <p>So it&rsquo;s not like the big bad implementer is actively trying to enlarge the holes you made in your metatarsals, instead, the compiler just assumes (because it has no other choice), that you wrote something sensible.
-If that assumption is wrong, the optimizers will possibly make it worse, by no fault of their own. Garbage in, garbage out.
+If that assumption is wrong, the optimizer will possibly make it worse, by no fault of its own. Garbage in, garbage out.
 This is why we say that UB can time travel, or do anything including summoning nasal demons. Maybe it&rsquo;s not a super helpful characterization, but what it&rsquo;s trying to express is that it&rsquo;s not possible to reason, or predict.
 the behavior of a program that is not correct.
 And yes, through optimizations UB can affect code preceding it. Spooky indeed.</p>
@@ -261,7 +262,7 @@ It&rsquo;s UB because it does not make sense. That&rsquo;s not how math works.
 If you explain to a kid that if they have 127 candies at Halloween and they get one more candy, they have to give all of their candies away, they might realize too young that grown-ups deserve to go sit in the corner forever.
 Wrapping just transforms a bug into another bug, which then snowballs, into a bigger issue, hoping that it will become someone else&rsquo;s mess to deal with.</p>
 <p>John Regehr <a href="https://blog.regehr.org/archives/1154">makes the case</a> that
-languages do have little choice of following the semantics of what the hardware supports, and trapping semantics for integer overflow would need some help from the hardware folks - which in turn would have industry-wide benefits. The reason this hardware does not exist is that Hardware folks 20 years ago thought it wasn&rsquo;t worth the real estate cost.</p>
+languages do have little choice of following the semantics of what the hardware supports, and trapping semantics for integer overflow would need some help from the hardware folks (neither amd64 nor Arm can trap on overflow) - which in turn would have industry-wide benefits. The reason this hardware does not exist is that Hardware folks 20 years ago thought it wasn&rsquo;t worth the real estate cost.</p>
 <p>Division always panics. I wonder what happens if one divides in the kernel. It&rsquo;s probably not allowed.</p>
 <h2 id="correct-by-confusion">Correct by confusion</h2>
 <p>Back to C++. In no case should exceptions ever be involved. Ever.
@@ -318,6 +319,10 @@ And in very rare cases, the developer does know better than the compiler and the
 <p>We&rsquo;ll need to accept that.</p>
 <p>But the borrow checker is not what makes Rust safe. Rust is safe because it decides to put correctness first by default.</p>
 <p><strong>Rust is safe by culture.</strong></p>
+<div style="text-align: center;">
+<p>🦀🦀🦀</p>
+</div>
+<p><br/></p>
 <figure><img src="dragon2.png" height="250"/>
 </figure>
 
