@@ -312,7 +312,8 @@ Even without a borrow checker, GCC&rsquo;s Rust implementation is less sharp of 
 <p>And they do care about performance, undoubtedly. In many cases, Rust is as fast or faster than C++.
 And in very rare cases, the developer does know better than the compiler and there are escape hatches to unhook the safety harness, even if that comes with a lot of safety stickers in the documentation.</p>
 <p>How C++ prioritizes its goals going forward will be key.</p>
-<p>Justifying the most unergonomic and dangerous designs in the name of performance, not asserting on precondition violations, not bound checking on the assumption that it might hurt performance, silencing known UB, propagating design mistakes in exceptions, etc&hellip; is what make C++ a very sharp tool. And sure that&rsquo;s fast but&hellip;is it faster? is it justifiably faster? Have we benchmarked?</p>
+<p>Justifying the most unergonomic and dangerous designs in the name of performance, not asserting on precondition violations, not bound checking on the assumption that it might hurt performance, silencing known UB, propagating design mistakes in exceptions, etc&hellip; is what make C++ a very sharp tool. And sure that&rsquo;s fast but&hellip;is it faster?
+Is it a good default? Is it justifiably faster? Have we benchmarked?</p>
 <p>And yes, because Rust has more robust foundations, it gets safety at a lesser cost than C++ will have to pay.</p>
 <p>We&rsquo;ll need to accept that.</p>
 <p>But the borrow checker is not what makes Rust safe. Rust is safe because it decides to put correctness first by default.</p>
