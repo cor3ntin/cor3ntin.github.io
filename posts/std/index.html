@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -162,8 +162,9 @@ So maybe the standard library should mainly provide concepts to tie all 3rd part
 <p>There is however an issue with just trying to add concepts in the standard.
 Concepts are informed by concrete types and how they are used, they cannot be pulled out of thin air. Not without making mistakes anyway, and <a href="https://www.youtube.com/watch?v=v_yzLe-wnfk">concepts are not amendable to mistakes</a>.</p>
 <p>So, it would seem that if the STL is to have concepts, it need algorithms.</p>
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Generic Programming pro tip: Although Concepts are constraints on types, you don&#39;t find them by looking at the types in your system. You find them by studying the algorithms.<a href="https://twitter.com/hashtag/cpp?src=hash&amp;ref_src=twsrc%5Etfw">#cpp</a></p>&mdash; Eric Niebler 🇺🇦 #BLM (@ericniebler) <a href="https://twitter.com/ericniebler/status/990390059579789312?ref_src=twsrc%5Etfw">April 29, 2018</a></blockquote>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Generic Programming pro tip: Although Concepts are constraints on types, you don&#39;t find them by looking at the types in your system. You find them by studying the algorithms.<a href="https://twitter.com/hashtag/cpp?src=hash&amp;ref_src=twsrc%5Etfw">#cpp</a></p>&mdash; @ericniebler.bsky.social (@ericniebler) <a href="https://twitter.com/ericniebler/status/990390059579789312?ref_src=twsrc%5Etfw">April 29, 2018</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 
 <p>Good algorithms are agnostic of domain-specific knowledge and can be used in the widest variety of situations.
 Algorithms are not useful to people who write games, or people who make microcontrollers, they are useful to people who write C++.
@@ -268,8 +269,9 @@ This is true of networking especially. Whatever the network TS ends up to be, it
 Being part of the SG-16 Unicode study group, I know how hard it is to build a common understanding both within a study group and with the committee as a whole.</p>
 <p>And so, if the domain knowledge is concentrated in the mind of the author and a few people,
 we come back to the question we started with: Is the value of a component in its implementation or its specification?</p>
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">So many <a href="https://twitter.com/isocpp?ref_src=twsrc%5Etfw">@isocpp</a> problems would be solved if we could get all the major vendors onboard with shipping a single implementation of a set of libraries curated with a lightweight review process and a policy of scheduled ABI breaks.</p>&mdash; Bryce Adelstein Lelbach 🇺🇦 (@blelbach) <a href="https://twitter.com/blelbach/status/1306113740572516352?ref_src=twsrc%5Etfw">September 16, 2020</a></blockquote>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">So many <a href="https://twitter.com/isocpp?ref_src=twsrc%5Etfw">@isocpp</a> problems would be solved if we could get all the major vendors onboard with shipping a single implementation of a set of libraries curated with a lightweight review process and a policy of scheduled ABI breaks.</p>&mdash; Bryce Adelstein Lelbach (@blelbach) <a href="https://twitter.com/blelbach/status/1306113740572516352?ref_src=twsrc%5Etfw">September 16, 2020</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 
 <p>It is definitively a difficult question to answer, what is clear however is that WG21&rsquo;s ability to deliver a richer STL within the bound of the current
 modus operandi simply does not scale.</p>
@@ -338,20 +340,6 @@ Until WG21 finds ways to reduce the overall cost of features, I think the STL sh
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">

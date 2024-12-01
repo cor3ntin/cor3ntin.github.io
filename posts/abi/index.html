@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -62,7 +62,7 @@
     <h1 class="title">The Day The Standard Library Died</h1>
     
     <div class="content">
-      <figure><img src="dagger.webp"/>
+      <figure><img src="/posts/abi/dagger.webp">
 </figure>
 
 <p>In Prague, the C++ committee took a series of polls on whether to break ABI, and decided not to.<br>
@@ -174,8 +174,9 @@ Although, alarmingly, many people voted against.</p>
 <p>My interpretation is that the committee wants its cake and eat it
 too. Which is not possible.</p>
 <!-- https://twitter.com/blelbach/status/1228962495865507840 -->
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Performance<br>ABI Stability<br>Ability to Change<br><br>You can pick two, choose wisely.<a href="https://twitter.com/hashtag/cppprg?src=hash&amp;ref_src=twsrc%5Etfw">#cppprg</a></p>&mdash; Bryce Adelstein Lelbach 🇺🇦 (@blelbach) <a href="https://twitter.com/blelbach/status/1228962495865507840?ref_src=twsrc%5Etfw">February 16, 2020</a></blockquote>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Performance<br>ABI Stability<br>Ability to Change<br><br>You can pick two, choose wisely.<a href="https://twitter.com/hashtag/cppprg?src=hash&amp;ref_src=twsrc%5Etfw">#cppprg</a></p>&mdash; Bryce Adelstein Lelbach (@blelbach) <a href="https://twitter.com/blelbach/status/1228962495865507840?ref_src=twsrc%5Etfw">February 16, 2020</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 
 <p>Stability and ABI ultimately, given a large enough period, run afoul of one another.
 <br>
@@ -184,7 +185,7 @@ This poll was important though: It touches a fundamental question:</p>
 <p>The words touted around are &ldquo;performance&rdquo; &ldquo;zero-cost abstractions&rdquo; and &ldquo;don&rsquo;t pay for what you don&rsquo;t use&rdquo;.
 <strong>ABI stability goes directly against all of that.</strong></p>
 <h2 id="far-reaching-consequences">Far-reaching consequences</h2>
-<figure><img src="birds.webp"/>
+<figure><img src="/posts/abi/birds.webp">
 </figure>
 
 <p>I believe, quite strongly, that not breaking ABI in 23 is the worst mistake the committee ever made.
@@ -225,10 +226,11 @@ Performance is what keeps the standard library alive. Without performance, a lot
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">They&#39;re common and readily available? (Which does have some value.)<br><br>Committing to ABI is like admitting that the standard library is aiming to be McDonald&#39;s - It&#39;s everywhere, it&#39;s consistent, and it technically solves the problem.</p>&mdash; Titus Winters (@TitusWinters) <a href="https://twitter.com/TitusWinters/status/1224377740306132998?ref_src=twsrc%5Etfw">February 3, 2020</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
+
 <h2 id="how-could-the-committee-address-abi-breaking-proposals">How could the committee address ABI-breaking proposals?</h2>
 <p>A few things are being proposed to ease the pain of not being able to break ABI:</p>
 <h3 id="adding-new-names">Adding new names</h3>
-<figure><img src="monster.webp"/>
+<figure><img src="/posts/abi/monster.webp">
 </figure>
 
 <p>This is the obvious solution
@@ -301,6 +303,7 @@ the state-of-the-art a decade ago, which we know can be improved upon dramatical
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">You will eventually want to change every single decision you make.  Build the ability to change into your ecosystem, both tooling and process. <a href="https://t.co/uo5Ir1MzCY">https://t.co/uo5Ir1MzCY</a></p>&mdash; Hyrum Wright (@hyrumwright) <a href="https://twitter.com/hyrumwright/status/1228833676240146434?ref_src=twsrc%5Etfw">February 16, 2020</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
+
 <p>Some mistakes are made conscientiously as being the right trade-offs at the time
 while others will remain hidden for years.</p>
 <p>Time goes on but the standard library stands still.
@@ -354,20 +357,6 @@ But like everything, stability has a cost, and the entire C++ ecosystem is payin
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">

@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -62,7 +62,7 @@
     <h1 class="title">Soursop and Ponies in Kona: A C&#43;&#43; Committee Trip Report</h1>
     
     <div class="content">
-      <figure><img src="kona1.png"/>
+      <figure><img src="/posts/kona22/kona1.png">
 </figure>
 
 <p>Earlier this month, the C++ committee meeting had its penultimate meeting of the C++23 cycle.
@@ -104,7 +104,7 @@ I had made sure to have both options (tuple, and aggregate) fully worded, but th
 And so, <code>std::enumerate</code> is now targeting C++23 subject to another round of electronic polling (so it&rsquo;s not yet certain).
 Sometimes, perfect is the enemy of good.</p>
 <p>The time spent on this was not entirely lost. It was a great learning experience, and we got convertibility between different tuple-like types in the standard (P2165), which is great! <code>std::pair</code> is dead, long live <code>std::tuple</code>.</p>
-<figure><img src="sg9.png"/>
+<figure><img src="/posts/kona22/sg9.png">
 </figure>
 
 <h2 id="unicode">Unicode</h2>
@@ -148,6 +148,7 @@ Shortly after, JF Bastien proposed to do something about uninitialized variables
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Wherein I propose that C++ initialize all stack variables to zero, preventing ~10% of CVEs.<br><br>Cost: none.<br><br>🔗 <a href="https://t.co/LJsDiRl7ZR">https://t.co/LJsDiRl7ZR</a> 🔗 <a href="https://t.co/M0dhOkIvOm">pic.twitter.com/M0dhOkIvOm</a></p>&mdash; JF Bastien 🔗 @jfbastien@mastodon.social (@jfbastien) <a href="https://twitter.com/jfbastien/status/1592578174763745280?ref_src=twsrc%5Etfw">November 15, 2022</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
+
 <p>I see that as a sort of litmus test in the coal mine. So far, this has engendered hundreds of comments, so there is interest. I think we are a long way from any kind of consensus, but the ball is rolling. It will be interesting to follow.</p>
 <p>Overall, I&rsquo;m not sure we achieved more in that meeting than the recognition that safety is a problem. I guess it&rsquo;s a necessary first step. And I&rsquo;m pretty sure that there are strong disagreements about what safety is. For example, people care about termination safety (ie the idea that a program should never terminate even when it ends up in a broken state), which seems antithetical to the notion of safety.</p>
 <p>So we are not sure what safety is, or how to get more of that, but we want more of it. Hooray.</p>
@@ -164,7 +165,7 @@ If safety-related work happens and trickles down to users in a decade or so, wil
 <p>As the pandemic struck, many were happy to pause the work entirely until we could get back to business as usual. C++23 is still a great release thanks to the dedication of many people though!</p>
 <p>We also did not talk about the successor elephants in the room. I think it&rsquo;s fair to say many people are dismissive of Carbon, Circle, Val (and even Rust at times), but whether these projects succeed is, to me less important than the question of why all these groups of people decided to start from scratch than to put up with the C++ committee. I don&rsquo;t believe these projects can be ignored. At the very least they further dilute the pile of talents the C++ community, the committee, and implementers can draw from.</p>
 <p>Following that meeting, we were asked whether we are optimistic about the future of C++. Maybe I&rsquo;m biased in that I&rsquo;ve always been bad at this optimism thing but… are you?</p>
-<figure><img src="kona4.png"/>
+<figure><img src="/posts/kona22/kona4.png">
 </figure>
 
 <h2 id="customization-function-objects">Customization Function Objects.</h2>
@@ -187,14 +188,14 @@ Maybe one that looks more like Rust generics, even if generics do not solve the 
 In the meantime, Sean Baxter has been experimenting with features in the design space of C++0x Concepts, rust traits, and generic type erasure.
 I hope something comes to fruition. But something needs to happen soon if we are to save our users and our compilers from <code>tag_invoke</code> and its one giant overload set.
 The best part is, no one is paid to work on this!</p>
-<figure><img src="kona3.png"/>
+<figure><img src="/posts/kona22/kona3.png">
 </figure>
 
 <h2 id="indexing-a-pack-by-committee">Indexing a pack by Committee</h2>
 <p>The most important thing for me that week was to present <a href="wg21.link/P2632">P2632. A plan for better template meta programming facilities in C++26</a>. It is, after all, the reason a 24h hour journey seemed justified.
 The idea of this paper was, in no small part to take some good ideas from Circle which are known to improve maintainability and productivity and standardize them, being careful to strike for a reasonably minimal subset and to reimplement everything in Clang so that we can derive a specification with confidence and gain more experience with it all.
 The set of features proposed either made currently impossible-to-write code possible (universal template parameters) or greatly reduced the complexity of already used techniques (improving pack manipulation greatly reduces code complexity).</p>
-<figure><img src="tuple.png"/>
+<figure><img src="/posts/kona22/tuple.png">
 </figure>
 
 <p>It also draws a lot from preexisting work over the past decade. And it extends the languages in mostly obvious ways, in many cases. It&rsquo;s about plugging holes, not inventing a brand-new paradigm. We don&rsquo;t need new paradigms!</p>
@@ -223,6 +224,7 @@ For pack slicing (getting a subset of a pack), the case for reflection is a litt
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Given a C++ parameter pack `P`, how to you get the `n`th type in it? Rules: short as possible, no additional definitions. I&#39;m sure we can do better than `std::remove_reference_t&lt;decltype(std::get&lt;n&gt;(*static_cast&lt;std::tuple&lt;P...&gt;*&gt;(nullptr)))&gt;`?</p>&mdash; 🇺🇦 Andrei Alexandrescu 🇺🇦 (@incomputable) <a href="https://twitter.com/incomputable/status/1590733659694583808?ref_src=twsrc%5Etfw">November 10, 2022</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
+
 <p>Another argument was that template meta-programming is terrible actually, which I find hilarious given that TMP is often a reason cited by people not to jump to rust. And we could make it better.</p>
 <p>Finally, we should just be able to convert packs to some kind of objects that we can iterate.
 I could not completely follow that discussion, having to be in multiple rooms at once, but I do have one question: what is the type of a pack of template template parameters?
@@ -230,6 +232,7 @@ Packs are fundamentally heterogeneous beasts and with luck, they may even contai
 <p>Given that our time is, in fact, limited, maybe introducing new kinds of objects/expressions in the language isn&rsquo;t something we should entertain given that the few operations that are actually useful and packs and for which reflection is overkill are actually few.</p>
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">C++ variadic templates seem to be the result of a gang war. One faction wanted to make them as complicated as possible. Another wanted to give variadics as little power as possible. Those gangs canceled each other out and the design was done by a group of TeX macro experts.</p>&mdash; 🇺🇦 Andrei Alexandrescu 🇺🇦 (@incomputable) <a href="https://twitter.com/incomputable/status/1579939413756612609?ref_src=twsrc%5Etfw">October 11, 2022</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 
 <p>Tuple unpacking is also a bit stuck because of the implementation complexity for one vendor, so we might burden users with syntactic ornaments that other implementations could maybe not require. If we even want tuple unpacking?
 The issue with the fact my paper presented a vision is that I&rsquo;m not sure which parts of it people had cold or warm reactions to.</p>
@@ -277,7 +280,7 @@ All the remaining NB comments will be resolved and C++ will be done!</p>
 Reflection, Pattern Matching, and SIMD are also areas that might make significant progress.</p>
 <p>Going forward, the plan or the hope at least is to continue meeting both remotely and in person.
 We certainly need to do both to keep up with the workload!</p>
-<figure><img src="kona2.png"/>
+<figure><img src="/posts/kona22/kona2.png">
 </figure>
 
 <p><em>A hui hou kākou.</em></p>
@@ -314,20 +317,6 @@ We certainly need to do both to keep up with the workload!</p>
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">

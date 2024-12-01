@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Legacy Safety: The Wrocław C&#43;&#43; Meeting | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">November 29, 2024</h2>
+    <h1 class="title">Legacy Safety: The Wrocław C&#43;&#43; Meeting</h1>
+    
+    <div class="content">
+      <figure><img src="/posts/profiles/1.jpg">
+</figure>
+
+<p>Someone was giving away stickers reading &ldquo;Somebody Should Do Something&rdquo; at the WG21 C++ Standardization meeting held in Wrocław last week, and it makes for a pretty good tagline for that meeting.</p>
+<p>We are one meeting away from calling C++26 feature complete.
+The draft will be sent to National Bodies this summer. After that, we will have a couple of meetings to fix bugs and then wait for ISO to publish the official standard, which might take a year or two.</p>
+<p>Hard-pressed by self-imposed deadlines, I would not dare say we are overly expedient with design reviews, but boy, does it seem like it sometimes!</p>
+<p>These deadlines are somewhat ridiculous, as very few people need to care about ISO publications, and to some extent, the version of C++ you use is irrelevant;
+features are implemented out-of-order and often deployed in older language modes when possible.
+Features test macros are good; use them.
+On the other hand, we still don&rsquo;t have a better way to stabilize features, so publishing
+the draft of the international standard is a somewhat okay cut-off point (even though WG21 will apply breaking changes well into 2025 if it feels like it). Either way, I don&rsquo;t think we are justified in designing features based on deadlines
+(<code>basic_fixed_string</code>, <code>define_aggregate</code> come to mind).
+All major features, especially reflection, have rough edges, and their design is still in flux.
+However, this end-of-the-cycle rush is on par for the course, and most features should stabilize
+over the next year.</p>
+<p>I know it is sometimes difficult to form a fair view of the outcomes when reading about WG21 proceedings, so before going further, we should acknowledge that there is a lot to love about C++26.
+<a href="https://wg21.link/P2996">Reflection</a> and <a href="https://wg21.link/P2900">Contracts</a> are poised to land in C++26, and each proposal represents
+years of hard work. We also just approved <a href="https://wg21.link/P1928"><code>std::simd</code></a>, a portable way to write SIMD code.
+I remember the author telling me about this work at my first meeting back in 2018.
+I think <a href="https://wg21.link/P2300">sender/receivers</a>, approved earlier this year, is the right framework
+to allow C++ to thrive in the current reality of highly heterogeneous and parallel hardware.</p>
+<p>C++26 will be a significant, exciting release.</p>
+<p>On the flip side, I have some concerns that the committee doesn&rsquo;t consider enough implementer bandwidth,
+especially on the library side.
+Don&rsquo;t be surprised if some of these proposals take years to implement.
+It&rsquo;s a somewhat tricky position to take, having a (totally unfounded!)
+reputation for writing a lot of papers.
+Yet, I think it&rsquo;s fairly important to consider the economic impact of our work,
+and I wish we had that conversation more often.</p>
+<p>And with that in mind, I guess we need to talk about safety again.
+Some great work happened on that front. A whole lot of nothing, too.</p>
+<h2 id="safety-why-do-we-care">Safety, why do we care?</h2>
+<p>You&rsquo;d think our newfound proclaimed interest in language safety would be motivated by our desire to improve our users&rsquo; productivity or because we genuinely admit Rust has some good ideas worth
+exploring. And mostly because we understand the world is changing, and our perception of code quality and sound engineering is shifting for the better. And to some extent, all of that is true.</p>
+<p>But, seemingly, it isn&rsquo;t what drives the discussion.</p>
+<p>Consider bound checking on <code>vector::operator[]</code>.
+We had the technology to solve that problem in 1984. We did not.
+Consider destructive moves. We had a window opportunity in the C++11 time frame. We choose not to take it.
+What changed?</p>
+<p>People at <a href="https://www.whitehouse.gov/oncd/briefing-room/2024/02/26/press-release-technical-report/">Washington</a> (and <a href="https://digital-strategy.ec.europa.eu/en/library/cyber-resilience-act">Bruxells</a>) realized poorly written software was a threat to national security and critical infrastructures and that they should do something about it.</p>
+<p>Memory unsafety is widely understood to be the <a href="https://www.memorysafety.org/docs/memory-safety/">most significant cause of vulnerabilities</a>,
+consequently, C++ (and C, obviously) found itself on the <a href="https://www.theregister.com/2024/11/08/the_us_government_wants_developers/">naughty list of Big Brother</a>.
+<a href="https://downloads.regulations.gov/ONCD-2023-0002-0020/attachment_1.pdf">That ruffled some feathers</a>!</p>
+<p>So, the C++ leadership is reacting, with haste, to a perceived threat.
+We care about safety out of fear. Is that conducive to good design outcomes?</p>
+<h2 id="reframing-language-safety">Reframing (language) safety.</h2>
+<p>We would like to make it close to impossible to compromise software so that we don&rsquo;t endanger
+the lives or privacy of anyone. Imagine making Software Engineering a bit more like Engineering.
+Crazy, right?</p>
+<p>This is hard, but frankly, you can do that in C++, or assembly, or brainfuck.
+It&rsquo;s a factor of cost.
+C++ can be perfectly usable in an air-gapped system buried under kilometers of granite, otherwise sandboxed (which is how Chrome works), or by applying sufficient fuzzing and qualification, but that takes time and money.</p>
+<p>Software vulnerabilities are ultimately a failure of process rather than a failure of technology.
+The good people at <a href="https://www.crowdstrike.com/wp-content/uploads/2024/08/Channel-File-291-Incident-Root-Cause-Analysis-08.06.2024.pdf">Crowdstrike simply had inadequate testing procedures</a>, and what happened in the guts
+of the billions of affected CPUs, while interesting, is not the material cause.
+No tool is going to help in an environment without a strong safety culture.</p>
+<p>Our concern is that, the more language safety becomes a prevalant goal, the less C++ offers a compelling value-proposition.</p>
+<p>The sooner unsafeties are found in the development cycle, the less they cost, even if that means that writing code
+becomes more expensive (i.e., <a href="https://en.wikipedia.org/wiki/Shift-left_testing">shifting left</a>).
+Some issues in C++ can only be found by running the code in sanitizers and <a href="https://security.googleblog.com/2022/09/fuzzing-beyond-memory-corruption.html">fuzzers</a>, which is expensive.
+Writing code is a one-time cost; fuzzing must happen continuously in the product&rsquo;s lifetime.</p>
+<p>Under increasing regulator scrutiny, the cost of documentation and certification increases too, such that at some point bidding on a contract with a C++ solution will not be competitive (especially as C++ has always been a costly hammer to begin with).</p>
+<p>That perspective on language safety is essential to keep in mind.</p>
+<p>The point is your code is not more unsafe than it was two years ago,
+but interest rates on technical debts are going to keep increasing.</p>
+<p>Somebody should do something!</p>
+<figure><img src="/posts/profiles/2.jpg">
+</figure>
+
+<h2 id="memory-safety-from-first-principles">Memory Safety from first principles.</h2>
+<p>In that context, Sean Baxter presented <a href="https://safecpp.org/draft.html">&ldquo;Safe C++&rdquo;</a>.
+The general idea is to introduce owning references and borrow checking to C++.</p>
+<p>It&rsquo;s not just that we know this solution works; it&rsquo;s one of the only solutions we know to be mathematically sound.
+Well, not <em>quite</em>. Whole program analysis (haha) or a language with only value semantics could work.
+But, in the context of C++ (unless we are willing to impact runtime performance - Memory tagging or CHERI are still options, for example),
+borrow checking is the least impractical compile-time solution to memory safety.</p>
+<p>There is even research for <a href="https://dl.acm.org/doi/pdf/10.1145/3652032.3657579">borrow checking in C</a>
+and <a href="https://dlang.org/blog/2019/07/15/ownership-and-borrowing-in-d/">D</a>.</p>
+<p>That doesn&rsquo;t mean it is <em>practical</em>. It would require a very ambitious and costly rewrite of all
+code that would want to be memory-safe, including the standard library.
+The deployment story is sort of awful.
+But the model works, and if there is a desire to make C++ memory safe,
+that would be a good way to go about it (whether what Sean Baxter proposes, or something isomorphic to it, after figuring out a gazillion details).</p>
+<p><a href="https://security.googleblog.com/2024/09/eliminating-memory-safety-vulnerabilities-Android.html">Google argues</a>
+that making small pockets of a project memory safe does reduce the surface vector
+of the overall system and has outsized benefits - I found that surprising (and a good reminder not to operate on gut feeling) -
+which is an argument in favor of going in that direction.</p>
+<p>Sean Baxter seems to believe that you can arbitrarily modify C++ and still call it C++, but we should be more explicit about the fact that Safe C++ is more of a successor language than an extension to C++.
+In particular, the incompatibility with the standard library might very well be a deal breaker unless it can be addressed somehow.
+Can we make the existing STL compatible with borrow checking yet allow its use in existing code?
+Can we provide wrappers that still allow cheap conversions to/from existing code?
+Can we make tuple work? Are large components such as <code>&lt;ranges&gt;</code>, <code>sender/receivers</code>, <code>&lt;algorithms&gt;</code> amendable to borrow checking and relocation?
+Can we keep parts of the existing library as-is and use it from safe code, under the assumption that we understand the behavior of the STL,
+and implementers can qualify its behavior?
+Quid of ABI?</p>
+<p>I don&rsquo;t think there is room for a new standard library. We can barely afford the one we have already,
+we don&rsquo;t have a good model to avoid ambiguities, conversions, and ADL terribleness.
+Having to retrain people to that extent is unlikely to motivate anyone, either.
+Maybe more importantly, WG21 works well under constraints, but give us a blank page and the opportunity to fix our past mistakes, and we will implode (and make the same mistakes, plus some new ones, too).</p>
+<p>It doesn&rsquo;t mean we should not explore our options.
+A successor language that would retain most of the syntax of C++, its meta-programming facilities,
+powerful overload resolution, constant evaluation, etc, would be more compelling than most.</p>
+<p>There is a lot of support and excitement for Sean&rsquo;s work, but it is large, scary, and ambitious,
+WG21 has a limited appetite for large, scary, and ambitious - and arguably a poor track record of execution on large features.</p>
+<p>Even setting the standard library aside, that concern is not without merit; in particular, this would be long-term work, and at the moment, no one seems willing to bankroll or spearhead it.
+We need to accept that, for various reasons, investments in C++ front ends are limited and maybe even waning.
+Google and other major players have reduced their involvement in language standardization, and this trend is not likely to be reversed.
+Sean Baxter has shown no interest in further involvement in WG21, and frankly, who can blame him?
+Large proposals also have a history of failing or crumbling under the weight of compromises.</p>
+<p>The C++ self-proclaimed leadership, in particular, seems terrified of that direction, although it&rsquo;s rather unclear why.
+Their solution, which after the Poland meeting has stronger consensus in the Safety Study Group is named &ldquo;Profiles&rdquo;.</p>
+<p>We should note that neither the members of the advisory &ldquo;direction group&rdquo; nor the convener can represent the position of
+WG21, even tough it can be confusing given the many hats they wear and the many endavor they pursue.
+We should also be clear that the work on profiles does appear to have extremely strong support in WG21.</p>
+<h2 id="expecting-a-different-result">Expecting a different result</h2>
+<p>What are <a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p3081r0.pdf">Profiles</a>?</p>
+<p>A set of pick-and-choose-your-own-safety rules that disable some constructs such as <code>reinterpret_cast</code>,
+or inject runtime checks for overflow, bound checking, and so forth.</p>
+<p>One such profile attempts to provide a mechanism for memory and lifetime safety without modifying
+existing code (peppering the code with verbose attributes somehow does not count).</p>
+<p>Profiles, therefore, are a set of sanitizers and static analysis checks.
+Their exact nature is very unclear at this point because this work is extremely light
+on details.</p>
+<p>People have been doing static analysis for decades, so we have a very good understanding
+of the limitations. In particular, we know <a href="https://www.circle-lang.org/draft-profiles.html">we cannot achieve guaranteed memory safety without annotating most references</a>.
+(Also, if it really needs to be said, lifetime annotations must be part of the ABI to offer safety over time.)</p>
+<p>The proponent of profiles points out that their goal is an overall reduction in vulnerabilities,
+and they are not aiming for perfection. This is extremely fair. Any mitigation is worth considering.
+However, we should acknowledge that there is a giant gap between 99% and 100% memory safety.
+It would be reasonable to treat a fragment of code that may have false negatives as being completely memory-unsafe, so if profiles could help with memory safety, they would not help with confidence. (<code>-Wlifetime</code> has yet to demonstrate effectiveness on non-trivial examples,
+so the rate of false negatives is much higher; can it even be 50% effective?).
+And having a full understanding of object lifetime thorough your code is another <a href="https://github.com/willcrichton/flowistry">exciting opportinity for tooling</a>.</p>
+<p>There is some hubris in thinking that WG21 could deliver memory safety through static analysis.
+Smart people have been trying for decades!
+It doesn&rsquo;t mean static analysis isn&rsquo;t useful or that tools with a high number of false negatives don&rsquo;t help — in fact, I think <code>-Wlifetime</code> is pretty cool — but if I had concerns over the long-term viability of C++, that work would do very little to alleviate them.
+It is unclear whether this work would adequately satisfy the requirements of governmental institutions, and that certainly would be useful information.</p>
+<p>Implementers and tool vendors are not actively involved in the work on Profiles,
+and the work on <code>-Wlifetime</code> - initially presented circa 2018 -
+never reached a complete, deployable state. If there was any confidence in the outcome, surely more investments would have flown in by now.</p>
+<p>There are a lot of concrete issues with some of the proposed profiles that would make them unfit as compiler warnings. Namely, some of the suggested rules are just stylistic, which would make them too verbose
+(and users <em>hate</em> chatty warnings; their tolerance for false positives is <em>0</em> - lest the warning gets disabled).
+The categorization by kind (such as &ldquo;lifetime&rdquo; and &ldquo;arithmetic&rdquo;) would make it very hard to add new rules,
+as users generally prefer warnings to be grouped by cost (compile time, runtime) similarly to what libc++ is doing,
+and/or by severity and reliability. We are constantly reminded of the billions of lines of C++ code out there.
+Yet, some profiles propose silent semantic changes to existing code, which we know will explode at scale.
+In that context, we should be very wary of solutions that work perfectly 95% of the time.
+Having code behave differently under different profile configurations also seems to me like a recipe for disaster.</p>
+<p>Profiles have a very explicit goal of shipping in C++26 (that is, in less than 3 months).
+It&rsquo;s very unclear to me why some safety guidelines with 0 impact on the language whatsoever need to
+be the standard and not in a separate document (especially as most C++ deployments are still on C++17).</p>
+<p>You&rsquo;d expect them to be implemented, researched, or motivated, but they appear to be none of these things,
+and the myriads of papers on the subject seem to recommend WG21 throw spaghetti at the wall and see if anything sticks.
+I might be judging profiles unfairly, but it is difficult to take at face value a body of work
+that does not acknowledge the state of the art and makes no effort to justify its perceived viability or quote its sources.</p>
+<p>To me, this makes little sense&hellip; until you realize profiles are very easy to sell.
+They reassure people who don&rsquo;t care about safety that they don&rsquo;t have to, and they reassure everyone else that there is a path forward.
+And we can blame users or implementers when it ultimately fails to have a meaningful impact.</p>
+<p>The safety group saw a paper saying &ldquo;<code>constexpr</code> has no UB&rdquo;, let&rsquo;s do the same thing at runtime&quot; without explaining how such a feat would be achieved. This is as useful as asking for a pony.
+Of course, the Safety Study group unanimously voted to have a pony.
+This is compounded by the fact that there are a limited number of safety and tooling experts present in these discussions.
+That same paper suggests that cases of explicit undefined behaviors should be cataloged.
+Which is great, and in fact, people have been doing <a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p1705r1.html">exactly that</a>.</p>
+<p>WG21 seems keen to show they are doing something, now!</p>
+<figure><img src="/posts/profiles/3.jpg">
+</figure>
+
+<h2 id="somebodies-are-doing-something">Somebodies are doing something!</h2>
+<p>The thing is, there is a lot of high-impact work happening to improve the language safety of C++,
+it is just not committee-led.</p>
+<p>Companies like Google, Microsoft, Apple, Adobe, etc all have large amounts of C++ code,
+so they are actively trying to improve language safety for their own interests
+(both to reduce maintenance costs and minimize attack vectors).
+They just do it mostly outside of the committee.</p>
+<p>Compiler and tools vendors are also hard at work exploring solutions to improve language safety through extensions,
+warnings and sanitizers.</p>
+<p>Emphasis on &ldquo;exploring&rdquo;. There are many good ideas out there, but most of them aren&rsquo;t ready for standardization.</p>
+<p>For example, Clang gained a flag to enforce bound safety for C arrays and pointers <a href="https://clang.llvm.org/docs/BoundsSafety.html">-fbounds-safety</a>.
+This does require annotations, and in C++, the generalized use of <code>std::span</code> would be a better solution.
+Clang provides <a href="https://clang.llvm.org/docs/SafeBuffers.html">-Wunsafe-buffer-usage</a> for that purpose.</p>
+<p>Both <code>libc++</code> and <code>libstdc++</code> introduced various modes <a href="https://www.youtube.com/watch?v=t7EJTO0-reg">enforcing preconditions on standard functions</a> and some of that has been deployed internally
+at <a href="https://security.googleblog.com/2024/11/retrofitting-spatial-safety-to-hundreds.html">Google with great effect</a>.
+Google&rsquo;s blog post introduces concrete data on performance impact and outcome (number of bugs found and segfault rate), all of which are very
+compelling.</p>
+<p>Some projects, such as <a href="https://clang.llvm.org/docs/SafeStack.html">SafeStack</a> and <a href="https://security.apple.com/blog/towards-the-next-generation-of-xnu-memory-safety/">Type isolation</a>, aim not to improve spatial safety but to limit the potential impact of vulnerability exploitations.
+They may not be as glamorous as borrow checking, but they are effective, concrete, cheap solutions.</p>
+<p>EWG saw and approved <a href="https://wg21.link/p2719r1">a paper to enable type isolation</a> by adding <code>new</code> overloads.
+That is an excellent example of actionable improvement in the standard.</p>
+<p>There is an ever-growing list of sanitizers, including a type-sanitizer being worked on for Clang.</p>
+<p>There is a culture shift in the wider community towards increasing language safety, which in turn means that compilers are more willing to warn on potentially dangerous code.</p>
+<p><code>-Wdangling</code>, <code>-Wdangling-field</code>. <code>[[clang::lifetimebound]]</code> and the new <code>[[clang::lifetime_capture_by]]</code> attributes allow to express lifetime relationship and avoid some common dangling issues.</p>
+<p>To a large degree, the work on <a href="https://llvm.github.io/clangir/">Clang IR</a> is motivated by the prospect of better, faster,
+more reliable lifetime analysis: Rust, Circle, and attempts to implement <code>-Wlifetime</code> in Clang demonstrated the limits
+of static analysis and CFI at the AST level.
+And while there are many more motivations behind <a href="https://llvm.github.io/clangir/">Clang IR</a>, putting <code>-Wlifetime</code> in a TS isn&rsquo;t going
+to make that work go any faster. Whether it would motivate other toolchains to make similar multi-million-dollar investments is unclear.</p>
+<p>More generally, many people are doing language safety research in C++.
+While that work could be better documented and advertised, and while WG21 certainly would benefit from more exposure to these ideas,
+not every shower thought needs to become a paper or a TS.
+Papers such as <a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p1179r1.pdf">P1179R1</a> make no effort to paint a picture of the state
+of the industry and end up being outdated, even if they had novel ideas when first introduced.</p>
+<p>Vendors can experiment with warnings and checks much faster than WG21 can react, and it remains unclear whether WG21 should opinionate on what essentially remains quality-of-implementation warnings.</p>
+<p>Looking at all of that work, it&rsquo;s clear we have yet to hone on a cohesive set of solutions.
+We could imagine WG21 to become a great unifying force that will distill the state of the art into a rejuvenated memory-safe C++ language
+for the next 30 years, but we are not there yet, and profiles are not that.</p>
+<p>Companies seem quite content to figure out all that memory safety funny business without WG21.
+Many big techs formed internal memory safety task forces that consider rewrites,
+interoperability with other languages, and remediations that do not involve the C++ committee.</p>
+<p>The Rust Foundation announced a desire for better <a href="https://github.com/rustfoundation/interop-initiative/blob/main/problem-statement.md">C++/Rust Interoperability</a> but has yet to contact WG21.</p>
+<p>After all, the C++ committee always tried to pretend it could evolve the language without considering or driving the broader ecosystem,
+(which explains the state of package management), and so there isn&rsquo;t a need to involve the C++ committee in memory-safety solutions
+that do not impact the language.</p>
+<h2 id="safety-related-standard-c-features-to-look-forward-to">Safety-related standard C++ features to look forward to</h2>
+<p>I am not saying the committee should do nothing. Some fantastic work is happening.</p>
+<ul>
+<li>I already mentioned <a href="https://wg21.link/p2719">Type-aware allocation and deallocation functions</a></li>
+<li><a href="wg21.link/P1494">Partial program correctness</a> aims to reduce how much Undefined Behavior can &ldquo;time travel&rdquo;,
+such that an overzealous optimizer would not optimize your code away in the presence of UB later in the program.</li>
+<li><a href="https://wg21.link/p2900">Contracts</a> offer a standard way to declare asserts and pre and post-conditions in a portable,
+constexpr-compatible way with enough flexibility to encourage their deployment. Library hardening, even as a last-defense runtime check, is poised to have a more practical impact on safety than memory safety could. And contracts make that easy!
+Contracts can also improve static analysis and spatial safety.</li>
+<li>C++26 will have basic <a href="https://wg21.link/P0543">saturation arithmetic</a></li>
+</ul>
+<p>C++ could further consider:</p>
+<ul>
+<li>Replace and deprecate dangerous constructs</li>
+<li>Version modules (like Rust editions) and <a href="https://wg21.link/P0997R0">remove some dangerous constructs therein</a>, ideas that have been promptly rejected when they were presented.</li>
+<li>Provide safer numeric types for narrowing and modulo arithmetic.</li>
+</ul>
+<p>A C++29 epoch/edition that would remove all dangerous type/numerical constructs and other warts certainly would
+be an excellent start and a bold message, even without solving memory safety.</p>
+<p>We certainly live in exciting times and can only hope to make the right tradeoffs.</p>
+<p><a href="https://herecomesthemoon.net/2024/11/two-factions-of-cpp/">&ldquo;The two factions of C++&rdquo;</a>
+makes the case that there is a divide between the people who care about existing code for which profiles are more applicable,
+and the people who don&rsquo;t and dream of borrow checking.
+To some extent, this is true, but it is a lot more nuanced.</p>
+<p>Sean has demonstrated he cares a lot about the long-term viability of some version of C++ and has no patience or interest in politics,
+while profiles aim to soothe the world and the powers that be.</p>
+<ul>
+<li>Profiles are alluring but do not offer meaningful improvement to the status quo. Their big selling point is &ldquo;do something today&rdquo;,
+but there is no long-term vision of profiles being useful or sufficient in 5, 10, or 20 years.</li>
+<li>Sean Baxter&rsquo;s Safe C++ is an impressive proof of concept, but we don&rsquo;t know how to get there (standardization, implementations, and deployments would each be massive endeavors)</li>
+<li>Some people with large code bases, users, or expertise provide small, targeted, high-impact changes.</li>
+<li>Most people in and out of the committee don&rsquo;t care too much for one reason or another.
+Maybe they understand that rushing a solution isn&rsquo;t the right move.</li>
+</ul>
+<p>The safety study group took a temperature-of-the-room poll, pitting &ldquo;Safe C++&rdquo; against &ldquo;Profiles&rdquo;.
+Never have I seen so much anxiety expressed at the idea of taking the poll.
+After 20 minutes of arguing, we ended up with a highly unusual four-way poll.</p>
+<p>Poll that I read as &ldquo;Do we prefer a solution that&rsquo;s proven to work but cannot be (easily) deployed
+over one that we know can be deployed but hasn&rsquo;t demonstrated its effectiveness?&rdquo;</p>
+<p>The poll was a bit muddied by suggesting profiles could be in C++26, and we are all suffering from deadline-driven design, but in the crowded, hot, poorly ventilated SG23 room, there was a very strong consensus to pursue profiles.</p>
+<p><strong>Which should we prioritize: Profiles or Safe C++ ?</strong></p>
+<table>
+<thead>
+<tr>
+<th>Profiles</th>
+<th>Both</th>
+<th>Neutral</th>
+<th>SafeC++</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>19</td>
+<td>11</td>
+<td>6</td>
+<td>9</td>
+</tr>
+</tbody>
+</table>
+<h1 id="the-10-years-outlook">The 10 years outlook</h1>
+<p>Overall, even if it tried, it&rsquo;s very unclear to me that WG21 can have a short-term impact on
+memory safety.</p>
+<p>WG21 should, if it wants to lead, consider the shape of C++ in 10 years.
+In the short term, WG21 is well-positioned to offer targeted and high-impact language changes.</p>
+<p>If we want C++ to be viable for new projects in the long term, some improvements to memory safety (and, more generally, language safety) will be needed.</p>
+<p>If we admit this is not viable, unrealistic, or too ambitious technically or economically,
+C++ needs to work on better interoperability with safe languages,
+and will need to reconsider its design priorities and its domain of applicability.</p>
+<p>C++ is merely a tool, so we should keep in mind that a slow, careful winding down might not be
+the worst outcome. It&rsquo;s impossible to predict where C++ will end up,
+but it&rsquo;s probably fair to say that there will be no market desire
+for new memory-unsafe languages going forward.</p>
+<p>Whatever the direction C++ ends up choosing, there is no easy path.
+And we should certainly not make hasty decisions.
+A lot of that comes back to whether most C++ code has
+already been written, which is a self-fulfilling belief
+(and if our unwillingness to operate ABI breaks is any indication,
+we already decided that we are well past peak C++).</p>
+<p>For example, <a href="https://wg21.link/P3466">P3466 - (Re)affirm design principles for future C++ evolution</a> does not seem
+to be motivated by anything but an attempt to dissuade anyone from researching whether borrow checking could possibly be viable in C++.
+This paper, intended to be a Standing Document, offers some dogmatic rules presented as pillars of C++,
+rules that have been ignored as often as they are followed.
+Inspired by an off-the-cut criticism of Java, we are told that &ldquo;viral annotations,&rdquo; such as those that would
+be necessary for borrow checking, should be avoided.
+Of course, in a borrow-checked language, lifetime is part of types. Are types bad?
+They are undoubtedly viral. Is <code>const</code> bad? What about <code>noexcept</code>, <code>constexpr</code>, contracts, conveyor functions, and&hellip; profile annotations?
+Maybe it is fitting that our principles would not be self-consistent.</p>
+<p>It might be a bit scary, but we won&rsquo;t find the solution to memory safety in <a href="https://www.stroustrup.com/dne.html">&ldquo;Design &amp; Evolution of C++&rdquo;</a>.
+I know D&amp;E is a good book because D&amp;E says it&rsquo;s good, but if there was ever a time to throw the book away,
+it might as well be now.
+Safety was not acknowledged as a significant concern in the early 90s; threat models were <del>different</del>, non-existent
+hardware was widely different, the ecosystem was different, the programming language landscape was different,
+toolchains had different technical and economic constraints, and the community was different.</p>
+<p>We should not discard anything too soon. Especially not as a matter of policy.
+There is a lot of inspiration to be found in existing compiler tools, hardened production software,
+existing guidelines, large-scale experimental deployments, academic research, and other languages.</p>
+<p>To quote <a href="https://chandlerc.blog/posts/2024/11/story-time-bounds-checking/">Chandler Carruth&rsquo;s excellent blog post</a>,</p>
+<blockquote>
+<p>[&hellip;] I want to temper our skepticism as an industry. We should avoid letting it rise to the point that even attempting to solve temporal memory safety seems like a fool’s errand. We don’t want to discourage work on the problem, simply because this avenue of solving it remains doubtful. Even though we may never find something sufficient to make C and C++ automatically memory safe, we may find ways to make our memory safe languages more ergonomic and user-friendly. We may find better ways to interoperate between unsafe and safe code in the temporal space. Fundamentally, software must shift to memory-safe languages, even for high-performance code.</p>
+</blockquote>
+<p>The long-term success of Standard C++ in a safety-first industry will not be challenged by Rust, Carbon, or Hylo but rather by its ability to adapt to this new reality.</p>
+<p>I am certainly excited to see how all of this unfolds. One way or the other, software will become more robust.</p>
+<p>In the meantime, don&rsquo;t worry; be unit-testing.</p>
+<figure><img src="/posts/profiles/4.jpg">
+</figure>
+
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fprofiles%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fprofiles%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fprofiles%2f&t=Legacy%20Safety%3a%20The%20Wroc%c5%82aw%20C%2b%2b%20Meeting" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a -Wall"},
+        "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"},
+        "meta"         : {"lang": "cppx", "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1,
+                lang: settings["lang"] || "c++"
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true, libraryCode: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"boost", "ver" :"171"}, {"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+

@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -71,7 +71,7 @@ including Herb Sutter (author of the In-Place syntax proposal), Bjarne Stroustru
 proposals) and Thomas Köppe (author of one of the adjective syntax proposal), so it would seem that we are converging towards a solution
 that pleases a large number of people (and that is, after all, the name of the game).</p>
 <p>This will please most of my readers.</p>
-<figure><img src="graph1.png"/>
+<figure><img src="/posts/template_syntax/graph1.png">
 </figure>
 
 <p>I don&rsquo;t want to sound like a broken record, but I think this syntax has a number of advantages including being easy to read,
@@ -84,7 +84,7 @@ It closes a bit of the difference gap between lambda and functions.</p>
 </span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;Sortable Container&gt; <span style="color:#888">/*type*/</span>
 </span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;Sortable <span style="color:#080;font-weight:bold">auto</span> c&gt; <span style="color:#888">/*value*/</span>
 </span></span></code></pre></div><p>This paper also proposes constrained variables, a feature that seems quite popular.</p>
-<figure><img src="graph2.png"/>
+<figure><img src="/posts/template_syntax/graph2.png">
 </figure>
 
 <p>And so this paper will let you write</p>
@@ -167,7 +167,7 @@ And, as I like to say, if you have complex requirements, use a require clause.</
 may not be convenient that often.
 That&rsquo;s why both the Concept Lite and the &ldquo;in place&rdquo; syntax proposals had this type introducer syntax to actually give a name
 to deduced types, so they can be referred later.</p>
-<figure><img src="graph3.png"/>
+<figure><img src="/posts/template_syntax/graph3.png">
 </figure>
 
 <p>I don&rsquo;t like these syntaxes: They are completely novel (in any language) and they introduce dependencies between parameter
@@ -572,20 +572,6 @@ specialization can still be achieved using the current syntax.</p>
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
