@@ -147,7 +147,7 @@ The deployment story is sort of awful.
 But the model works, and if there is a desire to make C++ memory safe,
 that would be a good way to go about it (whether what Sean Baxter proposes, or something isomorphic to it, after figuring out a gazillion details).</p>
 <p><a href="https://security.googleblog.com/2024/09/eliminating-memory-safety-vulnerabilities-Android.html">Google argues</a>
-that making small pockets of a project memory safe does reduce the surface vector
+that making small pockets of a project memory safe does reduce the vulnerability
 of the overall system and has outsized benefits - I found that surprising (and a good reminder not to operate on gut feeling) -
 which is an argument in favor of going in that direction.</p>
 <p>Sean Baxter seems to believe that you can arbitrarily modify C++ and still call it C++, but we should be more explicit about the fact that Safe C++ is more of a successor language than an extension to C++.
