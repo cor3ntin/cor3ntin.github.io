@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -65,10 +65,10 @@
       <p>How would you put a 69 meters long, 50 meters tall, 1210 tonnes ship in a museum? A boat so large and so great it sank 100 meters into her maiden voyage?</p>
 <p>Well, you can&rsquo;t.  <br/>
 But, if you really wanted to build a monument to hubris, unsound engineering requirements, and design by kingship,
-you could design and build a museum around the Vasa. <figure><img src="vasa.jpg"
-         alt="Entombed in concrete, the Vasa will never sail again" height="300"/><figcaption>
-            <p>Entombed in concrete, the Vasa will never sail again</p>
-        </figcaption>
+you could design and build a museum around the Vasa. <figure><img src="/posts/safety/vasa.jpg"
+    alt="Entombed in concrete, the Vasa will never sail again" height="300"><figcaption>
+      <p>Entombed in concrete, the Vasa will never sail again</p>
+    </figcaption>
 </figure>
 
 But this is not the topic of this article&hellip;</p>
@@ -128,7 +128,7 @@ And then we&rsquo;d try to make it generic, which would be a good way to stretch
 <p>And, because we are doing that to decrease the risk of vulnerabilities, we would reduce the surface area of the boundary between that new safe, green field component and the rest of the code as much as possible.</p>
 <p>We end up with a piece of code that does not look like the rest of our C++ nor integrate with it. At this point, could we have not written that piece of code in&hellip; Rust?</p>
 <p>The rules of interaction between a hypothetical safe C++ and C++ would be no different than that of C++ and Rust through a foreign function interface.</p>
-<figure><img src="rewrite.jpg" height="450"/>
+<figure><img src="/posts/safety/rewrite.jpg" height="450">
 </figure>
 
 <p>&ldquo;<em>Rewrite it in a slightly different yet completely incompatible C++!</em>&rdquo; sure is a rallying cry!</p>
@@ -209,7 +209,7 @@ our jobs won&rsquo;t be automated away just yet.</p>
 An interesting property of incorrect programs is that we never know why they are incorrect when they start to act unexpectedly. If the program was expecting to be in that specific state, it would be correct.
 Bugs are unknowns and failure of expectations.
 The program found itself in a state that was unaccounted for and its behavior is now&hellip; undefined.</p>
-<figure><img src="dragon.png" height="250"/>
+<figure><img src="/posts/safety/dragon.png" height="250">
 </figure>
 
 <h2 id="you-knew-we-would-get-there-didnt-you">You knew we would get there, didn&rsquo;t you?</h2>
@@ -267,7 +267,7 @@ Wrapping just transforms a bug into another bug, which then snowballs into a big
 <p>Back to C++. In no case should exceptions ever be involved. Ever.
 Even if there is a fire.
 <code>std::logic_error</code> should not exist. It should be understood as <code>std::wtf_exception</code>. And if someone throws that, what are you going to do? Especially if the exception comes from a third-party library or something deep in the application having an aneurysm. It manages to be, impressively, even less actionable than <code>std::bad_alloc</code>.</p>
-<figure><img src="clippy.png" height="250"/>
+<figure><img src="/posts/safety/clippy.png" height="250">
 </figure>
 
 <p>But, I get it. Confronted with annoying bugs, instead of fixing them - a difficult and costly endeavor assuredly, why not just&hellip; let it happen and try to plug the holes afterward?
@@ -322,7 +322,7 @@ Is it a good default? Is it justifiably faster? Have we benchmarked?</p>
 <p>🦀🦀🦀</p>
 </div>
 <p><br/></p>
-<figure><img src="dragon2.png" height="250"/>
+<figure><img src="/posts/safety/dragon2.png" height="250">
 </figure>
 
 
@@ -358,20 +358,6 @@ Is it a good default? Is it justifiably faster? Have we benchmarked?</p>
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">

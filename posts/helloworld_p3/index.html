@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -63,9 +63,9 @@
     
     <div class="content">
       <p>This is Part 3 on my series about cross-compilation. You can check out <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part 1</a> 1 and <a href="https://cor3ntin.github.io/posts/helloworld_p2/">part 2</a> 2 first !</p>
-<figure><img src="linux.png"/><figcaption>
-            <h4>linuxnewbieguide.org</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/linux.png"><figcaption>
+      <h4>linuxnewbieguide.org</h4>
+    </figcaption>
 </figure>
 
 <p>You cannot caters to the needs of Windows and Linux users while ignoring the third major, well, second actually, desktop operating system.</p>
@@ -84,9 +84,9 @@
 <p>I’m not a lawyer. However it seems to me that Apple is actively forbidding cross-compilation using their libraries, regardless of the technical do-ability.</p>
 <p><strong>Therefore, some of the ideas discussed in the rest of the article could, if applied, void any agreement you have with Apple.</strong></p>
 <p>You need an Apple ID, and so you need to create an account on apple.com. I don’t recall having a more terrible account creation experience in a while. The biggest offense is certainly their antiquated security policies.</p>
-<figure><img src="form.png"/><figcaption>
-            <h4>How not to do account creation and security, courtesy of Apple</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/form.png"><figcaption>
+      <h4>How not to do account creation and security, courtesy of Apple</h4>
+    </figcaption>
 </figure>
 
 <p>They will then send you an email for verification, which is great. But instead of having a link in the email you will get a code that you cannot even paste and have to type in manually.</p>
@@ -141,7 +141,7 @@ cp osxcross-llvm-dsymutil x86_64-apple-darwin15-dsymutil
 bundle.isBundle: false
 </code></pre>
 <p>At that point, we are able to build the simple console Hello World seen in <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part one</a>.</p>
-<figure><img src="term1.png"/>
+<figure><img src="/posts/helloworld_p3/term1.png">
 </figure>
 
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#888"># file helloworld</span>
@@ -152,9 +152,9 @@ bundle.isBundle: false
 <a href="https://darlinghq.org/">Darling - macOS translation layer for Linux</a></p>
 <p>You can clone and build darling, F<a href="https://github.com/darlinghq/darling">ollow the instructions on github</a>. On my machine, it took a bit under one hour for the whole thing. Once installed, it’s about 800MB. which is unsurprising as it is a complete system which comes with all the usual tools including g++, ruby, python, Perl, git, bash, swift, ssh…</p>
 <p>But, the build complete with no error, and amazingly, it works, and seems very reactive. Being more modern that wine, it is containerized !</p>
-<figure><img src="term2.png"/><figcaption>
-            <h4>Oh, Hi Mac</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/term2.png"><figcaption>
+      <h4>Oh, Hi Mac</h4>
+    </figcaption>
 </figure>
 
 <h3 id="adding-magic-with-binfmt">Adding magic with binfmt</h3>
@@ -171,9 +171,9 @@ bundle.isBundle: false
 <p>The darling documentation suggests that darling <binary> should work, but it does not.</p>
 <p>After restarting the binfmt service ( systemctl restart systemd-binfmt ), we are able to launch OSX application transparently.</p>
 <p>Which mean we can do this</p>
-<figure><img src="term3.png"/><figcaption>
-            <h4>Any sufficiently advanced technology is indistinguishable from magic</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/term3.png"><figcaption>
+      <h4>Any sufficiently advanced technology is indistinguishable from magic</h4>
+    </figcaption>
 </figure>
 
 <p>Oh, and by the way, you can do the same thing for windows executables and WINE. Some distributions do that out of the box.</p>
@@ -270,15 +270,15 @@ bundle.isBundle: false
 </span></span></code></pre></div><p>It was not quite the end of the road. Qt Widgets failed to build because of missing dependencies. QtLocation failed to build because the libc++ headers were too old or broken ( I fixed that by copying the latest libc++ version within the OSX SDK. It worked). Then QtLocation complained because std::auto_ptr was not defined so I hacked a few headers.</p>
 <p>I tried to get qwebengine(chromium ) to build, but it uses another build system still, and I had done enough build system hacking for one night.</p>
 <p>But in the end most of Qt did build.</p>
-<figure><img src="term4.png"/><figcaption>
-            <h4>It took me a few hours but I got Qt compiling!</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/term4.png"><figcaption>
+      <h4>It took me a few hours but I got Qt compiling!</h4>
+    </figcaption>
 </figure>
 
 <p>And what we have then, is something quite interesting. The binaries are natives Linux ELF, while the frameworks and libraries are Macho-O. That will be handy in a minute.</p>
-<figure><img src="term5.png"/><figcaption>
-            <h4>Hello, I’m a Mac — And I’m a PC. And I am a Mac too. — What ?</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/term5.png"><figcaption>
+      <h4>Hello, I’m a Mac — And I’m a PC. And I am a Mac too. — What ?</h4>
+    </figcaption>
 </figure>
 
 <p>Qt is a big piece of software making full use of the underlying system capabilities, in term of OS integration. If we can build that, we can build almost anything.</p>
@@ -288,25 +288,25 @@ bundle.isBundle: false
 </code></pre>
 <p>Which created the right profiles and modules. I cleaned up my profiles manually to merge clang-osx and osx-x64-qt510</p>
 <p>And then we can compile or magnificent <em>Hello World</em> app !</p>
-<figure><img src="term6.png"/><figcaption>
-            <h4>Compiling an OSX application based on Qt on Linux, using qbs : check</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/term6.png"><figcaption>
+      <h4>Compiling an OSX application based on Qt on Linux, using qbs : check</h4>
+    </figcaption>
 </figure>
 
 <p>What now ?</p>
 <p>Well, we have a complete toolchain, maybe we can check some things ?</p>
-<p><figure><img src="term7.png"/><figcaption>
-            <h4>Using otool -L , the osx equivalent of ldd we can assert that we indeed link to some libraries</h4>
-        </figcaption>
+<p><figure><img src="/posts/helloworld_p3/term7.png"><figcaption>
+      <h4>Using otool -L , the osx equivalent of ldd we can assert that we indeed link to some libraries</h4>
+    </figcaption>
 </figure>
 
 We can use other tools. such as nm or strings or the dreaded <code>install_name_tool</code>.</p>
 <p>Unfortunately, Darling can’t handle anything remotely graphical yet, So we need a Mac to actually launch our app.</p>
 <p>A real mac; It is illegal to visualize Mac OSX, unless it’s on a mac. Some words comes to mind. Imagine my French.</p>
 <p>Let’s talk about the mac. <em>The Mac</em>. You probably know the one. Most companies have it.</p>
-<figure><img src="mini.png"/><figcaption>
-            <h4>This is a true story. True.</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/mini.png"><figcaption>
+      <h4>This is a true story. True.</h4>
+    </figcaption>
 </figure>
 
 <p>It used to belong to Bob. It’s Bob’s mac. But then, 5 years ago, Bob died, so <em>The Mac</em> was offered to Alice. Alice left the company soon after - Pure coincidence, probably.</p>
@@ -321,9 +321,9 @@ We can use other tools. such as nm or strings or the dreaded <code>install_name_
 <p>I do happen to have a 2011 mac-mini, gift of a former employer. Its life was a a bit different than <em>the mac</em> ’s. It was never loved and spent the last two years in a box. It only gets to see the life of the day for the needs of this article. It is also the reason why I’m 4 days late in my publication schedule. I tried to install High Sierra — Grey screen; I had to reformat, install Lion, then install El Captain. So El captain is what we will be using. It features a whooping 2GB of memory, the system using 3/4 of that.</p>
 <p>You should enable VNC, remote share and SSH in the systems parameters of your mac.</p>
 <p>This article is starting to be a bit long. So here is a quick visual summary of the work achieved so far:</p>
-<figure><img src="jobs.png"/><figcaption>
-            <h4>Definitively improving our productivity</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/jobs.png"><figcaption>
+      <h4>Definitively improving our productivity</h4>
+    </figcaption>
 </figure>
 
 <p>We should stop fooling around.</p>
@@ -346,9 +346,9 @@ We can use other tools. such as nm or strings or the dreaded <code>install_name_
 </span></span><span style="display:flex;"><span><span style="color:#369">Prefix</span>=<span style="color:#d20;background-color:#fff0f0">/Users/cor3ntin/dev/cross-compilation/qt5_10/</span>
 </span></span><span style="display:flex;"><span><span style="color:#369">Plugins</span>=<span style="color:#d20;background-color:#fff0f0">plugins</span>
 </span></span></code></pre></div><p>Now, connected to the mac through ssh, you can execute your application and it will appear on the mac screen and on the remote display / VNC session.</p>
-<figure><img src="mountain.png"/><figcaption>
-            <h4>It feels like we climbed a mountain !</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p3/mountain.png"><figcaption>
+      <h4>It feels like we climbed a mountain !</h4>
+    </figcaption>
 </figure>
 
 <h2 id="can-we-make-all-that-legal-">Can we make all that legal ?</h2>
@@ -438,20 +438,6 @@ We can use other tools. such as nm or strings or the dreaded <code>install_name_
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">

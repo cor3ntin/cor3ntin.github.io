@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -72,9 +72,9 @@ And an easy-to-review, <a href="https://wg21.link/P1037">200 pages</a> long prop
 <p>First off, if you are not on the Cpp Slack, you should, it&rsquo;s a great community.</p>
 <p>Second, maybe you heard that <code>std::span</code> was already merged in the C++20 draft last meeting so why talk about it and why would a modest library addition make so much virtual ink flow?</p>
 <p>Or maybe you never heard of <code>std::span</code> and are wondering what <code>std::span</code> even is.</p>
-<figure><img src="question.gif"/><figcaption>
-            <h4>Life, the universe and span</h4>
-        </figcaption>
+<figure><img src="/posts/span/question.gif"><figcaption>
+      <h4>Life, the universe and span</h4>
+    </figcaption>
 </figure>
 
 <p>Trying not to break any eggs, I would say it can be described as <strong>a fixed-sized, non-owning wrapper over a contiguous sequence of objects letting you iterate and mutate the individual items in that sequence</strong>.</p>
@@ -316,9 +316,9 @@ int main() {
 <p>Which is nice, safe and obvious.</p>
 <p>Because we are speaking about contiguous memory, there is an equivalent relationship between a pair of
 <code>(begin, end)</code> pointers and a <code>begin</code> pointer + the size.</p>
-<figure><img src="drake.jpeg"/><figcaption>
-            <h4>Ranges all the things</h4>
-        </figcaption>
+<figure><img src="/posts/span/drake.jpeg"><figcaption>
+      <h4>Ranges all the things</h4>
+    </figcaption>
 </figure>
 
 <p>Given that, we can rewrite our span class</p>
@@ -378,9 +378,9 @@ int main() {
 Implementing or reasoning about <code>span</code> without <code>contiguous ranges</code> however is trickier.
 <code>string_view</code> being a further refinement on span, it&rsquo;s clear that the committee started with the more specialized solution
 and is progressing to the general cases, leaving odd inconsistencies in its wake.</p>
-<figure><img src="vasa.jpg"/><figcaption>
-            <h4>Death by a thousand paper cuts</h4>
-        </figcaption>
+<figure><img src="/posts/span/vasa.jpg"><figcaption>
+      <h4>Death by a thousand paper cuts</h4>
+    </figcaption>
 </figure>
 
 <p>So far we established that <code>span</code> is a view by any other name and a cumbersome range. But, what&rsquo;s the actual issue?</p>
@@ -521,9 +521,9 @@ And I wonder if - as much fun as it may be to see them jumping over the canopy -
 </ul>
 <p>Maybe that&rsquo;s not quite accurate. But we need an unifying theory of everything.</p>
 <p>To conclude this short introduction of <code>span</code>, I will leave you with this photo of a giraffe.</p>
-<figure><img src="horse.jpg"/><figcaption>
-            <h4>Span</h4>
-        </figcaption>
+<figure><img src="/posts/span/horse.jpg"><figcaption>
+      <h4>Span</h4>
+    </figcaption>
 </figure>
 
 <div class="footnotes" role="doc-endnotes">
@@ -567,20 +567,6 @@ And I wonder if - as much fun as it may be to see them jumping over the canopy -
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">

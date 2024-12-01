@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -63,9 +63,9 @@
     
     <div class="content">
       <p>This is Part two of a series wherein we build a “Hello World” application. If you are late to the party, I encourage you to check <a href="https://cor3ntin.github.io/posts/helloworld_p1/">part 1</a> first.</p>
-<figure><img src="dragon.png"/><figcaption>
-            <h4>Hic Sunt Arcūs</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/dragon.png"><figcaption>
+      <h4>Hic Sunt Arcūs</h4>
+    </figcaption>
 </figure>
 
 <p>So, our Boss came in to check on our progress. They were starting to wonder why it takes a whole day to port a 3 lines application to a new system. But the real reason of their visit was to ask for a new feature. While our “Hello world” business is booming, the marketing department thinks the lack of graphical UI is hurting sales.</p>
@@ -101,20 +101,20 @@ QtGuiApplication {
     }
 }
 </code></pre><p>The Linux version is still building fine. Duh.</p>
-<figure><img src="term1.png"/><figcaption>
-            <h4>The author likes to pretend all Linux machines are born with Qt And QBS installed. Just play along.</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/term1.png"><figcaption>
+      <h4>The author likes to pretend all Linux machines are born with Qt And QBS installed. Just play along.</h4>
+    </figcaption>
 </figure>
 
-<figure><img src="stupiddialog.png"/><figcaption>
-            <h4>In case of nuclear disaster, click “no”</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/stupiddialog.png"><figcaption>
+      <h4>In case of nuclear disaster, click “no”</h4>
+    </figcaption>
 </figure>
 
 <p>Let’s enthusiastically build the Windows version:</p>
-<figure><img src="term2.png"/><figcaption>
-            <h4>Not so Qt.</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/term2.png"><figcaption>
+      <h4>Not so Qt.</h4>
+    </figcaption>
 </figure>
 
 <p>I went to download Qt on <a href="https://www.qt.io/download">https://www.qt.io/download</a>. That site is getting worse by the day. The Qt company tries to dissuade people to get the open source version. But if you go to <a href="https://download.qt.io/">https://download.qt.io/</a> you have all the tarballs and installers.</p>
@@ -143,9 +143,9 @@ QtGuiApplication {
 </span></span><span style="display:flex;"><span>nmake install
 </span></span></code></pre></div><p>Once Qt has done building, copy the folders back to your linux host. You need at least bin, include, lib, plugins . put them in a new directory. I called mine qt5_10base-x64 .</p>
 <p>I had issues with the includes referencing src. So you can run perl bin\syncqt.pl -copy -windows -version 5.10.0 -outdir cpy from the Qt directory on windows and use the include folder generated in cpy . Even then I had to copy a few files manually ( qconfig.h, q{core,gui,widgets,network,xml}-config.h) from the src folder to their respective include folder. Definitively a bit fiddly but eventually you will get there.</p>
-<figure><img src="term3.png"/><figcaption>
-            <h4>My Linux is slowly morphing into a Windows Box. I expect Clippy to appear at any moment now</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/term3.png"><figcaption>
+      <h4>My Linux is slowly morphing into a Windows Box. I expect Clippy to appear at any moment now</h4>
+    </figcaption>
 </figure>
 
 <p>So now we have Qt. But how can we tell QBS to actually use it ?</p>
@@ -179,17 +179,17 @@ QtGuiApplication {
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>qt-project<span style="color:#04d;background-color:#fff0f0">\q</span>bs<span style="color:#04d;background-color:#fff0f0">\p</span>rofiles<span style="color:#04d;background-color:#fff0f0">\m</span>svc14-x86_64<span style="color:#04d;background-color:#fff0f0">\p</span>references<span style="color:#04d;background-color:#fff0f0">\q</span>bsSearchPaths=<span style="color:#04d;background-color:#fff0f0">\
 </span></span></span><span style="display:flex;"><span><span style="color:#04d;background-color:#fff0f0"></span>    /home/cor3ntin/dev/Qt/qbs-wine-toolchain,/home/cor3ntin/dev/cross-compilers/windows/qt5_10base-x64/qbs/1.10.0/profiles/msvc14-x64-qt
 </span></span></code></pre></div><p>I realize it’s all a bit tricky. Eventually though, we can run qbs and it compiles our Qt-based hello world for Windows.</p>
-<figure><img src="term4.png"/><figcaption>
-            <h4>$?==0</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/term4.png"><figcaption>
+      <h4>$?==0</h4>
+    </figcaption>
 </figure>
 
 <p>It won’t run because it can’t find the Qt dll. You can either copy the dll to the build directory, or make sure they are in the PATH. The windows/wine PATH that is.</p>
 <p>The only way I found to do that is to run regedit — make sure to do it from the appropriate WINEPREFIX and add the location of the Qt’s bin directory to Path which is under <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment</code>.</p>
 <p>If you know a way to script that away, please let me know.</p>
-<figure><img src="regedit.png"/><figcaption>
-            <h4>Using regedit on Linux. What would I not do for my readers ?</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/regedit.png"><figcaption>
+      <h4>Using regedit on Linux. What would I not do for my readers ?</h4>
+    </figcaption>
 </figure>
 
 <p>We also need to put a qt.conf file next to our built helloworld.exe binary to tell Qt where to load the plugins from. In my case</p>
@@ -197,18 +197,18 @@ QtGuiApplication {
 </span></span><span style="display:flex;"><span><span style="color:#369">Prefix</span>=<span style="color:#d20;background-color:#fff0f0">/home/cor3ntin/dev/cross-compilers/windows/qt5_10base-x64/</span>
 </span></span><span style="display:flex;"><span><span style="color:#369">Plugins</span> = <span style="color:#d20;background-color:#fff0f0">plugins</span>
 </span></span></code></pre></div><p>And that’s it ! It wasn’t too hard, was it ?</p>
-<figure><img src="hello1.png"/><figcaption>
-            <h4>I made a clicky thing !</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/hello1.png"><figcaption>
+      <h4>I made a clicky thing !</h4>
+    </figcaption>
 </figure>
 
 <h3 id="and-so-microsoft-studio-visual-c-compiler-is-the-greatest-thing-ever-">And So, Microsoft Studio Visual C++ Compiler is the greatest thing ever !</h3>
 <p>A recent study conducted on two preschoolers shows that millennials like rainbows. I was immediately asked to made our app more rainbow-y. Ambiguously labeled buttons are apparently the horsemen of the pretend apocalypse so we will also get rid of them.</p>
 <p>What we need to do is iterate over our string an inject some html markup around each character so that they are render in different colors.</p>
 <p>Iterating over some container will require us to use range-v3. There is <em>literally</em> no other way.</p>
-<figure><img src="rainbow1.png"/><figcaption>
-            <h4>Making WordArt Great Again.</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/rainbow1.png"><figcaption>
+      <h4>Making WordArt Great Again.</h4>
+    </figcaption>
 </figure>
 
 <p>Isn’t that great ?</p>
@@ -246,9 +246,9 @@ QtGuiApplication {
 <p>Creating a QBS profile for clang-cl is straight forward, copy the one from wine and change the toolchain name from msvc to clang-cl and point the toolchainInstallPath to somewhere containing clang-cl and lld-link .</p>
 <p>Oh, didn’t I mention lld-link ? It’s a drop in replacement for link.exe. lld is also a replacement for ld on unix, and it’s much, much faster than ld and gold so you should <a href="https://lld.llvm.org/">check it out and use it</a>!</p>
 <p>We are not quite done yet.</p>
-<figure><img src="monkey.jpeg"/><figcaption>
-            <h4>Case consistency at Microsoft is a serious matter</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/monkey.jpeg"><figcaption>
+      <h4>Case consistency at Microsoft is a serious matter</h4>
+    </figcaption>
 </figure>
 
 <p>Microsoft Windows is designed around case insensitive file systems. Which I’m sure looked like a good idea at the time.</p>
@@ -273,32 +273,32 @@ sensorsapi.lib
 </span></span><span style="display:flex;"><span>mv sdk_10.bak/* sdk_10
 </span></span></code></pre></div><p>You gotta love Linux.</p>
 <p>And now, compiling with clang-cl works. However, running the program exposes a bug.</p>
-<figure><img src="term6.png"/><figcaption>
-            <h4>Our program compiles with clang and runs but it exhibits a nasty bug.</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/term6.png"><figcaption>
+      <h4>Our program compiles with clang and runs but it exhibits a nasty bug.</h4>
+    </figcaption>
 </figure>
 
 <p>And yet, the same executable copied to a virtual machine runs fine.</p>
-<figure><img src="rainbow21.png"/><figcaption>
-            <h4>Such greetings</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p2/rainbow21.png"><figcaption>
+      <h4>Such greetings</h4>
+    </figcaption>
 </figure>
 
 <p>I’m still not sure where the bug actually is. It appears to be either in range-v3 or my use thereof, and yet it seems odd that it would expose a different run-time behavior.</p>
 <p>But that’s what’s great about having a bigger set of development environments, if you have bugs, the are more likely to get exposed. For one, this nasty graphical glitch made me realized I should handle white spaces as a special case.</p>
 <p>Oh, and if you want to check what clang is actually doing, you can use Microsoft’s <code>dumpbin.exe</code> found in <code>msvc2017/bin/Hostx64/x64/</code> . This tool is equivalent of ldd and nm for unix.</p>
-<figure><img src="term7.png"/>
+<figure><img src="/posts/helloworld_p2/term7.png">
 </figure>
 
 <p>Interestingly, the clang artifact looks exactly like a msvc-produced one, albeit with few extra sections. Including the CRT and the vcruntime !</p>
 <p>Here is the MSVC built binary.</p>
-<figure><img src="term8.png"/>
+<figure><img src="/posts/helloworld_p2/term8.png">
 </figure>
 
 <p>Right now ldd-link is <a href="https://lld.llvm.org/windows_support.html">still experimental</a> and offers no support for debug info. clang-cl is <a href="https://clang.llvm.org/docs/MSVCCompatibility.html">mostly done</a> except for some exceptions handling. You can mix and match <code>cl.exe</code> <code>clang-cl</code> <code>link.exe</code> and <code>lld-link</code>.</p>
 <p>I can’t advise you to use clang-cl in production (yet, it’s getting there ) but it’s an amazing tool to add to your CI and development environment.</p>
 <p>It’s all I have for you today, I hope you’ve learned something!</p>
-<h2 id="one-more-thing--see-you-in-part-3hahahugoshortcode-s15-hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
+<h2 id="one-more-thing--see-you-in-part-3hahahugoshortcode20s15hbhb"><a href="https://cor3ntin.github.io/posts/helloworld_p3/">One more thing … See you in part 3</a>.</h2>
 
       
     <div id="socialshareDiv">
@@ -332,20 +332,6 @@ sensorsapi.lib
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">

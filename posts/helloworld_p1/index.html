@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -81,7 +81,7 @@ Hello, World!
 </code></pre>
 <p>Nice, That’s simple, let’s go home and have a beer 🍻 !</p>
 <p>But then, enters my boss. They are in the business of selling software to people who use Windows. I try to show them that I can make a cow speak and that I can resize my terminal so we should obviously move all our business to Linux at once, they say something incomprehensible about market shares and apparently, they can resize their command prompt too.</p>
-<figure><img src="mrrobot.png"/>
+<figure><img src="/posts/helloworld_p1/mrrobot.png">
 </figure>
 
 <p>After looking down at each other for a while like we are stuck in an Escher painting, I grudgingly remember that I’m in the business of making my clients happy, and so we are going to port our <em>hello world</em> application to Windows. Our boss doesn’t care what environment we use to create that ground breaking app, and they don’t have an issue with me continuing working on the Linux version at the same time, so I’ve decided to develop that application for Windows, <strong>on</strong> Linux; what could possibly go wrong ?</p>
@@ -118,17 +118,17 @@ The entry point method could not be loaded
 </code></pre>
 <p>Are you surprised? My dreams are crushed. We <strong>do</strong> need a windows to do some windows development ( spoiler : it gets better ).</p>
 <p>Let’s fire up a VM. If you want to follow along, I recommend that you use a new or cloned Windows 10 VM. We are gonna install a lot of weird things and it will be next to impossible to clean up after ourselves. Afterwards you may <a href="https://www.youtube.com/watch?v=z0wK6s-6cbo">get rid of the VM</a>.</p>
-<figure><img src="vs1.png"/><figcaption>
-            <h4>Isn’t he cute ? Maybe I should send my resume to Oracle</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p1/vs1.png"><figcaption>
+      <h4>Isn’t he cute ? Maybe I should send my resume to Oracle</h4>
+    </figcaption>
 </figure>
 
 <p>Once that’s done, <a href="https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017">we can go and download the VS build tools</a>.</p>
 <p>Scroll down until you get carpal tunnel. The build tools is the second to last item. Download that.</p>
 <p>I had a few issues launching the installer. I think they try to contact a server that managed to get itself in a list of ad servers so my DNS blocked it. Don’t ask.</p>
-<figure><img src="vs2.png"/><figcaption>
-            <h4>That took way more than a minute</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p1/vs2.png"><figcaption>
+      <h4>That took way more than a minute</h4>
+    </figcaption>
 </figure>
 
 <p>Installers with loading screens, it’s perfectly normal. Once it’s done, it loads the main UI, slowly and painfully but then we get to check boxes. I’m having a blast.</p>
@@ -144,15 +144,15 @@ The entry point method could not be loaded
 <p>We need a C++ toolset — the thing everybody else calls a toolchain. I’m not sure what is newer, v141 or 15.4 v14.11. Use a die ?</p>
 <p>We also need a C runtime too, that’s handy. I’m not sure whether we need the CRT or the URT so, we will just install both. The URT/CRT is nice though. Before it came into existence, everything was much, much harder.</p>
 <p>Finally, we will probably need to use some windows features so we should get the Windows SDK. Apparently that depends on some C# components. And some JS libraries, *obviously. *To be clear, you can’t do anything remotely useful without the Windows SDK, better get it now.</p>
-<figure><img src="vs4.png"/><figcaption>
-            <h4>WIN32_LEAN_AND_MEAN</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p1/vs4.png"><figcaption>
+      <h4>WIN32_LEAN_AND_MEAN</h4>
+    </figcaption>
 </figure>
 
 <p>Time to have a coffee pot while Visual Studio gets into every recess of your hard drive. At some point though, it’s done so you can go do some bicycle with the butterflies. Nice.</p>
-<figure><img src="vs5.png"/><figcaption>
-            <h4>Improving my editorial line with pretty pictures, courtesy of Microsoft</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p1/vs5.png"><figcaption>
+      <h4>Improving my editorial line with pretty pictures, courtesy of Microsoft</h4>
+    </figcaption>
 </figure>
 
 <p>A butterfly isn’t enough to make me want to ditch Linux, so let’s see if what we have just installed can be used without a Windows box.</p>
@@ -170,9 +170,9 @@ The entry point method could not be loaded
 </ul>
 <p>The first two paths are the Windows SDK, the last one is the toolchain, containing the compiler, the linker, the STL and the VC runtime libraries, for all architectures.</p>
 <p>In my installation I have URT files all over the places, So I guess that if you install the Windows 10 SDK you actually get the CRT so you don’t need to activate it separately when you select the components to install. Compared to only a few years ago the situation is much better. Microsoft has been busy.</p>
-<figure><img src="vs6.png"/><figcaption>
-            <h4>Copy all the things !</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p1/vs6.png"><figcaption>
+      <h4>Copy all the things !</h4>
+    </figcaption>
 </figure>
 
 <p>I put everything in a folder called windows, I have the msvc compiler with the runtime, the STL and the redistribuables on one side, and the windows 10 SDK in a separate folder. I didn’t keep any information about which version of the SDK or the toolchain I was using, you may want to do that more properly.</p>
@@ -191,9 +191,9 @@ The entry point method could not be loaded
 </ul>
 <p>You may need various other tools if you have to deal with drivers, cab files, MSI installers, etc.</p>
 <p>The whole thing is about <strong>2.9GB</strong>. About half what we had to install on the windows VM.</p>
-<figure><img src="term1.png"/><figcaption>
-            <h4>The road so far</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p1/term1.png"><figcaption>
+      <h4>The road so far</h4>
+    </figcaption>
 </figure>
 
 <p>Let’s have some wine again 🍷. Visit <a href="https://wiki.winehq.org/Ubuntu">https://wiki.winehq.org/Ubuntu</a> and <a href="https://github.com/Winetricks/winetricks">https://github.com/Winetricks/winetricks</a> to make sure your wine setup is up to date. I will be using wine-3.0.</p>
@@ -230,9 +230,9 @@ shc -f cl-wine.sh -o link.exe
 <pre><code>cd windows/msvc2017/bin/Hostx64/x86/
 for x in $(ls ../x64/ms*.dll); do ln -s $x .; done
 </code></pre>
-<figure><img src="term2.png"/><figcaption>
-            <h4>We are going places !</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p1/term2.png"><figcaption>
+      <h4>We are going places !</h4>
+    </figcaption>
 </figure>
 
 <p>One last thing before we can do some serious work. We need to delete vctip.exe as it doesn’t work. It’s a telemetry tool so we don’t need it. It’s located in windows/msvc2017/bin/Hostx*/**. If you don’t follow that step you will encounter weird stack traces.</p>
@@ -248,9 +248,9 @@ for x in $(ls ../x64/ms*.dll); do ln -s $x .; done
 </span></span></span><span style="display:flex;"><span><span style="color:#04d;background-color:#fff0f0"></span>  /LIBPATH:windows/sdk_10/lib/ucrt/x64 <span style="color:#04d;background-color:#fff0f0">\
 </span></span></span><span style="display:flex;"><span><span style="color:#04d;background-color:#fff0f0"></span>  /out:helloworld.exe
 </span></span></code></pre></div><p>We are building an executable that depends on the compiler headers ( including the STL ), the C runtime, and some windows libs such as kernel32.lib.</p>
-<figure><img src="term3.png"/><figcaption>
-            <h4>🎉 😎 🍻!</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p1/term3.png"><figcaption>
+      <h4>🎉 😎 🍻!</h4>
+    </figcaption>
 </figure>
 
 <p>For completeness, here is the x86 build</p>
@@ -289,9 +289,9 @@ for x in $(ls ../x64/ms*.dll); do ln -s $x .; done
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Which we can then run and <em>Voilà !</em></p>
-<figure><img src="term4.png"/><figcaption>
-            <h4>Bonsoir Eliot.</h4>
-        </figcaption>
+<figure><img src="/posts/helloworld_p1/term4.png"><figcaption>
+      <h4>Bonsoir Eliot.</h4>
+    </figcaption>
 </figure>
 
 <p>runner.sh is a <a href="https://gist.github.com/cor3ntin/ecd136ad792f54dd7feb89cb094dcf75">small script</a> that sets up the wine prefix before launching the freshly built windows executable. Nothing too fancy.</p>
@@ -330,20 +330,6 @@ for x in $(ls ../x64/ms*.dll); do ln -s $x .; done
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">

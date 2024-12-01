@@ -14,7 +14,7 @@
   <div class="container">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item" href="https://cor3ntin.github.io"><h1 class="title is-4">cor3ntin</h1></a>
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
       </div>
       <div class="nav-right">
         <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
@@ -68,9 +68,12 @@
 <p>And it actually works. We were able to build and even run applications for Windows and Mac, and it’s great.</p>
 <p>I of course, didn’t invent anything. Boris Kolpackov demonstrated cl.exe running on Linux in 2015. But it’s not something you will find a lot of documentation for. Linux people have been cross compiling for other architectures since the dawn of times, and mingw64 is quite popular.</p>
 
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-  <iframe src="https://www.youtube.com/embed/PxFrhYAYF3M" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
-</div>
+
+    
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+      <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/PxFrhYAYF3M?autoplay=0&controls=1&end=0&loop=0&mute=0&start=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" title="YouTube video"
+      ></iframe>
+    </div>
 
 <p>There are however issues. Most issues can be sum-up as the target OS vendors making cross compilation difficult. Not compilers people, they are amazing. Packagers. All issues we had with windows, OSX and even Qt came done to legal considerations and packaging issues. Assumptions turned into black magic. Black Magic is not, as it turn out cross platform.</p>
 <p>Don’t assume my filesystem layout, my tools or my host architecture.</p>
@@ -97,9 +100,9 @@
 <p>It has, however no support for Qt, and while this could in theory be fixed, qbs still has a major advantage.</p>
 <p>Both build2 and QBS having full control of the build graph they can do pretty wild things. Like build in parallel multiple independent targets, for different architectures.</p>
 <p>In fact, it can build for all the profiles it knows, at the same times. Here I build a hello world for all my compilers</p>
-<figure><img src="qbs.png"/><figcaption>
-            <h4>Your move CMake</h4>
-        </figcaption>
+<figure><img src="/posts/cross_compilation/qbs.png"><figcaption>
+      <h4>Your move CMake</h4>
+    </figcaption>
 </figure>
 
 <p>QBS as another thing going for it. A sane, understood syntax: QML. And I truly do believe it offers the best language of any available build tools currently.</p>
@@ -163,20 +166,6 @@
     
   </div>
 </section>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-119011218-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 </body>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
