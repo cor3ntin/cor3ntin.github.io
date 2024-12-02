@@ -12,6 +12,16 @@
     
     
     <item>
+      <title>Legacy Safety: The Wrocław C&#43;&#43; Meeting</title>
+      <link>https://cor3ntin.github.io/posts/profiles/</link>
+      <pubDate>Fri, 29 Nov 2024 09:14:07 +0100</pubDate>
+      
+      <guid>https://cor3ntin.github.io/posts/profiles/</guid>
+      <description>Someone was giving away stickers reading &amp;ldquo;Somebody Should Do Something&amp;rdquo; at the WG21 C++ Standardization meeting held in Wrocław last week, and it makes for a pretty good tagline for that meeting.
+We are one meeting away from calling C++26 feature complete. The draft will be sent to National Bodies this summer. After that, we will have a couple of meetings to fix bugs and then wait for ISO to publish the official standard, which might take a year or two.</description>
+    </item>
+    
+    <item>
       <title>If we must, let&#39;s talk about safety</title>
       <link>https://cor3ntin.github.io/posts/safety/</link>
       <pubDate>Sun, 11 Dec 2022 16:11:04 +0100</pubDate>
