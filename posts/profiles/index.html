@@ -175,8 +175,8 @@ Sean Baxter has shown no interest in further involvement in WG21, and frankly, w
 Large proposals also have a history of failing or crumbling under the weight of compromises.</p>
 <p>But a lot of the criticism isn&rsquo;t focused on the viability of this direction.
 Rather, people keep repeating that Rust has vulnerabilities too, and therefore memory safety is insufficient
-and therefore, unecessary. The C++ community understands the benefits of ressource safety, constness (to some extent)
-and type safety (ideas that, to this day, are often dismissed by a lot of C programmers),
+and therefore, unecessary. The C++ community understands the benefits of ressource safety, constness (sorta),
+access modifiers (<a href="https://wg21.link/P2996">kinda</a>) and type safety (ideas that, to this day, are often dismissed by a lot of C programmers),
 yet we feel the urge to dismiss the usefullness of lifetime safety. Why are programming communities so siloed?</p>
 <p>The self-proclaimed C++ leadership<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, in particular, seems terrified of that direction, although it&rsquo;s rather unclear why.
 Their solution, which after the Poland meeting has stronger consensus in the Safety Study Group is named &ldquo;Profiles&rdquo;.</p>
@@ -191,14 +191,14 @@ Their exact nature is very unclear at this point because this work is extremely 
 on details.</p>
 <p>There is some hubris in thinking that WG21 could deliver memory safety through static analysis.
 People have been doing static analysis for decades, so we have a very good understanding
-of the limitations. In particular, we know <a href="https://www.circle-lang.org/draft-profiles.html">we cannot achieve guaranteed memory safety without annotating most references</a>.
+of the limitations. In particular, we know <a href="https://www.circle-lang.org/draft-profiles.html">we cannot achieve guaranteed memory safety without annotating most references</a> - and that would still be insufficient.
 (Also, if it really needs to be said, lifetime annotations must be part of the ABI to offer safety over time.)</p>
 <p>The proponent of profiles points out that their goal is an overall reduction in vulnerabilities,
 and they are not aiming for perfection. This is extremely fair. Any mitigation is worth considering.
 However, we should acknowledge that there is a giant gap between 99% and 100% memory safety.
 It would be reasonable to treat a fragment of code that may have false negatives as being completely memory-unsafe, so if profiles could help with memory safety, they would not help with confidence. (<code>-Wlifetime</code> has yet to demonstrate effectiveness on non-trivial examples,
 so the rate of false negatives is much higher; can it even be 50% effective?).
-And having a full understanding of object lifetime thorough your code is another <a href="https://github.com/willcrichton/flowistry">exciting opportinity for tooling</a>.</p>
+And having a full understanding of object lifetime thorough the code would also be an <a href="https://github.com/willcrichton/flowistry">exciting opportinity for tooling</a>.</p>
 <p>It doesn&rsquo;t mean static analysis isn&rsquo;t useful or that tools with a high number of false negatives don&rsquo;t help — in fact, I think <code>-Wlifetime</code> is pretty cool — but if I had concerns over the long-term viability of C++, that work would do very little to alleviate them.
 It is unclear whether this work would adequately satisfy the requirements of governmental institutions, and that certainly would be useful information.</p>
 <p>Implementers and tool vendors are not actively involved in the work on Profiles,
@@ -254,7 +254,7 @@ They may not be as glamorous as borrow checking, but they are effective, concret
 That is an excellent example of actionable improvement in the standard.</p>
 <p>There is an ever-growing list of sanitizers, including a type-sanitizer being worked on for Clang.</p>
 <p>There is a culture shift in the wider community towards increasing language safety, which in turn means that compilers are more willing to warn on potentially dangerous code.</p>
-<p><code>-Wdangling</code>, <code>-Wdangling-field</code>. <code>[[clang::lifetimebound]]</code> and the new <code>[[clang::lifetime_capture_by]]</code> attributes allow to express lifetime relationship and avoid some common dangling issues.</p>
+<p><code>-Wdangling</code>, <code>-Wdangling-field</code>, <code>[[clang::lifetimebound]]</code> and the new <code>[[clang::lifetime_capture_by]]</code> attributes allow to express lifetime relationship and avoid some common dangling issues.</p>
 <p>To a large degree, the work on <a href="https://llvm.github.io/clangir/">Clang IR</a> is motivated by the prospect of better, faster,
 more reliable lifetime analysis: Rust, Circle, and attempts to implement <code>-Wlifetime</code> in Clang demonstrated the limits
 of static analysis and CFI at the AST level.
@@ -270,9 +270,9 @@ of the industry and end up being outdated, even if they had novel ideas when fir
 We could imagine WG21 to become a great unifying force that will distill the state of the art into a rejuvenated memory-safe C++ language
 for the next 30 years, but we are not there yet, and profiles are not that.</p>
 <p>Companies seem quite content to figure out all that memory safety funny business without WG21.
-Many big techs formed internal memory safety task forces that consider rewrites,
+Many big tech companies formed internal memory safety task forces that consider rewrites,
 interoperability with other languages, and remediations that do not involve the C++ committee.</p>
-<p>The Rust Foundation announced a desire for better <a href="https://github.com/rustfoundation/interop-initiative/blob/main/problem-statement.md">C++/Rust Interoperability</a> but has yet to contact WG21.</p>
+<p>The Rust Foundation announced a desire for better <a href="https://github.com/rustfoundation/interop-initiative/blob/main/problem-statement.md">C++/Rust Interoperability</a> but has yet to contact WG21, and it would probably not be a good use of their time to do so.</p>
 <p>After all, the C++ committee always tried to pretend it could evolve the language without considering or driving the broader ecosystem,
 (which explains the state of package management), and so there isn&rsquo;t a need to involve the C++ committee in memory-safety solutions
 that do not impact the language.</p>
