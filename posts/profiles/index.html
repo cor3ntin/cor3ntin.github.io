@@ -353,7 +353,8 @@ And we should certainly not make hasty decisions.
 A lot of that comes back to whether most C++ code has
 already been written, which is a self-fulfilling belief
 (and if our unwillingness to operate ABI breaks is any indication,
-we already decided that we are well past peak C++).</p>
+we already decided that we are well past peak C++).
+WG21 appear to widely underestimate the willingness of <a href="https://security.googleblog.com/2022/12/memory-safe-languages-in-android-13.html">large tech company to rewrite their code</a>.</p>
 <p>For example, <a href="https://wg21.link/P3466">P3466 - (Re)affirm design principles for future C++ evolution</a> does not seem
 to be motivated by anything but an attempt to dissuade anyone from researching whether borrow checking could possibly be viable in C++.
 This paper, intended to be a Standing Document, offers some dogmatic rules presented as pillars of C++,
@@ -366,7 +367,7 @@ Maybe it is fitting that our principles would not be self-consistent.</p>
 <p>It might be a bit scary, but we won&rsquo;t find the solution to memory safety in <a href="https://www.stroustrup.com/dne.html">&ldquo;Design &amp; Evolution of C++&rdquo;</a>.
 I know D&amp;E is a good book because D&amp;E says it&rsquo;s good, but if there was ever a time to throw the book away,
 it might as well be now.
-Safety was not acknowledged as a significant concern in the early 90s; threat models were <del>different</del>,non-existent,
+Safety was not acknowledged as a significant concern in the early 90s; threat models were <del>different</del> non-existent,
 hardware was widely different, the ecosystem was different, the programming language landscape was different,
 toolchains had different technical and economic constraints, and the community was different.</p>
 <p>We should not discard anything too soon. Especially not as a matter of policy.
