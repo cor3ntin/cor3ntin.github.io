@@ -6,7 +6,17 @@
     <title>GitHub Statistics</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/16.1.1/build.css" />
     <script>
-        const GITHUB_TOKEN = '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';
+        let GITHUB_TOKEN = localStorage.getItem('gh_token');
+        if (!GITHUB_TOKEN) {
+            GITHUB_TOKEN = prompt('Please enter your GitHub Personal Access Token with repo scope:');
+            localStorage.setItem('gh_token', GITHUB_TOKEN);
+        }
+        // Function to clear stored token
+        function clearToken() {
+            localStorage.removeItem('gh_token');
+            alert('GitHub token cleared. The page will reload so you can re-enter your token.');
+            location.reload();
+        }
 
         async function fetchGraphQL(query) {
             const res = await fetch('https://api.github.com/graphql', {
@@ -242,6 +252,7 @@
         <label for="until-date">Until:</label>
         <input type="date" id="until-date">
         <button onclick="loadActivity()">Reload</button>
+        <button onclick="clearToken()" style="margin-left:8px;">Clear Token</button>
     </div>
     <div id="progress-container">
         <div id="progress-bar"></div>
@@ -249,10 +260,10 @@
 
     <h2>PRs Opened</h2>
     <table id="opened-prs"></table>
-    <h2>PRs Reviewed</h2>
-    <table id="reviewed-prs"></table>
     <h2>Issues Closed</h2>
     <table id="closed-issues"></table>
+    <h2>PRs Reviewed</h2>
+    <table id="reviewed-prs"></table>
 </body>
 
 </html>
