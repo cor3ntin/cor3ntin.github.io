@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>GitHub Statistics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/16.1.1/build.css" />
+    <script>
+        const GITHUB_TOKEN = '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';
+
+        async function fetchGraphQL(query) {
+            const res = await fetch('https://api.github.com/graphql', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `bearer ${GITHUB_TOKEN}` },
+                body: JSON.stringify({ query })
+            });
+            const { data, errors } = await res.json();
+            if (errors) { console.error('GraphQL errors:', errors); throw new Error('GraphQL query failed'); }
+            return data;
+        }
+
+        async function fetchLabels() {
+            const query = `
+        query {
+          repository(owner: "llvm", name: "llvm-project") {
+            labels(first: 100) { nodes { name } }
+          }
+        }`;
+            const data = await fetchGraphQL(query);
+            return data.repository.labels.nodes.map(n => n.name).sort((a, b) => a.localeCompare(b));
+        }
+
+        function populateSelect(id, items, defaults = []) {
+            const sel = document.getElementById(id); sel.innerHTML = '';
+            items.forEach(item => {
+                const opt = document.createElement('option'); opt.value = item; opt.textContent = item;
+                if (defaults.includes(item)) opt.selected = true;
+                sel.appendChild(opt);
+            });
+        }
+
+        async function fetchPaginatedResults(type, sinceDate, untilDate, labelQuery) {
+            const bar = document.getElementById('progress-bar'); let page = 0; const all = []; let hasNext = true, cursor = null;
+            while (hasNext) {
+                if (bar) bar.style.width = `${Math.min(++page * 10, 100)}%`;
+                const pagination = cursor ? `, after: "${cursor}"` : '';
+                const query = `
+          query {
+            results: search(
+              query: "repo:llvm/llvm-project ${labelQuery} updated:>=${sinceDate} updated:<=${untilDate} is:${type}",
+              type: ISSUE_ADVANCED, first: 100${pagination}
+            ) { pageInfo { hasNextPage endCursor } nodes {
+                ... on PullRequest { number title url createdAt state author{login} labels(first:100){nodes{name}} reviews(first:100){nodes{author{login}submittedAt}} }
+                ... on Issue { number title url closedAt labels(first:100){nodes{name}} timelineItems(itemTypes:[CLOSED_EVENT],first:100){nodes{...on ClosedEvent{actor{login}}}} closedByPullRequestsReferences(first:100){nodes{number url author{login}}} }
+            }}
+          }`;
+                const data = await fetchGraphQL(query).then(d => d.results);
+                all.push(...data.nodes);
+                hasNext = data.pageInfo.hasNextPage; cursor = data.pageInfo.endCursor;
+            }
+            return all;
+        }
+
+        function stringToColor(str) {
+            const p = ['#6f42c1', '#d73a49', '#28a745', '#005cc5', '#e36209', '#0366d6', '#b60205', '#1d76db', '#0e8a16', '#f66a0a'];
+            let h = 0; for (let c of str) h = c.charCodeAt(0) + ((h << 5) - h);
+            return { bg: p[Math.abs(h) % p.length], text: '#fff' };
+        }
+
+        function renderTable(id, data, cols) {
+            const t = document.getElementById(id);
+            // Build header row, mapping viaPR to "PR"
+            const headerHtml = cols.map(c => {
+                const label = c === 'viaPR' ? 'PR' : c.charAt(0).toUpperCase() + c.slice(1);
+                return `<th>${label}</th>`;
+            }).join('');
+            t.innerHTML = `<tr>${headerHtml}</tr>`;
+            data.forEach(r => {
+                const tr = document.createElement('tr');
+                cols.forEach(c => {
+                    const td = document.createElement('td');
+                    if (c === 'viaPR') {
+                        td.innerHTML = r.viaPR ? `<a href="${r.prUrl}" target="_blank"><span style="font-weight:bold;color:#6f42c1">[PR]</span></a>` : '';
+                    } else if (c === 'number') {
+                        td.innerHTML = `<a href="${r.url}" target="_blank">#${r.number}</a>`;
+                    } else {
+                        td.innerHTML = r[c];
+                    }
+                    tr.appendChild(td);
+                });
+                t.appendChild(tr);
+            });
+        }
+
+        async function loadActivity() {
+            const users = document.getElementById('usernames').value.split(',').map(s => s.trim()).filter(Boolean);
+            const tags = Array.from(document.getElementById('tag-filters').selectedOptions).map(o => o.value);
+            const since = document.getElementById('since-date').value;
+            const until = document.getElementById('until-date').value;
+            const lblQ = tags.length ? `(${tags.map(t => `label:${t}`).join(' OR ')})` : '';
+
+            ['opened-prs', 'reviewed-prs', 'closed-issues'].forEach(id => document.getElementById(id).innerHTML = '');
+            const prs = await fetchPaginatedResults('pr', since, until, lblQ);
+            const iss = await fetchPaginatedResults('issue', since, until, lblQ);
+
+            const opened = [], reviewed = [], closed = []; const seen = new Set();
+            prs.forEach(pr => {
+                const labels = pr.labels.nodes.map(n => n.name);
+                const lblHTML = labels.map(l => { const c = stringToColor(l); return `<span class='label' style='background:${c.bg};color:${c.text}'>${l}</span>`; }).join(' ');
+                if (users.includes(pr.author.login) && pr.state !== 'CLOSED') opened.push({ number: pr.number, title: pr.title, url: pr.url, author: pr.author.login, status: pr.state, date: new Date(pr.createdAt).toISOString().slice(0, 10), labels: lblHTML });
+                pr.reviews.nodes.forEach(rv => { const key = `${rv.author.login}-${pr.number}`; if (users.includes(rv.author.login) && new Date(rv.submittedAt) >= new Date(since) && !seen.has(key)) { reviewed.push({ number: pr.number, title: pr.title, url: pr.url, reviewer: rv.author.login, date: rv.submittedAt.slice(0, 10), labels: lblHTML }); seen.add(key); } });
+            });
+            iss.forEach(issue => {
+                const labelsArr = issue.labels.nodes.map(n => n.name);
+                const lblHTML = labelsArr.map(l => {
+                    const c = stringToColor(l);
+                    return `<span class='label' style='background:${c.bg};color:${c.text}'>${l}</span>`;
+                }).join(' ');
+                const refs = issue.closedByPullRequestsReferences.nodes || [];
+                const ref = refs[refs.length - 1];
+                const prUrl = ref?.url;
+                const ce = issue.timelineItems.nodes.find(e => e.actor && e.actor.login);
+                let actor = null;
+                let via = false;
+                if (ref && users.includes(ref.author.login)) { actor = ref.author.login; via = true; }
+                else if (ce && users.includes(ce.actor.login)) { actor = ce.actor.login; }
+                if (actor && new Date(issue.closedAt) >= new Date(since)) {
+                    closed.push({
+                        number: issue.number,
+                        title: issue.title,
+                        url: issue.url,
+                        closer: actor,
+                        date: new Date(issue.closedAt).toISOString().slice(0, 10),
+                        labels: lblHTML,
+                        viaPR: via,
+                        prUrl: prUrl
+                    });
+                }
+            });
+            closed.sort((a, b) => b.viaPR - a.viaPR);
+
+            renderTable('opened-prs', opened, ['number', 'title', 'author', 'status', 'date', 'labels']);
+            renderTable('reviewed-prs', reviewed, ['number', 'title', 'reviewer', 'date', 'labels']);
+            renderTable('closed-issues', closed, ['number', 'title', 'viaPR', 'closer', 'date', 'labels']);
+        }
+        // Populate labels and initialize on page load
+        window.onload = async () => {
+            try {
+                const labels = await fetchLabels();
+                populateSelect('tag-filters', labels, ['clang', 'clang:frontend']);
+
+                const today = new Date().toISOString().slice(0, 10);
+                const ago30 = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+                document.getElementById('since-date').value = ago30;
+                document.getElementById('until-date').value = today;
+
+                await loadActivity();
+            } catch (err) {
+                console.error('Initialization failed', err);
+                alert('Error initializing labels. Check console.');
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .controls {
+            margin-bottom: 16px;
+        }
+
+        input,
+        select {
+            margin-right: 8px;
+        }
+
+        .label {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 2px;
+            font-size: 10px;
+            border-radius: 2em;
+            font-weight: 500;
+        }
+
+        #progress-container {
+            width: 100%;
+            background: #eee;
+            height: 8px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+
+        #progress-bar {
+            height: 8px;
+            width: 0%;
+            background: #28a745;
+            transition: width .3s;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>GitHub Statistics</h1>
+    <div class="controls">
+        <label for="usernames">Usernames:</label>
+        <input type="text" id="usernames" value="cor3ntin" placeholder="user1,user2">
+        <label for="tag-filters">Labels:</label>
+        <select id="tag-filters" multiple size="8" style="width:200px;"></select>
+        <br><br>
+        <label for="since-date">Since:</label>
+        <input type="date" id="since-date">
+        <label for="until-date">Until:</label>
+        <input type="date" id="until-date">
+        <button onclick="loadActivity()">Reload</button>
+    </div>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <h2>PRs Opened</h2>
+    <table id="opened-prs"></table>
+    <h2>PRs Reviewed</h2>
+    <table id="reviewed-prs"></table>
+    <h2>Issues Closed</h2>
+    <table id="closed-issues"></table>
+</body>
+
+</html>
