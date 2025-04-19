@@ -6,8 +6,22 @@
     <description>Recent content in Posts on cor3ntin</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 29 Nov 2024 09:14:07 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 19 Apr 2025 18:41:37 +0200</lastBuildDate>
     <atom:link href="https://cor3ntin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A patchwork of Clang patches</title>
+      <link>https://cor3ntin.github.io/posts/clang21/</link>
+      <pubDate>Sat, 19 Apr 2025 18:41:37 +0200</pubDate>
+      <guid>https://cor3ntin.github.io/posts/clang21/</guid>
+      <description>Clang 20 was released in early March. But there is no rest for the wicked; Clang 21 is poised for a release in September.&#xA;While we are hard at work on C++23, C++26, and C23 features, I am also trying to find some time to work on miscellaneous bits and bobs.&#xA;I figured I should talk about some of them even if it&amp;rsquo;s all listed in the in-progress changelog, which we do our best to keep as accurate as possible.</description>
+    </item>
+    <item>
+      <title>Nothingburgers in Hagenberg</title>
+      <link>https://cor3ntin.github.io/posts/hagengberg/</link>
+      <pubDate>Sun, 23 Feb 2025 10:38:23 +0100</pubDate>
+      <guid>https://cor3ntin.github.io/posts/hagengberg/</guid>
+      <description>The C++ committee held a meeting the week of the 10 February, in the lovely little village of Hagenberg. Far away from the civilization, we were hard at work on C++26. It was the last meeting to send new features to the wording groups. At the next meeting, C++26 will be complete and send to national bodies for comments.&#xA;As both my day job and my role as a Clang maintainer require me to pay very close attention to the language, I spent no more than a few minutes in library evolution.</description>
+    </item>
     <item>
       <title>Legacy Safety: The Wrocław C&#43;&#43; Meeting</title>
       <link>https://cor3ntin.github.io/posts/profiles/</link>
@@ -35,13 +49,6 @@
       <pubDate>Sat, 16 Jul 2022 10:21:04 +0200</pubDate>
       <guid>https://cor3ntin.github.io/posts/augeas/</guid>
       <description>&lt;p style=&#34;display:none&#34;&gt;&#xA;C++ is not done yet.&#xA;&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Importable_headers</title>
-      <link>https://cor3ntin.github.io/posts/importable_headers/</link>
-      <pubDate>Wed, 05 May 2021 10:13:52 +0200</pubDate>
-      <guid>https://cor3ntin.github.io/posts/importable_headers/</guid>
-      <description></description>
     </item>
     <item>
       <title>What is the standard Library?</title>

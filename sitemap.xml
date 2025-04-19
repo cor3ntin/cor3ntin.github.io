@@ -2,13 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://cor3ntin.github.io/</loc>
-    <lastmod>2024-11-29T09:14:07+01:00</lastmod>
+    <loc>https://cor3ntin.github.io/posts/clang21/</loc>
+    <lastmod>2025-04-19T18:41:37+02:00</lastmod>
   </url><url>
-    <loc>https://cor3ntin.github.io/posts/profiles/</loc>
-    <lastmod>2024-11-29T09:14:07+01:00</lastmod>
+    <loc>https://cor3ntin.github.io/</loc>
+    <lastmod>2025-04-19T18:41:37+02:00</lastmod>
   </url><url>
     <loc>https://cor3ntin.github.io/posts/</loc>
+    <lastmod>2025-04-19T18:41:37+02:00</lastmod>
+  </url><url>
+    <loc>https://cor3ntin.github.io/posts/hagengberg/</loc>
+    <lastmod>2025-02-23T10:38:23+01:00</lastmod>
+  </url><url>
+    <loc>https://cor3ntin.github.io/posts/profiles/</loc>
     <lastmod>2024-11-29T09:14:07+01:00</lastmod>
   </url><url>
     <loc>https://cor3ntin.github.io/posts/safety/</loc>
@@ -19,9 +25,6 @@
   </url><url>
     <loc>https://cor3ntin.github.io/posts/augeas/</loc>
     <lastmod>2022-07-16T10:21:04+02:00</lastmod>
-  </url><url>
-    <loc>https://cor3ntin.github.io/posts/importable_headers/</loc>
-    <lastmod>2021-05-05T10:13:52+02:00</lastmod>
   </url><url>
     <loc>https://cor3ntin.github.io/posts/std/</loc>
     <lastmod>2020-09-20T10:46:30+02:00</lastmod>

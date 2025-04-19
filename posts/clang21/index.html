@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en-us">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>A patchwork of Clang patches | cor3ntin</title>
+
+
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='https://cor3ntin.github.io/custom.css'></head>
+<body>
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://cor3ntin.github.io/"><h1 class="title is-4">cor3ntin</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="github" href='https://github.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/cor3ntin' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a><a class="level-item" aria-label="rss" href='' target='_blank' rel='noopener'>
+            <span class="icon">
+                <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    
+  </svg>
+</i>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </nav>
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <article class="container" id="article">
+    <div class="subtitle is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">April 19, 2025</h2>
+    <h1 class="title">A patchwork of Clang patches</h1>
+    
+    <div class="content">
+      <p>Clang 20 was released in early March.
+But there is no rest for the wicked; Clang 21 is poised for a release in September.</p>
+<p>While we are hard at work on C++23, C++26, and C23 features, I am also trying to find some time to work on miscellaneous bits and bobs.</p>
+<p>I figured I should talk about some of them even if it&rsquo;s all listed in the <a href="https://clang.llvm.org/docs/ReleaseNotes.html">in-progress changelog</a>, which we do our best to keep as accurate as possible.</p>
+<h2 id="looonger-fold-expressions">Looonger fold expressions</h2>
+<p>Folds expressions in clang are tied to <code>-fbracket-depth</code>, which kinda-sorta lets us put a
+cap on recursion in Clang&rsquo;s parser.</p>
+<p>That limit defaulted to 256, but ever since the introduction of fold expressions,
+there has been a desire to increase that limit.
+But letting the compiler do unbounded restrictions caused some instabilities
+on some platforms, simply because Clang was running out of stack space.
+And maybe we could have gotten away with adding another flag or
+ignoring this limit for fold expressions.
+But that would have put an additional burden on the user, so instead, I went hunting for some stack space
+to reclaim and was able to find a few hundred bytes here and there.
+It doesn&rsquo;t seem like a lot, but over a large number of recursions, it adds up.</p>
+<p>And so, we raised default the limit to 2048.</p>
+<p>It doesn&rsquo;t mean the stack won&rsquo;t blow up in some instances, but in trivial cases, Clang is more frugal in its consumption of stack space.</p>
+<p>I hope the new default will cover the needs of most of our users.
+Given that fold expressions are always preferable to a solution based on recursive template instantiation,
+it&rsquo;s nice to be able to use them without moderation!</p>
+<h3 id="constexpr-all-the-things-asm-edition">Constexpr all the things: <code>asm</code> edition.</h3>
+<p>When they implemented <a href="wg21.link/P2741R3">user-generated static_assert messages (P2741R3)</a>,
+the good folks working on GCC figured they could also support these constexpr strings in <a href="https://gcc.gnu.org/onlinedocs/gcc/Asm-constexprs.html"><code>asm</code> statements</a>. And so they did.</p>
+<p>I had a few users asking me if Clang could do the same.
+Yes, we could.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">foo</span>() {
+</span></span><span style="display:flex;"><span>   <span style="color:#080;font-weight:bold">asm</span>((std::string_view(<span style="color:#d20;background-color:#fff0f0">&#34;nop&#34;</span>)) ::: (std::string_view(<span style="color:#d20;background-color:#fff0f0">&#34;memory&#34;</span>)));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>I was told this would be useful for people writing SIMD libraries.
+You could also use it to write a C++ compiler in C++.</p>
+<p>Note that neither GCC nor clang support constexpr strings in asm label, so you cannot write your own constexpr mangler. Which is probably a good thing!</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#888;font-weight:bold">int</span> <span style="color:#06b;font-weight:bold">foo</span> () <span style="color:#080;font-weight:bold">asm</span> ((std::string_view(<span style="color:#d20;background-color:#fff0f0">&#34;bar&#34;</span>)); <span style="color:#888">// *NOT* Supported
+</span></span></span></code></pre></div><p><a href="https://compiler-explorer.com/z/YqsT98cj5">[Compiler Explorer]</a>.</p>
+<p>You can check <a href="https://clang.llvm.org/docs/LanguageExtensions.html#constexpr-strings-in-gnu-asm-statememts">Clang</a>&rsquo;s and <a href="https://gcc.gnu.org/onlinedocs/gcc/Asm-constexprs.html">GCC</a>&rsquo;s documentation for this feature. I&rsquo;m looking forward to seeing how it gets used!</p>
+<p>It was also a nice opportunity to refactor our constexpr string evaluation code, which will make it easier to adopt <a href="https://wg21.link/p3423r1">Extending User-Generated Diagnostic Messages</a> if that ends up being adopted by the C++ committee.</p>
+<h2 id="__builtin_structured_binding_size"><code>__builtin_structured_binding_size</code></h2>
+<p>Clang 21 will support <a href="https://wg21.link/P1061R10">packs in structured bindings</a> (thanks to a contribution from Jason Rice).</p>
+<p>One could think that having the ability to
+deduce the number of bindings would let us detect whether a type can be decomposed.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> decomposable = <span style="color:#080;font-weight:bold">requires</span>(<span style="color:#080;font-weight:bold">const</span> T &amp; t) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> [...p] = t; <span style="color:#888">// ❌ error
+</span></span></span><span style="display:flex;"><span><span style="color:#888"></span>};
+</span></span></code></pre></div><p>Alas, neither SFINAE nor constraints allow us to check if a declaration would be valid - and that would be a fairly difficult undertaking.</p>
+<p>However, knowing if a type can be used with structured bindings and how many bindings would be created is quite useful.</p>
+<p>So I added a new builtin for that: <code>__builtin_structured_binding_size</code>.</p>
+<p>If <code>T</code> can be decomposed, <code>__builtin_structured_binding_size(T)</code> returns the number of bindings as a size_t, and if it can&rsquo;t, it produces SFINAE-friendly errors.</p>
+<p>The <code>decomposable</code> concept can be rewritten as:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> decomposable = <span style="color:#080;font-weight:bold">requires</span> {
+</span></span><span style="display:flex;"><span> {__builtin_structured_binding_size(T)};
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>The combination of <code>__builtin_structured_binding_size</code> and packs in structured binding can even let us generically access members of aggregates:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span>&lt;std::size_t Idx, <span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">requires</span> (Idx &lt; __builtin_structured_binding_size(T))
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#080;font-weight:bold">auto</span>) <span style="color:#080;font-weight:bold">constexpr</span> get_binding(T&amp;&amp; obj) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> &amp;&amp; [...p] = std::forward&lt;T&gt;(obj);
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> p...[Idx];
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">struct</span> <span style="color:#b06;font-weight:bold">S</span> { <span style="color:#888;font-weight:bold">int</span> a = <span style="color:#00d;font-weight:bold">0</span>, b = <span style="color:#00d;font-weight:bold">42</span>; };
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">static_assert</span>(__builtin_structured_binding_size(S) == <span style="color:#00d;font-weight:bold">2</span>);
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">static_assert</span>(get_binding&lt;<span style="color:#00d;font-weight:bold">1</span>&gt;(S{}) == <span style="color:#00d;font-weight:bold">42</span>);
+</span></span></code></pre></div><p>Adding this builtin was necessary to make <a href="https://eel.is/c++draft/exec#snd.concepts-5">sender/receivers implementable</a>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">requires</span> (__builtin_structured_binding_size(T) &gt;=<span style="color:#00d;font-weight:bold">2</span>)
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">consteval</span> <span style="color:#080;font-weight:bold">auto</span> tag_of_impl(T&amp; t) {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">auto</span> &amp;&amp; [tag, ..._] = t;
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> std::type_identity&lt;<span style="color:#080;font-weight:bold">decltype</span>(<span style="color:#080;font-weight:bold">auto</span>(tag))&gt;{};
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
+</span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">using</span> tag_of_t = <span style="color:#080;font-weight:bold">decltype</span>(tag_of_impl(std::declval&lt;T&amp;&gt;()))::type;
+</span></span></code></pre></div><h2 id="faster-subsumption">Faster subsumption</h2>
+<p>Subsumption (the process by which we determined which viable candidate is the most constrained and, therefore, the best match) requires us to produce a <a href="https://en.wikipedia.org/wiki/Conjunctive_normal_form">Conjunctive Normal Form</a> and <a href="https://en.wikipedia.org/wiki/Disjunctive_normal_form">Disjunctive Normal Form</a> of the constraints.</p>
+<p>Unfortunately, this process has exponential worst-case complexity, and some (somewhat artificial) test cases would cause clang to crash, hang, or consume <a href="https://www.youtube.com/shorts/X6xddQI1fyQ">unreasonable amounts of RAM</a>.</p>
+<p>Not well versed in boolean algebra, I fell into deep the rabbit holes
+of Tseytin (not applicable, which is a shame because in the cases where it works, it is very efficient!), Tarjan&rsquo;s, and SAT (overkill).
+It doesn&rsquo;t help that what C++ calls subsumption is really an implication
+relationship rather than subsumption.</p>
+<p>It was fun but quite counterproductive. I managed to crawl out of that hole, and having re-learned that I know nothing, I opted for a simple solution of eliminating redundant sub-clauses, which seems to be enough.</p>
+<p>I also rewrote that whole process to be more space efficient.
+It does not make a lot of difference for most code, but pathological cases have a chance of compiling.</p>
+<p>We could still do a few things to remove more subclauses, sort them by size, etc. I even investigated this <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/sat_2005_subsumption.pdf">great paper from Microsoft</a>,
+but realistically, that&rsquo;s probably not worth it until the formula has thousands of terms, and that&rsquo;s not a reasonable scenario in the context of C++ constraints.</p>
+<p>We could throw a SAT solver at it - after all [Clang Tidy comes with z3]
+(<a href="https://arxiv.org/pdf/1810.12041)">https://arxiv.org/pdf/1810.12041)</a>. But that would not do anything good for performance in the common case.</p>
+<p>After all, constraint subsumption in C++ is designed to avoid the need for a SAT solver (which is why negations are atomic constraints) at the cost of the need
+for both a CNF and a DNF transformation per constraint (which, in the common case of a C++ program, should still be the faster option).</p>
+<p><a href="https://compiler-explorer.com/z/4aqo6K1WT">[Compiler Explorer]</a></p>
+<h2 id="faster-overload-resolution">Faster overload resolution</h2>
+<p>Last but not least, I implemented <a href="https://wg21.link/p3606">P3606 R0 On Overload Resolution, Exact Matches and Clever Implementations</a> because it&rsquo;s always nice to implement your own papers!</p>
+<p>During overload resolution, if we know that a non-template candidate will always be picked because a specialization of a template candidate cannot be better, we no longer instantiate the template candidate.</p>
+<p>This fixes a few issues where Clang complained about concepts depending on themselves. This was correct from the point of view of the standard but confusing
+as diverging from other implementations.</p>
+<p><a href="https://godbolt.org/z/Mn6674ooa">[Compiler Explorer]</a></p>
+<p>This should let us <a href="https://github.com/llvm/llvm-project/pull/122423">implement</a> the resolution to <a href="wg21.link/CWG2369">CWG2369</a> which quite a few users have been asking about.</p>
+<p>It also makes Clang 4% faster at compiling itself, which is a nice bonus!</p>
+<h1 id="thats-all-folks">That&rsquo;s all folks!</h1>
+<p>This is what I&rsquo;ve been up to over the past few weeks.
+Many people (not enough) contribute to Clang, and Clang 21 will have a lot of exciting features and bug fixes.</p>
+<p>If you are wondering what other toolchains are up to, <a href="https://developers.redhat.com/articles/2025/04/10/6-usability-improvements-gcc-15">GCC is making improvements to its diagnostics</a>, and <a href="https://devblogs.microsoft.com/cppblog/msvc-compiler-updates-in-visual-studio-2022-version-17-13/">MSVC is working on C++23</a>.</p>
+
+      
+    <div id="socialshareDiv">
+        <h1>Share on </h1>
+        <span class="icon-share-span"><a href="http://www.reddit.com/submit?url=https%3a%2f%2fcor3ntin.github.io%2fposts%2fclang21%2f" target="_blank" title="Submit to Reddit"><i class="icon-share icon-share-reddit"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M2.204 14.049c-.06.276-.091.56-.091.847 0 3.443 4.402 6.249 9.814 6.249 5.41 0 9.812-2.804 9.812-6.249 0-.274-.029-.546-.082-.809l-.015-.032c-.021-.055-.029-.11-.029-.165-.302-1.175-1.117-2.241-2.296-3.103-.045-.016-.088-.039-.126-.07-.026-.02-.045-.042-.067-.064-1.792-1.234-4.356-2.008-7.196-2.008-2.815 0-5.354.759-7.146 1.971-.014.018-.029.033-.049.049-.039.033-.084.06-.13.075-1.206.862-2.042 1.937-2.354 3.123 0 .058-.014.114-.037.171l-.008.015zm9.773 5.441c-1.794 0-3.057-.389-3.863-1.197-.173-.174-.173-.457 0-.632.176-.165.46-.165.635 0 .63.629 1.685.943 3.228.943 1.542 0 2.591-.3 3.219-.929.165-.164.45-.164.629 0 .165.18.165.465 0 .645-.809.808-2.065 1.198-3.862 1.198l.014-.028zm-3.606-7.573c-.914 0-1.677.765-1.677 1.677 0 .91.763 1.65 1.677 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm7.233 0c-.914 0-1.678.765-1.678 1.677 0 .91.764 1.65 1.678 1.65s1.651-.74 1.651-1.65c0-.912-.739-1.677-1.651-1.677zm4.548-1.595c1.037.833 1.8 1.821 2.189 2.904.45-.336.719-.864.719-1.449 0-1.002-.815-1.816-1.818-1.816-.399 0-.778.129-1.09.363v-.002zM2.711 9.963c-1.003 0-1.817.816-1.817 1.818 0 .543.239 1.048.644 1.389.401-1.079 1.172-2.053 2.213-2.876-.302-.21-.663-.329-1.039-.329v-.002zm9.217 12.079c-5.906 0-10.709-3.205-10.709-7.142 0-.275.023-.544.068-.809C.494 13.598 0 12.729 0 11.777c0-1.496 1.227-2.713 2.725-2.713.674 0 1.303.246 1.797.682 1.856-1.191 4.357-1.941 7.112-1.992l1.812-5.524.404.095s.016 0 .016.002l4.223.993c.344-.798 1.138-1.36 2.065-1.36 1.229 0 2.231 1.004 2.231 2.234 0 1.232-1.003 2.234-2.231 2.234s-2.23-1.004-2.23-2.23l-3.851-.912-1.467 4.477c2.65.105 5.047.854 6.844 2.021.494-.464 1.144-.719 1.833-.719 1.498 0 2.718 1.213 2.718 2.711 0 .987-.54 1.886-1.378 2.365.029.255.059.494.059.749-.015 3.938-4.806 7.143-10.72 7.143l-.034.009zm8.179-19.187c-.74 0-1.34.599-1.34 1.338 0 .738.6 1.34 1.34 1.34.732 0 1.33-.6 1.33-1.334 0-.733-.598-1.332-1.347-1.332l.017-.012z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fcor3ntin.github.io%2fposts%2fclang21%2f&via=cor3ntin" target="_blank" title="Tweet"><i class="icon-share icon-share-twitter"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg>
+</i></a></span>
+        <span class="icon-share-span"><a href="https://news.ycombinator.com/submit?u=https%3a%2f%2fcor3ntin.github.io%2fposts%2fclang21%2f&t=A%20patchwork%20of%20Clang%20patches" target="_blank" title="Submit to Hacker News"><i class="icon-share icon-share-hn"><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
+    
+    <path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/>
+    
+  </svg>
+</i></a></span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+</body>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  showMathMenu: false,
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementById('article');
+    if(!article)
+        return;
+    var headings = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(heading){
+      if(heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+<script>
+(function () {
+    let compilers = {
+        "gcc-trunk" : {"compiler" : "gsnapshot", "options" : "-O3 -std=c++2a"},
+        "default" : {"compiler" : "g81", "options" : ""},
+        "gcc-concepts" : {"compiler" : "g81", "options" : "-O1 -fconcepts -std=c++2a"},
+        "autonsdmi"    : {"compiler" : "clang_autonsdmi", "options" : "-O3 -std=c++2a -Wall"},
+        "executors"    : {"compiler" : "clang_concepts", "options" :  "-O3 -std=c++2a -Xclang -fconcepts-ts -stdlib=libc++ -pthread"},
+        "meta"         : {"lang": "cppx", "compiler" : "cppx_trunk", "options": "-O3 -std=c++2a"}
+    }
+    const ce_nodes = document.querySelectorAll('.compiler_explorer_block');
+    for (let i = 0, len = ce_nodes.length; i < len; i++) {
+        let element  = ce_nodes[i];
+        let settings = compilers[element.getAttribute("compiler")] || compilers["default"]
+        let codeBlock = element.querySelector(".highlight code :not([hidden])");
+        let source = unescape(element.textContent).trim();
+        let content = [];
+        let compiler = "g81";
+        let options =
+        content.push({
+            type: 'component',
+            componentName: 'codeEditor',
+            componentState: {
+                id: 1,
+                source: source,
+                options: {compileOnChange: true, colouriseAsm: true},
+                fontScale: 1,
+                lang: settings["lang"] || "c++"
+            }
+        });
+        content.push({
+            type: 'component',
+            componentName: 'compiler',
+            componentState: {
+                source: 1,
+                filters: {commentOnly: true, directives: true, intel: true, labels: true, trim: true, libraryCode: true},
+                options : settings["options"],
+                compiler: settings["compiler"],
+                fontScale: 0.8,
+                libs: [{"name":"boost", "ver" :"171"}, {"name":"cmcstl2", "ver" :"trunk"},{"name" : "gsl", "ver":"100"}, {"name":"rangesv3", "ver" :"trunk"}]
+
+
+            }
+        });
+        let obj = {
+            version: 4,
+            content: [{type: 'row', content: content}]
+        };
+        let ceFragment = encodeURIComponent(JSON.stringify(obj));
+        let parent = element.parentElement;
+        const baseUrl = 'https://gcc.godbolt.org/';
+        let a = document.createElement('a');
+        a.setAttribute('href', baseUrl + "#" + ceFragment);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('class', 'compiler-explorer-view-button');
+        a.setAttribute('title', "Test on Compiler Explorer !");
+
+        let img = document.createElement('img');
+        img.setAttribute('src', '/compiler_explorer.svg');
+        img.setAttribute('alt', 'Test on Compiler Explorer !');
+        img.setAttribute('class', 'compiler-explorer-view-button-img');
+        a.appendChild(img);
+        codeBlock.appendChild(a);
+    }
+})();
+</script>
+</html>
+
