@@ -83,7 +83,7 @@ It doesn&rsquo;t seem like a lot, but over a large number of recursions, it adds
 <p>I hope the new default will cover the needs of most of our users.
 Given that fold expressions are always preferable to a solution based on recursive template instantiation,
 it&rsquo;s nice to be able to use them without moderation!</p>
-<h3 id="constexpr-all-the-things-asm-edition">Constexpr all the things: <code>asm</code> edition.</h3>
+<h3 id="constexpr-all-the-things-asm-edition">Constexpr all the things, asm edition.</h3>
 <p>When they implemented <a href="wg21.link/P2741R3">user-generated static_assert messages (P2741R3)</a>,
 the good folks working on GCC figured they could also support these constexpr strings in <a href="https://gcc.gnu.org/onlinedocs/gcc/Asm-constexprs.html"><code>asm</code> statements</a>. And so they did.</p>
 <p>I had a few users asking me if Clang could do the same.
@@ -98,7 +98,7 @@ You could also use it to write a C++ compiler in C++.</p>
 </span></span></span></code></pre></div><p><a href="https://compiler-explorer.com/z/YqsT98cj5">[Compiler Explorer]</a>.</p>
 <p>You can check <a href="https://clang.llvm.org/docs/LanguageExtensions.html#constexpr-strings-in-gnu-asm-statememts">Clang</a>&rsquo;s and <a href="https://gcc.gnu.org/onlinedocs/gcc/Asm-constexprs.html">GCC</a>&rsquo;s documentation for this feature. I&rsquo;m looking forward to seeing how it gets used!</p>
 <p>It was also a nice opportunity to refactor our constexpr string evaluation code, which will make it easier to adopt <a href="https://wg21.link/p3423r1">Extending User-Generated Diagnostic Messages</a> if that ends up being adopted by the C++ committee.</p>
-<h2 id="__builtin_structured_binding_size"><code>__builtin_structured_binding_size</code></h2>
+<h2 id="__builtin_structured_binding_size">__builtin_structured_binding_size</h2>
 <p>Clang 21 will support <a href="https://wg21.link/P1061R10">packs in structured bindings</a> (thanks to a contribution from Jason Rice).</p>
 <p>One could think that having the ability to
 deduce the number of bindings would let us detect whether a type can be decomposed.</p>
