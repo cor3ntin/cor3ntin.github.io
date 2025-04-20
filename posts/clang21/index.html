@@ -147,8 +147,7 @@ relationship rather than subsumption.</p>
 It does not make a lot of difference for most code, but pathological cases have a chance of compiling.</p>
 <p>We could still do a few things to remove more subclauses, sort them by size, etc. I even investigated this <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/sat_2005_subsumption.pdf">great paper from Microsoft</a>,
 but realistically, that&rsquo;s probably not worth it until the formula has thousands of terms, and that&rsquo;s not a reasonable scenario in the context of C++ constraints.</p>
-<p>We could throw a SAT solver at it - after all [Clang Tidy comes with z3]
-(<a href="https://arxiv.org/pdf/1810.12041)">https://arxiv.org/pdf/1810.12041)</a>. But that would not do anything good for performance in the common case.</p>
+<p>We could throw a SAT solver at it - after all <a href="https://arxiv.org/pdf/1810.12041">Clang Tidy comes with z3</a>. But that would not do anything good for performance in the common case.</p>
 <p>After all, constraint subsumption in C++ is designed to avoid the need for a SAT solver (which is why negations are atomic constraints) at the cost of the need
 for both a CNF and a DNF transformation per constraint (which, in the common case of a C++ program, should still be the faster option).</p>
 <p><a href="https://compiler-explorer.com/z/4aqo6K1WT">[Compiler Explorer]</a></p>
