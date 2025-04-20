@@ -79,6 +79,12 @@ But that would have put an additional burden on the user, so instead, I went hun
 to reclaim and was able to find a few hundred bytes here and there.
 It doesn&rsquo;t seem like a lot, but over a large number of recursions, it adds up.</p>
 <p>And so, we raised default the limit to 2048.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>std::size_t a = [] {
+</span></span><span style="display:flex;"><span>    <span style="color:#080;font-weight:bold">return</span> []&lt;std::size_t...I&gt;(std::index_sequence&lt;I...&gt;) {
+</span></span><span style="display:flex;"><span>        <span style="color:#080;font-weight:bold">return</span> (I + ...);
+</span></span><span style="display:flex;"><span>    }(std::make_index_sequence&lt;<span style="color:#00d;font-weight:bold">2048</span>&gt;{});
+</span></span><span style="display:flex;"><span>}();
+</span></span></code></pre></div><p><a href="https://compiler-explorer.com/z/17MeWWTzv">[Compiler Explorer]</a></p>
 <p>It doesn&rsquo;t mean the stack won&rsquo;t blow up in some instances, but in trivial cases, Clang is more frugal in its consumption of stack space.</p>
 <p>I hope the new default will cover the needs of most of our users.
 Given that fold expressions are always preferable to a solution based on recursive template instantiation,
@@ -110,7 +116,7 @@ deduce the number of bindings would let us detect whether a type can be decompos
 <p>However, knowing if a type can be used with structured bindings and how many bindings would be created is quite useful.</p>
 <p>So I added a new builtin for that: <code>__builtin_structured_binding_size</code>.</p>
 <p>If <code>T</code> can be decomposed, <code>__builtin_structured_binding_size(T)</code> returns the number of bindings as a size_t, and if it can&rsquo;t, it produces SFINAE-friendly errors.</p>
-<p>The <code>decomposable</code> concept can be rewritten as:</p>
+<p>The <code>decomposable</code> concept can be written as:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#080;font-weight:bold">template</span> &lt;<span style="color:#080;font-weight:bold">typename</span> T&gt;
 </span></span><span style="display:flex;"><span><span style="color:#080;font-weight:bold">concept</span> decomposable = <span style="color:#080;font-weight:bold">requires</span> {
 </span></span><span style="display:flex;"><span> {__builtin_structured_binding_size(T)};
