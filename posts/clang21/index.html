@@ -71,7 +71,7 @@ But there is no rest for the wicked; Clang 21 is poised for a release in Septemb
 cap on recursion in Clang&rsquo;s parser.</p>
 <p>That limit defaulted to 256, but ever since the introduction of fold expressions,
 there has been a desire to increase that limit.
-But letting the compiler do unbounded restrictions caused some instabilities
+But letting the compiler do unbounded recursion caused some instabilities
 on some platforms, simply because Clang was running out of stack space.
 And maybe we could have gotten away with adding another flag or
 ignoring this limit for fold expressions.
