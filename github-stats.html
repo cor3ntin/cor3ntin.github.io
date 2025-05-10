@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>GitHub Statistics</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/16.1.1/build.css" />
+
+  <link rel="alternate icon" class="js-site-favicon" type="image/png" href="https://github.githubassets.com/favicons/favicon.png">
   <script>
     // Read token from URL query parameter if present
     params = new URLSearchParams(window.location.search);
@@ -286,6 +287,13 @@
       color: #0366d6;
       text-decoration: none;
     }
+
+    .controls {
+      font-size: x-large;
+    }
+    input, select {
+      font-size: x-large;
+    }
   </style>
 </head>
 
@@ -293,14 +301,14 @@
   <h1>GitHub Statistics</h1>
   <div class="controls">
     <label for="usernames">Usernames:</label>
-    <input style="font-size:'large'" type="text" id="usernames" value="cor3ntin" placeholder="user1,user2" style="width:200px;">
+    <input type="text" id="usernames" value="cor3ntin" placeholder="user1,user2" style="width:200px;">
     <label for="tag-filters">Labels:</label>
-    <select style="font-size:'large'" id="tag-filters" multiple size="8" style="width:200px;"></select>
+    <select id="tag-filters" multiple size="8" style="width:200px;"></select>
     <br><br>
     <label for="since-date">Since:</label>
-    <input style="font-size:'large'"  type="date" id="since-date">
+    <input type="date" id="since-date">
     <label for="until-date">Until:</label>
-    <input style="font-size:'large'"  type="date" id="until-date">
+    <input type="date" id="until-date">
     <button onclick="loadActivity()">Reload</button>
     <button onclick="clearToken()" style="margin-left:8px;">Clear Token</button>
   </div>
