@@ -133,6 +133,8 @@
       prs.forEach(pr => {
         const labels = pr.labels.nodes.map(n => n.name);
         const lblHTML = labels.map(l => { const c = stringToColor(l); return `<span class='label' style='background:${c.bg};color:${c.text}'>${l}</span>`; }).join(' ');
+        if(pr.author == null)
+          return
         if (users.includes(pr.author.login) && pr.state !== 'CLOSED') opened.push({ number: pr.number, title: pr.title, url: pr.url, author: pr.author.login, status: pr.state, date: new Date(pr.createdAt).toISOString().slice(0, 10), labels: lblHTML });
         pr.reviews.nodes.forEach(rv => { const key = `${rv.author.login}-${pr.number}`; if (users.includes(rv.author.login) && new Date(rv.submittedAt) >= new Date(since) && !seen.has(key)) { reviewed.push({ number: pr.number, title: pr.title, url: pr.url, reviewer: rv.author.login, date: rv.submittedAt.slice(0, 10), labels: lblHTML }); seen.add(key); } });
       });
